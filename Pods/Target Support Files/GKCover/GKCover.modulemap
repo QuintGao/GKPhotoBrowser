@@ -1,0 +1,6 @@
+framework module GKCover {
+  umbrella header "GKCover-umbrella.h"
+
+  export *
+  module * { export * }
+}
