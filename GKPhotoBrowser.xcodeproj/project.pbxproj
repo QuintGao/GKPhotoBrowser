@@ -38,6 +38,7 @@
 		792E93801FA2D62600A330DF /* GKTest02ViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 792E937F1FA2D62600A330DF /* GKTest02ViewCell.m */; };
 		792E93861FA32F3300A330DF /* GKTest03ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 792E93851FA32F3300A330DF /* GKTest03ViewController.m */; };
 		7934C9D81FBAF83500A1F7FA /* GKWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7934C9D71FBAF83500A1F7FA /* GKWebImageManager.m */; };
+		793B2DA21FCC624600A2A7E6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 793B2DA11FCC624600A2A7E6 /* README.md */; };
 		79A0EAD21FB579B10051058F /* UIScrollView+GKGestureHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A0EAD11FB579B10051058F /* UIScrollView+GKGestureHandle.m */; };
 		79A0EAD51FB6E9420051058F /* GKJianshuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A0EAD41FB6E9410051058F /* GKJianshuViewController.m */; };
 		79A0EAD91FB97BF90051058F /* GKToutiaoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A0EAD81FB97BF90051058F /* GKToutiaoDetailViewController.m */; };
@@ -126,6 +127,7 @@
 		7934C9D61FBAF83500A1F7FA /* GKWebImageManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKWebImageManager.h; sourceTree = "<group>"; };
 		7934C9D71FBAF83500A1F7FA /* GKWebImageManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKWebImageManager.m; sourceTree = "<group>"; };
 		7934C9D91FBAF90700A1F7FA /* GKWebImageProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKWebImageProtocol.h; sourceTree = "<group>"; };
+		793B2DA11FCC624600A2A7E6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		79A0EAD01FB579B10051058F /* UIScrollView+GKGestureHandle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+GKGestureHandle.h"; sourceTree = "<group>"; };
 		79A0EAD11FB579B10051058F /* UIScrollView+GKGestureHandle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+GKGestureHandle.m"; sourceTree = "<group>"; };
 		79A0EAD31FB6E9410051058F /* GKJianshuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKJianshuViewController.h; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 				791EB5D51F99FE7C00DEA01F /* Info.plist */,
 				791EB5D61F99FE7C00DEA01F /* main.m */,
 				791EB60E1FA0825900DEA01F /* PrefixHeader.pch */,
+				793B2DA11FCC624600A2A7E6 /* README.md */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -483,6 +486,7 @@
 			files = (
 				791534C71FB3514200F3A9A4 /* timeline.json in Resources */,
 				791EB5D41F99FE7C00DEA01F /* LaunchScreen.storyboard in Resources */,
+				793B2DA21FCC624600A2A7E6 /* README.md in Resources */,
 				791534CF1FB3F1B300F3A9A4 /* timeline.txt in Resources */,
 				791534DE1FB433A200F3A9A4 /* toutiao.txt in Resources */,
 				79AE02981FC8269400254846 /* angle-mask.png in Resources */,
