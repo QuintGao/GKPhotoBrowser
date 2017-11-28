@@ -37,12 +37,15 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 效果图
  
  1、仿微信
+ 
  ![wechat.gif](https://github.com/QuintGao/GKPhotoBrowser/blob/master/imgs/wechat.gif)
  
  
  2、今日头条
+ 
  ![toutiao.gif](https://github.com/QuintGao/GKPhotoBrowser/blob/master/imgs/toutiao.gif)
  
  
  3、简书
+ 
  ![jianshu.gif](https://github.com/QuintGao/GKPhotoBrowser/blob/master/imgs/jianshu.gif)
