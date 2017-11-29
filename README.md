@@ -9,11 +9,12 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
     [MJPhotoBrowser(已弃用)](https://github.com/Sunnyyoung/MJPhotoBrowser)
 
 ## 主要功能
-   1、支持单击、双击手势，支持缩放
-   2、可自定义显示方式（none，zoom，push）
-   3、可自定义隐藏方式（zoom，zoomScale，zoomSlide）
-   4、可自定义遮盖视图
-   5、支持屏幕旋转
+
+    * 支持单击、双击手势，支持缩放
+    * 可自定义显示方式（none，zoom，push）
+    * 可自定义隐藏方式（zoom，zoomScale，zoomSlide）
+    * 可自定义遮盖视图
+    * 支持屏幕旋转
  
  ## 用法
  1、创建包含GKPhoto的数组
@@ -32,6 +33,17 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:indexPath.row];
  browser.showStyle = GKPhotoBrowserShowStyleNone;
  [browser showFromVC:self];
+ ```
+  3、自定义遮盖视图
+  ```
+  /**
+  为浏览器添加自定义遮罩视图
+  
+  @param coverViews 视图数组
+  @param layoutBlock 布局block
+  */
+  - (void)setupCoverViews:(NSArray *)coverViews layoutBlock:(layoutBlock)layoutBlock;
+  
  ```
  
  ## 效果图
