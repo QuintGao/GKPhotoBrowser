@@ -422,19 +422,21 @@ static Class imageManagerClass = nil;
     [self.view addGestureRecognizer:longPress];
     
     // 拖拽手势
-    [self addPanGesture];
+    [self addPanGesture:YES];
 }
 
-- (void)addPanGesture {
-    if (self.showStyle != GKPhotoBrowserShowStylePush) {
-        
-        UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
-        
-        if (UIDeviceOrientationIsPortrait(orientation)) {
-            [self.view addGestureRecognizer:self.panGesture];
-        }
-    }else {
+- (void)addPanGesture:(BOOL)isFirst {
+    if (self.showStyle == GKPhotoBrowserShowStylePush) {
         [self removePanGesture];
+    }else {
+        if (isFirst) {
+            [self.view addGestureRecognizer:self.panGesture];
+        }else {
+            UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+            if (UIDeviceOrientationIsPortrait(orientation)) {
+                [self.view addGestureRecognizer:self.panGesture];
+            }
+        }
     }
 }
 
@@ -482,7 +484,7 @@ static Class imageManagerClass = nil;
         [photoView.scrollView setZoomScale:1.0 animated:YES];
         
         // 默认情况下有滑动手势
-        [self addPanGesture];
+        [self addPanGesture:YES];
     }else {
         CGPoint location = [tap locationInView:self.view];
         CGFloat wh = 1.0;
@@ -798,7 +800,7 @@ static Class imageManagerClass = nil;
         }];
     }else if (currentOrientation == UIDeviceOrientationPortrait) {
         // 竖屏时添加pan手势
-        [self addPanGesture];
+        [self addPanGesture:NO];
         
         NSTimeInterval duration = kAnimationDuration;
         
@@ -884,7 +886,7 @@ static Class imageManagerClass = nil;
         if (photoView.scrollView.zoomScale > 1.0) {
             [self removePanGesture];
         }else {
-            [self addPanGesture];
+            [self addPanGesture:NO];
         }
         
         [self updateLabel];

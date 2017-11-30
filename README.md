@@ -52,11 +52,9 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  
  ![wechat.gif](https://github.com/QuintGao/GKPhotoBrowser/blob/master/imgs/wechat.gif)
  
- 
  2、今日头条
  
  ![toutiao.gif](https://github.com/QuintGao/GKPhotoBrowser/blob/master/imgs/toutiao.gif)
- 
  
  3、简书
  
