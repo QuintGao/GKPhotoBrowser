@@ -99,9 +99,9 @@
         self.pageControl.hidesForSinglePage = YES;
         
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-        browser.showStyle = GKPhotoBrowserShowStyleZoom;
-        browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
-        
+        browser.showStyle           = GKPhotoBrowserShowStyleZoom;
+        browser.hideStyle           = GKPhotoBrowserHideStyleZoomScale;
+//        browser.isResumePhotoZoom   = YES;
         [browser setupCoverViews:@[self.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
             
             self.pageControl.center = CGPointMake(superFrame.size.width * 0.5, superFrame.size.height - 30);

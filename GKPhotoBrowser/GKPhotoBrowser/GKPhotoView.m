@@ -100,6 +100,9 @@
     [self.loadingView startLoading];
     
     if (photo) {
+        // 每次设置数据时，恢复缩放
+        [self.scrollView setZoomScale:1.0 animated:NO];
+        
         if (photo.image) {
             self.imageView.image = photo.image;
             photo.finished = YES;
@@ -188,14 +191,14 @@
         
         // 设置图片的frame
         self.imageView.frame = imageF;
-        
+                
         self.scrollView.contentSize = self.imageView.frame.size;
         
         self.imageView.center = [self centerOfScrollViewContent:self.scrollView];
         
         // 根据图片大小找到最大缩放等级，保证最大缩放时候，不会有黑边
         CGFloat maxScale = frame.size.height / imageF.size.height;
-        
+
         maxScale = frame.size.width / imageF.size.width > maxScale ? frame.size.width / imageF.size.width : maxScale;
         // 超过了设置的最大的才算数
         maxScale = maxScale > kMaxZoomScale ? maxScale : kMaxZoomScale;
@@ -213,6 +216,11 @@
         self.scrollView.contentSize = self.imageView.frame.size;
     }
     self.scrollView.contentOffset = CGPointZero;
+    
+    // frame调整完毕，重新设置缩放
+    if (self.photo.isZooming) {
+        [self zoomToRect:self.photo.zoomRect animated:NO];
+    }
 }
 
 - (CGPoint)centerOfScrollViewContent:(UIScrollView *)scrollView {
@@ -229,7 +237,7 @@
     return CGRectMake(x, y, width, height);
 }
 
-- (void)zoomToRect:(CGRect)rect {
+- (void)zoomToRect:(CGRect)rect animated:(BOOL)animated {
     [self.scrollView zoomToRect:rect animated:YES];
 }
 

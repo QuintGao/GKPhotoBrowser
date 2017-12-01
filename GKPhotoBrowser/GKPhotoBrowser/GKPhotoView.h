@@ -41,12 +41,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithFrame:(CGRect)frame imageProtocol:(id<GKWebImageProtocol>)imageProtocol;
 
+// 设置数据
 - (void)setupPhoto:(GKPhoto *)photo;
 
 - (void)adjustFrame;
 
-- (void)zoomToRect:(CGRect)rect;
+// 缩放
+- (void)zoomToRect:(CGRect)rect animated:(BOOL)animated;
 
+// 重新布局
 - (void)resetFrame;
 
 @end

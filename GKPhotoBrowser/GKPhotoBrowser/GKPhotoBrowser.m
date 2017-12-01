@@ -482,15 +482,19 @@ static Class imageManagerClass = nil;
     
     if (photoView.scrollView.zoomScale > 1.0) {
         [photoView.scrollView setZoomScale:1.0 animated:YES];
+        photo.isZooming = NO;
         
         // 默认情况下有滑动手势
         [self addPanGesture:YES];
     }else {
-        CGPoint location = [tap locationInView:self.view];
-        CGFloat wh = 1.0;
-        CGRect zoomRect = [self frameWithWidth:wh height:wh center:location];
+        CGPoint location = [tap locationInView:self.contentView];
+        CGFloat wh       = 1.0;
+        CGRect zoomRect  = [self frameWithWidth:wh height:wh center:location];
         
-        [photoView zoomToRect:zoomRect];
+        [photoView zoomToRect:zoomRect animated:YES];
+        
+        photo.isZooming = YES;
+        photo.zoomRect  = zoomRect;
         
         // 放大情况下移除滑动手势
         [self removePanGesture];
@@ -855,11 +859,11 @@ static Class imageManagerClass = nil;
         }
         GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
-            photoView = [self dequeueReusablePhotoView];
-            CGRect frame = self.photoScrollView.bounds;
+            photoView               = [self dequeueReusablePhotoView];
+            CGRect frame            = self.photoScrollView.bounds;
 
-            CGFloat photoScrollW = frame.size.width;
-            CGFloat photoScrollH = frame.size.height;
+            CGFloat photoScrollW    = frame.size.width;
+            CGFloat photoScrollH    = frame.size.height;
             // 调整当前显示的photoView的frame
             CGFloat w = photoScrollW - kPhotoViewPadding * 2;
             CGFloat h = photoScrollH;
@@ -883,6 +887,7 @@ static Class imageManagerClass = nil;
         self.currentIndex = index;
         
         GKPhotoView *photoView = [self currentPhotoView];
+        
         if (photoView.scrollView.zoomScale > 1.0) {
             [self removePanGesture];
         }else {
@@ -927,24 +932,21 @@ static Class imageManagerClass = nil;
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollEndedIndex:)]) {
         [self.delegate photoBrowser:self scrollEndedIndex:index];
     }
+    
+    if (self.isResumePhotoZoom) {
+        [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
+            GKPhoto *photo = self.photos[idx];
+            photo.isZooming = NO;
+            
+            [photoView.scrollView setZoomScale:1.0 animated:NO];
+        }];
+    }
+    
+    if ([self currentPhotoView].scrollView.zoomScale > 1.0) {
+        [self removePanGesture];
+    }else {
+        [self addPanGesture:NO];
+    }
 }
 
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

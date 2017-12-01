@@ -32,6 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
 /** 图片是否加载完成 */
 @property (nonatomic, assign) BOOL finished;
 
+/** 记录photoView是否缩放 */
+@property (nonatomic, assign) BOOL isZooming;
+
+/** 记录photoView缩放时的rect */
+@property (nonatomic, assign) CGRect zoomRect;
+
 @end
 
 NS_ASSUME_NONNULL_END

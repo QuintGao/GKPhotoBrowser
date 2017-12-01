@@ -35,7 +35,7 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // 开始滑动时
 - (void)photoBrowser:(GKPhotoBrowser *)browser panBeginWithIndex:(NSInteger)index;
 
-// 结束滑动时 isDismiss：是否消失
+// 结束滑动时 disappear：是否消失
 - (void)photoBrowser:(GKPhotoBrowser *)browser panEndedWithIndex:(NSInteger)index willDisappear:(BOOL)disappear;
 
 
@@ -69,6 +69,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /** 滑动消失时是否隐藏原来的视图：默认YES */
 @property (nonatomic, assign) BOOL isHideSourceView;
 
+/** 滑动切换图片时，是否恢复上（下）一张图片的缩放程度，默认是NO */
+@property (nonatomic, assign) BOOL isResumePhotoZoom;
+
 // 初始化方法
 
 /**
@@ -85,7 +88,7 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /**
  为浏览器添加自定义遮罩视图
 
- @param coverViews 视图数组
+ @param coverViews  视图数组
  @param layoutBlock 布局
  */
 - (void)setupCoverViews:(NSArray *)coverViews layoutBlock:(layoutBlock)layoutBlock;
