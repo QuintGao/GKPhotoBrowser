@@ -1,22 +1,21 @@
 //
-//  GKToutiaoDetailViewController.m
+//  GIFViewController.m
 //  GKPhotoBrowser
 //
-//  Created by QuintGao on 2017/11/13.
+//  Created by QuintGao on 2017/12/4.
 //  Copyright © 2017年 QuintGao. All rights reserved.
 //
 
-#import "GKToutiaoDetailViewController.h"
+#import "GIFViewController.h"
 #import "GKToutiaoModel.h"
 #import <WebKit/WebKit.h>
 #import "GKPhotoBrowser.h"
 
-@interface GKToutiaoDetailViewController ()<WKNavigationDelegate, GKPhotoBrowserDelegate, UIWebViewDelegate>
+@interface GIFViewController ()<WKNavigationDelegate, GKPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 
 @property (nonatomic, strong) WKWebView *webView;
-//@property (nonatomic, strong) UIWebView *webView;
 
 @property (nonatomic, strong) NSArray *imgUrls;
 
@@ -26,15 +25,14 @@
 
 @end
 
-@implementation GKToutiaoDetailViewController
+@implementation GIFViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.gk_navigationItem.title = @"详情";
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.gk_navigationItem.title = @"GIF图片加载";
+    self.view.backgroundColor    = [UIColor whiteColor];
     
-//    [self addUIWebView];
     [self addWKWebView];
 }
 
@@ -43,18 +41,9 @@
     self.webView = [[WKWebView alloc] initWithFrame:frame];
     self.webView.navigationDelegate = self;
     [self.view addSubview:self.webView];
-
+    
     [self.webView loadHTMLString:[self getHtmlString] baseURL:nil];
 }
-
-//- (void)addUIWebView {
-//    CGRect frame = CGRectMake(0, self.gk_navigationBar.bottom, KScreenW, KScreenH - self.gk_navigationBar.height);
-//    self.webView = [[UIWebView alloc] initWithFrame:frame];
-//    self.webView.delegate = self;
-//    [self.view addSubview:self.webView];
-//
-//    [self.webView loadHTMLString:[self getHtmlString] baseURL:nil];
-//}
 
 #pragma mark - WKNavigationDelegate
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
@@ -75,7 +64,7 @@
         
         NSInteger index = [self.imgUrls indexOfObject:imgUrl];
         
-        if (index >=0 && index < self.imgUrls.count) {
+        if (index >= 0 && index < self.imgUrls.count) {
             [self showImageWithArray:self.imgUrls index:index];
         }
         
@@ -85,30 +74,6 @@
     }
     
     decisionHandler(WKNavigationActionPolicyAllow);
-}
-
-#pragma mark - UIWebViewDelegate
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [self getImgsJSToUIWebView:webView];
-}
-
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    
-    NSString *url = request.URL.absoluteString;
-    
-    if ([url hasPrefix:@"imgurl:"]) {
-        
-        NSString *imgUrl = [url substringFromIndex:7];
-        
-        NSInteger index = [self.imgUrls indexOfObject:imgUrl];
-        
-        if (index >=0 && index < self.imgUrls.count) {
-            [self showImageWithArray:self.imgUrls index:index];
-        }
-        
-        return NO;
-    }
-    return YES;
 }
 
 - (void)showImageWithArray:(NSArray *)imageUrls index:(NSInteger)index {
@@ -277,7 +242,7 @@
     [webView stringByEvaluatingJavaScriptFromString:getImgFramesJS];
     
     NSString *str = [webView stringByEvaluatingJavaScriptFromString:@"getImgFrames()"];
-
+    
     NSArray *frames = [str componentsSeparatedByString:@"||"];
     
     NSMutableArray *imgFrames = [NSMutableArray new];
@@ -326,14 +291,13 @@
     [html appendString:@"</body>"];
     [html appendString:@"</html>"];
     
-//    NSLog(@"%@", html);
-    
     return html;
 }
 
 - (NSString *)getBodyString {
-    NSString *content = @"&lt;div&gt;&lt;p&gt;电视剧《猎场》在最新的剧情种贾衣玫终于出场了，也就是说和郑秋冬有感情线的三位女主角都在剧中“集合”了，但是在剧中最新的剧情中郑秋冬和熊青春还好着呢，那么郑秋冬又怎么会和贾衣玫在一起呢？&lt;/p&gt;&lt;p&gt;在《猎场》的官方人物介绍总，贾衣玫的身份是郑秋冬的前女友，所以在剧中如果贾衣玫和郑秋冬在一起的话，前提郑秋冬和熊青春得分手。&lt;/p&gt;&lt;p&gt;一个是大雪纷飞的冬季，一个是春暖花开的春季，合在一起就成为了恋爱的季节。在杭州合伙同开职介所的郑秋冬和熊青春，在经历过对彼此的误解、不安之后，终于认清了对方并成功转化为好感。&lt;/p&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p9.pstatp.com/large/46d4000303bba298a49e&quot; img_width&#x3D;&quot;600&quot; img_height&#x3D;&quot;400&quot; alt&#x3D;&quot;《猎场》郑秋冬和贾衣玫怎么好上的 前提是和熊青春分手&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;在惠成功(徐阁饰)的尽力撮合下，“季节cp”这对欢喜冤家终于在一起了。&lt;/p&gt;&lt;p&gt;“季节cp”刚刚开始发糖，贾衣玫(章龄之饰)就在马不停蹄赶来的路上了。贾衣玫来到职介所面试，熊青春亲自出马面见了她。那么，熊青春究竟会抛出什么问题来考核贾衣玫，贾衣玫能否轻松过关最终加入“玉汝于成职介所”呢？&lt;/p&gt;&lt;p&gt;好奇的网友们已经开始了自己的预测，“赌五毛钱贾衣玫一定能成功，就是这么自信”、“熊青春看到郑秋冬和洗脚小妹多聊了几句就醋性大发，这么优秀的贾衣玫她能傻到引狼入室？&lt;/p&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p3.pstatp.com/large/46cf000513d2b4307208&quot; img_width&#x3D;&quot;600&quot; img_height&#x3D;&quot;400&quot; alt&#x3D;&quot;《猎场》郑秋冬和贾衣玫怎么好上的 前提是和熊青春分手&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;在之前公布的剧照中能看出，郑秋冬和贾衣玫应该会是同事关系然后发展成为男女朋友关系的，据悉贾衣玫在郑秋冬的事业上也会有所帮助。&lt;/p&gt;&lt;p&gt;剧中郑秋冬一共有三个女朋友，罗伊人、熊青春和贾衣玫，虽然在剧中郑秋冬和这三个人都在一起过，但是都经历过分手，最后郑秋冬和感情归宿到底是谁，还要看剧情接下来会如何发展了。&lt;/p&gt;&lt;p&gt;在《猎场》中，章龄之饰演的贾衣玫是一个非常特别的角色，她不但要周旋在诸多职场精英之间展示自己女性特有的魅力，还要负责调和气氛的情感线索。&lt;/p&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p1.pstatp.com/large/46d10004d8be18e1d401&quot; img_width&#x3D;&quot;600&quot; img_height&#x3D;&quot;400&quot; alt&#x3D;&quot;《猎场》郑秋冬和贾衣玫怎么好上的 前提是和熊青春分手&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;她与胡歌组成的情侣档，更是成为观众关注的焦点——随着《伪装者》、《琅琊榜》等剧的热播，胡歌的人气再次飙升，男神地位无法撼动，而人气花旦章龄之，在结束了《他来了请闭眼》的拍摄后，火速走进《猎场》，这两位偶像实力派的强强发力，自然成为热门话题。&lt;/p&gt;&lt;p&gt;另外，众所周知，胡歌和章龄之的老公陈龙是“伉俪情深”的好兄弟，二人合作多次，见证彼此在演艺道路上的成长，而到了《猎场》，三个人的关系就略显“奇妙”——老公的“兄弟”胡歌竟然成为章龄之的男朋友，这一转变不但让演员觉得很有意思，也让广大的观众很是好奇。&lt;/p&gt;&lt;/div&gt;";
+    NSString *content = @"&lt;div&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p1.pstatp.com/large/402e0002bb952d89b317&quot; img_width&#x3D;&quot;195&quot; img_height&#x3D;&quot;273&quot; alt&#x3D;&quot;搞笑gif动态图，段子：不是，最后他老婆和别人跑了&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;第一次来大城市，没见过这种车&lt;/p&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p1.pstatp.com/large/402f0001698b3231793d&quot; img_width&#x3D;&quot;173&quot; img_height&#x3D;&quot;214&quot; alt&#x3D;&quot;搞笑gif动态图，段子：不是，最后他老婆和别人跑了&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;手不够，嘴来凑，妹子果然聪明！&lt;/p&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p3.pstatp.com/large/402d0002c62195dd68c9&quot; img_width&#x3D;&quot;215&quot; img_height&#x3D;&quot;244&quot; alt&#x3D;&quot;搞笑gif动态图，段子：不是，最后他老婆和别人跑了&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;这就叫乐极生悲吧&lt;/p&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p3.pstatp.com/large/402b0002d805574e34b9&quot; img_width&#x3D;&quot;257&quot; img_height&#x3D;&quot;170&quot; alt&#x3D;&quot;搞笑gif动态图，段子：不是，最后他老婆和别人跑了&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;就觉得很有爱&lt;/p&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p3.pstatp.com/large/402a0002e18148958ca9&quot; img_width&#x3D;&quot;300&quot; img_height&#x3D;&quot;296&quot; alt&#x3D;&quot;搞笑gif动态图，段子：不是，最后他老婆和别人跑了&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;厉害了，我的姐！！吃东西我只服你！！&lt;/p&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p1.pstatp.com/large/402d0002c6a5cb854b69&quot; img_width&#x3D;&quot;500&quot; img_height&#x3D;&quot;281&quot; alt&#x3D;&quot;搞笑gif动态图，段子：不是，最后他老婆和别人跑了&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;神同步&lt;/p&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p9.pstatp.com/large/402a0002e177d91cf123&quot; img_width&#x3D;&quot;210&quot; img_height&#x3D;&quot;228&quot; alt&#x3D;&quot;搞笑gif动态图，段子：不是，最后他老婆和别人跑了&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;这是干什么的啊！！！&lt;/p&gt;&lt;p&gt;&lt;img src&#x3D;&quot;http://p3.pstatp.com/large/402e0002bd4f67e630fe&quot; img_width&#x3D;&quot;224&quot; img_height&#x3D;&quot;251&quot; alt&#x3D;&quot;搞笑gif动态图，段子：不是，最后他老婆和别人跑了&quot; inline&#x3D;&quot;0&quot;&gt;&lt;/p&gt;&lt;p&gt;我知道你有大胆的想法&lt;/p&gt;&lt;p&gt;1：同事：小伙子还在加班吗？我：是啊！刚来业务不熟加班多多熟悉业务。同事：嗯，不错啊，挺积极啊，有前途。你让我想起一个同事他以前和你一样天天加班，最后……我：最后加薪了还是升职了？同事：不是，最后他老婆和别人跑了……&lt;/p&gt;&lt;p&gt;2：我们老师的口头禅，觉得对就顶我！1.这又是一道送分题。2.我在办公室里都能听到你们的声音，整栋楼就咱们班最吵！3.由于时间关系这道题我们一起做。4.我要找平时不举手的同学回答问题！5.你们成绩差跟我有关系吗？我的工资一分不少！6.你们班是我教过最差的一班！7.我再讲两分钟，之后再下课！8.今天体育老师没有来，我们上英语课！&lt;/p&gt;&lt;p&gt;3：大海刚上地铁，就闻到一股韭菜包子味，大海坐下，用杀人的眼光看着吃韭菜包子的那汉子。那汉子好像感觉到了不对，把包子收起来，转头对大海说：“哥呀，我不吃包子了，能不能把您鞋穿上，咱各退一步……”&lt;/p&gt;&lt;p&gt;4：父子赌气妻子出差，丈夫和儿子都不愿做饭，只得赌气上饭店。儿子对服务生说：给那角落的老头上好酒好菜，我买单！服务生不解：为何？儿子说：我和他儿媳相好！服务生看老头吃的欢，便问：他和你儿媳妇好你不揍他？老头笑了：他和我儿媳好才几年？我跟他妈好三十年了！&lt;/p&gt;&lt;/div&gt;";
     
+    // 转义字符
     NSAttributedString *body = [[NSAttributedString alloc] initWithData:[content dataUsingEncoding:NSUTF8StringEncoding] options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding)} documentAttributes:nil error:nil];
     
     return body.string;

@@ -264,7 +264,6 @@ static Class imageManagerClass = nil;
     GKPhotoView *photoView  = [self currentPhotoView];
     
     CGRect endRect = photoView.imageView.frame;
-    NSLog(@"%@", NSStringFromCGRect(endRect));
     CGRect sourceRect = photo.sourceFrame;
     
     if (CGRectEqualToRect(sourceRect, CGRectZero)) {

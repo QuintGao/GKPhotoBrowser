@@ -39,6 +39,7 @@
 		792E93861FA32F3300A330DF /* GKTest03ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 792E93851FA32F3300A330DF /* GKTest03ViewController.m */; };
 		7934C9D81FBAF83500A1F7FA /* GKWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7934C9D71FBAF83500A1F7FA /* GKWebImageManager.m */; };
 		793B2DA21FCC624600A2A7E6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 793B2DA11FCC624600A2A7E6 /* README.md */; };
+		7973BE131FD5292C00648D23 /* GIFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973BE121FD5292C00648D23 /* GIFViewController.m */; };
 		79A0EAD21FB579B10051058F /* UIScrollView+GKGestureHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A0EAD11FB579B10051058F /* UIScrollView+GKGestureHandle.m */; };
 		79A0EAD51FB6E9420051058F /* GKJianshuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A0EAD41FB6E9410051058F /* GKJianshuViewController.m */; };
 		79A0EAD91FB97BF90051058F /* GKToutiaoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A0EAD81FB97BF90051058F /* GKToutiaoDetailViewController.m */; };
@@ -128,6 +129,8 @@
 		7934C9D71FBAF83500A1F7FA /* GKWebImageManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKWebImageManager.m; sourceTree = "<group>"; };
 		7934C9D91FBAF90700A1F7FA /* GKWebImageProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKWebImageProtocol.h; sourceTree = "<group>"; };
 		793B2DA11FCC624600A2A7E6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		7973BE111FD5292C00648D23 /* GIFViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIFViewController.h; sourceTree = "<group>"; };
+		7973BE121FD5292C00648D23 /* GIFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIFViewController.m; sourceTree = "<group>"; };
 		79A0EAD01FB579B10051058F /* UIScrollView+GKGestureHandle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+GKGestureHandle.h"; sourceTree = "<group>"; };
 		79A0EAD11FB579B10051058F /* UIScrollView+GKGestureHandle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+GKGestureHandle.m"; sourceTree = "<group>"; };
 		79A0EAD31FB6E9410051058F /* GKJianshuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKJianshuViewController.h; sourceTree = "<group>"; };
@@ -325,6 +328,7 @@
 				791534BF1FB30F7500F3A9A4 /* WeChat */,
 				791534D31FB426F500F3A9A4 /* Toutiao */,
 				79A0EAD61FB97B910051058F /* Jianshu */,
+				7973BE101FD5290F00648D23 /* GIF */,
 				792E93781FA094EA00A330DF /* GKTest01ViewCell.h */,
 				792E93791FA094EA00A330DF /* GKTest01ViewCell.m */,
 				792E937E1FA2D62600A330DF /* GKTest02ViewCell.h */,
@@ -343,6 +347,15 @@
 				791EB6141FA0839D00DEA01F /* UIView+GKFrame.m */,
 			);
 			path = GKCategory;
+			sourceTree = "<group>";
+		};
+		7973BE101FD5290F00648D23 /* GIF */ = {
+			isa = PBXGroup;
+			children = (
+				7973BE111FD5292C00648D23 /* GIFViewController.h */,
+				7973BE121FD5292C00648D23 /* GIFViewController.m */,
+			);
+			path = GIF;
 			sourceTree = "<group>";
 		};
 		79A0EAD61FB97B910051058F /* Jianshu */ = {
@@ -522,6 +535,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-GKPhotoBrowser/Pods-GKPhotoBrowser-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
+				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/GKCover/GKCover.framework",
 				"${BUILT_PRODUCTS_DIR}/GKNavigationBarViewController/GKNavigationBarViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -530,6 +544,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKCover.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKNavigationBarViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
@@ -599,6 +614,7 @@
 				791EB6151FA0839D00DEA01F /* UIView+GKFrame.m in Sources */,
 				791EB5C91F99FE7C00DEA01F /* AppDelegate.m in Sources */,
 				792E93861FA32F3300A330DF /* GKTest03ViewController.m in Sources */,
+				7973BE131FD5292C00648D23 /* GIFViewController.m in Sources */,
 				7934C9D81FBAF83500A1F7FA /* GKWebImageManager.m in Sources */,
 				79A0EAD91FB97BF90051058F /* GKToutiaoDetailViewController.m in Sources */,
 				792E937A1FA094EA00A330DF /* GKTest01ViewCell.m in Sources */,
@@ -781,7 +797,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvtalking.browser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "ccbba57f-97f6-4ffe-9154-b8a209a7d9cd";
-				PROVISIONING_PROFILE_SPECIFIER = "jvtalking___test";
+				PROVISIONING_PROFILE_SPECIFIER = jvtalking___test;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -800,7 +816,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvtalking.browser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "ccbba57f-97f6-4ffe-9154-b8a209a7d9cd";
-				PROVISIONING_PROFILE_SPECIFIER = "jvtalking___test";
+				PROVISIONING_PROFILE_SPECIFIER = jvtalking___test;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

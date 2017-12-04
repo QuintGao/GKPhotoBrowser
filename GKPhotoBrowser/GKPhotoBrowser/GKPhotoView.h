@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) GKPhotoScrollView *scrollView;
 
-@property (nonatomic, strong, readonly) UIImageView *imageView;
+@property (nonatomic, strong, readonly) FLAnimatedImageView *imageView;
 
 @property (nonatomic, strong, readonly) GKLoadingView *loadingView;
 

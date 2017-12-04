@@ -14,7 +14,7 @@
 
 @property (nonatomic, strong, readwrite) GKPhotoScrollView *scrollView;
 
-@property (nonatomic, strong, readwrite) UIImageView *imageView;
+@property (nonatomic, strong, readwrite) FLAnimatedImageView *imageView;
 
 @property (nonatomic, strong, readwrite) GKLoadingView *loadingView;
 
@@ -68,9 +68,9 @@
 
 - (UIImageView *)imageView {
     if (!_imageView) {
-        _imageView                  = [UIImageView new];
-        _imageView.frame            = CGRectMake(0, 0, GKScreenW, GKScreenH);
-        _imageView.clipsToBounds    = YES;
+        _imageView               = [FLAnimatedImageView new];
+        _imageView.frame         = CGRectMake(0, 0, GKScreenW, GKScreenH);
+        _imageView.clipsToBounds = YES;
     }
     return _imageView;
 }
@@ -103,9 +103,12 @@
         // 每次设置数据时，恢复缩放
         [self.scrollView setZoomScale:1.0 animated:NO];
         
-        if (photo.image) {
-            self.imageView.image = photo.image;
-            photo.finished = YES;
+        if (photo.image || photo.animatedImage) {
+            if (photo.animatedImage) {
+                self.imageView.animatedImage = photo.animatedImage;
+            }else if (photo.image) {
+                self.imageView.image = photo.image;
+            }
             
             [self adjustFrame];
             return;
@@ -134,9 +137,11 @@
         gkWebImageCompletionBlock completionBlock = ^(UIImage *image, NSURL *url, BOOL finished, NSError *error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (finished) {
+                photo.animatedImage = self.imageView.animatedImage;
+                photo.image         = self.imageView.image;
+                photo.finished      = YES; // 下载完成
+                
                 strongSelf.scrollView.scrollEnabled = YES;
-                photo.image    = image;
-                photo.finished = YES; // 下载完成
                 [strongSelf.loadingView stopLoading];
             }else {
                 [strongSelf addSubview:self.loadingView];

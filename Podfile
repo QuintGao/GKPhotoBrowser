@@ -5,6 +5,7 @@ target 'GKPhotoBrowser' do
 
   pod 'AFNetworking'
   pod 'SDWebImage'
+  pod 'SDWebImage/GIF'
   pod 'GKNavigationBarViewController'
   pod 'YYModel'
   pod 'GKCover', '~> 2.4.7'
