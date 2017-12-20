@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GKPhotoBrowserConfigure.h"
 #import "GKWebImageProtocol.h"
 
 @interface GKWebImageManager : NSObject<GKWebImageProtocol>

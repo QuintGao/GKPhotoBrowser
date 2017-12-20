@@ -7,8 +7,6 @@
 //
 
 #import "GKPhotoView.h"
-#import <SDWebImage/UIView+WebCache.h>
-#import <SDWebImage/UIImageView+WebCache.h>
 
 @interface GKPhotoView()
 

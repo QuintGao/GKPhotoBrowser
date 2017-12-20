@@ -8,10 +8,6 @@
 
 #import "GKWebImageManager.h"
 
-#import <SDWebImage/UIImageView+WebCache.h>
-#import <SDWebImage/UIView+WebCache.h>
-#import <SDWebImage/SDWebImageManager.h>
-
 @implementation GKWebImageManager
 
 - (void)setImageWithImageView:(UIImageView *)imageView url:(NSURL *)url placeholder:(UIImage *)placeholder progress:(gkWebImageProgressBlock)progress completion:(gkWebImageCompletionBlock)completion {

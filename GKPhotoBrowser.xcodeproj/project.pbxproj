@@ -29,7 +29,6 @@
 		791EB5FC1F99FF0800DEA01F /* GKPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 791EB5FB1F99FF0800DEA01F /* GKPhotoBrowser.m */; };
 		791EB5FF1F99FF1D00DEA01F /* GKPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 791EB5FE1F99FF1D00DEA01F /* GKPhoto.m */; };
 		791EB6021F9D9B4D00DEA01F /* GKPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 791EB6011F9D9B4D00DEA01F /* GKPhotoView.m */; };
-		791EB6061F9DD1CE00DEA01F /* GKPhotoLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 791EB6051F9DD1CE00DEA01F /* GKPhotoLoadingView.m */; };
 		791EB6111FA082F800DEA01F /* GKMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 791EB6101FA082F800DEA01F /* GKMainViewController.m */; };
 		791EB6151FA0839D00DEA01F /* UIView+GKFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 791EB6141FA0839D00DEA01F /* UIView+GKFrame.m */; };
 		791EB6181FA08D9B00DEA01F /* GKTest01ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 791EB6171FA08D9A00DEA01F /* GKTest01ViewController.m */; };
@@ -108,8 +107,6 @@
 		791EB6001F9D9B4D00DEA01F /* GKPhotoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKPhotoView.h; sourceTree = "<group>"; };
 		791EB6011F9D9B4D00DEA01F /* GKPhotoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKPhotoView.m; sourceTree = "<group>"; };
 		791EB6031F9DC0F400DEA01F /* GKPhotoBrowserConfigure.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKPhotoBrowserConfigure.h; sourceTree = "<group>"; };
-		791EB6041F9DD1CE00DEA01F /* GKPhotoLoadingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKPhotoLoadingView.h; sourceTree = "<group>"; };
-		791EB6051F9DD1CE00DEA01F /* GKPhotoLoadingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKPhotoLoadingView.m; sourceTree = "<group>"; };
 		791EB60E1FA0825900DEA01F /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		791EB60F1FA082F800DEA01F /* GKMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKMainViewController.h; sourceTree = "<group>"; };
 		791EB6101FA082F800DEA01F /* GKMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKMainViewController.m; sourceTree = "<group>"; };
@@ -273,8 +270,6 @@
 				791EB6011F9D9B4D00DEA01F /* GKPhotoView.m */,
 				7915346C1FB1600400F3A9A4 /* GKPhotoScrollView.h */,
 				7915346D1FB1600400F3A9A4 /* GKPhotoScrollView.m */,
-				791EB6041F9DD1CE00DEA01F /* GKPhotoLoadingView.h */,
-				791EB6051F9DD1CE00DEA01F /* GKPhotoLoadingView.m */,
 				791EB5FA1F99FF0800DEA01F /* GKPhotoBrowser.h */,
 				791EB5FB1F99FF0800DEA01F /* GKPhotoBrowser.m */,
 				7934C9D61FBAF83500A1F7FA /* GKWebImageManager.h */,
@@ -619,7 +614,6 @@
 				79A0EAD91FB97BF90051058F /* GKToutiaoDetailViewController.m in Sources */,
 				792E937A1FA094EA00A330DF /* GKTest01ViewCell.m in Sources */,
 				791534D61FB4275500F3A9A4 /* GKToutiaoViewController.m in Sources */,
-				791EB6061F9DD1CE00DEA01F /* GKPhotoLoadingView.m in Sources */,
 				79A0EAD21FB579B10051058F /* UIScrollView+GKGestureHandle.m in Sources */,
 				791EB5FC1F99FF0800DEA01F /* GKPhotoBrowser.m in Sources */,
 				792E937D1FA2D51E00A330DF /* GKTest02ViewController.m in Sources */,
@@ -797,7 +791,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvtalking.browser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "ccbba57f-97f6-4ffe-9154-b8a209a7d9cd";
-				PROVISIONING_PROFILE_SPECIFIER = jvtalking___test;
+				PROVISIONING_PROFILE_SPECIFIER = "jvtalking___test";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -816,7 +810,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvtalking.browser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "ccbba57f-97f6-4ffe-9154-b8a209a7d9cd";
-				PROVISIONING_PROFILE_SPECIFIER = jvtalking___test;
+				PROVISIONING_PROFILE_SPECIFIER = "jvtalking___test";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

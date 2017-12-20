@@ -7,8 +7,6 @@
 //
 
 #import "GKPhotoBrowser.h"
-#import "UIScrollView+GKGestureHandle.h"
-#import <SDWebImage/UIImageView+WebCache.h>
 #import "GKWebImageManager.h"
 
 static Class imageManagerClass = nil;
@@ -133,7 +131,7 @@ static Class imageManagerClass = nil;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
+    
     GKPhoto *photo          = [self currentPhoto];
     GKPhotoView *photoView  = [self currentPhotoView];
     
@@ -219,7 +217,7 @@ static Class imageManagerClass = nil;
     _showStyle = showStyle;
     
     if (showStyle == GKPhotoBrowserShowStylePush) {
-//        self.photoScrollView.gk_gestureHandleDisabled = NO;
+        //        self.photoScrollView.gk_gestureHandleDisabled = NO;
     }else {
         self.modalPresentationStyle = UIModalPresentationCustom;
         self.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
@@ -465,7 +463,7 @@ static Class imageManagerClass = nil;
     }else {
         // 显示状态栏
         self.isStatusBarShow = YES;
-
+        
         // 防止返回时跳动
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self recoverAnimation];
@@ -619,7 +617,7 @@ static Class imageManagerClass = nil;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     
     if (UIDeviceOrientationIsLandscape(orientation)) {
-        [UIView animateWithDuration:kAnimDuration animations:^{
+        [UIView animateWithDuration:kAnimationDuration animations:^{
             // 旋转view
             self.contentView.transform = CGAffineTransformIdentity;
             
@@ -693,7 +691,7 @@ static Class imageManagerClass = nil;
         toTranslationY = self.view.frame.size.height;
     }
     
-    [UIView animateWithDuration:kAnimDuration animations:^{
+    [UIView animateWithDuration:kAnimationDuration animations:^{
         photoView.imageView.transform = CGAffineTransformMakeTranslation(0, toTranslationY);
         self.view.backgroundColor = [UIColor clearColor];
     }completion:^(BOOL finished) {
@@ -746,7 +744,7 @@ static Class imageManagerClass = nil;
     // 默认设备方向：竖屏
     self.originalOrientation = UIDeviceOrientationPortrait;
     
-//    [self deviceOrientationDidChange];
+    //    [self deviceOrientationDidChange];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 }
@@ -860,7 +858,7 @@ static Class imageManagerClass = nil;
         if (photoView == nil) {
             photoView               = [self dequeueReusablePhotoView];
             CGRect frame            = self.photoScrollView.bounds;
-
+            
             CGFloat photoScrollW    = frame.size.width;
             CGFloat photoScrollH    = frame.size.height;
             // 调整当前显示的photoView的frame

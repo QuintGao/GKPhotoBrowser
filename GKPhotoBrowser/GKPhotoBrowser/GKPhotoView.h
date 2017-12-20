@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "GKPhoto.h"
 #import "GKPhotoScrollView.h"
-#import "GKPhotoLoadingView.h"
 #import "GKWebImageProtocol.h"
 #import "GKLoadingView.h"
 
@@ -17,16 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class GKPhotoView;
 
-@protocol GKPhotoViewDelegate<NSObject>
-
-- (void)photoViewSingleTap:(GKPhotoView *)photoView;
-- (void)photoViewDoubleTap:(GKPhotoView *)photoView;
-
-@end
-
 @interface GKPhotoView : UIView<UIScrollViewDelegate>
-
-@property (nonatomic, weak) id<GKPhotoViewDelegate> delegate;
 
 @property (nonatomic, strong, readonly) GKPhotoScrollView *scrollView;
 

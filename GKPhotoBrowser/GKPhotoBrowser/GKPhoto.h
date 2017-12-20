@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Foundation/Foundation.h>
 #import "GKPhotoBrowserConfigure.h"
 
 NS_ASSUME_NONNULL_BEGIN
