@@ -6,8 +6,8 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   s.authors      = { "高坤" => "1094887059@qq.com" }
   s.social_media_url   = "https://github.com/QuintGao"
-  s.platform     = :ios, "6.0"
-  s.ios.deployment_target = "6.0"
+  s.platform     = :ios, "8.0"
+  s.ios.deployment_target = "8.0"
   s.source       = { :git => "https://github.com/QuintGao/GKPhotoBrowser.git", :tag => s.version.to_s }
   s.source_files  = "GKPhotoBrowser/**/*.{h,m}"
   s.public_header_files = "GKPhotoBrowser/**/*.h"
