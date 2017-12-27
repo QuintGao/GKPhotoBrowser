@@ -1,0 +1,885 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		795FA5981FF333420057BDB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5971FF333420057BDB0 /* Assets.xcassets */; };
+		795FA59B1FF333420057BDB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5991FF333420057BDB0 /* LaunchScreen.storyboard */; };
+		795FA59E1FF333420057BDB0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA59D1FF333420057BDB0 /* main.m */; };
+		795FA5A81FF333430057BDB0 /* GKPhotoBrowserDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5A71FF333430057BDB0 /* GKPhotoBrowserDemoTests.m */; };
+		795FA5B31FF333430057BDB0 /* GKPhotoBrowserDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5B21FF333430057BDB0 /* GKPhotoBrowserDemoUITests.m */; };
+		795FA5D31FF334100057BDB0 /* GKLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5C31FF334100057BDB0 /* GKLoadingView.m */; };
+		795FA5D41FF334100057BDB0 /* UIScrollView+GKGestureHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5C51FF334100057BDB0 /* UIScrollView+GKGestureHandle.m */; };
+		795FA5D61FF334100057BDB0 /* GKPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5CA1FF334100057BDB0 /* GKPhotoBrowser.m */; };
+		795FA5D71FF334100057BDB0 /* GKPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5CC1FF334100057BDB0 /* GKPhoto.m */; };
+		795FA5D81FF334100057BDB0 /* GKWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5CE1FF334100057BDB0 /* GKWebImageManager.m */; };
+		795FA5D91FF334100057BDB0 /* GKPhotoBrowser.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5D01FF334100057BDB0 /* GKPhotoBrowser.bundle */; };
+		795FA5DA1FF334100057BDB0 /* GKPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5D21FF334100057BDB0 /* GKPhotoView.m */; };
+		795FA60D1FF338200057BDB0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5DD1FF3381F0057BDB0 /* AppDelegate.m */; };
+		795FA60E1FF338200057BDB0 /* GKMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5DF1FF3381F0057BDB0 /* GKMainViewController.m */; };
+		795FA60F1FF338200057BDB0 /* GKPhotosView.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5E01FF3381F0057BDB0 /* GKPhotosView.m */; };
+		795FA6101FF338200057BDB0 /* GKJianshuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5E31FF3381F0057BDB0 /* GKJianshuViewController.m */; };
+		795FA6111FF338200057BDB0 /* GKBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5E61FF338200057BDB0 /* GKBaseViewController.m */; };
+		795FA6121FF338200057BDB0 /* GKToutiaoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5EA1FF338200057BDB0 /* GKToutiaoDetailViewController.m */; };
+		795FA6131FF338200057BDB0 /* GKToutiaoViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5EB1FF338200057BDB0 /* GKToutiaoViewCell.m */; };
+		795FA6141FF338200057BDB0 /* GKToutiaoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5EC1FF338200057BDB0 /* GKToutiaoViewController.m */; };
+		795FA6151FF338200057BDB0 /* GKToutiaoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5ED1FF338200057BDB0 /* GKToutiaoModel.m */; };
+		795FA6161FF338200057BDB0 /* toutiao.txt in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5F01FF338200057BDB0 /* toutiao.txt */; };
+		795FA6171FF338200057BDB0 /* GKTest01ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5F21FF338200057BDB0 /* GKTest01ViewController.m */; };
+		795FA6181FF338200057BDB0 /* GKTest02ViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5F31FF338200057BDB0 /* GKTest02ViewCell.m */; };
+		795FA6191FF338200057BDB0 /* UIView+GKFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5F61FF338200057BDB0 /* UIView+GKFrame.m */; };
+		795FA61B1FF338200057BDB0 /* GKTimeLineViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5FA1FF338200057BDB0 /* GKTimeLineViewCell.m */; };
+		795FA61D1FF338200057BDB0 /* GKTimeLineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5FD1FF338200057BDB0 /* GKTimeLineViewController.m */; };
+		795FA61E1FF338200057BDB0 /* timeline.json in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5FE1FF338200057BDB0 /* timeline.json */; };
+		795FA61F1FF338200057BDB0 /* GKTimeLineModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA5FF1FF338200057BDB0 /* GKTimeLineModel.m */; };
+		795FA6201FF338200057BDB0 /* timeline.txt in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6011FF338200057BDB0 /* timeline.txt */; };
+		795FA6211FF338200057BDB0 /* GKTest01ViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA6051FF338200057BDB0 /* GKTest01ViewCell.m */; };
+		795FA6221FF338200057BDB0 /* GKTest03ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA6061FF338200057BDB0 /* GKTest03ViewController.m */; };
+		795FA6231FF338200057BDB0 /* GKTest02ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA6071FF338200057BDB0 /* GKTest02ViewController.m */; };
+		795FA6241FF338200057BDB0 /* GIFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA60C1FF338200057BDB0 /* GIFViewController.m */; };
+		795FA6281FF34F230057BDB0 /* GKPhotoBrowser.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */; };
+		795FA6291FF34F230057BDB0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6271FF34F220057BDB0 /* README.md */; };
+		90EEF67CE4A0A3BDF6976160 /* Pods_GKPhotoBrowserDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		795FA5A41FF333420057BDB0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 795FA5831FF333420057BDB0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 795FA58A1FF333420057BDB0;
+			remoteInfo = GKPhotoBrowserDemo;
+		};
+		795FA5AF1FF333430057BDB0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 795FA5831FF333420057BDB0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 795FA58A1FF333420057BDB0;
+			remoteInfo = GKPhotoBrowserDemo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1BD88472E22F06A033FA0CC2 /* Pods-GKPhotoBrowserDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GKPhotoBrowserDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		795FA58B1FF333420057BDB0 /* GKPhotoBrowserDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GKPhotoBrowserDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		795FA5971FF333420057BDB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		795FA59A1FF333420057BDB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		795FA59C1FF333420057BDB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		795FA59D1FF333420057BDB0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		795FA5A31FF333420057BDB0 /* GKPhotoBrowserDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GKPhotoBrowserDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		795FA5A71FF333430057BDB0 /* GKPhotoBrowserDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKPhotoBrowserDemoTests.m; sourceTree = "<group>"; };
+		795FA5A91FF333430057BDB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		795FA5AE1FF333430057BDB0 /* GKPhotoBrowserDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GKPhotoBrowserDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		795FA5B21FF333430057BDB0 /* GKPhotoBrowserDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKPhotoBrowserDemoUITests.m; sourceTree = "<group>"; };
+		795FA5B41FF333430057BDB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		795FA5C11FF3340F0057BDB0 /* GKWebImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKWebImageManager.h; sourceTree = "<group>"; };
+		795FA5C31FF334100057BDB0 /* GKLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKLoadingView.m; sourceTree = "<group>"; };
+		795FA5C41FF334100057BDB0 /* GKLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKLoadingView.h; sourceTree = "<group>"; };
+		795FA5C51FF334100057BDB0 /* UIScrollView+GKGestureHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+GKGestureHandle.m"; sourceTree = "<group>"; };
+		795FA5C61FF334100057BDB0 /* GKPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKPhoto.h; sourceTree = "<group>"; };
+		795FA5C71FF334100057BDB0 /* GKWebImageProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKWebImageProtocol.h; sourceTree = "<group>"; };
+		795FA5C91FF334100057BDB0 /* GKPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKPhotoView.h; sourceTree = "<group>"; };
+		795FA5CA1FF334100057BDB0 /* GKPhotoBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKPhotoBrowser.m; sourceTree = "<group>"; };
+		795FA5CB1FF334100057BDB0 /* GKPhotoBrowserConfigure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKPhotoBrowserConfigure.h; sourceTree = "<group>"; };
+		795FA5CC1FF334100057BDB0 /* GKPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKPhoto.m; sourceTree = "<group>"; };
+		795FA5CD1FF334100057BDB0 /* UIScrollView+GKGestureHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+GKGestureHandle.h"; sourceTree = "<group>"; };
+		795FA5CE1FF334100057BDB0 /* GKWebImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKWebImageManager.m; sourceTree = "<group>"; };
+		795FA5D01FF334100057BDB0 /* GKPhotoBrowser.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GKPhotoBrowser.bundle; sourceTree = "<group>"; };
+		795FA5D11FF334100057BDB0 /* GKPhotoBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKPhotoBrowser.h; sourceTree = "<group>"; };
+		795FA5D21FF334100057BDB0 /* GKPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKPhotoView.m; sourceTree = "<group>"; };
+		795FA5DC1FF3381F0057BDB0 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		795FA5DD1FF3381F0057BDB0 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		795FA5DF1FF3381F0057BDB0 /* GKMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKMainViewController.m; sourceTree = "<group>"; };
+		795FA5E01FF3381F0057BDB0 /* GKPhotosView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKPhotosView.m; sourceTree = "<group>"; };
+		795FA5E21FF3381F0057BDB0 /* GKJianshuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKJianshuViewController.h; sourceTree = "<group>"; };
+		795FA5E31FF3381F0057BDB0 /* GKJianshuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKJianshuViewController.m; sourceTree = "<group>"; };
+		795FA5E41FF3381F0057BDB0 /* GKTest03ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest03ViewController.h; sourceTree = "<group>"; };
+		795FA5E51FF338200057BDB0 /* GKTest01ViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest01ViewCell.h; sourceTree = "<group>"; };
+		795FA5E61FF338200057BDB0 /* GKBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKBaseViewController.m; sourceTree = "<group>"; };
+		795FA5E71FF338200057BDB0 /* GKTest02ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest02ViewController.h; sourceTree = "<group>"; };
+		795FA5E91FF338200057BDB0 /* GKToutiaoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKToutiaoModel.h; sourceTree = "<group>"; };
+		795FA5EA1FF338200057BDB0 /* GKToutiaoDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKToutiaoDetailViewController.m; sourceTree = "<group>"; };
+		795FA5EB1FF338200057BDB0 /* GKToutiaoViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKToutiaoViewCell.m; sourceTree = "<group>"; };
+		795FA5EC1FF338200057BDB0 /* GKToutiaoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKToutiaoViewController.m; sourceTree = "<group>"; };
+		795FA5ED1FF338200057BDB0 /* GKToutiaoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKToutiaoModel.m; sourceTree = "<group>"; };
+		795FA5EE1FF338200057BDB0 /* GKToutiaoViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKToutiaoViewCell.h; sourceTree = "<group>"; };
+		795FA5EF1FF338200057BDB0 /* GKToutiaoDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKToutiaoDetailViewController.h; sourceTree = "<group>"; };
+		795FA5F01FF338200057BDB0 /* toutiao.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = toutiao.txt; sourceTree = "<group>"; };
+		795FA5F11FF338200057BDB0 /* GKToutiaoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKToutiaoViewController.h; sourceTree = "<group>"; };
+		795FA5F21FF338200057BDB0 /* GKTest01ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTest01ViewController.m; sourceTree = "<group>"; };
+		795FA5F31FF338200057BDB0 /* GKTest02ViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTest02ViewCell.m; sourceTree = "<group>"; };
+		795FA5F51FF338200057BDB0 /* UIView+GKFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+GKFrame.h"; sourceTree = "<group>"; };
+		795FA5F61FF338200057BDB0 /* UIView+GKFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+GKFrame.m"; sourceTree = "<group>"; };
+		795FA5F71FF338200057BDB0 /* GKPhotosView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKPhotosView.h; sourceTree = "<group>"; };
+		795FA5FA1FF338200057BDB0 /* GKTimeLineViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTimeLineViewCell.m; sourceTree = "<group>"; };
+		795FA5FC1FF338200057BDB0 /* GKTimeLineModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTimeLineModel.h; sourceTree = "<group>"; };
+		795FA5FD1FF338200057BDB0 /* GKTimeLineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTimeLineViewController.m; sourceTree = "<group>"; };
+		795FA5FE1FF338200057BDB0 /* timeline.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = timeline.json; sourceTree = "<group>"; };
+		795FA5FF1FF338200057BDB0 /* GKTimeLineModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTimeLineModel.m; sourceTree = "<group>"; };
+		795FA6001FF338200057BDB0 /* GKTimeLineViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTimeLineViewCell.h; sourceTree = "<group>"; };
+		795FA6011FF338200057BDB0 /* timeline.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = timeline.txt; sourceTree = "<group>"; };
+		795FA6021FF338200057BDB0 /* GKTimeLineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTimeLineViewController.h; sourceTree = "<group>"; };
+		795FA6031FF338200057BDB0 /* GKMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKMainViewController.h; sourceTree = "<group>"; };
+		795FA6041FF338200057BDB0 /* GKBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKBaseViewController.h; sourceTree = "<group>"; };
+		795FA6051FF338200057BDB0 /* GKTest01ViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTest01ViewCell.m; sourceTree = "<group>"; };
+		795FA6061FF338200057BDB0 /* GKTest03ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTest03ViewController.m; sourceTree = "<group>"; };
+		795FA6071FF338200057BDB0 /* GKTest02ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTest02ViewController.m; sourceTree = "<group>"; };
+		795FA6081FF338200057BDB0 /* GKTest02ViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest02ViewCell.h; sourceTree = "<group>"; };
+		795FA6091FF338200057BDB0 /* GKTest01ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest01ViewController.h; sourceTree = "<group>"; };
+		795FA60B1FF338200057BDB0 /* GIFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFViewController.h; sourceTree = "<group>"; };
+		795FA60C1FF338200057BDB0 /* GIFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFViewController.m; sourceTree = "<group>"; };
+		795FA6251FF3383E0057BDB0 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GKPhotoBrowser.podspec; path = ../../GKPhotoBrowser.podspec; sourceTree = "<group>"; };
+		795FA6271FF34F220057BDB0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GKPhotoBrowserDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE7DA052FCA02BBA178A7C45 /* Pods-GKPhotoBrowserDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GKPhotoBrowserDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		795FA5881FF333420057BDB0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				90EEF67CE4A0A3BDF6976160 /* Pods_GKPhotoBrowserDemo.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		795FA5A01FF333420057BDB0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		795FA5AB1FF333430057BDB0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		795FA5821FF333420057BDB0 = {
+			isa = PBXGroup;
+			children = (
+				795FA58D1FF333420057BDB0 /* GKPhotoBrowserDemo */,
+				795FA5A61FF333430057BDB0 /* GKPhotoBrowserDemoTests */,
+				795FA5B11FF333430057BDB0 /* GKPhotoBrowserDemoUITests */,
+				795FA58C1FF333420057BDB0 /* Products */,
+				D046328ED89ACCCB7C7940DB /* Pods */,
+				AC164CC01C3860407343047D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		795FA58C1FF333420057BDB0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				795FA58B1FF333420057BDB0 /* GKPhotoBrowserDemo.app */,
+				795FA5A31FF333420057BDB0 /* GKPhotoBrowserDemoTests.xctest */,
+				795FA5AE1FF333430057BDB0 /* GKPhotoBrowserDemoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		795FA58D1FF333420057BDB0 /* GKPhotoBrowserDemo */ = {
+			isa = PBXGroup;
+			children = (
+				795FA5C01FF3340F0057BDB0 /* GKPhotoBrowser */,
+				795FA5DB1FF3381F0057BDB0 /* Classes */,
+				795FA5971FF333420057BDB0 /* Assets.xcassets */,
+				795FA5991FF333420057BDB0 /* LaunchScreen.storyboard */,
+				795FA59C1FF333420057BDB0 /* Info.plist */,
+				795FA59D1FF333420057BDB0 /* main.m */,
+				795FA6251FF3383E0057BDB0 /* PrefixHeader.pch */,
+				795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */,
+				795FA6271FF34F220057BDB0 /* README.md */,
+			);
+			path = GKPhotoBrowserDemo;
+			sourceTree = "<group>";
+		};
+		795FA5A61FF333430057BDB0 /* GKPhotoBrowserDemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				795FA5A71FF333430057BDB0 /* GKPhotoBrowserDemoTests.m */,
+				795FA5A91FF333430057BDB0 /* Info.plist */,
+			);
+			path = GKPhotoBrowserDemoTests;
+			sourceTree = "<group>";
+		};
+		795FA5B11FF333430057BDB0 /* GKPhotoBrowserDemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				795FA5B21FF333430057BDB0 /* GKPhotoBrowserDemoUITests.m */,
+				795FA5B41FF333430057BDB0 /* Info.plist */,
+			);
+			path = GKPhotoBrowserDemoUITests;
+			sourceTree = "<group>";
+		};
+		795FA5C01FF3340F0057BDB0 /* GKPhotoBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				795FA5CB1FF334100057BDB0 /* GKPhotoBrowserConfigure.h */,
+				795FA5C61FF334100057BDB0 /* GKPhoto.h */,
+				795FA5CC1FF334100057BDB0 /* GKPhoto.m */,
+				795FA5C91FF334100057BDB0 /* GKPhotoView.h */,
+				795FA5D21FF334100057BDB0 /* GKPhotoView.m */,
+				795FA5D11FF334100057BDB0 /* GKPhotoBrowser.h */,
+				795FA5CA1FF334100057BDB0 /* GKPhotoBrowser.m */,
+				795FA5C71FF334100057BDB0 /* GKWebImageProtocol.h */,
+				795FA5C11FF3340F0057BDB0 /* GKWebImageManager.h */,
+				795FA5CE1FF334100057BDB0 /* GKWebImageManager.m */,
+				795FA5CD1FF334100057BDB0 /* UIScrollView+GKGestureHandle.h */,
+				795FA5C51FF334100057BDB0 /* UIScrollView+GKGestureHandle.m */,
+				795FA5C21FF334100057BDB0 /* GKLoadingView */,
+				795FA5D01FF334100057BDB0 /* GKPhotoBrowser.bundle */,
+			);
+			name = GKPhotoBrowser;
+			path = ../../GKPhotoBrowser;
+			sourceTree = "<group>";
+		};
+		795FA5C21FF334100057BDB0 /* GKLoadingView */ = {
+			isa = PBXGroup;
+			children = (
+				795FA5C31FF334100057BDB0 /* GKLoadingView.m */,
+				795FA5C41FF334100057BDB0 /* GKLoadingView.h */,
+			);
+			path = GKLoadingView;
+			sourceTree = "<group>";
+		};
+		795FA5DB1FF3381F0057BDB0 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				795FA5DC1FF3381F0057BDB0 /* AppDelegate.h */,
+				795FA5DD1FF3381F0057BDB0 /* AppDelegate.m */,
+				795FA5DE1FF3381F0057BDB0 /* Main */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		795FA5DE1FF3381F0057BDB0 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				795FA6031FF338200057BDB0 /* GKMainViewController.h */,
+				795FA5DF1FF3381F0057BDB0 /* GKMainViewController.m */,
+				795FA6041FF338200057BDB0 /* GKBaseViewController.h */,
+				795FA5E61FF338200057BDB0 /* GKBaseViewController.m */,
+				795FA6091FF338200057BDB0 /* GKTest01ViewController.h */,
+				795FA5F21FF338200057BDB0 /* GKTest01ViewController.m */,
+				795FA5E71FF338200057BDB0 /* GKTest02ViewController.h */,
+				795FA6071FF338200057BDB0 /* GKTest02ViewController.m */,
+				795FA5E41FF3381F0057BDB0 /* GKTest03ViewController.h */,
+				795FA6061FF338200057BDB0 /* GKTest03ViewController.m */,
+				795FA5F81FF338200057BDB0 /* WeChat */,
+				795FA5E81FF338200057BDB0 /* Toutiao */,
+				795FA5E11FF3381F0057BDB0 /* Jianshu */,
+				795FA60A1FF338200057BDB0 /* GIF */,
+				795FA5F71FF338200057BDB0 /* GKPhotosView.h */,
+				795FA5E01FF3381F0057BDB0 /* GKPhotosView.m */,
+				795FA5E51FF338200057BDB0 /* GKTest01ViewCell.h */,
+				795FA6051FF338200057BDB0 /* GKTest01ViewCell.m */,
+				795FA6081FF338200057BDB0 /* GKTest02ViewCell.h */,
+				795FA5F31FF338200057BDB0 /* GKTest02ViewCell.m */,
+				795FA5F41FF338200057BDB0 /* GKCategory */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		795FA5E11FF3381F0057BDB0 /* Jianshu */ = {
+			isa = PBXGroup;
+			children = (
+				795FA5E21FF3381F0057BDB0 /* GKJianshuViewController.h */,
+				795FA5E31FF3381F0057BDB0 /* GKJianshuViewController.m */,
+			);
+			path = Jianshu;
+			sourceTree = "<group>";
+		};
+		795FA5E81FF338200057BDB0 /* Toutiao */ = {
+			isa = PBXGroup;
+			children = (
+				795FA5F11FF338200057BDB0 /* GKToutiaoViewController.h */,
+				795FA5EC1FF338200057BDB0 /* GKToutiaoViewController.m */,
+				795FA5EF1FF338200057BDB0 /* GKToutiaoDetailViewController.h */,
+				795FA5EA1FF338200057BDB0 /* GKToutiaoDetailViewController.m */,
+				795FA5E91FF338200057BDB0 /* GKToutiaoModel.h */,
+				795FA5ED1FF338200057BDB0 /* GKToutiaoModel.m */,
+				795FA5EE1FF338200057BDB0 /* GKToutiaoViewCell.h */,
+				795FA5EB1FF338200057BDB0 /* GKToutiaoViewCell.m */,
+				795FA5F01FF338200057BDB0 /* toutiao.txt */,
+			);
+			path = Toutiao;
+			sourceTree = "<group>";
+		};
+		795FA5F41FF338200057BDB0 /* GKCategory */ = {
+			isa = PBXGroup;
+			children = (
+				795FA5F51FF338200057BDB0 /* UIView+GKFrame.h */,
+				795FA5F61FF338200057BDB0 /* UIView+GKFrame.m */,
+			);
+			path = GKCategory;
+			sourceTree = "<group>";
+		};
+		795FA5F81FF338200057BDB0 /* WeChat */ = {
+			isa = PBXGroup;
+			children = (
+				795FA6021FF338200057BDB0 /* GKTimeLineViewController.h */,
+				795FA5FD1FF338200057BDB0 /* GKTimeLineViewController.m */,
+				795FA5FC1FF338200057BDB0 /* GKTimeLineModel.h */,
+				795FA5FF1FF338200057BDB0 /* GKTimeLineModel.m */,
+				795FA6001FF338200057BDB0 /* GKTimeLineViewCell.h */,
+				795FA5FA1FF338200057BDB0 /* GKTimeLineViewCell.m */,
+				795FA5FE1FF338200057BDB0 /* timeline.json */,
+				795FA6011FF338200057BDB0 /* timeline.txt */,
+			);
+			path = WeChat;
+			sourceTree = "<group>";
+		};
+		795FA60A1FF338200057BDB0 /* GIF */ = {
+			isa = PBXGroup;
+			children = (
+				795FA60B1FF338200057BDB0 /* GIFViewController.h */,
+				795FA60C1FF338200057BDB0 /* GIFViewController.m */,
+			);
+			path = GIF;
+			sourceTree = "<group>";
+		};
+		AC164CC01C3860407343047D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D046328ED89ACCCB7C7940DB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1BD88472E22F06A033FA0CC2 /* Pods-GKPhotoBrowserDemo.debug.xcconfig */,
+				EE7DA052FCA02BBA178A7C45 /* Pods-GKPhotoBrowserDemo.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		795FA58A1FF333420057BDB0 /* GKPhotoBrowserDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 795FA5B71FF333430057BDB0 /* Build configuration list for PBXNativeTarget "GKPhotoBrowserDemo" */;
+			buildPhases = (
+				0772BFFF35C87FD92302D665 /* [CP] Check Pods Manifest.lock */,
+				795FA5871FF333420057BDB0 /* Sources */,
+				795FA5881FF333420057BDB0 /* Frameworks */,
+				795FA5891FF333420057BDB0 /* Resources */,
+				97A440345E9F899EBB2359F3 /* [CP] Embed Pods Frameworks */,
+				C98C36B80CAA4DE0375A21A0 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GKPhotoBrowserDemo;
+			productName = GKPhotoBrowserDemo;
+			productReference = 795FA58B1FF333420057BDB0 /* GKPhotoBrowserDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		795FA5A21FF333420057BDB0 /* GKPhotoBrowserDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 795FA5BA1FF333430057BDB0 /* Build configuration list for PBXNativeTarget "GKPhotoBrowserDemoTests" */;
+			buildPhases = (
+				795FA59F1FF333420057BDB0 /* Sources */,
+				795FA5A01FF333420057BDB0 /* Frameworks */,
+				795FA5A11FF333420057BDB0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				795FA5A51FF333420057BDB0 /* PBXTargetDependency */,
+			);
+			name = GKPhotoBrowserDemoTests;
+			productName = GKPhotoBrowserDemoTests;
+			productReference = 795FA5A31FF333420057BDB0 /* GKPhotoBrowserDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		795FA5AD1FF333430057BDB0 /* GKPhotoBrowserDemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 795FA5BD1FF333430057BDB0 /* Build configuration list for PBXNativeTarget "GKPhotoBrowserDemoUITests" */;
+			buildPhases = (
+				795FA5AA1FF333430057BDB0 /* Sources */,
+				795FA5AB1FF333430057BDB0 /* Frameworks */,
+				795FA5AC1FF333430057BDB0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				795FA5B01FF333430057BDB0 /* PBXTargetDependency */,
+			);
+			name = GKPhotoBrowserDemoUITests;
+			productName = GKPhotoBrowserDemoUITests;
+			productReference = 795FA5AE1FF333430057BDB0 /* GKPhotoBrowserDemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		795FA5831FF333420057BDB0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = QuintGao;
+				TargetAttributes = {
+					795FA58A1FF333420057BDB0 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Manual;
+					};
+					795FA5A21FF333420057BDB0 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 795FA58A1FF333420057BDB0;
+					};
+					795FA5AD1FF333430057BDB0 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 795FA58A1FF333420057BDB0;
+					};
+				};
+			};
+			buildConfigurationList = 795FA5861FF333420057BDB0 /* Build configuration list for PBXProject "GKPhotoBrowserDemo" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 795FA5821FF333420057BDB0;
+			productRefGroup = 795FA58C1FF333420057BDB0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				795FA58A1FF333420057BDB0 /* GKPhotoBrowserDemo */,
+				795FA5A21FF333420057BDB0 /* GKPhotoBrowserDemoTests */,
+				795FA5AD1FF333430057BDB0 /* GKPhotoBrowserDemoUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		795FA5891FF333420057BDB0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				795FA61E1FF338200057BDB0 /* timeline.json in Resources */,
+				795FA6281FF34F230057BDB0 /* GKPhotoBrowser.podspec in Resources */,
+				795FA59B1FF333420057BDB0 /* LaunchScreen.storyboard in Resources */,
+				795FA5D91FF334100057BDB0 /* GKPhotoBrowser.bundle in Resources */,
+				795FA6161FF338200057BDB0 /* toutiao.txt in Resources */,
+				795FA6201FF338200057BDB0 /* timeline.txt in Resources */,
+				795FA6291FF34F230057BDB0 /* README.md in Resources */,
+				795FA5981FF333420057BDB0 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		795FA5A11FF333420057BDB0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		795FA5AC1FF333430057BDB0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0772BFFF35C87FD92302D665 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GKPhotoBrowserDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		97A440345E9F899EBB2359F3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
+				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
+				"${BUILT_PRODUCTS_DIR}/GKCover/GKCover.framework",
+				"${BUILT_PRODUCTS_DIR}/GKNavigationBarViewController/GKNavigationBarViewController.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/YYModel/YYModel.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKCover.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKNavigationBarViewController.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYModel.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C98C36B80CAA4DE0375A21A0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		795FA5871FF333420057BDB0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				795FA60D1FF338200057BDB0 /* AppDelegate.m in Sources */,
+				795FA6171FF338200057BDB0 /* GKTest01ViewController.m in Sources */,
+				795FA5D71FF334100057BDB0 /* GKPhoto.m in Sources */,
+				795FA6181FF338200057BDB0 /* GKTest02ViewCell.m in Sources */,
+				795FA6191FF338200057BDB0 /* UIView+GKFrame.m in Sources */,
+				795FA6141FF338200057BDB0 /* GKToutiaoViewController.m in Sources */,
+				795FA6151FF338200057BDB0 /* GKToutiaoModel.m in Sources */,
+				795FA6121FF338200057BDB0 /* GKToutiaoDetailViewController.m in Sources */,
+				795FA6111FF338200057BDB0 /* GKBaseViewController.m in Sources */,
+				795FA5D41FF334100057BDB0 /* UIScrollView+GKGestureHandle.m in Sources */,
+				795FA6211FF338200057BDB0 /* GKTest01ViewCell.m in Sources */,
+				795FA61F1FF338200057BDB0 /* GKTimeLineModel.m in Sources */,
+				795FA5D61FF334100057BDB0 /* GKPhotoBrowser.m in Sources */,
+				795FA5D31FF334100057BDB0 /* GKLoadingView.m in Sources */,
+				795FA6241FF338200057BDB0 /* GIFViewController.m in Sources */,
+				795FA59E1FF333420057BDB0 /* main.m in Sources */,
+				795FA5DA1FF334100057BDB0 /* GKPhotoView.m in Sources */,
+				795FA6131FF338200057BDB0 /* GKToutiaoViewCell.m in Sources */,
+				795FA6221FF338200057BDB0 /* GKTest03ViewController.m in Sources */,
+				795FA61B1FF338200057BDB0 /* GKTimeLineViewCell.m in Sources */,
+				795FA5D81FF334100057BDB0 /* GKWebImageManager.m in Sources */,
+				795FA60F1FF338200057BDB0 /* GKPhotosView.m in Sources */,
+				795FA60E1FF338200057BDB0 /* GKMainViewController.m in Sources */,
+				795FA6101FF338200057BDB0 /* GKJianshuViewController.m in Sources */,
+				795FA6231FF338200057BDB0 /* GKTest02ViewController.m in Sources */,
+				795FA61D1FF338200057BDB0 /* GKTimeLineViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		795FA59F1FF333420057BDB0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				795FA5A81FF333430057BDB0 /* GKPhotoBrowserDemoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		795FA5AA1FF333430057BDB0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				795FA5B31FF333430057BDB0 /* GKPhotoBrowserDemoUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		795FA5A51FF333420057BDB0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 795FA58A1FF333420057BDB0 /* GKPhotoBrowserDemo */;
+			targetProxy = 795FA5A41FF333420057BDB0 /* PBXContainerItemProxy */;
+		};
+		795FA5B01FF333430057BDB0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 795FA58A1FF333420057BDB0 /* GKPhotoBrowserDemo */;
+			targetProxy = 795FA5AF1FF333430057BDB0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		795FA5991FF333420057BDB0 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				795FA59A1FF333420057BDB0 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		795FA5B51FF333430057BDB0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		795FA5B61FF333430057BDB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		795FA5B81FF333430057BDB0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1BD88472E22F06A033FA0CC2 /* Pods-GKPhotoBrowserDemo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				GCC_PREFIX_HEADER = GKPhotoBrowserDemo/PrefixHeader.pch;
+				INFOPLIST_FILE = GKPhotoBrowserDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		795FA5B91FF333430057BDB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EE7DA052FCA02BBA178A7C45 /* Pods-GKPhotoBrowserDemo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				GCC_PREFIX_HEADER = GKPhotoBrowserDemo/PrefixHeader.pch;
+				INFOPLIST_FILE = GKPhotoBrowserDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		795FA5BB1FF333430057BDB0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 85SKD6C7ZZ;
+				INFOPLIST_FILE = GKPhotoBrowserDemoTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GKPhotoBrowserDemo.app/GKPhotoBrowserDemo";
+			};
+			name = Debug;
+		};
+		795FA5BC1FF333430057BDB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 85SKD6C7ZZ;
+				INFOPLIST_FILE = GKPhotoBrowserDemoTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GKPhotoBrowserDemo.app/GKPhotoBrowserDemo";
+			};
+			name = Release;
+		};
+		795FA5BE1FF333430057BDB0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 85SKD6C7ZZ;
+				INFOPLIST_FILE = GKPhotoBrowserDemoUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = GKPhotoBrowserDemo;
+			};
+			name = Debug;
+		};
+		795FA5BF1FF333430057BDB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 85SKD6C7ZZ;
+				INFOPLIST_FILE = GKPhotoBrowserDemoUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = GKPhotoBrowserDemo;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		795FA5861FF333420057BDB0 /* Build configuration list for PBXProject "GKPhotoBrowserDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				795FA5B51FF333430057BDB0 /* Debug */,
+				795FA5B61FF333430057BDB0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		795FA5B71FF333430057BDB0 /* Build configuration list for PBXNativeTarget "GKPhotoBrowserDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				795FA5B81FF333430057BDB0 /* Debug */,
+				795FA5B91FF333430057BDB0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		795FA5BA1FF333430057BDB0 /* Build configuration list for PBXNativeTarget "GKPhotoBrowserDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				795FA5BB1FF333430057BDB0 /* Debug */,
+				795FA5BC1FF333430057BDB0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		795FA5BD1FF333430057BDB0 /* Build configuration list for PBXNativeTarget "GKPhotoBrowserDemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				795FA5BE1FF333430057BDB0 /* Debug */,
+				795FA5BF1FF333430057BDB0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 795FA5831FF333420057BDB0 /* Project object */;
+}

@@ -1,0 +1,6 @@
+framework module Pods_GKPhotoBrowserDemo {
+  umbrella header "Pods-GKPhotoBrowserDemo-umbrella.h"
+
+  export *
+  module * { export * }
+}
