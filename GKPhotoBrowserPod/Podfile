@@ -1,0 +1,13 @@
+platform :ios, '9.0'
+
+target 'GKPhotoBrowserPod' do
+  use_frameworks!
+
+  pod 'AFNetworking'
+  pod 'GKNavigationBarViewController'
+  pod 'YYModel'
+  pod 'GKCover'
+  
+  pod 'GKPhotoBrowser'
+
+end

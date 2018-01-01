@@ -1,0 +1,6 @@
+framework module GKPhotoBrowser {
+  umbrella header "GKPhotoBrowser-umbrella.h"
+
+  export *
+  module * { export * }
+}

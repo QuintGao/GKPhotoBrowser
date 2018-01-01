@@ -1,0 +1,24 @@
+//
+//  PrefixHeader.pch
+//  GKPhotoBrowser
+//
+//  Created by QuintGao on 2017/10/25.
+//  Copyright © 2017年 QuintGao. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#import <GKNavigationBarViewController/GKNavigationBarViewController.h>
+#import <YYModel/YYModel.h>
+#import <GKCover/GKCover.h>
+
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <FLAnimatedImage/FLAnimatedImage.h>
+
+#import "UIView+GKFrame.h"
+
+#define kScreenW [UIScreen mainScreen].bounds.size.width
+#define kScreenH [UIScreen mainScreen].bounds.size.height
+
+#endif /* PrefixHeader_pch */
