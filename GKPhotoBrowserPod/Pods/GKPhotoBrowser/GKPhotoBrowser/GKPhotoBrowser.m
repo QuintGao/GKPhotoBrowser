@@ -9,6 +9,10 @@
 #import "GKPhotoBrowser.h"
 #import "GKWebImageManager.h"
 
+// 判断iPhone X
+#define KIsiPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
+
+
 static Class imageManagerClass = nil;
 
 @interface GKPhotoBrowser()<UIScrollViewDelegate>
@@ -333,8 +337,8 @@ static Class imageManagerClass = nil;
         !self.layoutBlock ? : self.layoutBlock(self, self.contentView.bounds);
     }else {
         _countLabel.bounds = CGRectMake(0, 0, 80, 30);
-        CGFloat systemVersion = [UIDevice currentDevice].systemVersion.floatValue;
-        CGFloat centerY = systemVersion >= 11.0f ? 50 : 30;
+
+        CGFloat centerY = KIsiPhoneX ? 50 : 30;
         
         UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
         if (UIDeviceOrientationIsLandscape(currentOrientation)) {
