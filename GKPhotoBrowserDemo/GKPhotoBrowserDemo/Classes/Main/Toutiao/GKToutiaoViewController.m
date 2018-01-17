@@ -153,7 +153,8 @@
     self.isCoverShow = !self.isCoverShow;
     
     [UIView animateWithDuration:0.25 animations:^{
-        self.browser.isStatusBarShow = self.isCoverShow;
+        browser.isStatusBarShow      = self.isCoverShow;
+        
         self.closeBtn.hidden         = !self.isCoverShow;
         self.moreBtn.hidden          = !self.isCoverShow;
         self.bottomView.hidden       = !self.isCoverShow;
