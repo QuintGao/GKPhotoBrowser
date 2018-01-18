@@ -251,15 +251,15 @@
 		793D01521FF7663B0053A2E9 /* Toutiao */ = {
 			isa = PBXGroup;
 			children = (
-				793D01531FF7663B0053A2E9 /* GKToutiaoModel.h */,
-				793D01541FF7663B0053A2E9 /* GKToutiaoDetailViewController.m */,
-				793D01551FF7663B0053A2E9 /* GKToutiaoViewCell.m */,
-				793D01561FF7663B0053A2E9 /* GKToutiaoViewController.m */,
-				793D01571FF7663B0053A2E9 /* GKToutiaoModel.m */,
-				793D01581FF7663B0053A2E9 /* GKToutiaoViewCell.h */,
-				793D01591FF7663B0053A2E9 /* GKToutiaoDetailViewController.h */,
-				793D015A1FF7663B0053A2E9 /* toutiao.txt */,
 				793D015B1FF7663B0053A2E9 /* GKToutiaoViewController.h */,
+				793D01561FF7663B0053A2E9 /* GKToutiaoViewController.m */,
+				793D01531FF7663B0053A2E9 /* GKToutiaoModel.h */,
+				793D01571FF7663B0053A2E9 /* GKToutiaoModel.m */,
+				793D01591FF7663B0053A2E9 /* GKToutiaoDetailViewController.h */,
+				793D01541FF7663B0053A2E9 /* GKToutiaoDetailViewController.m */,
+				793D01581FF7663B0053A2E9 /* GKToutiaoViewCell.h */,
+				793D01551FF7663B0053A2E9 /* GKToutiaoViewCell.m */,
+				793D015A1FF7663B0053A2E9 /* toutiao.txt */,
 			);
 			path = Toutiao;
 			sourceTree = "<group>";

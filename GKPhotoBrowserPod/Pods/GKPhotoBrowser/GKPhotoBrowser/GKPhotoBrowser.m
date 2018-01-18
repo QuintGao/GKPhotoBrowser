@@ -45,6 +45,9 @@ static Class imageManagerClass = nil;
 /** 正在发生屏幕旋转 */
 @property (nonatomic, assign) BOOL isRotation;
 
+/** 状态栏正在发生变化 */
+@property (nonatomic, assign) BOOL isStatusBarChanged;
+
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 
 @property (nonatomic, strong) id<GKWebImageProtocol> imageProtocol;
@@ -166,7 +169,9 @@ static Class imageManagerClass = nil;
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    [self layoutSubviews];
+    if (!self.isStatusBarChanged) {
+        [self layoutSubviews];
+    }
 }
 
 - (void)setupUI {
@@ -240,7 +245,13 @@ static Class imageManagerClass = nil;
 - (void)setIsStatusBarShow:(BOOL)isStatusBarShow {
     _isStatusBarShow = isStatusBarShow;
     
+    self.isStatusBarChanged = YES;
+    
     [self setNeedsStatusBarAppearanceUpdate];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.isStatusBarChanged = NO;
+    });
 }
 
 #pragma mark - BrowserShow
