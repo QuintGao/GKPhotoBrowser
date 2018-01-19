@@ -17,7 +17,7 @@ PODS:
   - FLAnimatedImage (1.0.12)
   - GKCover (2.4.7)
   - GKNavigationBarViewController (1.3.8)
-  - GKPhotoBrowser (1.0.4):
+  - GKPhotoBrowser (1.0.5):
     - SDWebImage/GIF
   - SDWebImage/Core (4.2.3)
   - SDWebImage/GIF (4.2.3):
@@ -29,7 +29,7 @@ DEPENDENCIES:
   - AFNetworking
   - GKCover
   - GKNavigationBarViewController
-  - GKPhotoBrowser (~> 1.0.4)
+  - GKPhotoBrowser (~> 1.0.5)
   - YYModel
 
 SPEC CHECKSUMS:
@@ -37,10 +37,10 @@ SPEC CHECKSUMS:
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GKCover: 19124bd752cc3fd2bea1cf253dafbe541756a5b7
   GKNavigationBarViewController: 10db67da0578c4274c441e75f23f4a4000436720
-  GKPhotoBrowser: a82582bea1237be38ad9e2a47bfc68a110146e79
+  GKPhotoBrowser: 19d342d0c08651f5351ad661c1b0f15c4183b82b
   SDWebImage: 791bb72962b3492327ddcac4b1880bd1b5458431
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: bf87390bfe297446952c4a7d7ef0968466440d39
+PODFILE CHECKSUM: e41ecc3d470ba6a06747edc3e9207ec50102b848
 
 COCOAPODS: 1.4.0.beta.1

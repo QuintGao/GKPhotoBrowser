@@ -788,7 +788,11 @@ static Class imageManagerClass = nil;
     self.isRotation = YES;
     
     // 恢复当前视图的缩放
-    GKPhotoView *photoView = [self photoViewForIndex:self.currentIndex];
+    GKPhoto *photo  = [self currentPhoto];
+    photo.isZooming = NO;
+    photo.zoomRect  = CGRectZero;
+    
+    GKPhotoView *photoView = [self currentPhotoView];
     [photoView.scrollView setZoomScale:1.0 animated:YES];
     
     // 旋转之后当前的设备方向
