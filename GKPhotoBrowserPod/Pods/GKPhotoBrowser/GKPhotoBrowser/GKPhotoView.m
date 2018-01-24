@@ -95,13 +95,14 @@
     // 取消以前的加载
     [_imageProtocol cancelImageRequestWithImageView:self.imageView];
     
-    [self.loadingView startLoading];
-    
     if (photo) {
         // 每次设置数据时，恢复缩放
         [self.scrollView setZoomScale:1.0 animated:NO];
         
+        // 已经加载成功，无需再加载
         if (photo.image || photo.animatedImage) {
+            [self.loadingView stopLoading];
+            
             if (photo.animatedImage) {
                 self.imageView.animatedImage = photo.animatedImage;
             }else if (photo.image) {
@@ -141,10 +142,9 @@
                 
                 strongSelf.scrollView.scrollEnabled = YES;
                 [strongSelf.loadingView stopLoading];
-            }else {
-                [strongSelf addSubview:self.loadingView];
-                
-                [strongSelf.loadingView stopLoading];
+            }else { // 加载失败
+                [strongSelf addSubview:weakSelf.loadingView];
+                [weakSelf.loadingView showFailure];
             }
             [strongSelf adjustFrame];
         };

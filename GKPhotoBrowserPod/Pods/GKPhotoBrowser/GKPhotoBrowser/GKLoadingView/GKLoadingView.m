@@ -27,6 +27,8 @@
 
 @property (nonatomic, copy) void(^completion)(GKLoadingView *loadingView, BOOL finished);
 
+@property (nonatomic, strong) UILabel       *failureLabel;
+
 @end
 
 @implementation GKLoadingView
@@ -164,6 +166,20 @@
     return _backgroundLayer;
 }
 
+- (UILabel *)failureLabel {
+    if (!_failureLabel) {
+        _failureLabel           = [UILabel new];
+        _failureLabel.font      = [UIFont systemFontOfSize:16.0f];
+        _failureLabel.textColor = [UIColor whiteColor];
+        _failureLabel.text      = @"图片加载失败，请检查网络后重试";
+        _failureLabel.textAlignment = NSTextAlignmentCenter;
+        [_failureLabel sizeToFit];
+        
+        _failureLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }
+    return _failureLabel;
+}
+
 - (void)setupIndeterminateAnim:(CAShapeLayer *)layer {
     CGPoint arcCenter = [self layerCenter];
     
@@ -274,7 +290,14 @@
     return CGPointMake(xy, xy);
 }
 
+- (void)tapGestureAction:(UITapGestureRecognizer *)tap {
+    !self.tapToReload ? : self.tapToReload();
+}
+
 - (void)startLoading {
+    [self.failureLabel removeFromSuperview];
+    self.failureLabel = nil;
+    
     if (self.loadingStyle == GKLoadingStyleIndeterminate) {
         CABasicAnimation *rotateAnimation   = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
         rotateAnimation.timingFunction      = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
@@ -321,6 +344,12 @@
 
 - (void)stopLoading {
     [self hideLoadingView];
+}
+
+- (void)showFailure {
+    [self.layer removeAllAnimations];
+    
+    [self addSubview:self.failureLabel];
 }
 
 - (void)hideLoadingView {

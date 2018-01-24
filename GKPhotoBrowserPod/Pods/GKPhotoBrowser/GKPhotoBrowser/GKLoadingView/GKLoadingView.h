@@ -37,6 +37,8 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
 
 @property (nonatomic, copy) void (^progressChange)(GKLoadingView *loadingView, CGFloat progress);
 
+@property (nonatomic, copy) void (^tapToReload)(void);
+
 /**
  开始动画方法-loadingStyle为GKLoadingStyleIndeterminate，GKLoadingStyleIndeterminateMask时使用
  */
@@ -46,6 +48,8 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
  结束动画方法
  */
 - (void)stopLoading;
+
+- (void)showFailure;
 
 - (void)hideLoadingView;
 
