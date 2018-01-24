@@ -246,8 +246,8 @@
 		795FA5C21FF334100057BDB0 /* GKLoadingView */ = {
 			isa = PBXGroup;
 			children = (
-				795FA5C31FF334100057BDB0 /* GKLoadingView.m */,
 				795FA5C41FF334100057BDB0 /* GKLoadingView.h */,
+				795FA5C31FF334100057BDB0 /* GKLoadingView.m */,
 			);
 			path = GKLoadingView;
 			sourceTree = "<group>";
