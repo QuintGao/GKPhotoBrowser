@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 图片是否加载完成 */
 @property (nonatomic, assign) BOOL finished;
+/** 图片是否加载失败 */
+@property (nonatomic, assign) BOOL failed;
 
 /** 记录photoView是否缩放 */
 @property (nonatomic, assign) BOOL isZooming;

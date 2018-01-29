@@ -22,7 +22,8 @@
 
 @property (nonatomic, strong) UIView *bottomView;
 @property (nonatomic, strong) UIImageView *btmImageView;
-@property (nonatomic, strong) UILabel *btmLabel;
+@property (nonatomic, strong) UIScrollView *contentView;
+@property (nonatomic, strong) UILabel *contentLabel;
 
 @property (nonatomic, assign) BOOL isCoverShow;
 
@@ -30,6 +31,9 @@
 @property (nonatomic, weak) GKPhotoBrowser *browser;
 
 @property (nonatomic, weak) GKToutiaoViewCell *selectCell;
+
+@property (nonatomic, strong) UIView    *testView;
+@property (nonatomic, strong) UIScrollView  *scrollView;
 
 @end
 
@@ -123,10 +127,14 @@
     browser.delegate            = self;
     
     [browser setupCoverViews:@[self.closeBtn, self.moreBtn, self.bottomView] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
-        
+
         [self resetCoverFrame:superFrame index:photoBrowser.currentIndex];
-        
+
     }];
+    
+//    [browser setupCoverViews:@[self.testView] layoutBlock:^(GKPhotoBrowser * _Nonnull photoBrowser, CGRect superFrame) {
+//        [self resetCoverFrame:superFrame index:photoBrowser.currentIndex];
+//    }];
     
     [browser showFromVC:self];
     
@@ -194,30 +202,47 @@
 - (void)resetCoverFrame:(CGRect)frame index:(NSInteger)index{
     self.closeBtn.left = 15;
     self.closeBtn.top  = 30;
-    
+
     self.moreBtn.left  = frame.size.width - 15 - self.moreBtn.width;
     self.moreBtn.top   = 30;
-    
+
     BOOL isLandspace = frame.size.width > frame.size.height;
-    
+
     // 计算高度
     GKToutiaoImage *image = self.selectCell.model.images[index];
-    
+
     CGFloat width    = frame.size.width;
     CGFloat maxWidth = width - 30;
-    
+
     NSString *desc = [NSString stringWithFormat:@"%zd/%zd %@", index + 1, self.selectCell.model.images.count, image.desc];
+
+    CGSize size = [self sizeWithText:desc font:self.contentLabel.font maxW:maxWidth];
+    self.contentLabel.frame = CGRectMake(15, 0, maxWidth, size.height);
+    self.contentLabel.text  = desc;
+
+    CGFloat height = CGRectGetMaxY(self.contentLabel.frame) + 10;
     
-    CGSize size = [self sizeWithText:desc font:self.btmLabel.font maxW:maxWidth];
-    self.btmLabel.frame = CGRectMake(15, 15, maxWidth, size.height);
-    self.btmLabel.text  = desc;
+    // 显示时的最大高度
+    CGFloat maxHeight = 120;
+    if (size.height > maxHeight) {
+        self.contentView.frame = CGRectMake(0, 15, KScreenW, maxHeight);
+        self.contentView.contentSize = CGSizeMake(0, size.height);
+    }else {
+        self.contentView.frame = CGRectMake(0, 15, KScreenW, size.height);
+        self.contentView.contentSize = CGSizeZero;
+    }
     
-    CGFloat height = CGRectGetMaxY(self.btmLabel.frame) + 10;
-    height = isLandspace ? height : height + 40;
-    
+    height = CGRectGetMaxY(self.contentView.frame) + 10 + 40;
+
     self.bottomView.frame = CGRectMake(0, frame.size.height - height, width, height);
-    
+
     self.btmImageView.frame = isLandspace ? CGRectZero : CGRectMake(0, height - 40, width, 40);
+    
+//    self.testView.frame = CGRectMake(0, (frame.size.height - 400) / 2, width, 400);
+//
+//    self.scrollView.frame = self.testView.bounds;
+//
+//    self.scrollView.contentSize = CGSizeMake(width, 1000);
 }
 
 #pragma mark - Action
@@ -230,6 +255,10 @@
 }
 
 - (void)moreBtnClick:(id)sender {
+    
+}
+
+- (void)bottomViewPan:(UIPanGestureRecognizer *)sender {
     
 }
 
@@ -259,8 +288,12 @@
         _bottomView = [UIView new];
         _bottomView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
         
-        [_bottomView addSubview:self.btmLabel];
+        [_bottomView addSubview:self.contentView];
         [_bottomView addSubview:self.btmImageView];
+        
+        UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(bottomViewPan:)];
+        
+        [_bottomView addGestureRecognizer:panGesture];
     }
     return _bottomView;
 }
@@ -274,14 +307,41 @@
     return _btmImageView;
 }
 
-- (UILabel *)btmLabel {
-    if (!_btmLabel) {
-        _btmLabel = [UILabel new];
-        _btmLabel.numberOfLines = 0;
-        _btmLabel.textColor = [UIColor whiteColor];
-        _btmLabel.font = [UIFont systemFontOfSize:15.0];
+- (UIScrollView *)contentView {
+    if (!_contentView) {
+        _contentView = [UIScrollView new];
+        _contentView.backgroundColor = [UIColor clearColor];
+        
+        [_contentView addSubview:self.contentLabel];
     }
-    return _btmLabel;
+    return _contentView;
+}
+
+- (UILabel *)contentLabel {
+    if (!_contentLabel) {
+        _contentLabel               = [UILabel new];
+        _contentLabel.numberOfLines = 0;
+        _contentLabel.textColor     = [UIColor whiteColor];
+        _contentLabel.font          = [UIFont systemFontOfSize:16.0];
+    }
+    return _contentLabel;
+}
+
+- (UIView *)testView {
+    if (!_testView) {
+        _testView = [UIView new];
+        _testView.backgroundColor = [UIColor redColor];
+//        [_testView addSubview:self.closeBtn];
+        [_testView addSubview:self.scrollView];
+    }
+    return _testView;
+}
+
+- (UIScrollView *)scrollView {
+    if (!_scrollView) {
+        _scrollView = [UIScrollView new];
+    }
+    return _scrollView;
 }
 
 @end

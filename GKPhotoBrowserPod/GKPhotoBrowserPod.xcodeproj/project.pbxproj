@@ -686,13 +686,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = P756K496H9;
 				GCC_PREFIX_HEADER = GKPhotoBrowserPod/PrefixHeader.pch;
 				INFOPLIST_FILE = GKPhotoBrowserPod/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserPod;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wanluzhe.GKPhotoBrowserPod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "0ee5a965-50d0-425c-9198-7d781db0dcd2";
+				PROVISIONING_PROFILE_SPECIFIER = com.wanluzhe_test_0425;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -703,13 +704,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = P756K496H9;
 				GCC_PREFIX_HEADER = GKPhotoBrowserPod/PrefixHeader.pch;
 				INFOPLIST_FILE = GKPhotoBrowserPod/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserPod;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wanluzhe.GKPhotoBrowserPod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "0ee5a965-50d0-425c-9198-7d781db0dcd2";
+				PROVISIONING_PROFILE_SPECIFIER = com.wanluzhe_test_0425;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
