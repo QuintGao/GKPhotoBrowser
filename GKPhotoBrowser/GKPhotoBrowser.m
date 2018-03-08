@@ -544,6 +544,12 @@ static Class imageManagerClass = nil;
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)panGesture {
     
+    // 放大时候禁止滑动返回
+    GKPhotoView *photoView = [self currentPhotoView];
+    if (photoView.scrollView.zoomScale > 1.0f) {
+        return;
+    }
+    
     switch (self.hideStyle) {
         case GKPhotoBrowserHideStyleZoomScale:
             [self handlePanZoomScale:panGesture];
@@ -576,7 +582,7 @@ static Class imageManagerClass = nil;
             CGAffineTransform translation = CGAffineTransformMakeTranslation(point.x / s, point.y / s);
             CGAffineTransform scale = CGAffineTransformMakeScale(s, s);
             photoView.imageView.transform = CGAffineTransformConcat(translation, scale);
-            self.contentView.backgroundColor = [UIColor colorWithWhite:0 alpha:percent];
+            self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:percent];
         }
             break;
         case UIGestureRecognizerStateEnded:

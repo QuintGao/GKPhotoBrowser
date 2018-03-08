@@ -48,6 +48,8 @@ static Class imageManagerClass = nil;
 /** 状态栏正在发生变化 */
 @property (nonatomic, assign) BOOL isStatusBarChanged;
 
+@property (nonatomic, assign) BOOL isPortraitToUp;
+
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 
 @property (nonatomic, strong) id<GKWebImageProtocol> imageProtocol;
@@ -458,7 +460,8 @@ static Class imageManagerClass = nil;
             [self.view addGestureRecognizer:self.panGesture];
         }else {
             UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
-            if (UIDeviceOrientationIsPortrait(orientation)) {
+            
+            if (UIDeviceOrientationIsPortrait(orientation) || self.isPortraitToUp) {
                 [self.view addGestureRecognizer:self.panGesture];
             }
         }
@@ -573,7 +576,7 @@ static Class imageManagerClass = nil;
             CGAffineTransform translation = CGAffineTransformMakeTranslation(point.x / s, point.y / s);
             CGAffineTransform scale = CGAffineTransformMakeScale(s, s);
             photoView.imageView.transform = CGAffineTransformConcat(translation, scale);
-            self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:percent];
+            self.contentView.backgroundColor = [UIColor colorWithWhite:0 alpha:percent];
         }
             break;
         case UIGestureRecognizerStateEnded:
@@ -793,10 +796,29 @@ static Class imageManagerClass = nil;
     photo.zoomRect  = CGRectZero;
     
     GKPhotoView *photoView = [self currentPhotoView];
-    [photoView.scrollView setZoomScale:1.0 animated:YES];
     
     // 旋转之后当前的设备方向
     UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
+    
+    if (UIDeviceOrientationIsPortrait(self.originalOrientation)) {
+        if (UIDeviceOrientationIsLandscape(currentOrientation)) {
+            [photoView.scrollView setZoomScale:1.0 animated:YES];
+        }
+    }
+    
+    if (UIDeviceOrientationIsLandscape(self.originalOrientation)) {
+        if (UIDeviceOrientationIsPortrait(currentOrientation)) {
+            [photoView.scrollView setZoomScale:1.0 animated:YES];
+        }
+    }
+    
+    self.isPortraitToUp = NO;
+    
+    if (UIDeviceOrientationIsPortrait(self.originalOrientation)) {
+        if (currentOrientation == UIDeviceOrientationFaceUp) {
+            self.isPortraitToUp = YES;
+        }
+    }
     
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     
@@ -889,6 +911,13 @@ static Class imageManagerClass = nil;
         GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
             photoView               = [self dequeueReusablePhotoView];
+            photoView.zoomEnded     = ^(NSInteger scale) {
+                if (scale == 1.0f) {
+                    [self addPanGesture:NO];
+                }else {
+                    [self removePanGesture];
+                }
+            };
             CGRect frame            = self.photoScrollView.bounds;
             
             CGFloat photoScrollW    = frame.size.width;
@@ -917,7 +946,7 @@ static Class imageManagerClass = nil;
         
         GKPhotoView *photoView = [self currentPhotoView];
         
-        if (photoView.scrollView.zoomScale > 1.0) {
+        if (photoView.scrollView.zoomScale != 1.0) {
             [self removePanGesture];
         }else {
             [self addPanGesture:NO];

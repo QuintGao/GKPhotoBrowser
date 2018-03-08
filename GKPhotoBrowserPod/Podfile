@@ -8,6 +8,6 @@ target 'GKPhotoBrowserPod' do
   pod 'YYModel'
   pod 'GKCover'
   
-  pod 'GKPhotoBrowser', '~> 1.0.7'
+  pod 'GKPhotoBrowser', '~> 1.0.8'
 
 end

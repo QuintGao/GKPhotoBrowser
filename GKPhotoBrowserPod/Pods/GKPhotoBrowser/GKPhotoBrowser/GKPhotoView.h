@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) GKPhoto *photo;
 
+@property (nonatomic, copy) void(^zoomEnded)(NSInteger scale);
+
 /** 是否重新布局 */
 @property (nonatomic, assign) BOOL isLayoutSubViews;
 

@@ -118,7 +118,10 @@
         self.scrollView.scrollEnabled = NO;
         // 进度条
         [self addSubview:self.loadingView];
-        [self.loadingView startLoading];
+        
+        if (!photo.failed) {
+            [self.loadingView startLoading];
+        }
         
         [self adjustFrame];
         
@@ -143,6 +146,8 @@
                 strongSelf.scrollView.scrollEnabled = YES;
                 [strongSelf.loadingView stopLoading];
             }else { // 加载失败
+                photo.failed = YES;
+                
                 [strongSelf addSubview:weakSelf.loadingView];
                 [weakSelf.loadingView showFailure];
             }
@@ -256,6 +261,10 @@
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     self.imageView.center = [self centerOfScrollViewContent:scrollView];
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+    !self.zoomEnded ? : self.zoomEnded(scrollView.zoomScale);
 }
 
 #pragma mark - UIGestureRecognizerDelegate
