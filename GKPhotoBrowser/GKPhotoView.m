@@ -106,7 +106,7 @@
             if (photo.animatedImage) {
                 self.imageView.animatedImage = photo.animatedImage;
             }else if (photo.image) {
-                self.imageView.image = photo.image;
+                self.imageView.image         = photo.image;
             }
             
             [self adjustFrame];
@@ -114,7 +114,8 @@
         }
         
         // 显示原来的图片
-        self.imageView.image          = self.photo.placeholderImage;
+        self.imageView.image          = photo.placeholderImage;
+        self.imageView.contentMode    = photo.sourceImageView.contentMode;
         self.scrollView.scrollEnabled = NO;
         // 进度条
         [self addSubview:self.loadingView];
