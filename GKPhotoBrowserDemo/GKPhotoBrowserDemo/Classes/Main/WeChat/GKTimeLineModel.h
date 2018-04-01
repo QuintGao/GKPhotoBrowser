@@ -28,6 +28,7 @@
 
 @interface GKTimeLineImage : NSObject
 
+@property (nonatomic, copy) NSString *thumbnail_url;
 @property (nonatomic, copy) NSString *url;
 
 @property (nonatomic, assign) CGFloat width;

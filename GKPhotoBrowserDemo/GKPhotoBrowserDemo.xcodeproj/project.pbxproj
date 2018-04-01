@@ -40,7 +40,6 @@
 		795FA6211FF338200057BDB0 /* GKTest01ViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA6051FF338200057BDB0 /* GKTest01ViewCell.m */; };
 		795FA6221FF338200057BDB0 /* GKTest03ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA6061FF338200057BDB0 /* GKTest03ViewController.m */; };
 		795FA6231FF338200057BDB0 /* GKTest02ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA6071FF338200057BDB0 /* GKTest02ViewController.m */; };
-		795FA6241FF338200057BDB0 /* GIFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA60C1FF338200057BDB0 /* GIFViewController.m */; };
 		795FA6281FF34F230057BDB0 /* GKPhotoBrowser.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */; };
 		795FA6291FF34F230057BDB0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6271FF34F220057BDB0 /* README.md */; };
 		90EEF67CE4A0A3BDF6976160 /* Pods_GKPhotoBrowserDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */; };
@@ -130,8 +129,6 @@
 		795FA6071FF338200057BDB0 /* GKTest02ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTest02ViewController.m; sourceTree = "<group>"; };
 		795FA6081FF338200057BDB0 /* GKTest02ViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest02ViewCell.h; sourceTree = "<group>"; };
 		795FA6091FF338200057BDB0 /* GKTest01ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest01ViewController.h; sourceTree = "<group>"; };
-		795FA60B1FF338200057BDB0 /* GIFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFViewController.h; sourceTree = "<group>"; };
-		795FA60C1FF338200057BDB0 /* GIFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFViewController.m; sourceTree = "<group>"; };
 		795FA6251FF3383E0057BDB0 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GKPhotoBrowser.podspec; path = ../../GKPhotoBrowser.podspec; sourceTree = "<group>"; };
 		795FA6271FF34F220057BDB0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
@@ -278,7 +275,6 @@
 				795FA5F81FF338200057BDB0 /* WeChat */,
 				795FA5E81FF338200057BDB0 /* Toutiao */,
 				795FA5E11FF3381F0057BDB0 /* Jianshu */,
-				795FA60A1FF338200057BDB0 /* GIF */,
 				795FA5F71FF338200057BDB0 /* GKPhotosView.h */,
 				795FA5E01FF3381F0057BDB0 /* GKPhotosView.m */,
 				795FA5E51FF338200057BDB0 /* GKTest01ViewCell.h */,
@@ -337,15 +333,6 @@
 				795FA6011FF338200057BDB0 /* timeline.txt */,
 			);
 			path = WeChat;
-			sourceTree = "<group>";
-		};
-		795FA60A1FF338200057BDB0 /* GIF */ = {
-			isa = PBXGroup;
-			children = (
-				795FA60B1FF338200057BDB0 /* GIFViewController.h */,
-				795FA60C1FF338200057BDB0 /* GIFViewController.m */,
-			);
-			path = GIF;
 			sourceTree = "<group>";
 		};
 		AC164CC01C3860407343047D /* Frameworks */ = {
@@ -528,7 +515,6 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
-				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/GKCover/GKCover.framework",
 				"${BUILT_PRODUCTS_DIR}/GKNavigationBarViewController/GKNavigationBarViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -537,7 +523,6 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKCover.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKNavigationBarViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
@@ -584,7 +569,6 @@
 				795FA61F1FF338200057BDB0 /* GKTimeLineModel.m in Sources */,
 				795FA5D61FF334100057BDB0 /* GKPhotoBrowser.m in Sources */,
 				795FA5D31FF334100057BDB0 /* GKLoadingView.m in Sources */,
-				795FA6241FF338200057BDB0 /* GIFViewController.m in Sources */,
 				795FA59E1FF333420057BDB0 /* main.m in Sources */,
 				795FA5DA1FF334100057BDB0 /* GKPhotoView.m in Sources */,
 				795FA6131FF338200057BDB0 /* GKToutiaoViewCell.m in Sources */,

@@ -101,6 +101,7 @@
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.showStyle           = GKPhotoBrowserShowStyleZoom;
         browser.hideStyle           = GKPhotoBrowserHideStyleZoomScale;
+        browser.loadStyle           = GKPhotoBrowserLoadStyleIndeterminateMask;
 //        browser.isResumePhotoZoom   = YES;
         [browser setupCoverViews:@[self.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
             

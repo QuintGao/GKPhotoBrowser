@@ -71,15 +71,14 @@
 
 - (void)sd_setAnimationImagesWithURLs:(nonnull NSArray<NSURL *> *)arrayOfURLs {
     [self sd_cancelCurrentAnimationImagesLoad];
-    __weak __typeof(self)wself = self;
-
-    NSMutableArray<id<SDWebImageOperation>> *operationsArray = [[NSMutableArray alloc] init];
-
+    NSPointerArray *operationsArray = [self sd_animationOperationArray];
+    
     [arrayOfURLs enumerateObjectsUsingBlock:^(NSURL *logoImageURL, NSUInteger idx, BOOL * _Nonnull stop) {
-        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager loadImageWithURL:logoImageURL options:0 progress:nil completed:^(UIImage *image, NSData *data, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-            if (!wself) return;
+        __weak __typeof(self) wself = self;
+        id <SDWebImageOperation> operation = [[SDWebImageManager sharedManager] loadImageWithURL:logoImageURL options:0 progress:nil completed:^(UIImage *image, NSData *data, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            __strong typeof(wself) sself = wself;
+            if (!sself) return;
             dispatch_main_async_safe(^{
-                __strong UIImageView *sself = wself;
                 [sself stopAnimating];
                 if (sself && image) {
                     NSMutableArray<UIImage *> *currentImages = [[sself animationImages] mutableCopy];
@@ -103,14 +102,40 @@
                 [sself startAnimating];
             });
         }];
-        [operationsArray addObject:operation];
+        @synchronized (self) {
+            [operationsArray addPointer:(__bridge void *)(operation)];
+        }
     }];
+}
 
-    [self sd_setImageLoadOperation:[operationsArray copy] forKey:@"UIImageViewAnimationImages"];
+static char animationLoadOperationKey;
+
+// element is weak because operation instance is retained by SDWebImageManager's runningOperations property
+// we should use lock to keep thread-safe because these method may not be acessed from main queue
+- (NSPointerArray *)sd_animationOperationArray {
+    @synchronized(self) {
+        NSPointerArray *operationsArray = objc_getAssociatedObject(self, &animationLoadOperationKey);
+        if (operationsArray) {
+            return operationsArray;
+        }
+        operationsArray = [NSPointerArray weakObjectsPointerArray];
+        objc_setAssociatedObject(self, &animationLoadOperationKey, operationsArray, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        return operationsArray;
+    }
 }
 
 - (void)sd_cancelCurrentAnimationImagesLoad {
-    [self sd_cancelImageLoadOperationWithKey:@"UIImageViewAnimationImages"];
+    NSPointerArray *operationsArray = [self sd_animationOperationArray];
+    if (operationsArray) {
+        @synchronized (self) {
+            for (id operation in operationsArray) {
+                if ([operation conformsToProtocol:@protocol(SDWebImageOperation)]) {
+                    [operation cancel];
+                }
+            }
+            operationsArray.count = 0;
+        }
+    }
 }
 #endif
 

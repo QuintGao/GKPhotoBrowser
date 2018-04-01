@@ -4,8 +4,7 @@ target 'GKPhotoBrowserDemo' do
   use_frameworks!
   
   pod 'AFNetworking'
-#  pod 'SDWebImage'
-  pod 'SDWebImage/GIF'
+  pod 'SDWebImage'
   pod 'GKNavigationBarViewController'
   pod 'YYModel'
   pod 'GKCover'

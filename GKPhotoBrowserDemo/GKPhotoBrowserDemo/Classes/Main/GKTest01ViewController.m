@@ -80,6 +80,7 @@
     
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:indexPath.row];
     browser.showStyle = GKPhotoBrowserShowStyleNone;
+    browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate;
     [browser showFromVC:self];
 }
 

@@ -77,7 +77,7 @@ static CGFloat   photoH;
         GKTimeLineImage *image = images[i];
         
         if ([image.url hasPrefix:@"http"]) {
-            [imgView sd_setImageWithURL:[NSURL URLWithString:image.url]];
+            [imgView sd_setImageWithURL:[NSURL URLWithString:image.thumbnail_url ? image.thumbnail_url : image.url]];
         }else {
             imgView.image = [UIImage imageNamed:image.url];
         }

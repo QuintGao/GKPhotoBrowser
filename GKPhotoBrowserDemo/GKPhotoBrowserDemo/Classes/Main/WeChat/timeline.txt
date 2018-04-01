@@ -9,34 +9,40 @@
         "content": "GKPhotoBrowser-自定义图片浏览器，已经为你封装好了显示和隐藏时的一些动画，可以很方便的设置其属性", 
         "images": [
             {
-                "url": "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=246912836,1223468464&fm=27&gp=0.jpg", 
-                "width": "528", 
-                "height": "300"
+                "thumbnail_url": "http://app.ztbu.edu.cn:1885/thumbnail/a318c8c539f27b46d314810f95506f29_200_200.png",
+                "url": "http://app.ztbu.edu.cn:1885/uploads/image/bbs/20171115/5a0c30257c8f9.png",
+                "width": "500",
+                "height": "282"
+            },
+            {
+                "thumbnail_url": "http://app.ztbu.edu.cn:1885/thumbnail/1c9e51d09be55ef313f5e07caecff6f0_200_200.png",
+                "url": "http://app.ztbu.edu.cn:1885/uploads/image/bbs/20171115/5a0c30257d41c.png",
+                "width": "500",
+                "height": "282"
             }, 
             {
-                "url": "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3258213409,1470632782&fm=27&gp=0.jpg", 
+                "thumbnail_url": "http://app.ztbu.edu.cn:1885/thumbnail/98c23a0c030346cc492da8ec6054e729_200_200.png",
+                "url": "http://app.ztbu.edu.cn:1885/uploads/image/bbs/20171115/5a0c30257f7cc.png",
+                "width": "500",
+                "height": "282"
+            },
+            {
+                "thumbnail_url": "http://app.ztbu.edu.cn:1885/thumbnail/eb5400678cbb5118deb4897b8ad44a47_200_200.png",
+                "url": "http://app.ztbu.edu.cn:1885/uploads/image/bbs/20171115/5a0c30257de51.png",
                 "width": "500", 
-                "height": "371"
+                "height": "282"
             }, 
             {
-                "url": "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3269061743,2028437678&fm=27&gp=0.jpg", 
-                "width": "426", 
-                "height": "658"
-            }, 
-            {
-                "url": "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1162295525,3847656102&fm=27&gp=0.jpg", 
+                "thumbnail_url": "http://app.ztbu.edu.cn:1885/thumbnail/07a46bb116b654d1596f3ae4891230d1_200_200.png",
+                "url": "http://app.ztbu.edu.cn:1885/uploads/image/bbs/20171115/5a0c30257e786.png",
                 "width": "500", 
-                "height": "329"
+                "height": "282"
             }, 
             {
-                "url": "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3243486925,3348023943&fm=27&gp=0.jpg", 
+                "thumbnail_url": "http://app.ztbu.edu.cn:1885/uploads/image/bbs/20171115/5a0c30257ef93.png",
+                "url": "http://app.ztbu.edu.cn:1885/thumbnail/f2ffa0d291f1a051221676a08f2677e4_200_200.png",
                 "width": "500", 
-                "height": "315"
-            }, 
-            {
-                "url": "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1727466040,2801574451&fm=27&gp=0.jpg", 
-                "width": "500", 
-                "height": "313"
+                "height": "282"
             }
         ]
     }, 

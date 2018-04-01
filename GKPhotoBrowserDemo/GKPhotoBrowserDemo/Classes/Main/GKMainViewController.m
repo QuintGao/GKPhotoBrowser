@@ -52,9 +52,7 @@
                       @{@"text"  : @"今日头条",
                         @"class" : @"GKToutiaoViewController"},
                       @{@"text"  : @"简书",
-                        @"class" : @"GKJianshuViewController"},
-                      @{@"text"  : @"GIF图片",
-                        @"class" : @"GIFViewController"}
+                        @"class" : @"GKJianshuViewController"}
                       ];
     
     [self.mainTable reloadData];
