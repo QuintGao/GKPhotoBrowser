@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
 
-@property (nonatomic, strong, readonly) FLAnimatedImageView *imageView;
+@property (nonatomic, strong, readonly) UIImageView *imageView;
 
 @property (nonatomic, strong, readonly) GKLoadingView *loadingView;
 
@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 是否重新布局 */
 @property (nonatomic, assign) BOOL isLayoutSubViews;
+
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
 
 - (instancetype)initWithFrame:(CGRect)frame imageProtocol:(id<GKWebImageProtocol>)imageProtocol;
 

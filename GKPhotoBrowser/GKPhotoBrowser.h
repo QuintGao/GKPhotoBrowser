@@ -55,6 +55,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 
 @property (nonatomic, assign) GKPhotoBrowserHideStyle hideStyle;
 
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
+
 @property (nonatomic, weak) id<GKPhotoBrowserDelegate> delegate;
 
 /** 是否禁止全屏，默认是NO */

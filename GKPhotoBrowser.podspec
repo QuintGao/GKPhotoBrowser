@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GKPhotoBrowser"
-  s.version      = "1.2.0"
+  s.version      = "1.2.1"
   s.summary      = "iOS自定义图片浏览器，支持CocoaPods"
   s.homepage     = "https://github.com/QuintGao/GKPhotoBrowser"
   s.license      = "MIT"
@@ -13,6 +13,6 @@ Pod::Spec.new do |s|
   s.public_header_files = "GKPhotoBrowser/**/*.h"
   s.resource      = "GKPhotoBrowser/GKPhotoBrowser.bundle"
   s.frameworks    = "Foundation", "UIKit"
-  s.dependency    "SDWebImage/GIF"
+  s.dependency    "SDWebImage"
 
 end

@@ -287,7 +287,7 @@ static Class imageManagerClass = nil;
     GKPhoto *photo          = [self currentPhoto];
     GKPhotoView *photoView  = [self currentPhotoView];
     
-    CGRect endRect = photoView.imageView.frame;
+    CGRect endRect    = photoView.imageView.frame;
     CGRect sourceRect = photo.sourceFrame;
     
     if (CGRectEqualToRect(sourceRect, CGRectZero)) {
@@ -537,8 +537,19 @@ static Class imageManagerClass = nil;
 }
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)longPress {
-    if ([self.delegate respondsToSelector:@selector(photoBrowser:longPressWithIndex:)]) {
-        [self.delegate photoBrowser:self longPressWithIndex:self.currentIndex];
+    switch (longPress.state) {
+        case UIGestureRecognizerStateBegan:{
+            if ([self.delegate respondsToSelector:@selector(photoBrowser:longPressWithIndex:)]) {
+                [self.delegate photoBrowser:self longPressWithIndex:self.currentIndex];
+            }
+        }
+            break;
+        case UIGestureRecognizerStateEnded:
+            
+            break;
+            
+        default:
+            break;
     }
 }
 
@@ -891,6 +902,7 @@ static Class imageManagerClass = nil;
     }
 }
 
+// 更新可复用的图片视图
 - (void)updateReusableViews {
     NSMutableArray *viewsForRemove = [NSMutableArray new];
     for (GKPhotoView *photoView in _visiblePhotoViews) {
@@ -907,6 +919,7 @@ static Class imageManagerClass = nil;
     [_visiblePhotoViews removeObjectsInArray:viewsForRemove];
 }
 
+// 设置图片视图
 - (void)setupPhotoViews {
     NSInteger index = self.photoScrollView.contentOffset.x / self.photoScrollView.frame.size.width + 0.5;
     
@@ -917,6 +930,7 @@ static Class imageManagerClass = nil;
         GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
             photoView               = [self dequeueReusablePhotoView];
+            photoView.loadStyle     = self.loadStyle;
             photoView.zoomEnded     = ^(NSInteger scale) {
                 if (scale == 1.0f) {
                     [self addPanGesture:NO];
@@ -941,6 +955,7 @@ static Class imageManagerClass = nil;
             
             [photoView resetFrame];
         }
+        
         if (photoView.photo == nil && self.isShow) {
             [photoView setupPhoto:self.photos[i]];
         }

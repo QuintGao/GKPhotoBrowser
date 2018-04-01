@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong, readwrite) UIScrollView *scrollView;
 
-@property (nonatomic, strong, readwrite) FLAnimatedImageView *imageView;
+@property (nonatomic, strong, readwrite) UIImageView *imageView;
 
 @property (nonatomic, strong, readwrite) GKLoadingView *loadingView;
 
@@ -56,6 +56,8 @@
         _scrollView.delegate             = self;
         _scrollView.clipsToBounds        = YES;
         _scrollView.multipleTouchEnabled = YES; // 多点触摸开启
+        _scrollView.showsVerticalScrollIndicator = NO;
+        _scrollView.showsHorizontalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
             _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
@@ -66,7 +68,7 @@
 
 - (UIImageView *)imageView {
     if (!_imageView) {
-        _imageView               = [FLAnimatedImageView new];
+        _imageView               = [UIImageView new];
         _imageView.frame         = CGRectMake(0, 0, GKScreenW, GKScreenH);
         _imageView.clipsToBounds = YES;
     }
@@ -75,7 +77,7 @@
 
 - (GKLoadingView *)loadingView {
     if (!_loadingView) {
-        _loadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:GKLoadingStyleIndeterminate];
+        _loadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.loadStyle];
         _loadingView.lineWidth   = 3;
         _loadingView.radius      = 12;
         _loadingView.bgColor     = [UIColor blackColor];
@@ -100,16 +102,13 @@
         [self.scrollView setZoomScale:1.0 animated:NO];
         
         // 已经加载成功，无需再加载
-        if (photo.image || photo.animatedImage) {
+        if (photo.image) {
             [self.loadingView stopLoading];
             
-            if (photo.animatedImage) {
-                self.imageView.animatedImage = photo.animatedImage;
-            }else if (photo.image) {
-                self.imageView.image         = photo.image;
-            }
+            self.imageView.image = photo.image;
             
             [self adjustFrame];
+            
             return;
         }
         
@@ -128,19 +127,18 @@
         
         __weak typeof(self) weakSelf = self;
         gkWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
-//            __strong typeof(weakSelf) strongSelf = weakSelf;
-//
-//            if (receivedSize > kMinProgress) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-////                    strongSelf.loadingView.progress = (float)receivedSize / expectedSize;
-//                });
-//            }
+            if (self.loadStyle == GKLoadingStyleDeterminate) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                // 主线程中更新进度
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    strongSelf.loadingView.progress = (float)receivedSize / expectedSize;
+                });
+            }
         };
         
         gkWebImageCompletionBlock completionBlock = ^(UIImage *image, NSURL *url, BOOL finished, NSError *error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (finished) {
-                photo.animatedImage = self.imageView.animatedImage;
                 photo.image         = self.imageView.image;
                 photo.finished      = YES; // 下载完成
                 
@@ -149,8 +147,10 @@
             }else { // 加载失败
                 photo.failed = YES;
                 
-                [strongSelf addSubview:weakSelf.loadingView];
-                [weakSelf.loadingView showFailure];
+                [strongSelf.loadingView stopLoading];
+                
+                [strongSelf addSubview:strongSelf.loadingView];
+                [strongSelf.loadingView showFailure];
             }
             [strongSelf adjustFrame];
         };
@@ -203,7 +203,13 @@
                 
         self.scrollView.contentSize = self.imageView.frame.size;
         
-        self.imageView.center = [self centerOfScrollViewContent:self.scrollView];
+//        self.imageView.center = [self centerOfScrollViewContent:self.scrollView];
+        
+        if (imageF.size.height <= self.scrollView.bounds.size.height) {
+            self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, self.scrollView.bounds.size.height * 0.5);
+        }else {
+            self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, imageF.size.height * 0.5);
+        }
         
         // 根据图片大小找到最大缩放等级，保证最大缩放时候，不会有黑边
         CGFloat maxScale = frame.size.height / imageF.size.height;

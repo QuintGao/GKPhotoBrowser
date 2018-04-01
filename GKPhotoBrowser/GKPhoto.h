@@ -24,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 图片 */
 @property (nonatomic, strong) UIImage *image; // 完整的图片
-@property (nonatomic, strong) FLAnimatedImage *animatedImage;
 
 /** 占位图 */
 @property (nonatomic, strong) UIImage *placeholderImage;

@@ -11,8 +11,9 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
 ## 主要功能
 
     * 支持单击、双击手势，支持缩放
-    * 可自定义显示方式（none，zoom，push）
-    * 可自定义隐藏方式（zoom，zoomScale，zoomSlide）
+    * 支持多种显示方式（none，zoom，push）
+    * 支持多种隐藏方式（zoom，zoomScale，zoomSlide)
+    * 支持多种加载方式（不明确，不明确带阴影，明确进度）
     * 可自定义遮盖视图
     * 支持屏幕旋转
  
@@ -59,3 +60,6 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  3、简书
  
  ![jianshu.gif](https://github.com/QuintGao/GKPhotoBrowser/blob/master/imgs/jianshu.gif)
+ 
+ ## 更新
+  * 2018.4.1  1、修复长按方式执行多次的bug  2、新增支持多种加载方式

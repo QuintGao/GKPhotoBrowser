@@ -347,8 +347,10 @@
 }
 
 - (void)showFailure {
-    [self.layer removeAllAnimations];
+    [self.animatedLayer removeFromSuperlayer];
     self.animatedLayer = nil;
+    
+    [self.layer removeAllAnimations];
     
     [self addSubview:self.failureLabel];
 }
