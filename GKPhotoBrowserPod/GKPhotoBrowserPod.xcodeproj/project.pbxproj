@@ -33,7 +33,6 @@
 		793D01871FF7663B0053A2E9 /* GKTest01ViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D016D1FF7663B0053A2E9 /* GKTest01ViewCell.m */; };
 		793D01881FF7663B0053A2E9 /* GKTest03ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D016E1FF7663B0053A2E9 /* GKTest03ViewController.m */; };
 		793D01891FF7663B0053A2E9 /* GKTest02ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D016F1FF7663B0053A2E9 /* GKTest02ViewController.m */; };
-		793D018A1FF7663B0053A2E9 /* GIFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D01741FF7663B0053A2E9 /* GIFViewController.m */; };
 		F3B1ECAE6E6AB669DA0A0AED /* Pods_GKPhotoBrowserPod.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7814AE75A96A31E32F710D7D /* Pods_GKPhotoBrowserPod.framework */; };
 /* End PBXBuildFile section */
 
@@ -106,8 +105,6 @@
 		793D016F1FF7663B0053A2E9 /* GKTest02ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTest02ViewController.m; sourceTree = "<group>"; };
 		793D01701FF7663B0053A2E9 /* GKTest02ViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest02ViewCell.h; sourceTree = "<group>"; };
 		793D01711FF7663B0053A2E9 /* GKTest01ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest01ViewController.h; sourceTree = "<group>"; };
-		793D01731FF7663B0053A2E9 /* GIFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFViewController.h; sourceTree = "<group>"; };
-		793D01741FF7663B0053A2E9 /* GIFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFViewController.m; sourceTree = "<group>"; };
 		794691261FFA79660003C777 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		8CA10D680D9743A89995A000 /* Pods-GKPhotoBrowserPod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GKPhotoBrowserPod.release.xcconfig"; path = "Pods/Target Support Files/Pods-GKPhotoBrowserPod/Pods-GKPhotoBrowserPod.release.xcconfig"; sourceTree = "<group>"; };
 		BD9BC74AD2ABC46C140E1AD5 /* Pods-GKPhotoBrowserPod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GKPhotoBrowserPod.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GKPhotoBrowserPod/Pods-GKPhotoBrowserPod.debug.xcconfig"; sourceTree = "<group>"; };
@@ -233,7 +230,6 @@
 				793D016D1FF7663B0053A2E9 /* GKTest01ViewCell.m */,
 				793D01701FF7663B0053A2E9 /* GKTest02ViewCell.h */,
 				793D015D1FF7663B0053A2E9 /* GKTest02ViewCell.m */,
-				793D01721FF7663B0053A2E9 /* GIF */,
 				793D015E1FF7663B0053A2E9 /* GKCategory */,
 			);
 			path = Main;
@@ -276,25 +272,16 @@
 		793D01621FF7663B0053A2E9 /* WeChat */ = {
 			isa = PBXGroup;
 			children = (
+				793D016A1FF7663B0053A2E9 /* GKTimeLineViewController.h */,
+				793D01651FF7663B0053A2E9 /* GKTimeLineViewController.m */,
+				793D01681FF7663B0053A2E9 /* GKTimeLineViewCell.h */,
 				793D01631FF7663B0053A2E9 /* GKTimeLineViewCell.m */,
 				793D01641FF7663B0053A2E9 /* GKTimeLineModel.h */,
-				793D01651FF7663B0053A2E9 /* GKTimeLineViewController.m */,
-				793D01661FF7663B0053A2E9 /* timeline.json */,
 				793D01671FF7663B0053A2E9 /* GKTimeLineModel.m */,
-				793D01681FF7663B0053A2E9 /* GKTimeLineViewCell.h */,
+				793D01661FF7663B0053A2E9 /* timeline.json */,
 				793D01691FF7663B0053A2E9 /* timeline.txt */,
-				793D016A1FF7663B0053A2E9 /* GKTimeLineViewController.h */,
 			);
 			path = WeChat;
-			sourceTree = "<group>";
-		};
-		793D01721FF7663B0053A2E9 /* GIF */ = {
-			isa = PBXGroup;
-			children = (
-				793D01731FF7663B0053A2E9 /* GIFViewController.h */,
-				793D01741FF7663B0053A2E9 /* GIFViewController.m */,
-			);
-			path = GIF;
 			sourceTree = "<group>";
 		};
 		E4F7BBDB8B5F30467890BB19 /* Pods */ = {
@@ -521,7 +508,6 @@
 				793D01871FF7663B0053A2E9 /* GKTest01ViewCell.m in Sources */,
 				793D01811FF7663B0053A2E9 /* UIView+GKFrame.m in Sources */,
 				793D01781FF7663B0053A2E9 /* GKJianshuViewController.m in Sources */,
-				793D018A1FF7663B0053A2E9 /* GIFViewController.m in Sources */,
 				793D01831FF7663B0053A2E9 /* GKTimeLineViewController.m in Sources */,
 				793D01791FF7663B0053A2E9 /* GKBaseViewController.m in Sources */,
 				793D017F1FF7663B0053A2E9 /* GKTest01ViewController.m in Sources */,

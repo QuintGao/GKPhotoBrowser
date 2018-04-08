@@ -104,6 +104,9 @@ static CGFloat   photoH;
             photoW = subview.image.size.width;
             photoH = subview.image.size.height;
         }
+    }else {
+        photoW = (maxWidth - (photosMaxCol - 1) * photoMargin) / photosMaxCol;
+        photoH = photoW;
     }
     
     // 布局
