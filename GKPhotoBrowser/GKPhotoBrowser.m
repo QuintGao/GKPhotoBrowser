@@ -19,7 +19,6 @@ static Class imageManagerClass = nil;
 {
     UILabel  *_countLabel;
     CGPoint  _startLocation;
-    BOOL     _isStatusBarShowing;
 }
 
 @property (nonatomic, strong, readwrite) UIView *contentView;
@@ -47,6 +46,8 @@ static Class imageManagerClass = nil;
 
 /** 状态栏正在发生变化 */
 @property (nonatomic, assign) BOOL isStatusBarChanged;
+/** 状态栏是否显示 */
+@property (nonatomic, assign) BOOL isStatusBarShowing;
 
 @property (nonatomic, assign) BOOL isPortraitToUp;
 
@@ -760,7 +761,7 @@ static Class imageManagerClass = nil;
         self.view.backgroundColor = [UIColor blackColor];
     }completion:^(BOOL finished) {
         
-        if (!_isStatusBarShowing) {
+        if (!self.isStatusBarShowing) {
             // 隐藏状态栏
             self.isStatusBarShow = NO;
         }
@@ -932,13 +933,16 @@ static Class imageManagerClass = nil;
         if (photoView == nil) {
             photoView               = [self dequeueReusablePhotoView];
             photoView.loadStyle     = self.loadStyle;
+            
+            __typeof(self) __weak weakSelf = self;
             photoView.zoomEnded     = ^(NSInteger scale) {
                 if (scale == 1.0f) {
-                    [self addPanGesture:NO];
+                    [weakSelf addPanGesture:NO];
                 }else {
-                    [self removePanGesture];
+                    [weakSelf removePanGesture];
                 }
             };
+            
             CGRect frame            = self.photoScrollView.bounds;
             
             CGFloat photoScrollW    = frame.size.width;

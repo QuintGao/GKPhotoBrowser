@@ -62,4 +62,9 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ![jianshu.gif](https://github.com/QuintGao/GKPhotoBrowser/blob/master/imgs/jianshu.gif)
  
  ## 更新
-  * 2018.4.1  1、修复长按方式执行多次的bug  2、新增支持多种加载方式
+ 
+```
+2018.4.1  
+    1、修复长按方式执行多次的bug  
+    2、新增支持多种加载方式
+```
