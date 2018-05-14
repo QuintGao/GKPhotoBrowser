@@ -247,7 +247,8 @@ static Class imageManagerClass = nil;
 - (void)setIsStatusBarShow:(BOOL)isStatusBarShow {
     _isStatusBarShow = isStatusBarShow;
     
-    self.isStatusBarChanged = YES;
+    /**这一行代码打开，在有些情况下会出现pageControl位置不正确的bug */
+//    self.isStatusBarChanged = YES;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.isStatusBarChanged = NO;
