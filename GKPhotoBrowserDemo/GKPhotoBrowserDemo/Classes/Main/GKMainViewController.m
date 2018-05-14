@@ -52,7 +52,9 @@
                       @{@"text"  : @"今日头条",
                         @"class" : @"GKToutiaoViewController"},
                       @{@"text"  : @"简书",
-                        @"class" : @"GKJianshuViewController"}
+                        @"class" : @"GKJianshuViewController"},
+                      @{@"text"  : @"测试",
+                        @"class" : @"GKTestViewController"}
                       ];
     
     [self.mainTable reloadData];

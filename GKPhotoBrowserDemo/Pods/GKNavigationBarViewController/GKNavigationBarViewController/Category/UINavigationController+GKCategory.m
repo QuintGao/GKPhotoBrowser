@@ -112,7 +112,10 @@
                 GKNavigationBarViewController *vc = (GKNavigationBarViewController *)viewController;
                 
                 UIImage *backImage = self.visibleViewController.gk_backStyle == GKNavigationBarBackStyleBlack ? GKImage(@"btn_back_black") : GKImage(@"btn_back_white");
-                vc.gk_navLeftBarButtonItem = [UIBarButtonItem itemWithTitle:nil image:backImage target:self action:@selector(goBack)];
+                
+                if (vc.gk_navLeftBarButtonItem == nil && vc.gk_navLeftBarButtonItems == nil) {
+                    vc.gk_navLeftBarButtonItem = [UIBarButtonItem itemWithTitle:nil image:backImage target:self action:@selector(goBack)];
+                }
             }
         }
     }

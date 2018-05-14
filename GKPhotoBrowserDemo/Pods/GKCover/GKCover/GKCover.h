@@ -240,7 +240,8 @@ typedef void(^hideBlock)(void);
                             showAnimStyle:(GKCoverShowAnimStyle)showAnimStyle
                             hideAnimStyle:(GKCoverHideAnimStyle)hideAnimStyle
                                  notClick:(BOOL)notClick
-                                showBlock:(showBlock)showBlock hideBlock:(hideBlock)hideBlock;
+                                showBlock:(showBlock)showBlock
+                                hideBlock:(hideBlock)hideBlock;
 
 + (void)showCover;
 + (void)hideCover;

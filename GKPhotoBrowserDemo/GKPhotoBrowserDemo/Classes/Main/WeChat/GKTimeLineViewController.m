@@ -23,6 +23,8 @@
 
 @property (nonatomic, weak) UIView *actionSheet;
 
+@property (nonatomic, assign) NSInteger count;
+
 @end
 
 @implementation GKTimeLineViewController
@@ -102,10 +104,16 @@
         browser.showStyle           = GKPhotoBrowserShowStyleZoom;
         browser.hideStyle           = GKPhotoBrowserHideStyleZoomScale;
         browser.loadStyle           = GKPhotoBrowserLoadStyleIndeterminateMask;
+//        browser.isStatusBarShow     = YES;
 //        browser.isResumePhotoZoom   = YES;
         [browser setupCoverViews:@[self.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
             
             self.pageControl.center = CGPointMake(superFrame.size.width * 0.5, superFrame.size.height - 30);
+            
+            self.count ++;
+            
+            NSLog(@"%zd", self.count);
+            
         }];
         browser.delegate = self;
         

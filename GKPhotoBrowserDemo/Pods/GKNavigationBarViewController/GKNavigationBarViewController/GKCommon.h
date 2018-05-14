@@ -34,13 +34,13 @@ typedef NS_ENUM(NSUInteger, GKNavigationBarBackStyle) {
 static BOOL gk_disableFixSpace = NO;
 
 // 使用static inline创建静态内联函数，方便调用
-static inline void gk_swizzled_method(Class class ,SEL originalSelector, SEL swizzledSelector) {
-    Method originalMethod = class_getInstanceMethod(class, originalSelector);
-    Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
+static inline void gk_swizzled_method(Class cls ,SEL originalSelector, SEL swizzledSelector) {
+    Method originalMethod = class_getInstanceMethod(cls, originalSelector);
+    Method swizzledMethod = class_getInstanceMethod(cls, swizzledSelector);
     
-    BOOL isAdd = class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
+    BOOL isAdd = class_addMethod(cls, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
     if (isAdd) {
-        class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+        class_replaceMethod(cls, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
     }else {
         method_exchangeImplementations(originalMethod, swizzledMethod);
     }

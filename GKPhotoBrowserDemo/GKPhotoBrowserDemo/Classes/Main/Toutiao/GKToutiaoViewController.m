@@ -32,9 +32,6 @@
 
 @property (nonatomic, weak) GKToutiaoViewCell *selectCell;
 
-@property (nonatomic, strong) UIView    *testView;
-@property (nonatomic, strong) UIScrollView  *scrollView;
-
 @end
 
 @implementation GKToutiaoViewController
@@ -132,10 +129,6 @@
 
     }];
     
-//    [browser setupCoverViews:@[self.testView] layoutBlock:^(GKPhotoBrowser * _Nonnull photoBrowser, CGRect superFrame) {
-//        [self resetCoverFrame:superFrame index:photoBrowser.currentIndex];
-//    }];
-    
     [browser showFromVC:self];
     
     self.isCoverShow = YES;
@@ -200,6 +193,7 @@
 }
 
 - (void)resetCoverFrame:(CGRect)frame index:(NSInteger)index{
+    
     self.closeBtn.left = 15;
     self.closeBtn.top  = 30;
 
@@ -223,7 +217,8 @@
     CGFloat height = CGRectGetMaxY(self.contentLabel.frame) + 10;
     
     // 显示时的最大高度
-    CGFloat maxHeight = 120;
+    CGFloat maxHeight = isLandspace ? 100.0f : 120.0f;
+    
     if (size.height > maxHeight) {
         self.contentView.frame = CGRectMake(0, 15, KScreenW, maxHeight);
         self.contentView.contentSize = CGSizeMake(0, size.height);
@@ -232,17 +227,13 @@
         self.contentView.contentSize = CGSizeZero;
     }
     
-    height = CGRectGetMaxY(self.contentView.frame) + 10 + 40;
+    height = CGRectGetMaxY(self.contentView.frame) + 10;
+    
+    height = isLandspace ? height : height + 40;
 
     self.bottomView.frame = CGRectMake(0, frame.size.height - height, width, height);
 
     self.btmImageView.frame = isLandspace ? CGRectZero : CGRectMake(0, height - 40, width, 40);
-    
-//    self.testView.frame = CGRectMake(0, (frame.size.height - 400) / 2, width, 400);
-//
-//    self.scrollView.frame = self.testView.bounds;
-//
-//    self.scrollView.contentSize = CGSizeMake(width, 1000);
 }
 
 #pragma mark - Action
@@ -325,23 +316,6 @@
         _contentLabel.font          = [UIFont systemFontOfSize:16.0];
     }
     return _contentLabel;
-}
-
-- (UIView *)testView {
-    if (!_testView) {
-        _testView = [UIView new];
-        _testView.backgroundColor = [UIColor redColor];
-//        [_testView addSubview:self.closeBtn];
-        [_testView addSubview:self.scrollView];
-    }
-    return _testView;
-}
-
-- (UIScrollView *)scrollView {
-    if (!_scrollView) {
-        _scrollView = [UIScrollView new];
-    }
-    return _scrollView;
 }
 
 @end

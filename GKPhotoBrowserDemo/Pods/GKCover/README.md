@@ -1,12 +1,16 @@
 # GKCover
 
-已支持CocoaPods：pod 'GKCover' ,'~>2.4.0'
+已支持CocoaPods：pod 'GKCover' ,'~>2.4.9'
 
-版本2.4.0更新：分离遮罩弹出和隐藏时的动画，当前隐藏遮罩方法[GKCover hideCover]
+## 说明
+    关于iPhone X及iOS 11的适配问题，在底部弹出视图时，建议自行将弹出视图的底部距离增加安全区域的距离，防止遮挡。
 
-最新版本2.3.1已支持判断遮罩是否存在的方法：[GKCover hasCover]
+## 版本说明
+    版本2.4.0更新：分离遮罩弹出和隐藏时的动画，当前隐藏遮罩方法[GKCover hideCover]
 
-使用方法
+    最新版本2.3.1已支持判断遮罩是否存在的方法：[GKCover hasCover]
+
+## 使用方法
 
 1.底部弹窗
 
@@ -86,7 +90,7 @@ UIView *customView = [UIView new];
 
 ```
 
-Demo效果图：
+## Demo效果图：
 
 ![image](https://github.com/QuintGao/GKCover/blob/master/GKCoverDemo/GKCoverDemo-gif.gif)
 
@@ -133,7 +137,7 @@ Demo效果图：
     新增遮罩遮盖状态栏的方法
 ```
 
-技术支持：
+## 技术支持：
 
 [csdn博客地址](http://blog.csdn.net/u010565269/article/details/52332027)
 

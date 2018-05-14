@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7927F0CF20A97F280017FD5B /* GKTestViewController.m */; };
 		795FA5981FF333420057BDB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5971FF333420057BDB0 /* Assets.xcassets */; };
 		795FA59B1FF333420057BDB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5991FF333420057BDB0 /* LaunchScreen.storyboard */; };
 		795FA59E1FF333420057BDB0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA59D1FF333420057BDB0 /* main.m */; };
@@ -64,6 +65,8 @@
 
 /* Begin PBXFileReference section */
 		1BD88472E22F06A033FA0CC2 /* Pods-GKPhotoBrowserDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GKPhotoBrowserDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		7927F0CE20A97F280017FD5B /* GKTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKTestViewController.h; sourceTree = "<group>"; };
+		7927F0CF20A97F280017FD5B /* GKTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKTestViewController.m; sourceTree = "<group>"; };
 		795FA58B1FF333420057BDB0 /* GKPhotoBrowserDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GKPhotoBrowserDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		795FA5971FF333420057BDB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		795FA59A1FF333420057BDB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -162,6 +165,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7927F0CD20A97F0C0017FD5B /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				7927F0CE20A97F280017FD5B /* GKTestViewController.h */,
+				7927F0CF20A97F280017FD5B /* GKTestViewController.m */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
 		795FA5821FF333420057BDB0 = {
 			isa = PBXGroup;
 			children = (
@@ -275,6 +287,7 @@
 				795FA5F81FF338200057BDB0 /* WeChat */,
 				795FA5E81FF338200057BDB0 /* Toutiao */,
 				795FA5E11FF3381F0057BDB0 /* Jianshu */,
+				7927F0CD20A97F0C0017FD5B /* Test */,
 				795FA5F71FF338200057BDB0 /* GKPhotosView.h */,
 				795FA5E01FF3381F0057BDB0 /* GKPhotosView.m */,
 				795FA5E51FF338200057BDB0 /* GKTest01ViewCell.h */,
@@ -364,7 +377,6 @@
 				795FA5881FF333420057BDB0 /* Frameworks */,
 				795FA5891FF333420057BDB0 /* Resources */,
 				97A440345E9F899EBB2359F3 /* [CP] Embed Pods Frameworks */,
-				C98C36B80CAA4DE0375A21A0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -417,7 +429,7 @@
 		795FA5831FF333420057BDB0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = QuintGao;
 				TargetAttributes = {
 					795FA58A1FF333420057BDB0 = {
@@ -533,21 +545,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C98C36B80CAA4DE0375A21A0 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -563,6 +560,7 @@
 				795FA6141FF338200057BDB0 /* GKToutiaoViewController.m in Sources */,
 				795FA6151FF338200057BDB0 /* GKToutiaoModel.m in Sources */,
 				795FA6121FF338200057BDB0 /* GKToutiaoDetailViewController.m in Sources */,
+				7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */,
 				795FA6111FF338200057BDB0 /* GKBaseViewController.m in Sources */,
 				795FA5D41FF334100057BDB0 /* UIScrollView+GKGestureHandle.m in Sources */,
 				795FA6211FF338200057BDB0 /* GKTest01ViewCell.m in Sources */,
@@ -640,6 +638,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -647,6 +646,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -695,6 +695,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -702,6 +703,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -736,15 +738,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = P756K496H9;
+				DEVELOPMENT_TEAM = X52753HQNM;
 				GCC_PREFIX_HEADER = GKPhotoBrowserDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = GKPhotoBrowserDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.wanluzhe.GKPhotoBrowserDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.test.GKPhotoBrowser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0ee5a965-50d0-425c-9198-7d781db0dcd2";
-				PROVISIONING_PROFILE_SPECIFIER = com.wanluzhe_test_0425;
+				PROVISIONING_PROFILE = "8685295a-1707-43ac-8bc7-be6b170d4940";
+				PROVISIONING_PROFILE_SPECIFIER = ay_wildtest_pro;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -760,7 +762,7 @@
 				INFOPLIST_FILE = GKPhotoBrowserDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.wanluzhe.GKPhotoBrowserDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.test.GKPhotoBrowser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "0ee5a965-50d0-425c-9198-7d781db0dcd2";
 				PROVISIONING_PROFILE_SPECIFIER = com.wanluzhe_test_0425;
