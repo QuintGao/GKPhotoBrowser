@@ -45,6 +45,8 @@ static CGFloat   photoH;
     for (NSInteger i = 0; i < photos.count; i++) {
         UIImageView *imgView = [UIImageView new];
         imgView.tag = i;
+        imgView.contentMode = UIViewContentModeScaleAspectFill;
+        imgView.clipsToBounds = YES;
         [self addSubview:imgView];
         
         imgView.userInteractionEnabled = YES;
