@@ -107,6 +107,8 @@
             
             self.imageView.image = photo.image;
             
+            photo.finished = YES; // 加载完成
+            
             [self adjustFrame];
             
             return;
