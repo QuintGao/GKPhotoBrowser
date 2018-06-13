@@ -193,10 +193,12 @@
            contentView:actionSheet
                  style:GKCoverStyleTranslucent
              showStyle:GKCoverShowStyleBottom
-             animStyle:GKCoverAnimStyleBottom
+         showAnimStyle:GKCoverShowAnimStyleBottom
+         hideAnimStyle:GKCoverHideAnimStyleBottom
               notClick:NO
              showBlock:nil
              hideBlock:^{
+                 
                  [self.fromView removeFromSuperview];
                  self.fromView = nil;
              }];
@@ -226,7 +228,7 @@
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandspace:(BOOL)isLandspace {
-    [GKCover hideView];
+    [GKCover hideCover];
 }
 
 - (void)saveBtnClick:(id)sender {
@@ -234,7 +236,7 @@
 }
 
 - (void)cancelBtnClick:(id)sender {
-    [GKCover hideView];
+    [GKCover hideCover];
 }
 
 @end

@@ -14,11 +14,15 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
-  - GKCover (2.5.0)
+  - FLAnimatedImage (1.0.12)
+  - GKCover (2.5.3)
   - GKNavigationBarViewController (2.0.3)
-  - SDWebImage (4.3.3):
-    - SDWebImage/Core (= 4.3.3)
-  - SDWebImage/Core (4.3.3)
+  - SDWebImage (4.4.1):
+    - SDWebImage/Core (= 4.4.1)
+  - SDWebImage/Core (4.4.1)
+  - SDWebImage/GIF (4.4.1):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
   - YYModel (1.0.4)
 
 DEPENDENCIES:
@@ -26,11 +30,13 @@ DEPENDENCIES:
   - GKCover
   - GKNavigationBarViewController
   - SDWebImage
+  - SDWebImage/GIF
   - YYModel
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - AFNetworking
+    - FLAnimatedImage
     - GKCover
     - GKNavigationBarViewController
     - SDWebImage
@@ -38,11 +44,12 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
-  GKCover: 620d3c909f5075d500221bb20cb7658fbc18707f
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
+  GKCover: 26a096a184e32b3cdfd96492eaf3d847d9ae80a9
   GKNavigationBarViewController: 0697bd20b687ce437d29be6a9a3a5b8e3ae5e19e
-  SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
+  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: c7cd07fdf9608b9ad0bdf88e590b43dd6fb303eb
+PODFILE CHECKSUM: b209d0108fa5bf69063ab9d4cf0aff1994e88d60
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.3
