@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong, readwrite) UIScrollView *scrollView;
 
-@property (nonatomic, strong, readwrite) UIImageView *imageView;
+@property (nonatomic, strong, readwrite) FLAnimatedImageView *imageView;
 
 @property (nonatomic, strong, readwrite) GKLoadingView *loadingView;
 
@@ -68,7 +68,7 @@
 
 - (UIImageView *)imageView {
     if (!_imageView) {
-        _imageView               = [UIImageView new];
+        _imageView               = [FLAnimatedImageView new];
         _imageView.frame         = CGRectMake(0, 0, GKScreenW, GKScreenH);
         _imageView.clipsToBounds = YES;
     }
@@ -102,10 +102,14 @@
         [self.scrollView setZoomScale:1.0 animated:NO];
         
         // 已经加载成功，无需再加载
-        if (photo.image) {
+        if (photo.image || photo.animatedImage) {
             [self.loadingView stopLoading];
             
-            self.imageView.image = photo.image;
+            if (photo.animatedImage) {
+                self.imageView.animatedImage = photo.animatedImage;
+            }else {
+                self.imageView.image = photo.image;
+            }
             
             photo.finished = YES; // 加载完成
             
@@ -141,7 +145,11 @@
         gkWebImageCompletionBlock completionBlock = ^(UIImage *image, NSURL *url, BOOL finished, NSError *error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (finished) {
-                photo.image         = self.imageView.image;
+                if (self.imageView.animatedImage) {
+                    photo.animatedImage = self.imageView.animatedImage;
+                }else {
+                    photo.image = self.imageView.image;
+                }
                 photo.finished      = YES; // 下载完成
                 
                 strongSelf.scrollView.scrollEnabled = YES;
@@ -158,10 +166,15 @@
         };
         
         // 加载图片
-        [_imageProtocol setImageWithImageView:self.imageView url:photo.url placeholder:photo.placeholderImage progress:progressBlock completion:completionBlock];
+        [_imageProtocol setImageWithImageView:self.imageView
+                                          url:photo.url
+                                  placeholder:photo.placeholderImage
+                                     progress:progressBlock
+                                   completion:completionBlock];
         
     }else {
         self.imageView.image = nil;
+        self.imageView.animatedImage = nil;
         
         [self adjustFrame];
     }
@@ -178,8 +191,8 @@
 - (void)adjustFrame {
     CGRect frame = self.scrollView.frame;
     
-    if (self.imageView.image) {
-        CGSize imageSize = self.imageView.image.size;
+    if (self.imageView.image || self.imageView.animatedImage) {
+        CGSize imageSize = self.imageView.animatedImage ? self.imageView.animatedImage.size : self.imageView.image.size;
         CGRect imageF = (CGRect){{0, 0}, imageSize};
         
         // 图片的宽度 = 屏幕的宽度
