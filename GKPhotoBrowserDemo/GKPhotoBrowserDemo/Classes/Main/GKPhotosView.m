@@ -43,8 +43,10 @@ static CGFloat   photoH;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     for (NSInteger i = 0; i < photos.count; i++) {
-        UIImageView *imgView = [UIImageView new];
+        FLAnimatedImageView *imgView = [FLAnimatedImageView new];
         imgView.tag = i;
+        imgView.contentMode = UIViewContentModeScaleAspectFill;
+        imgView.clipsToBounds = YES;
         [self addSubview:imgView];
         
         imgView.userInteractionEnabled = YES;
@@ -67,7 +69,7 @@ static CGFloat   photoH;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     for (NSInteger i = 0; i < images.count; i++) {
-        UIImageView *imgView = [UIImageView new];
+        FLAnimatedImageView *imgView = [FLAnimatedImageView new];
         imgView.tag = i;
         [self addSubview:imgView];
         
@@ -76,7 +78,7 @@ static CGFloat   photoH;
         
         GKTimeLineImage *image = images[i];
         
-        if ([image.url hasPrefix:@"http"]) {
+        if ([image.url hasPrefix:@"http://"] || [image.url hasPrefix:@"https://"]) {
             [imgView sd_setImageWithURL:[NSURL URLWithString:image.thumbnail_url ? image.thumbnail_url : image.url]];
         }else {
             imgView.image = [UIImage imageNamed:image.url];

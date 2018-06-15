@@ -13,6 +13,7 @@
 #import <SDWebImage/UIView+WebCache.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/SDWebImageManager.h>
+#import <FLAnimatedImage/FLAnimatedImage.h>
 
 #define GKScreenW [UIScreen mainScreen].bounds.size.width
 #define GKScreenH [UIScreen mainScreen].bounds.size.height

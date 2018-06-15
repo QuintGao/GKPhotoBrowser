@@ -11,6 +11,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 判断iPhone X
+#define KIsiPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
+#define kSaveTopSpace       (KIsiPhoneX ? 24.0f : 0)   // iPhone X顶部多出的距离（刘海）
+#define kSaveBottomSpace    (KIsiPhoneX ? 34.0f : 0)   // iPhone X底部多出的距离
+
 @class GKPhotoBrowser;
 
 typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
@@ -31,6 +36,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // 长按事件
 - (void)photoBrowser:(GKPhotoBrowser *)browser longPressWithIndex:(NSInteger)index;
 
+// 旋转事件
+- (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandspace:(BOOL)isLandspace;
+
 // 上下滑动消失
 // 开始滑动时
 - (void)photoBrowser:(GKPhotoBrowser *)browser panBeginWithIndex:(NSInteger)index;
@@ -45,22 +53,27 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 
 @interface GKPhotoBrowser : UIViewController
 
-@property (nonatomic, strong, readonly) UIView *contentView;
-
-@property (nonatomic, strong, readonly) NSArray *photos;
-
-@property (nonatomic, assign, readonly) NSInteger currentIndex;
-
+/** 底部内容试图 */
+@property (nonatomic, strong, readonly) UIView        *contentView;
+/** 图片模型数组 */
+@property (nonatomic, strong, readonly) NSArray       *photos;
+/** 当前索引 */
+@property (nonatomic, assign, readonly) NSInteger     currentIndex;
+/** 是否是横屏 */
+@property (nonatomic, assign, readonly) BOOL          isLandspace;
+/** 当前设备的方向 */
+@property (nonatomic, assign, readonly) UIDeviceOrientation currentOrientation;
+/** 显示方式 */
 @property (nonatomic, assign) GKPhotoBrowserShowStyle showStyle;
-
+/** 隐藏方式 */
 @property (nonatomic, assign) GKPhotoBrowserHideStyle hideStyle;
-
+/** 图片加载方式 */
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
-
+/** 代理 */
 @property (nonatomic, weak) id<GKPhotoBrowserDelegate> delegate;
 
-/** 是否禁止全屏，默认是NO */
-@property (nonatomic, assign) BOOL isFullScreenDisabled;
+/** 是否禁止屏幕旋转监测 */
+@property (nonatomic, assign) BOOL isScreenRotateDisabled;
 
 /** 是否禁用默认单击事件 */
 @property (nonatomic, assign) BOOL isSingleTapDisabled;

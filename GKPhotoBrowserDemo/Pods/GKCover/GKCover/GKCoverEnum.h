@@ -17,6 +17,9 @@
 /** 默认透明度 */
 #define kAlpha 0.5
 
+// 过期提醒
+#define GKCoverDeprecated(instead) NS_DEPRECATED(2_0, 8_0, 2_0, 8_0, instead)
+
 /** 遮罩类型 */
 typedef NS_ENUM(NSUInteger, GKCoverStyle) {
     /** 半透明 */

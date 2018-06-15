@@ -25,6 +25,8 @@
 
 @property (nonatomic, assign) NSInteger count;
 
+@property (nonatomic, assign) BOOL isLandspace;
+
 @end
 
 @implementation GKTimeLineViewController
@@ -108,7 +110,14 @@
 //        browser.isResumePhotoZoom   = YES;
         [browser setupCoverViews:@[self.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
             
-            self.pageControl.center = CGPointMake(superFrame.size.width * 0.5, superFrame.size.height - 30);
+            CGFloat pointY = 0;
+            if (photoBrowser.isLandspace) {
+                pointY = superFrame.size.height - 20;
+            }else {
+                pointY = superFrame.size.height - 10;
+            }
+            
+            self.pageControl.center = CGPointMake(superFrame.size.width * 0.5, pointY);
             
             self.count ++;
             
@@ -136,16 +145,30 @@
 - (void)photoBrowser:(GKPhotoBrowser *)browser longPressWithIndex:(NSInteger)index {
     
     if (self.fromView) return;
+    if (browser.currentOrientation == UIDeviceOrientationPortraitUpsideDown) return;
     
     UIView *contentView = browser.contentView;
     
     UIView *fromView = [UIView new];
     fromView.backgroundColor = [UIColor clearColor];
-    fromView.frame = CGRectMake(0, 0, contentView.bounds.size.width, contentView.bounds.size.height);
-    [contentView addSubview:fromView];
     self.fromView = fromView;
     
-    UIView *actionSheet = [[UIView alloc] initWithFrame:CGRectMake(0, 0, contentView.bounds.size.width, 100)];
+    self.isLandspace = browser.isLandspace;
+    
+    CGFloat actionSheetH = 0;
+    
+    if (self.isLandspace) {
+        actionSheetH = 100;
+        fromView.frame = contentView.bounds;
+        [contentView addSubview:fromView];
+    }else {
+        actionSheetH = 100 + kSaveBottomSpace;
+        fromView.frame = browser.view.bounds;
+        [browser.view addSubview:fromView];
+    }
+    
+    UIView *actionSheet = [[UIView alloc] initWithFrame:CGRectMake(0, 0, contentView.bounds.size.width, actionSheetH)];
+    actionSheet.backgroundColor = [UIColor whiteColor];
     self.actionSheet = actionSheet;
 
     UIButton *saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, actionSheet.width, 50)];
@@ -162,8 +185,7 @@
     cancelBtn.backgroundColor = [UIColor whiteColor];
     [actionSheet addSubview:cancelBtn];
 
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, actionSheet.width, 0.5)];
-    lineView.center = CGPointMake(actionSheet.width * 0.5, actionSheet.height * 0.5);
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 50, actionSheet.width, 0.5)];
     lineView.backgroundColor = [UIColor grayColor];
     [actionSheet addSubview:lineView];
 
@@ -171,10 +193,12 @@
            contentView:actionSheet
                  style:GKCoverStyleTranslucent
              showStyle:GKCoverShowStyleBottom
-             animStyle:GKCoverAnimStyleBottom
+         showAnimStyle:GKCoverShowAnimStyleBottom
+         hideAnimStyle:GKCoverHideAnimStyleBottom
               notClick:NO
              showBlock:nil
              hideBlock:^{
+                 
                  [self.fromView removeFromSuperview];
                  self.fromView = nil;
              }];
@@ -182,16 +206,29 @@
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser willLayoutSubViews:(NSInteger)index {
     
-    UIView *contentView = browser.contentView;
     
-    self.fromView.frame = CGRectMake(0, 0, contentView.bounds.size.width, contentView.bounds.size.height);
-    
-    self.actionSheet.width = self.fromView.width;
-    [self.actionSheet.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        obj.width = self.fromView.width;
-    }];
-    
-    [GKCover layoutSubViews];
+//    UIView *contentView = browser.contentView;
+//
+//    [self.fromView removeFromSuperview];
+//
+//    if (browser.contentView.size.width > browser.contentView.size.height) { // 横屏
+//        [contentView addSubview:self.fromView];
+//        self.fromView.frame = CGRectMake(0, 0, contentView.bounds.size.width, contentView.bounds.size.height);
+//    }else {
+//        [browser.view addSubview:self.fromView];
+//        self.fromView.frame = CGRectMake(0, 0, contentView.bounds.size.width, contentView.bounds.size.height);
+//    }
+//
+//    self.actionSheet.width = contentView.frame.size.width;
+//    [self.actionSheet.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        obj.width = contentView.frame.size.width;
+//    }];
+//
+//    [GKCover layoutSubViews];
+}
+
+- (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandspace:(BOOL)isLandspace {
+    [GKCover hideCover];
 }
 
 - (void)saveBtnClick:(id)sender {
@@ -199,7 +236,7 @@
 }
 
 - (void)cancelBtnClick:(id)sender {
-    [GKCover hideView];
+    [GKCover hideCover];
 }
 
 @end

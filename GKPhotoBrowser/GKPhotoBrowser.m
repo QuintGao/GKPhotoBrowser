@@ -9,10 +9,6 @@
 #import "GKPhotoBrowser.h"
 #import "GKWebImageManager.h"
 
-// 判断iPhone X
-#define KIsiPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
-
-
 static Class imageManagerClass = nil;
 
 @interface GKPhotoBrowser()<UIScrollViewDelegate>
@@ -25,6 +21,8 @@ static Class imageManagerClass = nil;
 
 @property (nonatomic, strong, readwrite) NSArray *photos;
 @property (nonatomic, assign, readwrite) NSInteger currentIndex;
+@property (nonatomic, assign, readwrite) BOOL       isLandspace;
+@property (nonatomic, assign, readwrite) UIDeviceOrientation currentOrientation;
 
 @property (nonatomic, strong) UIScrollView *photoScrollView;
 
@@ -183,7 +181,17 @@ static Class imageManagerClass = nil;
     
     self.view.backgroundColor   = [UIColor blackColor];
     
-    self.contentView = [[UIView alloc] initWithFrame:self.view.bounds];
+    CGFloat width = self.view.bounds.size.width;
+    CGFloat height = self.view.bounds.size.height;
+    BOOL isLandspace = width > height;
+    if (isLandspace) {
+        width -= (kSaveTopSpace + kSaveBottomSpace);
+    }else {
+        height -= (kSaveTopSpace + kSaveBottomSpace);
+    }
+    
+    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
+    self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
     self.contentView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.contentView];
     
@@ -194,22 +202,14 @@ static Class imageManagerClass = nil;
             [self.contentView addSubview:obj];
         }];
     }else {
-        _countLabel = [UILabel new];
-        _countLabel.textColor = [UIColor whiteColor];
-        _countLabel.font = [UIFont systemFontOfSize:18.0];
-        _countLabel.textAlignment = NSTextAlignmentCenter;
+        _countLabel                 = [UILabel new];
+        _countLabel.textColor       = [UIColor whiteColor];
+        _countLabel.font            = [UIFont systemFontOfSize:18.0];
+        _countLabel.textAlignment   = NSTextAlignmentCenter;
+        _countLabel.bounds          = CGRectMake(0, 0, 80, 30);
         [self.contentView addSubview:_countLabel];
-        _countLabel.bounds = CGRectMake(0, 0, 80, 30);
         
-        CGFloat systemVersion = [UIDevice currentDevice].systemVersion.floatValue;
-        CGFloat centerY = systemVersion >= 11.0f ? 50 : 30;
-        
-        UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
-        if (UIDeviceOrientationIsLandscape(currentOrientation)) {
-            centerY = 30;
-        }
-        
-        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, centerY);
+        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, 30);
         
         [self updateLabel];
     }
@@ -230,7 +230,9 @@ static Class imageManagerClass = nil;
 - (void)addGestureAndObserver {
     [self addGestureRecognizer];
     
-    [self addDeviceOrientationObserver];
+    if (!self.isScreenRotateDisabled) {
+        [self addDeviceOrientationObserver];
+    }
 }
 
 #pragma mark - Setter
@@ -256,6 +258,16 @@ static Class imageManagerClass = nil;
     });
     
     [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (void)setIsScreenRotateDisabled:(BOOL)isScreenRotateDisabled {
+    _isScreenRotateDisabled = isScreenRotateDisabled;
+    
+    if (isScreenRotateDisabled) {
+        [self delDeviceOrientationObserver];
+    }else {
+        [self addDeviceOrientationObserver];
+    }
 }
 
 #pragma mark - BrowserShow
@@ -327,8 +339,10 @@ static Class imageManagerClass = nil;
     CGFloat photoScrollW = frame.size.width;
     CGFloat photoScrollH = frame.size.height;
     
+    CGFloat pointX = photoScrollW * 0.5 - kPhotoViewPadding;
+    
     self.photoScrollView.frame  = frame;
-    self.photoScrollView.center = CGPointMake(photoScrollW * 0.5 - kPhotoViewPadding, photoScrollH * 0.5);
+    self.photoScrollView.center = CGPointMake(pointX, photoScrollH * 0.5);
     
     self.photoScrollView.contentOffset = CGPointMake(self.currentIndex * photoScrollW, 0);
     
@@ -353,14 +367,7 @@ static Class imageManagerClass = nil;
     }else {
         _countLabel.bounds = CGRectMake(0, 0, 80, 30);
 
-        CGFloat centerY = KIsiPhoneX ? 50 : 30;
-        
-        UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
-        if (UIDeviceOrientationIsLandscape(currentOrientation)) {
-            centerY = 30;
-        }
-
-        _countLabel.center = CGPointMake(frame.size.width * 0.5, centerY);
+        _countLabel.center = CGPointMake(frame.size.width * 0.5, 30);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {
@@ -589,7 +596,7 @@ static Class imageManagerClass = nil;
             [self handlePanBegin];
             break;
         case UIGestureRecognizerStateChanged: {
-            double percent = 1 - fabs(point.y) / self.contentView.frame.size.height;
+            double percent = 1 - fabs(point.y) / self.view.frame.size.height;
             percent  = MAX(percent, 0);
             double s = MAX(percent, 0.5);
             CGAffineTransform translation = CGAffineTransformMakeTranslation(point.x / s, point.y / s);
@@ -672,7 +679,7 @@ static Class imageManagerClass = nil;
             self.contentView.transform = CGAffineTransformIdentity;
             
             // 设置frame
-            self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), MAX(screenBounds.size.width, screenBounds.size.height));
+            self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), MAX(screenBounds.size.width, screenBounds.size.height) - kSaveTopSpace - kSaveBottomSpace);
             
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
@@ -805,7 +812,7 @@ static Class imageManagerClass = nil;
 }
 
 - (void)deviceOrientationDidChange {
-    if (self.isFullScreenDisabled) return;
+    if (self.isScreenRotateDisabled) return;
     
     self.isRotation = YES;
     
@@ -818,6 +825,7 @@ static Class imageManagerClass = nil;
     
     // 旋转之后当前的设备方向
     UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
+    self.currentOrientation = currentOrientation;
     
     if (UIDeviceOrientationIsPortrait(self.originalOrientation)) {
         if (UIDeviceOrientationIsLandscape(currentOrientation)) {
@@ -843,6 +851,9 @@ static Class imageManagerClass = nil;
     
     // 旋转之后是横屏
     if (UIDeviceOrientationIsLandscape(currentOrientation)) {
+        self.isLandspace = YES;
+        [self deviceOrientationChangedDelegate];
+        
         // 横屏移除pan手势
         [self removePanGesture];
         
@@ -858,7 +869,7 @@ static Class imageManagerClass = nil;
             self.contentView.transform = CGAffineTransformMakeRotation(M_PI * rotation);
             
             // 设置frame
-            self.contentView.bounds = CGRectMake(0, 0, MAX(screenBounds.size.width, screenBounds.size.height), MIN(screenBounds.size.width, screenBounds.size.height));
+            self.contentView.bounds = CGRectMake(0, 0, MAX(screenBounds.size.width, screenBounds.size.height) - kSaveTopSpace - kSaveBottomSpace, MIN(screenBounds.size.width, screenBounds.size.height));
             
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
@@ -871,8 +882,17 @@ static Class imageManagerClass = nil;
             // 记录设备方向
             self.originalOrientation = currentOrientation;
             self.isRotation = NO;
+            
+            // 横屏时隐藏状态栏，这里为了解决一个bug，iPhone X中横屏状态栏隐藏后不能再次显示，暂时的解决办法是这样，如果有更好的方法可随时修改
+            if (self.isStatusBarShow) { // 状态栏是显示状态
+                self.isStatusBarShowing = self.isStatusBarShow;  // 记录状态栏显隐状态
+                self.isStatusBarShow = NO;
+            }
         }];
     }else if (currentOrientation == UIDeviceOrientationPortrait) {
+        self.isLandspace = NO;
+        [self deviceOrientationChangedDelegate];
+        
         // 竖屏时添加pan手势
         [self addPanGesture:NO];
         
@@ -886,7 +906,7 @@ static Class imageManagerClass = nil;
             self.contentView.transform = currentOrientation == UIDeviceOrientationPortrait ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
             
             // 设置frame
-            self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), MAX(screenBounds.size.width, screenBounds.size.height));
+            self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), MAX(screenBounds.size.width, screenBounds.size.height) - kSaveTopSpace - kSaveBottomSpace);
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
             [self layoutSubviews];
@@ -898,9 +918,24 @@ static Class imageManagerClass = nil;
             // 记录设备方向
             self.originalOrientation = currentOrientation;
             self.isRotation = NO;
+            
+            // 切换到竖屏后，如果原来状态栏是显示状态，就再次显示状态栏
+            if (self.isStatusBarShowing) {
+                self.isStatusBarShow    = YES;
+                self.isStatusBarShowing = NO;
+            }
         }];
     }else {
-        self.isRotation = NO;
+        self.isRotation     = NO;
+        self.isLandspace    = NO;
+        
+        [self deviceOrientationChangedDelegate];
+    }
+}
+
+- (void)deviceOrientationChangedDelegate {
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:onDeciceChangedWithIndex:isLandspace:)]) {
+        [self.delegate photoBrowser:self onDeciceChangedWithIndex:self.currentIndex isLandspace:self.isLandspace];
     }
 }
 

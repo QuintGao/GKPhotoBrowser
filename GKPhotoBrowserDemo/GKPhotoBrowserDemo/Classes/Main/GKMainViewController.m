@@ -54,7 +54,9 @@
                       @{@"text"  : @"简书",
                         @"class" : @"GKJianshuViewController"},
                       @{@"text"  : @"测试",
-                        @"class" : @"GKTestViewController"}
+                        @"class" : @"GKTestViewController"},
+                      @{@"text"  : @"GIF图片",
+                        @"class" : @"GKGIFViewController"}
                       ];
     
     [self.mainTable reloadData];
