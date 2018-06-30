@@ -27,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) void(^zoomEnded)(NSInteger scale);
 
+/** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
+@property (nonatomic, assign) BOOL isFullWidthForLandSpace;
+
 /** 是否重新布局 */
 @property (nonatomic, assign) BOOL isLayoutSubViews;
 

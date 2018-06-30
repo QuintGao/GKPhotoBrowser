@@ -108,8 +108,10 @@ static Class imageManagerClass = nil;
         self.photos       = photos;
         self.currentIndex = currentIndex;
         
-        self.isStatusBarShow  = NO;
-        self.isHideSourceView = YES;
+        // 初始化
+        self.isStatusBarShow            = NO;
+        self.isHideSourceView           = YES;
+        self.isFullWidthForLandSpace    = YES;
         
         _visiblePhotoViews  = [NSMutableArray new];
         _reusablePhotoViews = [NSMutableSet new];
@@ -376,8 +378,6 @@ static Class imageManagerClass = nil;
 }
 
 - (void)dealloc {
-    NSLog(@"browser dealloc");
-    
     [self delDeviceOrientationObserver];
 }
 
@@ -968,6 +968,7 @@ static Class imageManagerClass = nil;
         if (photoView == nil) {
             photoView               = [self dequeueReusablePhotoView];
             photoView.loadStyle     = self.loadStyle;
+            photoView.isFullWidthForLandSpace = self.isFullWidthForLandSpace;
             
             __typeof(self) __weak weakSelf = self;
             photoView.zoomEnded     = ^(NSInteger scale) {

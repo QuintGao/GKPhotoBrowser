@@ -20,8 +20,6 @@
 
 #define kMaxZoomScale               2.0f
 
-#define kIsFullWidthForLandSpace    YES
-
 #define kPhotoViewPadding           10
 
 #define kAnimationDuration          0.25f
