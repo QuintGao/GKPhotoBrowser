@@ -55,8 +55,6 @@ static CGFloat   photoH;
         NSString *url = photos[i];
         
         if ([url hasPrefix:@"http"]) {
-            NSString *urlStr = url;
-            
             [imgView sd_setImageWithURL:[NSURL URLWithString:url]];
         }else {
             imgView.image = [UIImage imageNamed:url];
@@ -72,6 +70,8 @@ static CGFloat   photoH;
     
     for (NSInteger i = 0; i < images.count; i++) {
         FLAnimatedImageView *imgView = [FLAnimatedImageView new];
+        imgView.contentMode = UIViewContentModeScaleAspectFill;
+        imgView.clipsToBounds = YES;
         imgView.tag = i;
         [self addSubview:imgView];
         

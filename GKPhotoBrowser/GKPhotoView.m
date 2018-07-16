@@ -264,12 +264,6 @@
     [self.scrollView zoomToRect:rect animated:YES];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    NSLog(@"%@", NSStringFromCGRect(self.imageView.frame));
-}
-
 #pragma mark - UIScrollViewDelegate
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.imageView;
