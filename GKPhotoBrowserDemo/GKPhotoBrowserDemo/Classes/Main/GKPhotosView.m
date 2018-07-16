@@ -78,12 +78,39 @@ static CGFloat   photoH;
         
         GKTimeLineImage *image = images[i];
         
-        if ([image.url hasPrefix:@"http://"] || [image.url hasPrefix:@"https://"]) {
-            [imgView sd_setImageWithURL:[NSURL URLWithString:image.thumbnail_url ? image.thumbnail_url : image.url]];
+        if ([image.url hasPrefix:@"http"]) {
+            NSString *urlStr = image.thumbnail_url ? image.thumbnail_url : image.url;
+            
+            [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                // 裁剪图片，显示中间区域
+                imgView.image = [self cropImage:image];
+            }];
         }else {
             imgView.image = [UIImage imageNamed:image.url];
         }
     }
+}
+
+- (UIImage *)cropImage:(UIImage *)image {
+    CGRect rect;
+    
+    if (image.size.width > image.size.height) {
+        rect = CGRectMake((image.size.width - image.size.height) / 2, 0, image.size.height, image.size.height);
+    }else if (image.size.width < image.size.height) {
+        rect = CGRectMake(0, (image.size.height - image.size.width) / 2, image.size.width, image.size.width);
+    }else {
+        rect = CGRectMake(0, 0, image.size.width, image.size.height);
+    }
+    
+    rect = CGRectMake(ceilf(rect.origin.x), ceilf(rect.origin.y), ceilf(rect.size.width), ceilf(rect.size.height));
+    
+    UIGraphicsBeginImageContext(rect.size);
+    [image drawAtPoint:CGPointMake(-rect.origin.x, -rect.origin.y)];
+    
+    UIImage *cropImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return cropImage;
 }
 
 - (void)layoutSubviews {

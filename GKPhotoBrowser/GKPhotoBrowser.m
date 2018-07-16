@@ -146,7 +146,7 @@ static Class imageManagerClass = nil;
     if ([_imageProtocol imageFromMemoryForURL:photo.url] || photo.image) {
         [photoView setupPhoto:photo];
     }else {
-        photoView.imageView.image = photo.placeholderImage;
+        photoView.imageView.image = photo.placeholderImage ? photo.placeholderImage : photo.sourceImageView.image;
         [photoView adjustFrame];
     }
     
@@ -359,7 +359,9 @@ static Class imageManagerClass = nil;
         
         photoView.frame = CGRectMake(x, y, w, h);
         
-        [photoView resetFrame];
+        if (photoView.photo) {
+            [photoView resetFrame];
+        }
     }
     
     if (self.coverViews) {
@@ -376,8 +378,6 @@ static Class imageManagerClass = nil;
 }
 
 - (void)dealloc {
-    NSLog(@"browser dealloc");
-    
     [self delDeviceOrientationObserver];
 }
 
@@ -730,6 +730,9 @@ static Class imageManagerClass = nil;
     
     [UIView animateWithDuration:kAnimationDuration animations:^{
         photoView.imageView.frame = sourceRect;
+        if (photo.sourceImageView) {
+            photoView.imageView.image = photo.sourceImageView.image;
+        }
         self.view.backgroundColor = [UIColor clearColor];
     }completion:^(BOOL finished) {
         [self dismissAnimated:NO];
@@ -993,7 +996,10 @@ static Class imageManagerClass = nil;
             [self.photoScrollView addSubview:photoView];
             [_visiblePhotoViews addObject:photoView];
             
-            [photoView resetFrame];
+            if (photoView.photo) {
+                [photoView resetFrame];
+            }
+//            [photoView resetFrame];
         }
         
         if (photoView.photo == nil && self.isShow) {

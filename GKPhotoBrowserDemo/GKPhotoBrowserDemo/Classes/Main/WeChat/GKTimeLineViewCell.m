@@ -72,9 +72,7 @@
 
 #pragma mark - GKPhotosViewDelegate
 - (void)photoTapped:(UIImageView *)imgView {
-    
     !self.photosImgClickBlock ? : self.photosImgClickBlock(self, imgView.tag);
-    
 }
 
 @end

@@ -66,11 +66,12 @@
     return _scrollView;
 }
 
-- (UIImageView *)imageView {
+- (FLAnimatedImageView *)imageView {
     if (!_imageView) {
         _imageView               = [FLAnimatedImageView new];
         _imageView.frame         = CGRectMake(0, 0, GKScreenW, GKScreenH);
         _imageView.clipsToBounds = YES;
+        _imageView.runLoopMode   = NSDefaultRunLoopMode;
     }
     return _imageView;
 }
@@ -119,7 +120,7 @@
         }
         
         // 显示原来的图片
-        self.imageView.image          = photo.placeholderImage;
+        self.imageView.image          = photo.placeholderImage ? photo.placeholderImage : photo.sourceImageView.image;
         self.imageView.contentMode    = photo.sourceImageView.contentMode;
         self.scrollView.scrollEnabled = NO;
         // 进度条
@@ -129,7 +130,9 @@
             [self.loadingView startLoading];
         }
         
-        [self adjustFrame];
+        if (self.imageView.image) {
+            [self adjustFrame];
+        }
         
         __weak typeof(self) weakSelf = self;
         gkWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
@@ -171,7 +174,6 @@
                                   placeholder:photo.placeholderImage
                                      progress:progressBlock
                                    completion:completionBlock];
-        
     }else {
         self.imageView.image = nil;
         self.imageView.animatedImage = nil;
@@ -215,10 +217,8 @@
         
         // 设置图片的frame
         self.imageView.frame = imageF;
-                
-        self.scrollView.contentSize = self.imageView.frame.size;
         
-//        self.imageView.center = [self centerOfScrollViewContent:self.scrollView];
+        self.scrollView.contentSize = self.imageView.frame.size;
         
         if (imageF.size.height <= self.scrollView.bounds.size.height) {
             self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, self.scrollView.bounds.size.height * 0.5);
@@ -237,11 +237,11 @@
         self.scrollView.maximumZoomScale = maxScale;
         self.scrollView.zoomScale        = 1.0;
     }else {
-        frame.origin     = CGPointZero;
-        CGFloat width  = frame.size.width;
-        CGFloat height = width * 2.0 / 3.0;
-        _imageView.bounds = CGRectMake(0, 0, width, height);
-        _imageView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+        frame.origin        = CGPointZero;
+        CGFloat width       = frame.size.width;
+        CGFloat height      = width;
+        _imageView.bounds   = CGRectMake(0, 0, width, height);
+        _imageView.center   = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
         // 重置内容大小
         self.scrollView.contentSize = self.imageView.frame.size;
     }
@@ -260,20 +260,14 @@
     return actualCenter;
 }
 
-- (CGRect)frameWithWidth:(CGFloat)width height:(CGFloat)height center:(CGPoint)center {
-    CGFloat x = center.x - width * 0.5;
-    CGFloat y = center.y - height * 0.5;
-    
-    return CGRectMake(x, y, width, height);
-}
-
 - (void)zoomToRect:(CGRect)rect animated:(BOOL)animated {
     [self.scrollView zoomToRect:rect animated:YES];
 }
 
 - (void)layoutSubviews {
-    
     [super layoutSubviews];
+    
+    NSLog(@"%@", NSStringFromCGRect(self.imageView.frame));
 }
 
 #pragma mark - UIScrollViewDelegate

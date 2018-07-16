@@ -103,9 +103,9 @@
         self.pageControl.hidesForSinglePage = YES;
         
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-        browser.showStyle           = GKPhotoBrowserShowStyleZoom;
-        browser.hideStyle           = GKPhotoBrowserHideStyleZoomScale;
-        browser.loadStyle           = GKPhotoBrowserLoadStyleIndeterminateMask;
+        browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
+        browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
+        browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
 //        browser.isStatusBarShow     = YES;
 //        browser.isResumePhotoZoom   = YES;
         [browser setupCoverViews:@[self.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
@@ -120,10 +120,8 @@
             self.pageControl.center = CGPointMake(superFrame.size.width * 0.5, pointY);
             
             self.count ++;
-            
-            NSLog(@"%zd", self.count);
-            
         }];
+        
         browser.delegate = self;
         
         [browser showFromVC:self];

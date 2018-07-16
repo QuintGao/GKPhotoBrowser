@@ -12,13 +12,13 @@ typedef void (^gkWebImageCompletionBlock)(UIImage *_Nullable image, NSURL * _Nul
 
 @protocol GKWebImageProtocol<NSObject>
 
-- (void)setImageWithImageView:(nullable UIImageView *)imageView
+- (void)setImageWithImageView:(nullable FLAnimatedImageView *)imageView
                           url:(nullable NSURL *)url
                   placeholder:(nullable UIImage *)placeholder
                      progress:(nullable gkWebImageProgressBlock)progress
                    completion:(nullable gkWebImageCompletionBlock)completion;
 
-- (void)cancelImageRequestWithImageView:(nullable UIImageView *)imageView;
+- (void)cancelImageRequestWithImageView:(nullable FLAnimatedImageView *)imageView;
 
 - (UIImage *_Nullable)imageFromMemoryForURL:(nullable NSURL *)url;
 
