@@ -64,6 +64,9 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2018.6.30
+    1、去除多余注释
+    2、增加属性isFullWidthForLandSpace 控制横屏显示
 2018.6.13
     支持GIF图片的显示
 2018.5.28

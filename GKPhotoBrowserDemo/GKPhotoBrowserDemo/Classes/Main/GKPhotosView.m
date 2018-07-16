@@ -55,6 +55,8 @@ static CGFloat   photoH;
         NSString *url = photos[i];
         
         if ([url hasPrefix:@"http"]) {
+            NSString *urlStr = url;
+            
             [imgView sd_setImageWithURL:[NSURL URLWithString:url]];
         }else {
             imgView.image = [UIImage imageNamed:url];
@@ -80,11 +82,11 @@ static CGFloat   photoH;
         
         if ([image.url hasPrefix:@"http"]) {
             NSString *urlStr = image.thumbnail_url ? image.thumbnail_url : image.url;
-            
-            [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                // 裁剪图片，显示中间区域
-                imgView.image = [self cropImage:image];
-            }];
+            [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
+//            [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+//                // 裁剪图片，显示中间区域
+//                imgView.image = [self cropImage:image];
+//            }];
         }else {
             imgView.image = [UIImage imageNamed:image.url];
         }

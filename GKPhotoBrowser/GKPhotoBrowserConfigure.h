@@ -20,8 +20,6 @@
 
 #define kMaxZoomScale               2.0f
 
-#define kIsFullWidthForLandSpace    YES
-
 #define kPhotoViewPadding           10
 
 #define kAnimationDuration          0.25f
@@ -35,9 +33,9 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserShowStyle) {
 
 // 图片浏览器的隐藏方式
 typedef NS_ENUM(NSUInteger, GKPhotoBrowserHideStyle) {
-    GKPhotoBrowserHideStyleZoom,           // 缩放
-    GKPhotoBrowserHideStyleZoomScale,      // 缩放和滑动缩小
-    GKPhotoBrowserHideStyleZoomSlide       // 缩放和滑动平移
+    GKPhotoBrowserHideStyleZoom,           // 点击缩放消失
+    GKPhotoBrowserHideStyleZoomScale,      // 点击缩放消失、滑动缩小后消失
+    GKPhotoBrowserHideStyleZoomSlide       // 点击缩放消失、滑动平移后消失
 };
 
 // 图片浏览器的加载方式

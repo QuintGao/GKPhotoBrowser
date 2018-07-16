@@ -206,7 +206,7 @@
         // 如果kIsFullWidthForLandSpace = NO，需要把图片全部显示在屏幕上
         // 此时由于图片的宽度已经等于屏幕的宽度，所以只需判断图片显示的高度>屏幕高度时，将图片的高度缩小到屏幕的高度即可
         
-        if (!kIsFullWidthForLandSpace) {
+        if (!self.isFullWidthForLandSpace) {
             // 图片的高度 > 屏幕的高度
             if (imageF.size.height > frame.size.height) {
                 CGFloat scale = imageF.size.width / imageF.size.height;
