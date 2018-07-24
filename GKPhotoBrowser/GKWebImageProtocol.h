@@ -6,6 +6,8 @@
 //  Copyright © 2017年 QuintGao. All rights reserved.
 //
 
+#import <FLAnimatedImage/FLAnimatedImage.h>
+
 typedef void (^gkWebImageProgressBlock)(NSInteger receivedSize, NSInteger expectedSize);
 
 typedef void (^gkWebImageCompletionBlock)(UIImage *_Nullable image, NSURL * _Nullable url, BOOL success, NSError * _Nullable error);

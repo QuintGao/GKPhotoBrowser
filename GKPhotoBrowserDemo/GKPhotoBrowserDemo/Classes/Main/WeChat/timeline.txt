@@ -2,9 +2,9 @@
     {
         "name": "高清大图",
         "icon": {
-            "url": "http://img2.imgtn.bdimg.com/it/u=3779071083,1744545237&fm=27&gp=0.jpg",
-            "width": "400",
-            "height": "400"
+            "url": "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1214248342,1256011437&fm=27&gp=0.jpg",
+            "width": "200",
+            "height": "200"
         },
         "content": "超清蓝光1080p手机壁纸，可自定义所需壁纸",
         "images": [

@@ -7,6 +7,8 @@
 //
 
 #import "GKWebImageManager.h"
+#import <SDWebImage/UIView+WebCache.h>
+#import <SDWebImage/SDWebImageManager.h>
 
 @implementation GKWebImageManager
 

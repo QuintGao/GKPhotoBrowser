@@ -46,7 +46,7 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // 结束滑动时 disappear：是否消失
 - (void)photoBrowser:(GKPhotoBrowser *)browser panEndedWithIndex:(NSInteger)index willDisappear:(BOOL)disappear;
 
-
+// 布局子视图
 - (void)photoBrowser:(GKPhotoBrowser *)browser willLayoutSubViews:(NSInteger)index;
 
 @end

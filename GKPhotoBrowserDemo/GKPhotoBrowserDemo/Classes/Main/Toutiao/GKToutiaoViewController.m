@@ -45,7 +45,7 @@
 }
 
 - (void)setupUI {
-    self.gk_navigationItem.title = @"朋友圈";
+    self.gk_navigationItem.title = @"今日头条";
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.top        = self.gk_navigationBar.bottom;

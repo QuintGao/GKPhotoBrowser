@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GKWebImageProtocol.h"
 #import "GKPhotoBrowserConfigure.h"
 
 NS_ASSUME_NONNULL_BEGIN
