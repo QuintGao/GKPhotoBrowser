@@ -4,8 +4,6 @@ GKPhotoBrowser
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/QuintGao/GKPhotoBrowser/master/LICENSE)&nbsp;
 [![CocoaPods](http://img.shields.io/cocoapods/v/GKPhotoBrowser.svg?style=flat)](http://cocoapods.org/pods/GKPhotoBrowser)&nbsp;
 [![CocoaPods](http://img.shields.io/cocoapods/p/GKPhotoBrowser.svg?style=flat)](http://cocoadocs.org/docsets/GKPhotoBrowser)&nbsp;
-[![Build Status](https://travis-ci.org/QuintGao/GKPhotoBrowser.svg?branch=master)](https://travis-ci.org/QuintGao/GKPhotoBrowser)&nbsp;
-[![codecov.io](https://codecov.io/github/QuintGao/GKPhotoBrowser/coverage.svg?branch=master)](https://codecov.io/github/QuintGao/GKPhotoBrowser?branch=master)
 
 iOS仿微信、今日头条等图片浏览器
 ==============
