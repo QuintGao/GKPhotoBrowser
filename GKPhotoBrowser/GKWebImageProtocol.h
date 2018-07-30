@@ -7,6 +7,8 @@
 //
 
 #import <FLAnimatedImage/FLAnimatedImage.h>
+#import <SDWebImage/UIView+WebCache.h>
+#import <SDWebImage/SDWebImageManager.h>
 
 typedef void (^gkWebImageProgressBlock)(NSInteger receivedSize, NSInteger expectedSize);
 
