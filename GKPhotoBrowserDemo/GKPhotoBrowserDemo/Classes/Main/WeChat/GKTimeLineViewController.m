@@ -27,6 +27,9 @@
 
 @property (nonatomic, assign) BOOL isLandspace;
 
+/** 这里用weak是防止GKPhotoBrowser被强引用，导致不能释放 */
+@property (nonatomic, weak) GKPhotoBrowser *browser;
+
 @end
 
 @implementation GKTimeLineViewController
@@ -125,6 +128,8 @@
         browser.delegate = self;
         
         [browser showFromVC:self];
+        
+        self.browser = browser;
     };
     
     return cell;
@@ -156,11 +161,11 @@
     CGFloat actionSheetH = 0;
     
     if (self.isLandspace) {
-        actionSheetH = 100;
+        actionSheetH = 150;
         fromView.frame = contentView.bounds;
         [contentView addSubview:fromView];
     }else {
-        actionSheetH = 100 + kSaveBottomSpace;
+        actionSheetH = 150 + kSaveBottomSpace;
         fromView.frame = browser.view.bounds;
         [browser.view addSubview:fromView];
     }
@@ -168,15 +173,22 @@
     UIView *actionSheet = [[UIView alloc] initWithFrame:CGRectMake(0, 0, contentView.bounds.size.width, actionSheetH)];
     actionSheet.backgroundColor = [UIColor whiteColor];
     self.actionSheet = actionSheet;
+    
+    UIButton *delBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, actionSheet.width, 50)];
+    [delBtn setTitle:@"删除" forState:UIControlStateNormal];
+    [delBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [delBtn addTarget:self action:@selector(delBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    delBtn.backgroundColor = [UIColor whiteColor];
+    [actionSheet addSubview:delBtn];
 
-    UIButton *saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, actionSheet.width, 50)];
+    UIButton *saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50, actionSheet.width, 50)];
     [saveBtn setTitle:@"保存图片" forState:UIControlStateNormal];
     [saveBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [saveBtn addTarget:self action:@selector(saveBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     saveBtn.backgroundColor = [UIColor whiteColor];
     [actionSheet addSubview:saveBtn];
 
-    UIButton *cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50, actionSheet.width, 50)];
+    UIButton *cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 100, actionSheet.width, 50)];
     [cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
     [cancelBtn addTarget:self action:@selector(cancelBtnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -186,6 +198,10 @@
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 50, actionSheet.width, 0.5)];
     lineView.backgroundColor = [UIColor grayColor];
     [actionSheet addSubview:lineView];
+    
+    UIView *line2View = [[UIView alloc] initWithFrame:CGRectMake(0, 100, actionSheet.width, 0.5)];
+    line2View.backgroundColor = [UIColor grayColor];
+    [actionSheet addSubview:line2View];
 
     [GKCover coverFrom:fromView
            contentView:actionSheet
@@ -229,12 +245,34 @@
     [GKCover hideCover];
 }
 
-- (void)saveBtnClick:(id)sender {
+- (void)delBtnClick:(id)sender {
+    [GKCover hideCover];
     
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
+    
+    [arr removeObjectAtIndex:self.browser.currentIndex];
+    
+    [self.browser resetPhotoBrowserWithPhotos:arr];
+    
+    self.pageControl.numberOfPages = arr.count;
+}
+
+- (void)saveBtnClick:(id)sender {
+    [GKCover hideCover];
+    
+    GKPhoto *photo = self.browser.photos[self.browser.currentIndex];
+    
+    UIImageWriteToSavedPhotosAlbum(photo.image, self, @selector(image:didFinishSavingWithError:contextInfo:), (__bridge void *)self);
 }
 
 - (void)cancelBtnClick:(id)sender {
     [GKCover hideCover];
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    
+    NSLog(@"image = %@, error = %@, contextInfo = %@", image, error, contextInfo);
 }
 
 @end

@@ -188,7 +188,9 @@
     self.scrollView.frame  = self.bounds;
     self.loadingView.frame = self.bounds;
     
-    [self adjustFrame];
+    if (self.photo) {
+        [self adjustFrame];
+    }
 }
 
 #pragma mark - 调整frame

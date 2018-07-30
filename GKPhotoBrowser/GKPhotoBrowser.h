@@ -118,6 +118,20 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
  */
 - (void)showFromVC:(UIViewController *)vc;
 
+/**
+ 移除指定位置的内容
+
+ @param index 位置索引
+ */
+- (void)removePhotoAtIndex:(NSInteger)index;
+
+/**
+ 重置图片浏览器
+
+ @param photos 图片内容数组
+ */
+- (void)resetPhotoBrowserWithPhotos:(NSArray *)photos;
+
 + (void)setImageManagerClass:(Class<GKWebImageProtocol>)cls;
 
 @end

@@ -360,10 +360,7 @@ static Class imageManagerClass = nil;
         x = kPhotoViewPadding + photoView.tag * (kPhotoViewPadding * 2 + w);
         
         photoView.frame = CGRectMake(x, y, w, h);
-        
-        if (photoView.photo) {
-            [photoView resetFrame];
-        }
+        [photoView resetFrame];
     }
     
     if (self.coverViews) {
@@ -380,6 +377,7 @@ static Class imageManagerClass = nil;
 }
 
 - (void)dealloc {
+    NSLog(@"dealloc");
     [self delDeviceOrientationObserver];
 }
 
@@ -429,19 +427,28 @@ static Class imageManagerClass = nil;
     }
 }
 
-- (void)dismissAnimated:(BOOL)animated {
-    GKPhoto *photo = self.photos[self.currentIndex];
-    if (animated) {
-        [UIView animateWithDuration:kAnimationDuration animations:^{
-            photo.sourceImageView.alpha = 1.0;
-        }];
-    }else {
-        photo.sourceImageView.alpha = 1.0;
+- (void)removePhotoAtIndex:(NSInteger)index {
+    if (index < 0 || index >= self.photos.count) return;
+    
+    NSMutableArray *photos = [NSMutableArray arrayWithArray:self.photos];
+    [photos removeObjectAtIndex:index];
+    
+    [self resetPhotoBrowserWithPhotos:photos];
+}
+
+- (void)resetPhotoBrowserWithPhotos:(NSArray *)photos {
+    if (photos.count == 0) {
+        [self handleSingleTap:nil];
+        return;
     }
     
-    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    self.photos = photos;
     
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self.reusablePhotoViews removeAllObjects];
+    [self.visiblePhotoViews removeAllObjects];
+    
+    [self updateReusableViews];
+    [self setupPhotoViews];
 }
 
 #pragma mark - Private Methods
@@ -485,6 +492,24 @@ static Class imageManagerClass = nil;
     }
 }
 
+- (void)dismissAnimated:(BOOL)animated {
+    GKPhoto *photo = self.photos[self.currentIndex];
+    if (animated) {
+        [UIView animateWithDuration:kAnimationDuration animations:^{
+            photo.sourceImageView.alpha = 1.0;
+        }];
+    }else {
+        photo.sourceImageView.alpha = 1.0;
+    }
+    
+    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    
+    // 移除屏幕旋转监听
+    [self delDeviceOrientationObserver];
+    
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
+
 #pragma mark - Gesture Handle
 - (void)handleSingleTap:(UITapGestureRecognizer *)tap {
     
@@ -501,6 +526,8 @@ static Class imageManagerClass = nil;
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
     
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
+        [self delDeviceOrientationObserver];
+        
         [self.navigationController popViewControllerAnimated:YES];
     }else {
         // 显示状态栏
@@ -568,9 +595,7 @@ static Class imageManagerClass = nil;
     
     // 放大时候禁止滑动返回
     GKPhotoView *photoView = [self currentPhotoView];
-    if (photoView.scrollView.zoomScale > 1.0f) {
-        return;
-    }
+    if (photoView.scrollView.zoomScale > 1.0f) return;
     
     switch (self.hideStyle) {
         case GKPhotoBrowserHideStyleZoomScale:
@@ -999,10 +1024,7 @@ static Class imageManagerClass = nil;
             [self.photoScrollView addSubview:photoView];
             [_visiblePhotoViews addObject:photoView];
             
-            if (photoView.photo) {
-                [photoView resetFrame];
-            }
-//            [photoView resetFrame];
+            [photoView resetFrame];
         }
         
         if (photoView.photo == nil && self.isShow) {
