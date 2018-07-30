@@ -6,9 +6,7 @@
 //  Copyright © 2017年 QuintGao. All rights reserved.
 //
 
-#import <FLAnimatedImage/FLAnimatedImage.h>
-#import <SDWebImage/UIView+WebCache.h>
-#import <SDWebImage/SDWebImageManager.h>
+#import "GKPhotoBrowserConfigure.h"
 
 typedef void (^gkWebImageProgressBlock)(NSInteger receivedSize, NSInteger expectedSize);
 

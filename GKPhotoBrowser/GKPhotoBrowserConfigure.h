@@ -10,6 +10,10 @@
 #define GKPhotoBrowserConfigure_h
 
 #import "UIScrollView+GKGestureHandle.h"
+#import <SDWebImage/UIView+WebCache.h>
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <FLAnimatedImage/FLAnimatedImage.h>
+#import <SDWebImage/SDWebImageManager.h>
 
 #define GKScreenW [UIScreen mainScreen].bounds.size.width
 #define GKScreenH [UIScreen mainScreen].bounds.size.height
