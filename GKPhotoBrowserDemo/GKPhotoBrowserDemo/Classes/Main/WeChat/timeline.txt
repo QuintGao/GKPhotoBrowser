@@ -1,5 +1,36 @@
 [
     {
+        "name": "长图",
+        "icon": {
+            "url": "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2770691011,100164542&fm=27&gp=0.jpg",
+            "width": "300",
+            "height": "300"
+        },
+        "content": "GKPhotoBrowser-显示长图",
+        "images": [
+            {
+                "url": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1533056077048&di=e67f672075c673e6ffaa0625564133e7&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201406%2F12%2F20140612211118_YYXAC.jpeg",
+                "width": "127.05",
+                "height": "459"
+            },
+            {
+                "url": "http://img1.mydrivers.com/img/20171008/s_da7893ed38074cbc994e0ff3d85adeb5.jpg",
+                "width": "602",
+                "height": "9073"
+            },
+            {
+                "url": "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3959670449,2646882971&fm=27&gp=0.jpg",
+                "width": "640",
+                "height": "1580"
+            },
+            {
+                "url": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1533056728983&di=0377ea3d0ef5acdefe8863c1657a67f4&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01e90159a5094ba801211d25bec351.jpg",
+                "width": "750",
+                "height": "4956"
+            }
+        ]
+    },
+    {
         "name": "高清大图",
         "icon": {
             "url": "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1214248342,1256011437&fm=27&gp=0.jpg",

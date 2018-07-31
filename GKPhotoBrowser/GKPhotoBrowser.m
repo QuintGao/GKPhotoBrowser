@@ -380,7 +380,6 @@ static Class imageManagerClass = nil;
 }
 
 - (void)dealloc {
-    NSLog(@"dealloc");
     [self delDeviceOrientationObserver];
 }
 
@@ -627,9 +626,11 @@ static Class imageManagerClass = nil;
             double percent = 1 - fabs(point.y) / self.view.frame.size.height;
             percent  = MAX(percent, 0);
             double s = MAX(percent, 0.5);
+
             CGAffineTransform translation = CGAffineTransformMakeTranslation(point.x / s, point.y / s);
             CGAffineTransform scale = CGAffineTransformMakeScale(s, s);
             photoView.imageView.transform = CGAffineTransformConcat(translation, scale);
+            
             self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:percent];
         }
             break;
