@@ -97,6 +97,7 @@
         
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photoArrs currentIndex:index];
         browser.showStyle    = GKPhotoBrowserShowStyleZoom;
+        browser.hideStyle    = GKPhotoBrowserHideStyleZoomScale;
         
         [browser showFromVC:self];
     };

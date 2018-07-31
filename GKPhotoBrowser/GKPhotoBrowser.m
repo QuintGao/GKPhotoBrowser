@@ -186,10 +186,13 @@ static Class imageManagerClass = nil;
     CGFloat width = self.view.bounds.size.width;
     CGFloat height = self.view.bounds.size.height;
     BOOL isLandspace = width > height;
-    if (isLandspace) {
-        width -= (kSaveTopSpace + kSaveBottomSpace);
-    }else {
-        height -= (kSaveTopSpace + kSaveBottomSpace);
+    
+    if (self.isAdaptiveSaveArea) {
+        if (isLandspace) {
+            width -= (kSaveTopSpace + kSaveBottomSpace);
+        }else {
+            height -= (kSaveTopSpace + kSaveBottomSpace);
+        }
     }
     
     self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
@@ -512,7 +515,6 @@ static Class imageManagerClass = nil;
 
 #pragma mark - Gesture Handle
 - (void)handleSingleTap:(UITapGestureRecognizer *)tap {
-    
     GKPhotoView *photoView = [self currentPhotoView];
     photoView.isLayoutSubViews = YES;
     
@@ -592,7 +594,6 @@ static Class imageManagerClass = nil;
 }
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)panGesture {
-    
     // 放大时候禁止滑动返回
     GKPhotoView *photoView = [self currentPhotoView];
     if (photoView.scrollView.zoomScale > 1.0f) return;
@@ -705,8 +706,13 @@ static Class imageManagerClass = nil;
             // 旋转view
             self.contentView.transform = CGAffineTransformIdentity;
             
+            CGFloat height = MAX(screenBounds.size.width, screenBounds.size.height);
+            
+            if (self.isAdaptiveSaveArea) {
+                height -= (kSaveTopSpace + kSaveBottomSpace);
+            }
             // 设置frame
-            self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), MAX(screenBounds.size.width, screenBounds.size.height) - kSaveTopSpace - kSaveBottomSpace);
+            self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
             
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
@@ -898,8 +904,12 @@ static Class imageManagerClass = nil;
             // 旋转contentView
             self.contentView.transform = CGAffineTransformMakeRotation(M_PI * rotation);
             
+            CGFloat width = MAX(screenBounds.size.width, screenBounds.size.height);
+            if (self.isAdaptiveSaveArea) {
+                width -= (kSaveTopSpace + kSaveBottomSpace);
+            }
             // 设置frame
-            self.contentView.bounds = CGRectMake(0, 0, MAX(screenBounds.size.width, screenBounds.size.height) - kSaveTopSpace - kSaveBottomSpace, MIN(screenBounds.size.width, screenBounds.size.height));
+            self.contentView.bounds = CGRectMake(0, 0, width, MIN(screenBounds.size.width, screenBounds.size.height));
             
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
@@ -935,8 +945,12 @@ static Class imageManagerClass = nil;
             // 旋转view
             self.contentView.transform = currentOrientation == UIDeviceOrientationPortrait ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
             
+            CGFloat height = MAX(screenBounds.size.width, screenBounds.size.height);
+            if (self.isAdaptiveSaveArea) {
+                height -= (kSaveTopSpace + kSaveBottomSpace);
+            }
             // 设置frame
-            self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), MAX(screenBounds.size.width, screenBounds.size.height) - kSaveTopSpace - kSaveBottomSpace);
+            self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
             [self layoutSubviews];
@@ -1062,6 +1076,7 @@ static Class imageManagerClass = nil;
 }
 
 #pragma mark - 代理
+
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
