@@ -32,26 +32,18 @@ static const void* GKGestureHandleDisabled = @"GKGestureHandleDisabled";
         }
     }
     
-    if (self.gk_gestureHandleDisabled) {
-        return YES;
-    }
+    if (self.gk_gestureHandleDisabled) return YES;
     
-    if ([self panBack:gestureRecognizer]) {
-        return NO;
-    }
+    if ([self panBack:gestureRecognizer]) return NO;
     
     return YES;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     
-    if (self.gk_gestureHandleDisabled) {
-        return NO;
-    }
+    if (self.gk_gestureHandleDisabled) return NO;
     
-    if ([self panBack:gestureRecognizer]) {
-        return YES;
-    }
+    if ([self panBack:gestureRecognizer]) return YES;
     
     return NO;
 }
@@ -80,10 +72,10 @@ static const void* GKGestureHandleDisabled = @"GKGestureHandleDisabled";
     if (translation.y > 0 && self.contentOffset.y <= 0) {
         return YES;
     }
-    CGFloat maxOffsetY = floor(self.contentSize.height - self.bounds.size.height);
-    if (translation.y < 0 && self.contentOffset.y >= maxOffsetY) {
-        return YES;
-    }
+//    CGFloat maxOffsetY = floor(self.contentSize.height - self.bounds.size.height);
+//    if (translation.y < 0 && self.contentOffset.y >= maxOffsetY) {
+//        return YES;
+//    }
     return NO;
 }
 

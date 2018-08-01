@@ -51,6 +51,8 @@ static Class imageManagerClass = nil;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 
+@property (nonatomic, assign) CGPoint   firstMovePoint;
+
 @property (nonatomic, strong) id<GKWebImageProtocol> imageProtocol;
 
 @end
@@ -630,7 +632,7 @@ static Class imageManagerClass = nil;
             CGAffineTransform translation = CGAffineTransformMakeTranslation(point.x / s, point.y / s);
             CGAffineTransform scale = CGAffineTransformMakeScale(s, s);
             photoView.imageView.transform = CGAffineTransformConcat(translation, scale);
-            
+
             self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:percent];
         }
             break;
