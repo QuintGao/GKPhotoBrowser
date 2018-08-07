@@ -14,12 +14,7 @@ typedef void (^gkWebImageCompletionBlock)(UIImage * _Nullable image, NSData * _N
 
 @protocol GKWebImageProtocol<NSObject>
 
-- (void)setImageWithImageView:(nullable UIImageView *)imageView
-                          url:(nullable NSURL *)url
-                  placeholder:(nullable UIImage *)placeholder
-                     progress:(nullable gkWebImageProgressBlock)progress
-                   completion:(nullable gkWebImageCompletionBlock)completion;
-
+// 加载图片
 - (id)loadImageWithURL:(nullable NSURL *)url
               progress:(nullable gkWebImageProgressBlock)progress
              completed:(nullable gkWebImageCompletionBlock)completion;

@@ -147,8 +147,8 @@
         // 正在加载
         if (self.operation) return;
         
-        // 开始加载
-        UIImage *cacheImage = [[SDWebImageManager sharedManager].imageCache imageFromCacheForKey:photo.url.absoluteString];
+        // 缓存图片
+        UIImage *cacheImage = [_imageProtocol imageFromMemoryForURL:photo.url];
         photo.image = cacheImage.images.count == 0 ? cacheImage.images.firstObject : cacheImage;
         
         if (photo.image.images.count > 1) {
