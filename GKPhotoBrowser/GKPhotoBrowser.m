@@ -180,12 +180,11 @@ static Class imageManagerClass = nil;
 }
 
 - (void)setupUI {
-    
     [self.navigationController setNavigationBarHidden:YES];
     
     self.view.backgroundColor   = [UIColor blackColor];
     
-    CGFloat width = self.view.bounds.size.width;
+    CGFloat width  = self.view.bounds.size.width;
     CGFloat height = self.view.bounds.size.height;
     BOOL isLandspace = width > height;
     
@@ -216,7 +215,7 @@ static Class imageManagerClass = nil;
         _countLabel.bounds          = CGRectMake(0, 0, 80, 30);
         [self.contentView addSubview:_countLabel];
         
-        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, 30);
+        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !isLandspace) ? 50 : 30);
         
         [self updateLabel];
     }
@@ -373,7 +372,7 @@ static Class imageManagerClass = nil;
     }else {
         _countLabel.bounds = CGRectMake(0, 0, 80, 30);
 
-        _countLabel.center = CGPointMake(frame.size.width * 0.5, 30);
+        _countLabel.center = CGPointMake(frame.size.width * 0.5, (KIsiPhoneX && !self.isLandspace) ? 50 : 30);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {
@@ -497,7 +496,10 @@ static Class imageManagerClass = nil;
 }
 
 - (void)dismissAnimated:(BOOL)animated {
-    GKPhoto *photo = self.photos[self.currentIndex];
+    GKPhoto *photo = [self currentPhoto];
+    
+    [photo stopAnimation];
+    
     if (animated) {
         [UIView animateWithDuration:kAnimationDuration animations:^{
             photo.sourceImageView.alpha = 1.0;
@@ -544,8 +546,8 @@ static Class imageManagerClass = nil;
 }
 
 - (void)handleDoubleTap:(UITapGestureRecognizer *)tap {
-    GKPhotoView *photoView = [self photoViewForIndex:self.currentIndex];
-    GKPhoto *photo = self.photos[self.currentIndex];
+    GKPhotoView *photoView = [self currentPhotoView];
+    GKPhoto *photo = [self currentPhoto];
     
     if (!photo.finished) return;
     
@@ -1008,14 +1010,14 @@ static Class imageManagerClass = nil;
     NSInteger index = self.photoScrollView.contentOffset.x / self.photoScrollView.frame.size.width + 0.5;
     
     for (NSInteger i = index - 1; i <= index + 1; i++) {
-        if (i < 0 || i >= self.photos.count) {
-            continue;
-        }
+        if (i < 0 || i >= self.photos.count) continue;
+        
         GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
             photoView               = [self dequeueReusablePhotoView];
             photoView.loadStyle     = self.loadStyle;
             photoView.isFullWidthForLandSpace = self.isFullWidthForLandSpace;
+            photoView.isLowGifMemory = self.isLowGifMemory;
             
             __typeof(self) __weak weakSelf = self;
             photoView.zoomEnded     = ^(NSInteger scale) {
@@ -1088,6 +1090,11 @@ static Class imageManagerClass = nil;
     [self updateReusableViews];
     
     [self setupPhotoViews];
+    
+    // 滑动中，停止gif动画
+    [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj stopGifAnimation];
+    }];
 }
 
 // scrollView结束滚动时调用
@@ -1096,6 +1103,10 @@ static Class imageManagerClass = nil;
     CGFloat scrollW = self.photoScrollView.frame.size.width;
     
     NSInteger index = (offsetX + scrollW * 0.5) / scrollW;
+    
+    // 滚动结束，开始gif动画
+    GKPhotoView *currentPhotoView = [self currentPhotoView];
+    [currentPhotoView startGifAnimation];
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollEndedIndex:)]) {
         [self.delegate photoBrowser:self scrollEndedIndex:index];

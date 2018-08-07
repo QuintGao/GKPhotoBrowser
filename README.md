@@ -14,6 +14,7 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
 参考：
     [KSPhotoBrowser](https://github.com/skx926/KSPhotoBrowser)，
     [MJPhotoBrowser(已弃用)](https://github.com/Sunnyyoung/MJPhotoBrowser)
+    对于gif图片的加载，参考了[LBPhotoBrowser](https://github.com/tianliangyihou/LBPhotoBrowser)
 
 ## 主要功能
 
