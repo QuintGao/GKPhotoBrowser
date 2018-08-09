@@ -93,6 +93,11 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /** 是否适配安全区域，默认NO，为YES时图片会自动适配iPhone X的安全区域 */
 @property (nonatomic, assign) BOOL isAdaptiveSaveArea;
 
+/**
+ 开启这个选项后 在加载gif的时候 会大大的降低内存.与YYImage对gif的内存优化思路一样 default is NO
+ */
+@property (nonatomic, assign) BOOL isLowGifMemory;
+
 // 初始化方法
 
 /**

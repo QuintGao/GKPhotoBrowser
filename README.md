@@ -14,6 +14,7 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
 参考：
     [KSPhotoBrowser](https://github.com/skx926/KSPhotoBrowser)，
     [MJPhotoBrowser(已弃用)](https://github.com/Sunnyyoung/MJPhotoBrowser)
+    对于gif图片的加载，参考了[LBPhotoBrowser](https://github.com/tianliangyihou/LBPhotoBrowser)
 
 ## 主要功能
 
@@ -71,6 +72,9 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2018.8.7
+    1、移除FLAnimationImage
+    2、优化gif图片的加载，增加属性isLowGifMemory，可减少gif图片的加载内存。
 2018.8.1
     1、增加属性isAdaptiveSaveArea，控制是否自动适配安全区域
     2、图片超过屏幕高度不能滑动消失问题修复（超长图滑动隐藏效果不是很好，目前没找到更好的解决方案）

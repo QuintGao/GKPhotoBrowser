@@ -9,10 +9,11 @@
 #ifndef GKPhotoBrowserConfigure_h
 #define GKPhotoBrowserConfigure_h
 
+#import "UIImage+GKDecoder.h"
+//#import "UIImage+LBDecoder.h"
 #import "UIScrollView+GKGestureHandle.h"
 #import <SDWebImage/UIView+WebCache.h>
 #import <SDWebImage/UIImageView+WebCache.h>
-#import <FLAnimatedImage/FLAnimatedImage.h>
 #import <SDWebImage/SDWebImageManager.h>
 
 #define GKScreenW [UIScreen mainScreen].bounds.size.width
@@ -23,6 +24,10 @@
 #define kPhotoViewPadding           10
 
 #define kAnimationDuration          0.25f
+
+#define LOCK(...) dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER); \
+__VA_ARGS__; \
+dispatch_semaphore_signal(_lock);
 
 // 图片浏览器的显示方式
 typedef NS_ENUM(NSUInteger, GKPhotoBrowserShowStyle) {

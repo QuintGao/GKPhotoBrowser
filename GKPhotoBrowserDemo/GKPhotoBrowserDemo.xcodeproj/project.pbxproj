@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		60154B5F20D11D6B0000877A /* GKGIFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60154B5E20D11D6B0000877A /* GKGIFViewController.m */; };
+		6064CA3021183B7900AAB2A1 /* UIImage+GKDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6064CA2F21183B7900AAB2A1 /* UIImage+GKDecoder.m */; };
 		7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7927F0CF20A97F280017FD5B /* GKTestViewController.m */; };
 		795FA5981FF333420057BDB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5971FF333420057BDB0 /* Assets.xcassets */; };
 		795FA59B1FF333420057BDB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5991FF333420057BDB0 /* LaunchScreen.storyboard */; };
@@ -81,6 +82,8 @@
 		1BD88472E22F06A033FA0CC2 /* Pods-GKPhotoBrowserDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GKPhotoBrowserDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		60154B5D20D11D6B0000877A /* GKGIFViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKGIFViewController.h; sourceTree = "<group>"; };
 		60154B5E20D11D6B0000877A /* GKGIFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKGIFViewController.m; sourceTree = "<group>"; };
+		6064CA2E21183B7900AAB2A1 /* UIImage+GKDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+GKDecoder.h"; sourceTree = "<group>"; };
+		6064CA2F21183B7900AAB2A1 /* UIImage+GKDecoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+GKDecoder.m"; sourceTree = "<group>"; };
 		7927F0CE20A97F280017FD5B /* GKTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKTestViewController.h; sourceTree = "<group>"; };
 		7927F0CF20A97F280017FD5B /* GKTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKTestViewController.m; sourceTree = "<group>"; };
 		795FA58B1FF333420057BDB0 /* GKPhotoBrowserDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GKPhotoBrowserDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -270,6 +273,8 @@
 				795FA5CE1FF334100057BDB0 /* GKWebImageManager.m */,
 				795FA5CD1FF334100057BDB0 /* UIScrollView+GKGestureHandle.h */,
 				795FA5C51FF334100057BDB0 /* UIScrollView+GKGestureHandle.m */,
+				6064CA2E21183B7900AAB2A1 /* UIImage+GKDecoder.h */,
+				6064CA2F21183B7900AAB2A1 /* UIImage+GKDecoder.m */,
 				795FA5C21FF334100057BDB0 /* GKLoadingView */,
 				795FA5D01FF334100057BDB0 /* GKPhotoBrowser.bundle */,
 			);
@@ -603,6 +608,7 @@
 				795FA61B1FF338200057BDB0 /* GKTimeLineViewCell.m in Sources */,
 				795FA5D81FF334100057BDB0 /* GKWebImageManager.m in Sources */,
 				60154B5F20D11D6B0000877A /* GKGIFViewController.m in Sources */,
+				6064CA3021183B7900AAB2A1 /* UIImage+GKDecoder.m in Sources */,
 				795FA60F1FF338200057BDB0 /* GKPhotosView.m in Sources */,
 				795FA60E1FF338200057BDB0 /* GKMainViewController.m in Sources */,
 				795FA6101FF338200057BDB0 /* GKJianshuViewController.m in Sources */,

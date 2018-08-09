@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
 
-@property (nonatomic, strong, readonly) FLAnimatedImageView *imageView;
+@property (nonatomic, strong, readonly) UIImageView *imageView;
 
 @property (nonatomic, strong, readonly) GKLoadingView *loadingView;
 
@@ -29,6 +29,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
 @property (nonatomic, assign) BOOL isFullWidthForLandSpace;
+
+/**
+ 开启这个选项后 在加载gif的时候 会大大的降低内存.与YYImage对gif的内存优化思路一样 default is NO
+ */
+@property (nonatomic, assign) BOOL isLowGifMemory;
 
 /** 是否重新布局 */
 @property (nonatomic, assign) BOOL isLayoutSubViews;
@@ -47,6 +52,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 重新布局
 - (void)resetFrame;
+
+- (void)startGifAnimation;
+- (void)stopGifAnimation;
 
 @end
 
