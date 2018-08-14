@@ -12,5 +12,6 @@ target 'GKPhotoBrowserDemo' do
   pod 'GKNavigationBarViewController'
   pod 'YYModel'
   pod 'GKCover'
+  pod 'SDAutoLayout'
 
 end

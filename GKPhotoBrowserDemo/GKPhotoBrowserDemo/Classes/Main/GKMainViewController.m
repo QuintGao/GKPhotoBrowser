@@ -8,6 +8,7 @@
 
 #import "GKMainViewController.h"
 #import "GKTest01ViewController.h"
+#import "GKSDAutoLayoutViewController.h"
 
 @interface GKMainViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -53,6 +54,8 @@
                         @"class" : @"GKToutiaoViewController"},
                       @{@"text"  : @"简书",
                         @"class" : @"GKJianshuViewController"},
+                      @{@"text"  : @"SDAutoLayout",
+                        @"class" : @"GKSDAutoLayoutViewController"},
                       @{@"text"  : @"测试",
                         @"class" : @"GKTestViewController"},
                       @{@"text"  : @"GIF图片",

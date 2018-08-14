@@ -8,6 +8,7 @@
 
 #import "GKTestViewController.h"
 #import "GKTest02ViewCell.h"
+#import "GKBottomView.h"
 
 #import "GKPhotoBrowser.h"
 
@@ -30,9 +31,13 @@
     
     self.gk_navigationItem.title = @"test02";
     
-    [self setupView];
     
-    [self setupData];
+    GKBottomView *btmView = [GKBottomView new];
+    btmView.frame = CGRectMake(0, 100, self.view.frame.size.width, 100);
+    [self.view addSubview:btmView];
+//    [self setupView];
+//
+//    [self setupData];
 }
 
 - (void)setupView {
