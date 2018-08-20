@@ -10,7 +10,6 @@
 #define GKPhotoBrowserConfigure_h
 
 #import "UIImage+GKDecoder.h"
-//#import "UIImage+LBDecoder.h"
 #import "UIScrollView+GKGestureHandle.h"
 #import <SDWebImage/UIView+WebCache.h>
 #import <SDWebImage/UIImageView+WebCache.h>

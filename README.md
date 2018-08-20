@@ -73,6 +73,8 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2018.8.20
+    修复影响UITableview与UICollectionView滑动卡顿问题
 2018.8.7
     1、移除FLAnimationImage
     2、优化gif图片的加载，增加属性isLowGifMemory，可减少gif图片的加载内存。

@@ -14,7 +14,7 @@
 
 @interface GKPhotoView()
 
-@property (nonatomic, strong, readwrite) UIScrollView *scrollView;
+@property (nonatomic, strong, readwrite) GKScrollView *scrollView;
 
 @property (nonatomic, strong, readwrite) UIImageView *imageView;
 
@@ -54,9 +54,9 @@
     return self;
 }
 
-- (UIScrollView *)scrollView {
+- (GKScrollView *)scrollView {
     if (!_scrollView) {
-        _scrollView                      = [UIScrollView new];
+        _scrollView                      = [GKScrollView new];
         _scrollView.frame                = CGRectMake(0, 0, GKScreenW, GKScreenH);
         _scrollView.backgroundColor      = [UIColor clearColor];
         _scrollView.delegate             = self;
@@ -366,8 +366,6 @@
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     !self.zoomEnded ? : self.zoomEnded(scrollView.zoomScale);
 }
-
-#pragma mark - UIGestureRecognizerDelegate
 
 - (void)cancelCurrentImageLoad {
     [self.imageView sd_cancelCurrentImageLoad];
