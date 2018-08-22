@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GKPhotoBrowserConfigure.h"
 
 typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
     GKLoadingStyleIndeterminate,      // 不明确的加载方式

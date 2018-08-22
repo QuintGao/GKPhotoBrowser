@@ -8,12 +8,6 @@
 
 #import "GKLoadingView.h"
 
-#define GKLoadingSrcName(file) [@"GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
-
-#define GKLoadingFrameworkSrcName(file) [@"Frameworks/GKPhotoBrowser.framework/GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
-
-#define GKLoadingImage(file)  [UIImage imageNamed:GKLoadingSrcName(file)] ? : [UIImage imageNamed:GKLoadingFrameworkSrcName(file)]
-
 @interface GKLoadingView()<CAAnimationDelegate>
 
 // 动画layer
@@ -204,7 +198,7 @@
     
     CALayer *maskLayer = [CALayer layer];
     
-    maskLayer.contents  = (__bridge id)[GKLoadingImage(@"angle-mask") CGImage];
+    maskLayer.contents  = (__bridge id)[GKPhotoBrowserImage(@"angle-mask") CGImage];
     maskLayer.frame     = layer.bounds;
     layer.mask          = maskLayer;
 }

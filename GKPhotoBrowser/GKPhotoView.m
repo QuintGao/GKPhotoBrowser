@@ -14,15 +14,15 @@
 
 @interface GKPhotoView()
 
-@property (nonatomic, strong, readwrite) GKScrollView *scrollView;
+@property (nonatomic, strong, readwrite) GKScrollView   *scrollView;
 
-@property (nonatomic, strong, readwrite) UIImageView *imageView;
+@property (nonatomic, strong, readwrite) UIImageView    *imageView;
 
-@property (nonatomic, strong, readwrite) GKLoadingView *loadingView;
+@property (nonatomic, strong, readwrite) GKLoadingView  *loadingView;
 
-@property (nonatomic, strong, readwrite) GKPhoto *photo;
+@property (nonatomic, strong, readwrite) GKPhoto        *photo;
 
-@property (nonatomic, strong) id<GKWebImageProtocol> imageProtocol;
+@property (nonatomic, strong) id<GKWebImageProtocol>    imageProtocol;
 
 @property (nonatomic, strong) id operation;
 
@@ -48,7 +48,6 @@
         self.backgroundColor = [UIColor clearColor];
         
         [self addSubview:self.scrollView];
-        
         [self.scrollView addSubview:self.imageView];
     }
     return self;

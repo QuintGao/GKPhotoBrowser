@@ -28,6 +28,12 @@
 __VA_ARGS__; \
 dispatch_semaphore_signal(_lock);
 
+#define GKPhotoBrowserSrcName(file) [@"GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
+
+#define GKPhotoBrowserFrameworkSrcName(file) [@"Frameworks/GKPhotoBrowser.framework/GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
+
+#define GKPhotoBrowserImage(file)  [UIImage imageNamed:GKPhotoBrowserSrcName(file)] ? : [UIImage imageNamed:GKPhotoBrowserFrameworkSrcName(file)]
+
 // 图片浏览器的显示方式
 typedef NS_ENUM(NSUInteger, GKPhotoBrowserShowStyle) {
     GKPhotoBrowserShowStyleNone,       // 直接显示，默认方式

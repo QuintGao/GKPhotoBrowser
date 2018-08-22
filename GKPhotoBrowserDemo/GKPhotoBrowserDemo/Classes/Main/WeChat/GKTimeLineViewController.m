@@ -95,6 +95,7 @@
             
             GKPhoto *photo = [GKPhoto new];
             photo.url = [NSURL URLWithString:obj.url];
+            
             photo.sourceImageView = cell.photosView.subviews[idx];
             
             [photos addObject:photo];

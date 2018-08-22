@@ -15,12 +15,6 @@
 /** 图片地址 */
 @property (nonatomic, strong) NSURL *url;
 
-/** 是否是视频 */
-@property (nonatomic, assign) BOOL  isVideo;
-
-/** 是否重复播放 */
-@property (nonatomic, assign) BOOL  isRepeatPlay;
-
 /** 来源imageView */
 @property (nonatomic, strong) UIImageView *sourceImageView;
 
