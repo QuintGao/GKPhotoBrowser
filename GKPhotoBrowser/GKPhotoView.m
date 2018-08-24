@@ -333,6 +333,10 @@
         _imageView.center   = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
         // 重置内容大小
         self.scrollView.contentSize = self.imageView.frame.size;
+        
+        self.loadingView.bounds = self.scrollView.frame;
+        self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+        [self.loadingView removeAnimation];
     }
     self.scrollView.contentOffset = CGPointZero;
     

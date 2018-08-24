@@ -60,6 +60,8 @@
     
     self.centerButton.layer.cornerRadius  = btnWH * 0.5;
     self.centerButton.layer.masksToBounds = YES;
+    
+    self.failureLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -353,8 +355,24 @@
 }
 
 - (void)hideLoadingView {
+    [self.animatedLayer removeFromSuperlayer];
+    self.animatedLayer = nil;
+    
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
     [self.layer removeAllAnimations];
     [self removeFromSuperview];
+}
+
+- (void)removeAnimation {
+    [self.animatedLayer removeFromSuperlayer];
+    self.animatedLayer = nil;
+    
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
+    [self.layer removeAllAnimations];
 }
 
 - (void)startLoadingWithDuration:(NSTimeInterval)duration completion:(void (^)(GKLoadingView *, BOOL))completion {

@@ -263,7 +263,11 @@ static Class imageManagerClass = nil;
         self.isStatusBarChanged = NO;
     });
     
-    [self setNeedsStatusBarAppearanceUpdate];
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        [self prefersStatusBarHidden];
+        
+        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    }
 }
 
 - (void)setIsScreenRotateDisabled:(BOOL)isScreenRotateDisabled {

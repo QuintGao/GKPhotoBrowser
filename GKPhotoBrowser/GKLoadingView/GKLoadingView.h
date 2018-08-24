@@ -54,6 +54,8 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
 
 - (void)hideLoadingView;
 
+- (void)removeAnimation;
+
 // 在duration时间内加载，
 - (void)startLoadingWithDuration:(NSTimeInterval)duration completion:(void (^)(GKLoadingView *loadingView, BOOL finished))completion;
 
