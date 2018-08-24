@@ -344,6 +344,9 @@
     [self.animatedLayer removeFromSuperlayer];
     self.animatedLayer = nil;
     
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
     [self.layer removeAllAnimations];
     
     [self addSubview:self.failureLabel];
