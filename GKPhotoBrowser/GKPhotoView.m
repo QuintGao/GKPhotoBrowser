@@ -235,7 +235,7 @@
         self.photo.isGif    = YES;
         self.photo.image    = currentImage;
         if (self.isLowGifMemory) {
-            self.photo.gifImage = currentImage;
+            self.photo.gifImage  = currentImage;
             self.photo.imageView = self.imageView;
             
             [self.photo startAnimation];
@@ -244,7 +244,6 @@
         }
         
         self.imageView.image = self.photo.gifImage;
-        
     }else {
         self.photo.isGif = NO;
         self.photo.image = currentImage;

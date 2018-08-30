@@ -30,6 +30,8 @@
 /** 这里用weak是防止GKPhotoBrowser被强引用，导致不能释放 */
 @property (nonatomic, weak) GKPhotoBrowser *browser;
 
+@property (nonatomic, assign) NSInteger     currentIndex;
+
 @end
 
 @implementation GKTimeLineViewController
@@ -112,6 +114,7 @@
         browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
 //        browser.isStatusBarShow     = YES;
 //        browser.isResumePhotoZoom   = YES;
+        browser.bgColor = [UIColor lightGrayColor];
         [browser setupCoverViews:@[self.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
             
             CGFloat pointY = 0;
@@ -150,6 +153,8 @@
     
     if (self.fromView) return;
     if (browser.currentOrientation == UIDeviceOrientationPortraitUpsideDown) return;
+    
+    self.currentIndex = index;
     
     UIView *contentView = browser.contentView;
     
@@ -249,13 +254,17 @@
 - (void)delBtnClick:(id)sender {
     [GKCover hideCover];
     
-    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
+//    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
+//
+//    [arr removeObjectAtIndex:self.browser.currentIndex];
+//
+//    [self.browser resetPhotoBrowserWithPhotos:arr];
+//
+//    self.pageControl.numberOfPages = arr.count;
     
-    [arr removeObjectAtIndex:self.browser.currentIndex];
+    [self.browser removePhotoAtIndex:self.currentIndex];
     
-    [self.browser resetPhotoBrowserWithPhotos:arr];
-    
-    self.pageControl.numberOfPages = arr.count;
+    self.pageControl.numberOfPages = self.browser.photos.count;
 }
 
 - (void)saveBtnClick:(id)sender {
