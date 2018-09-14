@@ -11,13 +11,13 @@
 
 #import "GKPhotoBrowser.h"
 
-@interface GKTest02ViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
+@interface GKTest02ViewController ()<UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
 @property (nonatomic, strong) NSArray *dataSource;
 
-@property (nonatomic, strong) UIView *containerView;
+//@property (nonatomic, strong) UIView *containerView;
 
 @end
 
@@ -29,8 +29,12 @@
     self.gk_navigationItem.title = @"test02";
     
     [self setupView];
-    
+
     [self setupData];
+}
+
+- (void)dealloc {
+    NSLog(@"002dealloc");
 }
 
 - (void)setupView {
@@ -81,6 +85,7 @@
     
     cell.photos = self.dataSource[indexPath.row];
     
+    __weak __typeof(self) weakSelf = self;
     cell.imgClickBlock = ^(UIView *containerView, NSArray *photos, NSInteger index) {
         NSMutableArray *photoArrs = [NSMutableArray new];
         
@@ -100,7 +105,7 @@
         browser.hideStyle    = GKPhotoBrowserHideStyleZoomScale;
         browser.isLowGifMemory = YES;
         
-        [browser showFromVC:self];
+        [browser showFromVC:weakSelf];
     };
     
     return cell;

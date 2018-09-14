@@ -79,6 +79,10 @@
     return dataFrames;
 }
 
+- (void)dealloc {
+    NSLog(@"wechat dealloc");
+}
+
 #pragma mark - UITableViewDataSource & UITableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataFrames.count;
@@ -89,6 +93,7 @@
     
     cell.timeLineFrame = self.dataFrames[indexPath.row];
     
+    __weak __typeof(self) weakSelf = self;
     cell.photosImgClickBlock = ^(GKTimeLineViewCell *cell, NSInteger index) {
         NSMutableArray *photos = [NSMutableArray new];
         [cell.timeLineFrame.model.images enumerateObjectsUsingBlock:^(GKTimeLineImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -100,10 +105,10 @@
             [photos addObject:photo];
         }];
         
-        self.pageControl = [[UIPageControl alloc] init];
-        self.pageControl.numberOfPages = photos.count;
-        self.pageControl.currentPage = index;
-        self.pageControl.hidesForSinglePage = YES;
+        weakSelf.pageControl = [[UIPageControl alloc] init];
+        weakSelf.pageControl.numberOfPages = photos.count;
+        weakSelf.pageControl.currentPage = index;
+        weakSelf.pageControl.hidesForSinglePage = YES;
         
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
@@ -111,7 +116,7 @@
         browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
 //        browser.isStatusBarShow     = YES;
 //        browser.isResumePhotoZoom   = YES;
-        [browser setupCoverViews:@[self.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
+        [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
             
             CGFloat pointY = 0;
             if (photoBrowser.isLandspace) {
@@ -120,16 +125,16 @@
                 pointY = superFrame.size.height - 10;
             }
             
-            self.pageControl.center = CGPointMake(superFrame.size.width * 0.5, pointY);
+            weakSelf.pageControl.center = CGPointMake(superFrame.size.width * 0.5, pointY);
             
-            self.count ++;
+            weakSelf.count ++;
         }];
         
-        browser.delegate = self;
+        browser.delegate = weakSelf;
         
-        [browser showFromVC:self];
+        [browser showFromVC:weakSelf];
         
-        self.browser = browser;
+        weakSelf.browser = browser;
     };
     
     return cell;
