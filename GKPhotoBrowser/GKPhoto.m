@@ -6,10 +6,6 @@
 //  Copyright © 2017年 QuintGao. All rights reserved.
 //
 
-#define LOCK(...) dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER); \
-__VA_ARGS__; \
-dispatch_semaphore_signal(_lock);
-
 #import "GKPhoto.h"
 
 @interface GKPhoto()

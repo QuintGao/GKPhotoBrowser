@@ -30,6 +30,8 @@
 /** 这里用weak是防止GKPhotoBrowser被强引用，导致不能释放 */
 @property (nonatomic, weak) GKPhotoBrowser *browser;
 
+@property (nonatomic, assign) NSInteger     currentIndex;
+
 @end
 
 @implementation GKTimeLineViewController
@@ -79,10 +81,6 @@
     return dataFrames;
 }
 
-- (void)dealloc {
-    NSLog(@"wechat dealloc");
-}
-
 #pragma mark - UITableViewDataSource & UITableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataFrames.count;
@@ -93,22 +91,22 @@
     
     cell.timeLineFrame = self.dataFrames[indexPath.row];
     
-    __weak __typeof(self) weakSelf = self;
     cell.photosImgClickBlock = ^(GKTimeLineViewCell *cell, NSInteger index) {
         NSMutableArray *photos = [NSMutableArray new];
         [cell.timeLineFrame.model.images enumerateObjectsUsingBlock:^(GKTimeLineImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             GKPhoto *photo = [GKPhoto new];
             photo.url = [NSURL URLWithString:obj.url];
+            
             photo.sourceImageView = cell.photosView.subviews[idx];
             
             [photos addObject:photo];
         }];
         
-        weakSelf.pageControl = [[UIPageControl alloc] init];
-        weakSelf.pageControl.numberOfPages = photos.count;
-        weakSelf.pageControl.currentPage = index;
-        weakSelf.pageControl.hidesForSinglePage = YES;
+        self.pageControl = [[UIPageControl alloc] init];
+        self.pageControl.numberOfPages = photos.count;
+        self.pageControl.currentPage = index;
+        self.pageControl.hidesForSinglePage = YES;
         
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
@@ -116,7 +114,8 @@
         browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
 //        browser.isStatusBarShow     = YES;
 //        browser.isResumePhotoZoom   = YES;
-        [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
+        browser.bgColor = [UIColor lightGrayColor];
+        [browser setupCoverViews:@[self.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
             
             CGFloat pointY = 0;
             if (photoBrowser.isLandspace) {
@@ -125,16 +124,16 @@
                 pointY = superFrame.size.height - 10;
             }
             
-            weakSelf.pageControl.center = CGPointMake(superFrame.size.width * 0.5, pointY);
+            self.pageControl.center = CGPointMake(superFrame.size.width * 0.5, pointY);
             
-            weakSelf.count ++;
+            self.count ++;
         }];
         
-        browser.delegate = weakSelf;
+        browser.delegate = self;
         
-        [browser showFromVC:weakSelf];
+        [browser showFromVC:self];
         
-        weakSelf.browser = browser;
+        self.browser = browser;
     };
     
     return cell;
@@ -154,6 +153,8 @@
     
     if (self.fromView) return;
     if (browser.currentOrientation == UIDeviceOrientationPortraitUpsideDown) return;
+    
+    self.currentIndex = index;
     
     UIView *contentView = browser.contentView;
     
@@ -253,13 +254,17 @@
 - (void)delBtnClick:(id)sender {
     [GKCover hideCover];
     
-    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
+//    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
+//
+//    [arr removeObjectAtIndex:self.browser.currentIndex];
+//
+//    [self.browser resetPhotoBrowserWithPhotos:arr];
+//
+//    self.pageControl.numberOfPages = arr.count;
     
-    [arr removeObjectAtIndex:self.browser.currentIndex];
+    [self.browser removePhotoAtIndex:self.currentIndex];
     
-    [self.browser resetPhotoBrowserWithPhotos:arr];
-    
-    self.pageControl.numberOfPages = arr.count;
+    self.pageControl.numberOfPages = self.browser.photos.count;
 }
 
 - (void)saveBtnClick:(id)sender {

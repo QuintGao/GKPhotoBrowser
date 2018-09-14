@@ -8,12 +8,6 @@
 
 #import "GKLoadingView.h"
 
-#define GKLoadingSrcName(file) [@"GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
-
-#define GKLoadingFrameworkSrcName(file) [@"Frameworks/GKPhotoBrowser.framework/GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
-
-#define GKLoadingImage(file)  [UIImage imageNamed:GKLoadingSrcName(file)] ? : [UIImage imageNamed:GKLoadingFrameworkSrcName(file)]
-
 @interface GKLoadingView()<CAAnimationDelegate>
 
 // 动画layer
@@ -66,6 +60,8 @@
     
     self.centerButton.layer.cornerRadius  = btnWH * 0.5;
     self.centerButton.layer.masksToBounds = YES;
+    
+    self.failureLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -204,7 +200,7 @@
     
     CALayer *maskLayer = [CALayer layer];
     
-    maskLayer.contents  = (__bridge id)[GKLoadingImage(@"angle-mask") CGImage];
+    maskLayer.contents  = (__bridge id)[GKPhotoBrowserImage(@"angle-mask") CGImage];
     maskLayer.frame     = layer.bounds;
     layer.mask          = maskLayer;
 }
@@ -350,14 +346,33 @@
     [self.animatedLayer removeFromSuperlayer];
     self.animatedLayer = nil;
     
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
     [self.layer removeAllAnimations];
     
     [self addSubview:self.failureLabel];
 }
 
 - (void)hideLoadingView {
+    [self.animatedLayer removeFromSuperlayer];
+    self.animatedLayer = nil;
+    
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
     [self.layer removeAllAnimations];
     [self removeFromSuperview];
+}
+
+- (void)removeAnimation {
+    [self.animatedLayer removeFromSuperlayer];
+    self.animatedLayer = nil;
+    
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
+    [self.layer removeAllAnimations];
 }
 
 - (void)startLoadingWithDuration:(NSTimeInterval)duration completion:(void (^)(GKLoadingView *, BOOL))completion {

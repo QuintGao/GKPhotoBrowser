@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		60154B5F20D11D6B0000877A /* GKGIFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60154B5E20D11D6B0000877A /* GKGIFViewController.m */; };
 		602CC2DC21226AD500DE81BF /* GKTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 602CC2DB21226AD500DE81BF /* GKTopView.m */; };
+		603FA72C212A7FD700E9692C /* GKScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 603FA72B212A7FD700E9692C /* GKScrollView.m */; };
 		60415CB22121648F00D1D54B /* GKSDAutoLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60415CB12121648F00D1D54B /* GKSDAutoLayoutViewController.m */; };
 		60415CB72121715000D1D54B /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = 60415CB62121715000D1D54B /* test.txt */; };
 		60415CBA2121750B00D1D54B /* GKBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 60415CB92121750B00D1D54B /* GKBottomView.m */; };
@@ -87,6 +88,8 @@
 		60154B5E20D11D6B0000877A /* GKGIFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKGIFViewController.m; sourceTree = "<group>"; };
 		602CC2DA21226AD500DE81BF /* GKTopView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKTopView.h; sourceTree = "<group>"; };
 		602CC2DB21226AD500DE81BF /* GKTopView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKTopView.m; sourceTree = "<group>"; };
+		603FA72A212A7FD700E9692C /* GKScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKScrollView.h; sourceTree = "<group>"; };
+		603FA72B212A7FD700E9692C /* GKScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKScrollView.m; sourceTree = "<group>"; };
 		60415CB02121648F00D1D54B /* GKSDAutoLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKSDAutoLayoutViewController.h; sourceTree = "<group>"; };
 		60415CB12121648F00D1D54B /* GKSDAutoLayoutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKSDAutoLayoutViewController.m; sourceTree = "<group>"; };
 		60415CB62121715000D1D54B /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
@@ -287,6 +290,8 @@
 				795FA5CB1FF334100057BDB0 /* GKPhotoBrowserConfigure.h */,
 				795FA5C61FF334100057BDB0 /* GKPhoto.h */,
 				795FA5CC1FF334100057BDB0 /* GKPhoto.m */,
+				603FA72A212A7FD700E9692C /* GKScrollView.h */,
+				603FA72B212A7FD700E9692C /* GKScrollView.m */,
 				795FA5C91FF334100057BDB0 /* GKPhotoView.h */,
 				795FA5D21FF334100057BDB0 /* GKPhotoView.m */,
 				795FA5D11FF334100057BDB0 /* GKPhotoBrowser.h */,
@@ -616,6 +621,7 @@
 				795FA5D71FF334100057BDB0 /* GKPhoto.m in Sources */,
 				795FA6181FF338200057BDB0 /* GKTest02ViewCell.m in Sources */,
 				795FA6191FF338200057BDB0 /* UIView+GKFrame.m in Sources */,
+				603FA72C212A7FD700E9692C /* GKScrollView.m in Sources */,
 				602CC2DC21226AD500DE81BF /* GKTopView.m in Sources */,
 				795FA6141FF338200057BDB0 /* GKToutiaoViewController.m in Sources */,
 				795FA6151FF338200057BDB0 /* GKToutiaoModel.m in Sources */,

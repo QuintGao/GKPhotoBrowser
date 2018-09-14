@@ -9,8 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface GKTopView : UIView
-// type 0: SDAutoLayout  1: Masonry
-- (instancetype)initWithType:(NSInteger)type;
 
 - (void)setupCurrent:(NSInteger)current total:(NSInteger)total;
 

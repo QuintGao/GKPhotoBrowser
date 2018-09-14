@@ -98,6 +98,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
  */
 @property (nonatomic, assign) BOOL isLowGifMemory;
 
+/** 浏览器背景（默认黑色） */
+@property (nonatomic, strong) UIColor   *bgColor;
+
 // 初始化方法
 
 /**

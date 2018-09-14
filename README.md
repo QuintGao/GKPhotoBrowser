@@ -73,6 +73,13 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2018.8.30
+    1、修复删除图片时的图片重叠问题
+    2、增加自定义浏览器背景颜色属性
+2018.8.24
+    修复加载失败时切换横竖屏加载视图位置不准及无法隐藏的问题
+2018.8.20
+    修复影响UITableview与UICollectionView滑动卡顿问题
 2018.8.7
     1、移除FLAnimationImage
     2、优化gif图片的加载，增加属性isLowGifMemory，可减少gif图片的加载内存。

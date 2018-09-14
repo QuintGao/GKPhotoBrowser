@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GKPhoto.h"
+#import "GKScrollView.h"
 #import "GKWebImageProtocol.h"
 #import "GKLoadingView.h"
 
@@ -17,9 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GKPhotoView : UIView<UIScrollViewDelegate>
 
-@property (nonatomic, strong, readonly) UIScrollView *scrollView;
+@property (nonatomic, strong, readonly) GKScrollView *scrollView;
 
-@property (nonatomic, strong, readonly) UIImageView *imageView;
+@property (nonatomic, strong, readonly) UIImageView  *imageView;
 
 @property (nonatomic, strong, readonly) GKLoadingView *loadingView;
 

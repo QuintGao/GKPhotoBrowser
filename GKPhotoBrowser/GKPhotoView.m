@@ -14,15 +14,15 @@
 
 @interface GKPhotoView()
 
-@property (nonatomic, strong, readwrite) UIScrollView *scrollView;
+@property (nonatomic, strong, readwrite) GKScrollView   *scrollView;
 
-@property (nonatomic, strong, readwrite) UIImageView *imageView;
+@property (nonatomic, strong, readwrite) UIImageView    *imageView;
 
-@property (nonatomic, strong, readwrite) GKLoadingView *loadingView;
+@property (nonatomic, strong, readwrite) GKLoadingView  *loadingView;
 
-@property (nonatomic, strong, readwrite) GKPhoto *photo;
+@property (nonatomic, strong, readwrite) GKPhoto        *photo;
 
-@property (nonatomic, strong) id<GKWebImageProtocol> imageProtocol;
+@property (nonatomic, strong) id<GKWebImageProtocol>    imageProtocol;
 
 @property (nonatomic, strong) id operation;
 
@@ -48,15 +48,14 @@
         self.backgroundColor = [UIColor clearColor];
         
         [self addSubview:self.scrollView];
-        
         [self.scrollView addSubview:self.imageView];
     }
     return self;
 }
 
-- (UIScrollView *)scrollView {
+- (GKScrollView *)scrollView {
     if (!_scrollView) {
-        _scrollView                      = [UIScrollView new];
+        _scrollView                      = [GKScrollView new];
         _scrollView.frame                = CGRectMake(0, 0, GKScreenW, GKScreenH);
         _scrollView.backgroundColor      = [UIColor clearColor];
         _scrollView.delegate             = self;
@@ -236,7 +235,7 @@
         self.photo.isGif    = YES;
         self.photo.image    = currentImage;
         if (self.isLowGifMemory) {
-            self.photo.gifImage = currentImage;
+            self.photo.gifImage  = currentImage;
             self.photo.imageView = self.imageView;
             
             [self.photo startAnimation];
@@ -245,7 +244,6 @@
         }
         
         self.imageView.image = self.photo.gifImage;
-        
     }else {
         self.photo.isGif = NO;
         self.photo.image = currentImage;
@@ -334,6 +332,10 @@
         _imageView.center   = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
         // 重置内容大小
         self.scrollView.contentSize = self.imageView.frame.size;
+        
+        self.loadingView.bounds = self.scrollView.frame;
+        self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+        [self.loadingView removeAnimation];
     }
     self.scrollView.contentOffset = CGPointZero;
     
@@ -366,8 +368,6 @@
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     !self.zoomEnded ? : self.zoomEnded(scrollView.zoomScale);
 }
-
-#pragma mark - UIGestureRecognizerDelegate
 
 - (void)cancelCurrentImageLoad {
     [self.imageView sd_cancelCurrentImageLoad];

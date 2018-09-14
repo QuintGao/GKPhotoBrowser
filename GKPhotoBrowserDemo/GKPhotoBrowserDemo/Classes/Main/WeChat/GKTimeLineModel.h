@@ -31,6 +31,9 @@
 @property (nonatomic, copy) NSString *thumbnail_url;
 @property (nonatomic, copy) NSString *url;
 
+@property (nonatomic, copy) NSString *video_url;
+@property (nonatomic, assign) BOOL   isVideo;
+
 @property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) CGFloat height;
 

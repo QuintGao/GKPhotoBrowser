@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GKPhotoBrowserConfigure.h"
 
 typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
     GKLoadingStyleIndeterminate,      // 不明确的加载方式
@@ -52,6 +53,8 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
 - (void)showFailure;
 
 - (void)hideLoadingView;
+
+- (void)removeAnimation;
 
 // 在duration时间内加载，
 - (void)startLoadingWithDuration:(NSTimeInterval)duration completion:(void (^)(GKLoadingView *loadingView, BOOL finished))completion;
