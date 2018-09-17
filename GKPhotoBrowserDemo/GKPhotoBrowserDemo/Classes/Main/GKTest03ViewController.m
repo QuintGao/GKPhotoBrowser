@@ -33,6 +33,10 @@
     [self setupData];
 }
 
+- (void)dealloc {
+    NSLog(@"003dealloc");
+}
+
 - (void)setupView {
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.top        = self.gk_navigationBar.bottom;
@@ -68,6 +72,7 @@
     
     cell.photos = self.dataSource[indexPath.row];
     
+    __weak __typeof(self) weakSelf = self;
     cell.imgClickBlock  = ^(UIView *containerView, NSArray *images, NSInteger index) {
         NSMutableArray *photos = [NSMutableArray new];
         
@@ -82,7 +87,7 @@
         
         browser.showStyle    = GKPhotoBrowserShowStylePush;
         
-        [browser showFromVC:self];
+        [browser showFromVC:weakSelf];
     };
     
     return cell;

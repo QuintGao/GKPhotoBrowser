@@ -77,6 +77,10 @@
     return dataFrames;
 }
 
+- (void)dealloc {
+    NSLog(@"%@ dealloc", NSStringFromClass([self class]));
+}
+
 #pragma mark - UITableViewDataSource & UITableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataFrames.count;
@@ -87,6 +91,7 @@
     
     cell.timeLineFrame = self.dataFrames[indexPath.row];
     
+    __weak __typeof(self) weakSelf = self;
     cell.photosImgClickBlock = ^(GKTimeLineViewCell *cell, NSInteger index) {
         NSMutableArray *photos = [NSMutableArray new];
         [cell.timeLineFrame.model.images enumerateObjectsUsingBlock:^(GKTimeLineImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -103,15 +108,15 @@
         browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
         browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate; // 加载方式
         
-        browser.delegate = self;
+        browser.delegate = weakSelf;
     
         
-        self.topView = [[GKTopView alloc] init];
+        weakSelf.topView = [[GKTopView alloc] init];
         
-        self.bottomView = [[GKBottomView alloc] init];
-        self.bottomView.text = cell.timeLineFrame.model.content;
+        weakSelf.bottomView = [[GKBottomView alloc] init];
+        weakSelf.bottomView.text = cell.timeLineFrame.model.content;
         
-        [browser setupCoverViews:@[self.topView, self.bottomView] layoutBlock:^(GKPhotoBrowser * _Nonnull photoBrowser, CGRect superFrame) {
+        [browser setupCoverViews:@[weakSelf.topView, weakSelf.bottomView] layoutBlock:^(GKPhotoBrowser * _Nonnull photoBrowser, CGRect superFrame) {
             
             CGFloat topH = (KIsiPhoneX && !photoBrowser.isLandspace) ? 84 : 60;
             
@@ -120,18 +125,18 @@
             CGFloat x = (KIsiPhoneX && photoBrowser.isLandspace) ? 30 : 0;
             
 //            self.topView.frame = CGRectMake(x, 0, w, topH);
-            self.topView.sd_layout.leftSpaceToView(photoBrowser.contentView, x).topEqualToView(photoBrowser.contentView).widthIs(w).heightIs(topH);
+            weakSelf.topView.sd_layout.leftSpaceToView(photoBrowser.contentView, x).topEqualToView(photoBrowser.contentView).widthIs(w).heightIs(topH);
             
             CGFloat btmH = (KIsiPhoneX && !photoBrowser.isLandspace) ? 94 : 60;
 //            self.bottomView.frame = CGRectMake(x, superFrame.size.height - btmH, w, btmH);
-            self.bottomView.sd_layout.leftSpaceToView(photoBrowser.contentView, x).topSpaceToView(photoBrowser.contentView, superFrame.size.height - btmH).widthIs(w).heightIs(btmH);
+            weakSelf.bottomView.sd_layout.leftSpaceToView(photoBrowser.contentView, x).topSpaceToView(photoBrowser.contentView, superFrame.size.height - btmH).widthIs(w).heightIs(btmH);
         }];
         
-        [browser showFromVC:self];
+        [browser showFromVC:weakSelf];
         
-        [self.topView setupCurrent:(index + 1) total:browser.photos.count];
+        [weakSelf.topView setupCurrent:(index + 1) total:browser.photos.count];
         
-        self.browser = browser;
+        weakSelf.browser = browser;
     };
     
     return cell;

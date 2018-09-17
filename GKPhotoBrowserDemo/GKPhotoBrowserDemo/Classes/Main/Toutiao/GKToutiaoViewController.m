@@ -67,6 +67,10 @@
     [self.tableView reloadData];
 }
 
+- (void)dealloc {
+    NSLog(@"头条dealloc");
+}
+
 #pragma mark - UITableViewDataSource & UITableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataSource.count;

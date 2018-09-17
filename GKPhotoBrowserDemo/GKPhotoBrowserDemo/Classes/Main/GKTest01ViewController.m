@@ -30,6 +30,11 @@
     [self setupData];
 }
 
+- (void)dealloc
+{
+    NSLog(@"001dealloc");
+}
+
 - (void)setupView {
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.top        = self.gk_navigationBar.bottom;
