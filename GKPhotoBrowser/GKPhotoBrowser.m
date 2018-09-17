@@ -847,11 +847,9 @@ static Class imageManagerClass = nil;
 
 #pragma mark - 屏幕旋转相关
 - (void)addDeviceOrientationObserver {
-    
     // 默认设备方向：竖屏
     self.originalOrientation = UIDeviceOrientationPortrait;
     
-    //    [self deviceOrientationDidChange];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 }
