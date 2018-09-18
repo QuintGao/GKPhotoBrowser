@@ -22,16 +22,11 @@
 
 #define GKDeviceVersion [[[UIDevice currentDevice] systemVersion] floatValue]
 
-//#define GK_DefultFixSpace GKDeviceVersion >= 11.0 ? 0 : 4
-
 typedef NS_ENUM(NSUInteger, GKNavigationBarBackStyle) {
     GKNavigationBarBackStyleNone,    // 无返回按钮，可自行设置
     GKNavigationBarBackStyleBlack,   // 黑色返回按钮
     GKNavigationBarBackStyleWhite    // 白色返回按钮
 };
-
-//static CGFloat gk_tempFixSpace = 0;
-static BOOL gk_disableFixSpace = NO;
 
 // 使用static inline创建静态内联函数，方便调用
 static inline void gk_swizzled_method(Class cls ,SEL originalSelector, SEL swizzledSelector) {

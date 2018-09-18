@@ -13,5 +13,6 @@ target 'GKPhotoBrowserDemo' do
   pod 'YYModel'
   pod 'GKCover'
   pod 'SDAutoLayout'
+  pod 'ReactiveObjC'
 
 end

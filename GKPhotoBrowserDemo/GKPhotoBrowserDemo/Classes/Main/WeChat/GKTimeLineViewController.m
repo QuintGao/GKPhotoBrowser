@@ -119,7 +119,7 @@
         browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
 //        browser.isStatusBarShow     = YES;
 //        browser.isResumePhotoZoom   = YES;
-        browser.bgColor = [UIColor lightGrayColor];
+        browser.isAdaptiveSaveArea = YES;
         [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
             
             CGFloat pointY = 0;

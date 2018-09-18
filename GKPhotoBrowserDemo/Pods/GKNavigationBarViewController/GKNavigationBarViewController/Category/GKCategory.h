@@ -16,7 +16,6 @@
 #import "UIScrollView+GKCategory.h"
 
 // 导航栏item
-#import "UINavigationBar+GKCategory.h"
 #import "UINavigationItem+GKCategory.h"
 #import "UIBarButtonItem+GKCategory.h"
 

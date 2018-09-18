@@ -139,7 +139,7 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return self.visibleViewController.gk_StatusBarHidden;
+    return self.visibleViewController.gk_statusBarHidden;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {

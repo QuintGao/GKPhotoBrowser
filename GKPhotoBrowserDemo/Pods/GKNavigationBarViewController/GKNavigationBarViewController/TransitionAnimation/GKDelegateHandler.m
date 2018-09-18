@@ -15,17 +15,18 @@
 @implementation GKPopGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer {
-    
-    // 忽略根控制器
-    if (self.navigationController.viewControllers.count <= 1) {
-        return NO;
+    if (self.navigationController.gk_openScrollLeftPush) {
+        // 开启了左滑push功能
+    }else {
+        // 忽略根控制器
+        if (self.navigationController.viewControllers.count <= 1) {
+            return NO;
+        }
     }
     
     // 忽略禁用手势
     UIViewController *topVC = self.navigationController.viewControllers.lastObject;
-    if (topVC.gk_interactivePopDisabled) {
-        return NO;
-    }
+    if (topVC.gk_interactivePopDisabled) return NO;
     
     CGPoint transition = [gestureRecognizer translationInView:gestureRecognizer.view];
     
@@ -39,7 +40,6 @@
             return NO;
         }
     }else {
-        
         // 全屏滑动时起作用
         if (!topVC.gk_fullScreenPopDisabled) {
             // 上下滑动
@@ -155,7 +155,7 @@
     }else if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateCancelled) {
         if (self.isGesturePush) {
             if (self.navigationController.gk_openScrollLeftPush) {
-                if (progress > 0.5) {
+                if (progress > 0.3) {
                     [self.pushTransition finishInteractiveTransition];
                 }else {
                     [self.pushTransition cancelInteractiveTransition];

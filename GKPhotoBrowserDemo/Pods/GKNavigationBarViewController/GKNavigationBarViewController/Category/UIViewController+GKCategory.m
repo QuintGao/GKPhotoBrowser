@@ -44,7 +44,7 @@ static const void* GKPushDelegateKey    = @"GKPushDelegateKey";
 
 #pragma mark - StatusBar
 - (BOOL)prefersStatusBarHidden {
-    return self.gk_StatusBarHidden;
+    return self.gk_statusBarHidden;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -103,17 +103,27 @@ static const void* GKPushDelegateKey    = @"GKPushDelegateKey";
 - (void)setGk_statusBarStyle:(UIStatusBarStyle)gk_statusBarStyle {
     objc_setAssociatedObject(self, GKStatusBarStyleKey, @(gk_statusBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    [self setNeedsStatusBarAppearanceUpdate];
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        // 调用隐藏方法
+        [self prefersStatusBarHidden];
+        
+        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    }
 }
 
-- (BOOL)gk_StatusBarHidden {
+- (BOOL)gk_statusBarHidden {
     return [objc_getAssociatedObject(self, GKStatusBarHiddenKey) boolValue];
 }
 
-- (void)setGk_StatusBarHidden:(BOOL)gk_StatusBarHidden {
-    objc_setAssociatedObject(self, GKStatusBarHiddenKey, @(gk_StatusBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setGk_statusBarHidden:(BOOL)gk_statusBarHidden {
+    objc_setAssociatedObject(self, GKStatusBarHiddenKey, @(gk_statusBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    [self setNeedsStatusBarAppearanceUpdate];
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        // 调用隐藏方法
+        [self prefersStatusBarHidden];
+        
+        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    }
 }
 
 - (GKNavigationBarBackStyle)gk_backStyle {

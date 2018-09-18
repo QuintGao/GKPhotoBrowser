@@ -12,6 +12,7 @@
 #import <GKNavigationBarViewController/GKNavigationBarViewController.h>
 #import <YYModel/YYModel.h>
 #import <GKCover/GKCover.h>
+#import <ReactiveObjC/ReactiveObjC.h>
 
 #import <SDWebImage/UIImageView+WebCache.h>
 
