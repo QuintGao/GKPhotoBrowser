@@ -17,7 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.gk_StatusBarHidden = NO;
+    self.gk_statusBarHidden = NO;
     self.gk_statusBarStyle  = UIStatusBarStyleLightContent;
 }
 

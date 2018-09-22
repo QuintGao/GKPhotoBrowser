@@ -11,6 +11,15 @@
 @interface GKNavigationBar : UINavigationBar
 
 /** 导航栏背景色透明度，默认是1.0 */
-@property (nonatomic, assign) CGFloat gk_navBarBackgroundAlpha;
+@property (nonatomic, assign) CGFloat   gk_navBarBackgroundAlpha;
+
+@property (nonatomic, assign) BOOL      gk_navLineHidden;
+
+// 左边item间距
+@property (nonatomic, assign) CGFloat   gk_navItemLeftSpace;
+// 右边item间距
+@property (nonatomic, assign) CGFloat   gk_navItemRightSpace;
+
+- (void)gk_navLineHideOrShow;
 
 @end

@@ -26,13 +26,13 @@
 
 - (void)gk_viewWillAppear:(BOOL)animated {
     if (GKDeviceVersion >= 11.0) {
-        gk_disableFixSpace = YES;
+        GKConfigure.gk_disableFixSpace = YES;
     }
     [self gk_viewWillAppear:animated];
 }
 
 - (void)gk_viewWillDisappear:(BOOL)animated {
-    gk_disableFixSpace = NO;
+    GKConfigure.gk_disableFixSpace = NO;
     [self gk_viewWillDisappear:animated];
 }
 
@@ -60,7 +60,7 @@
     if (GKDeviceVersion >= 11.0) {
         [self gk_setLeftBarButtonItem:leftBarButtonItem];
     }else {
-        if (!gk_disableFixSpace && leftBarButtonItem) {
+        if (!GKConfigure.gk_disableFixSpace && leftBarButtonItem) {
             [self setLeftBarButtonItems:@[leftBarButtonItem]];
         }else {
             [self gk_setLeftBarButtonItem:leftBarButtonItem];
@@ -70,7 +70,7 @@
 
 - (void)gk_setLeftBarButtonItems:(NSArray<UIBarButtonItem *> *)leftBarButtonItems {
     if (leftBarButtonItems.count) {
-        NSMutableArray *items = [NSMutableArray arrayWithObject:[self fixedSpaceWithWidth:GKConfigure.navItem_space - 20]]; // 修复iOS11之前的偏移
+        NSMutableArray *items = [NSMutableArray arrayWithObject:[self fixedSpaceWithWidth:GKConfigure.gk_navItemLeftSpace - 20]]; // 修复iOS11之前的偏移
         
         [items addObjectsFromArray:leftBarButtonItems];
         
@@ -84,7 +84,7 @@
     if (GKDeviceVersion >= 11.0) {
         [self gk_setRightBarButtonItem:rightBarButtonItem];
     }else {
-        if (!gk_disableFixSpace && rightBarButtonItem) {
+        if (!GKConfigure.gk_disableFixSpace && rightBarButtonItem) {
             [self setRightBarButtonItems:@[rightBarButtonItem]];
         }else {
             [self gk_setRightBarButtonItem:rightBarButtonItem];
@@ -94,7 +94,7 @@
 
 - (void)gk_setRightBarButtonItems:(NSArray<UIBarButtonItem *> *)rightBarButtonItems {
     if (rightBarButtonItems.count) {
-        NSMutableArray *items = [NSMutableArray arrayWithObject:[self fixedSpaceWithWidth:GKConfigure.navItem_space - 20]]; // 可修正iOS11之前的偏移
+        NSMutableArray *items = [NSMutableArray arrayWithObject:[self fixedSpaceWithWidth:GKConfigure.gk_navItemRightSpace - 20]]; // 可修正iOS11之前的偏移
         [items addObjectsFromArray:rightBarButtonItems];
         [self gk_setRightBarButtonItems:items];
     }else {

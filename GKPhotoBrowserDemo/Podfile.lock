@@ -16,7 +16,8 @@ PODS:
     - AFNetworking/NSURLSession
   - FLAnimatedImage (1.0.12)
   - GKCover (2.5.3)
-  - GKNavigationBarViewController (2.0.3)
+  - GKNavigationBarViewController (2.1.0)
+  - ReactiveObjC (3.1.0)
   - SDAutoLayout (2.2.1)
   - SDWebImage (4.4.2):
     - SDWebImage/Core (= 4.4.2)
@@ -30,6 +31,7 @@ DEPENDENCIES:
   - AFNetworking
   - GKCover
   - GKNavigationBarViewController
+  - ReactiveObjC
   - SDAutoLayout
   - SDWebImage
   - SDWebImage/GIF
@@ -41,6 +43,7 @@ SPEC REPOS:
     - FLAnimatedImage
     - GKCover
     - GKNavigationBarViewController
+    - ReactiveObjC
     - SDAutoLayout
     - SDWebImage
     - YYModel
@@ -49,11 +52,12 @@ SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GKCover: 26a096a184e32b3cdfd96492eaf3d847d9ae80a9
-  GKNavigationBarViewController: 0697bd20b687ce437d29be6a9a3a5b8e3ae5e19e
+  GKNavigationBarViewController: 2ac358e48986e1db06993e07de611a089526b976
+  ReactiveObjC: 2a38ea15335de4119d8b17caf1db1484f61db902
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: a4ed5cf0697c2a54027dbfe2f350f3fa597c32ed
+PODFILE CHECKSUM: bc1e647541991248c99a631f4c6edd9ae9c699d0
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0.beta.1

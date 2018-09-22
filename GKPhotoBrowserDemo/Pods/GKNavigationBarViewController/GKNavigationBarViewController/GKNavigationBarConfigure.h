@@ -30,7 +30,12 @@
 @property (nonatomic, assign) GKNavigationBarBackStyle backStyle;
 
 /** 导航栏左右按钮距屏幕左右的间距，默认是0，可自行调整 */
-@property (nonatomic, assign) CGFloat navItem_space;
+@property (nonatomic, assign) CGFloat   gk_navItemLeftSpace;
+
+@property (nonatomic, assign) CGFloat   gk_navItemRightSpace;
+
+/** 是否禁止调整间距，默认NO */
+@property (nonatomic, assign) BOOL      gk_disableFixSpace;
 
 + (instancetype)sharedInstance;
 

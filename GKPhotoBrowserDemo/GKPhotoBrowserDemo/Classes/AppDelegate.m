@@ -24,7 +24,8 @@
         configure.backStyle       = GKNavigationBarBackStyleWhite;
         configure.titleColor      = [UIColor whiteColor];
         configure.titleFont       = [UIFont boldSystemFontOfSize:18.0];
-        configure.navItem_space   = 4;
+        configure.gk_navItemLeftSpace   = 4;
+        configure.gk_navItemRightSpace  = 4;
     }];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

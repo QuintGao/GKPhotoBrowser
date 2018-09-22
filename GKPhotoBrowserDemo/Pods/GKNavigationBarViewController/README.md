@@ -1,4 +1,9 @@
-## GKNavigationBarViewController --- iOS自定义导航栏-导航栏联动（二）
+## GKNavigationBarViewController
+[![CocoaPods](https://img.shields.io/cocoapods/v/GKNavigationBarViewController.svg?style=flat)](https://github.com/QuintGao/GKNavigationBarViewController)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
+
+iOS自定义导航栏 - 导航栏联动效果
 
 ## 导航栏联动的实现方法
   [iOS自定义导航栏-导航栏联动（一）](http://www.jianshu.com/p/5662cdf4393e),[GKNavigationController](https://github.com/QuintGao/GKNavigationController)
@@ -21,11 +26,12 @@
 
 ## Demo中部分截图如下
 
-![今日头条](https://github.com/QuintGao/GKNavigationBarViewController/blob/master/GKNavigationBarViewControllerDemo/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A1.gif)
+![今日头条](https://github.com/QuintGao/GKNavigationBarViewController/blob/master/Demo/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A1.gif)
 
-![网易云音乐](https://github.com/QuintGao/GKNavigationBarViewController/blob/master/GKNavigationBarViewControllerDemo/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90.gif)
+![网易云音乐](https://github.com/QuintGao/GKNavigationBarViewController/blob/master/Demo/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90.gif)
 
-![网易新闻](https://github.com/QuintGao/GKNavigationBarViewController/blob/master/GKNavigationBarViewControllerDemo/%E7%BD%91%E6%98%93%E6%96%B0%E9%97%BB.gif)
+![网易新闻](https://github.com/QuintGao/GKNavigationBarViewController/blob/master/Demo/%E7%BD%91%E6%98%93%E6%96%B0%E9%97%BB.gif)
+![抖音](https://github.com/QuintGao/GKNavigationBarViewController/blob/master/Demo/douyin.gif)
 
 
 ## 使用说明
@@ -134,11 +140,13 @@ pod 'GKNavigationBarViewController'
 * 不能使用系统导航栏的各种属性及方法
 
 
-## 时间记录
-
+## 时间记录(倒序)
+* 2018.9.11   -- 2.1.0 解决根控制器开启左滑push无效的问题
+* 2018.9.10   -- 2.0.8 拆分左右间距设置属性，可分别设置导航栏左右间距
+* 2018.9.7     -- 2.0.6发布，增加设置导航栏标题和隐藏分割线的属性
 * 2018.3.8     -- 2.0.1发布，修复bug，控制器新增设置导航栏左右按钮间距的属性
 * 2018.3.5     -- 2.0.0发布，修复bug，解决崩溃问题
-* 2017.10.11 -- 1.3.0版本,修复bug，解决手势冲突问题
+* 2017.10.11 -- 1.3.0版本,   修复bug，解决手势冲突问题
 * 2017.9.20   -- 1.2.6版本  适配iOS11，iPhone X
 * 2017.8.31   --
     1. 新增控制器旋转的方法，可以很好的控制单个控制器的旋转问题
