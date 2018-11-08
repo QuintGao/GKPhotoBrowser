@@ -216,6 +216,7 @@ static Class imageManagerClass = nil;
         [self.contentView addSubview:_countLabel];
         
         _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !isLandspace) ? 50 : 30);
+        _countLabel.hidden = self.photos.count == 1;
         
         [self updateLabel];
     }

@@ -76,6 +76,8 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2018.11.9
+    优化只有一张图片显示时的细节
 2018.9.18
     适配iPhone XS，iPhone XS Max，iPhone XR
 2018.8.30
