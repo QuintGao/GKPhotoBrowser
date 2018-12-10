@@ -73,9 +73,9 @@ static Class imageManagerClass = nil;
         _photoScrollView.showsHorizontalScrollIndicator = NO;
         _photoScrollView.backgroundColor                = [UIColor clearColor];
         if (self.showStyle == GKPhotoBrowserShowStylePush) {
-            _photoScrollView.gk_gestureHandleDisabled = NO;
-        }else {
-            _photoScrollView.gk_gestureHandleDisabled = YES;
+            if (self.isPopGestureEnabled) {
+                _photoScrollView.gk_gestureHandleEnabled = YES;
+            }
         }
         
         if (@available(iOS 11.0, *)) {
@@ -188,11 +188,11 @@ static Class imageManagerClass = nil;
     CGFloat height = self.view.bounds.size.height;
     BOOL isLandspace = width > height;
     
-    if (self.isAdaptiveSaveArea) {
+    if (self.isAdaptiveSafeArea) {
         if (isLandspace) {
-            width -= (kSaveTopSpace + kSaveBottomSpace);
+            width -= (kSafeTopSpace + kSafeBottomSpace);
         }else {
-            height -= (kSaveTopSpace + kSaveBottomSpace);
+            height -= (kSafeTopSpace + kSafeBottomSpace);
         }
     }
     
@@ -246,9 +246,7 @@ static Class imageManagerClass = nil;
 - (void)setShowStyle:(GKPhotoBrowserShowStyle)showStyle {
     _showStyle = showStyle;
     
-    if (showStyle == GKPhotoBrowserShowStylePush) {
-        //        self.photoScrollView.gk_gestureHandleDisabled = NO;
-    }else {
+    if (showStyle != GKPhotoBrowserShowStylePush) {
         self.modalPresentationStyle = UIModalPresentationCustom;
         self.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
     }
@@ -723,8 +721,8 @@ static Class imageManagerClass = nil;
             
             CGFloat height = MAX(screenBounds.size.width, screenBounds.size.height);
             
-            if (self.isAdaptiveSaveArea) {
-                height -= (kSaveTopSpace + kSaveBottomSpace);
+            if (self.isAdaptiveSafeArea) {
+                height -= (kSafeTopSpace + kSafeBottomSpace);
             }
             // 设置frame
             self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
@@ -918,8 +916,8 @@ static Class imageManagerClass = nil;
             self.contentView.transform = CGAffineTransformMakeRotation(M_PI * rotation);
             
             CGFloat width = MAX(screenBounds.size.width, screenBounds.size.height);
-            if (self.isAdaptiveSaveArea) {
-                width -= (kSaveTopSpace + kSaveBottomSpace);
+            if (self.isAdaptiveSafeArea) {
+                width -= (kSafeTopSpace + kSafeBottomSpace);
             }
             // 设置frame
             self.contentView.bounds = CGRectMake(0, 0, width, MIN(screenBounds.size.width, screenBounds.size.height));
@@ -959,8 +957,8 @@ static Class imageManagerClass = nil;
             self.contentView.transform = currentOrientation == UIDeviceOrientationPortrait ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
             
             CGFloat height = MAX(screenBounds.size.width, screenBounds.size.height);
-            if (self.isAdaptiveSaveArea) {
-                height -= (kSaveTopSpace + kSaveBottomSpace);
+            if (self.isAdaptiveSafeArea) {
+                height -= (kSafeTopSpace + kSafeBottomSpace);
             }
             // 设置frame
             self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);

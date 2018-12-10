@@ -23,8 +23,8 @@ CGSizeEqualToSize(CGSizeMake(414, 896),[UIScreen mainScreen].bounds.size)\
 CGSizeEqualToSize(CGSizeMake(896, 414),[UIScreen mainScreen].bounds.size))\
 :\
 NO)
-#define kSaveTopSpace       (KIsiPhoneX ? 24.0f : 0)   // iPhone X顶部多出的距离（刘海）
-#define kSaveBottomSpace    (KIsiPhoneX ? 34.0f : 0)   // iPhone X底部多出的距离
+#define kSafeTopSpace       (KIsiPhoneX ? 24.0f : 0)   // iPhone X顶部多出的距离（刘海）
+#define kSafeBottomSpace    (KIsiPhoneX ? 34.0f : 0)   // iPhone X底部多出的距离
 
 @class GKPhotoBrowser;
 
@@ -101,12 +101,17 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign) BOOL isFullWidthForLandSpace;
 
 /** 是否适配安全区域，默认NO，为YES时图片会自动适配iPhone X的安全区域 */
-@property (nonatomic, assign) BOOL isAdaptiveSaveArea;
+@property (nonatomic, assign) BOOL isAdaptiveSafeArea;
 
 /**
  开启这个选项后 在加载gif的时候 会大大的降低内存.与YYImage对gif的内存优化思路一样 default is NO
  */
 @property (nonatomic, assign) BOOL isLowGifMemory;
+
+/**
+ * 是否启用滑动返回手势处理（当showStyle为GKPhotoBrowserShowStylePush时有效）
+ */
+@property (nonatomic, assign) BOOL isPopGestureEnabled;
 
 /** 浏览器背景（默认黑色） */
 @property (nonatomic, strong) UIColor   *bgColor;

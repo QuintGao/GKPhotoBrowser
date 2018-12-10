@@ -148,6 +148,7 @@
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
     browser.showStyle = GKPhotoBrowserShowStyleZoom;
     browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
+    browser.isLowGifMemory = YES;
     
     browser.delegate  = self;
     

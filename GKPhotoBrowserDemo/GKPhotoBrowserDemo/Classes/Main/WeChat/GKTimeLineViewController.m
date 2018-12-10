@@ -119,7 +119,7 @@
         browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
 //        browser.isStatusBarShow     = YES;
 //        browser.isResumePhotoZoom   = YES;
-        browser.isAdaptiveSaveArea = YES;
+        browser.isAdaptiveSafeArea = YES;
         [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
             
             CGFloat pointY = 0;
@@ -176,7 +176,7 @@
         fromView.frame = contentView.bounds;
         [contentView addSubview:fromView];
     }else {
-        actionSheetH = 150 + kSaveBottomSpace;
+        actionSheetH = 150 + kSafeBottomSpace;
         fromView.frame = browser.view.bounds;
         [browser.view addSubview:fromView];
     }

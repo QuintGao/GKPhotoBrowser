@@ -9,22 +9,22 @@
 #import "UIScrollView+GKGestureHandle.h"
 #import <objc/runtime.h>
 
-static const void* GKGestureHandleDisabled = @"GKGestureHandleDisabled";
+static const void* GKGestureHandleEnabled = @"GKGestureHandleEnabled";
 
 @implementation UIScrollView (GKGestureHandle)
 
-- (void)setGk_gestureHandleDisabled:(BOOL)gk_gestureHandleDisabled {
-    objc_setAssociatedObject(self, GKGestureHandleDisabled, @(gk_gestureHandleDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setGk_gestureHandleEnabled:(BOOL)gk_gestureHandleEnabled {
+    objc_setAssociatedObject(self, GKGestureHandleEnabled, @(gk_gestureHandleEnabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)gk_gestureHandleDisabled {
-    return [objc_getAssociatedObject(self, GKGestureHandleDisabled) boolValue];
+- (BOOL)gk_gestureHandleEnabled {
+    return [objc_getAssociatedObject(self, GKGestureHandleEnabled) boolValue];
 }
 
 #pragma mark - 解决全屏滑动
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
     
-    if (self.gk_gestureHandleDisabled) return YES;
+    if (!self.gk_gestureHandleEnabled) return YES;
     
     if ([self panBack:gestureRecognizer]) return NO;
     
@@ -33,7 +33,7 @@ static const void* GKGestureHandleDisabled = @"GKGestureHandleDisabled";
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     
-    if (self.gk_gestureHandleDisabled) return NO;
+    if (!self.gk_gestureHandleEnabled) return NO;
     
     if ([self panBack:gestureRecognizer]) return YES;
     

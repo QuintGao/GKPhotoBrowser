@@ -92,8 +92,6 @@
     }];
 }
 
-
-
 // 给网页中的图片添加点击方法
 - (void)addImgClick {
     NSString *imgClickJS = @"function imgClickAction(){var imgs=document.getElementsByTagName('img');var length=imgs.length;for(var i=0; i < length;i++){img=imgs[i];if(\"ad\" ==img.getAttribute(\"flag\")){var parent = this.parentNode;if(parent.nodeName.toLowerCase() != \"a\")return;}img.onclick=function(){window.location.href='image-preview:'+this.src}}}";
@@ -114,6 +112,7 @@
     
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
     browser.showStyle = GKPhotoBrowserShowStylePush;
+    browser.isPopGestureEnabled = YES;
     
     [browser showFromVC:self];
 }

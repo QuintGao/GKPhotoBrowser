@@ -66,7 +66,6 @@
         if (@available(iOS 11.0, *)) {
             _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        _scrollView.gk_gestureHandleDisabled = YES;
     }
     return _scrollView;
 }

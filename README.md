@@ -76,6 +76,8 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2018.12.10
+    增加是否开启处理手势冲突的属性isPopGestureEnabled
 2018.11.9
     优化只有一张图片显示时的细节
 2018.9.18
@@ -91,7 +93,7 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
     1、移除FLAnimationImage
     2、优化gif图片的加载，增加属性isLowGifMemory，可减少gif图片的加载内存。
 2018.8.1
-    1、增加属性isAdaptiveSaveArea，控制是否自动适配安全区域
+    1、增加属性isAdaptiveSafeArea，控制是否自动适配安全区域
     2、图片超过屏幕高度不能滑动消失问题修复（超长图滑动隐藏效果不是很好，目前没找到更好的解决方案）
 2018.7.30
     1、显示与隐藏动画优化
