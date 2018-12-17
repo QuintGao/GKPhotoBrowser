@@ -310,7 +310,21 @@ static Class imageManagerClass = nil;
     GKPhoto *photo          = [self currentPhoto];
     GKPhotoView *photoView  = [self currentPhotoView];
     
-    CGRect endRect    = photoView.imageView.frame;
+    CGRect endRect = CGRectZero;
+    if (photoView.imageView.image) {
+        endRect = photoView.imageView.frame;
+    }else {
+        if (CGRectEqualToRect(photo.sourceFrame, CGRectZero)) {
+            endRect = photoView.imageView.frame;
+        }else {
+            CGFloat w = GKScreenW;
+            CGFloat h = w * photo.sourceFrame.size.height / photo.sourceFrame.size.width;
+            CGFloat x = 0;
+            CGFloat y = (GKScreenH - h) / 2;
+            endRect = CGRectMake(x, y, w, h);
+        }
+    }
+    
     CGRect sourceRect = photo.sourceFrame;
     
     if (CGRectEqualToRect(sourceRect, CGRectZero)) {

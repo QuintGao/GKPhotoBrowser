@@ -76,6 +76,8 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2018.12.17
+    修复只传入sourceFrame时的显示问题
 2018.12.10
     增加是否开启处理手势冲突的属性isPopGestureEnabled
 2018.11.9
