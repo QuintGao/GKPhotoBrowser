@@ -127,8 +127,16 @@
             return;
         }
         
-        // 显示原来的图片
-        self.imageView.image          = photo.placeholderImage ? photo.placeholderImage : photo.sourceImageView.image;
+        // 显示原来的图片或已缓存的图片
+        UIImage *placeholderImage = photo.placeholderImage;
+        if (!placeholderImage) {
+            placeholderImage = photo.sourceImageView.image;
+        }
+        if (!placeholderImage) {
+            placeholderImage = [_imageProtocol imageFromMemoryForURL:photo.url];
+        }
+        
+        self.imageView.image          = placeholderImage;
         self.imageView.contentMode    = photo.sourceImageView.contentMode;
         self.scrollView.scrollEnabled = NO;
         // 进度条
@@ -139,6 +147,8 @@
         }
         
         if (self.imageView.image) {
+            [self adjustFrame];
+        }else if (!CGRectEqualToRect(photo.sourceFrame, CGRectZero)) {
             [self adjustFrame];
         }
         
@@ -323,6 +333,16 @@
         self.scrollView.minimumZoomScale = 1.0;
         self.scrollView.maximumZoomScale = maxScale;
         self.scrollView.zoomScale        = 1.0;
+    }else if (!CGRectEqualToRect(self.photo.sourceFrame, CGRectZero)) {
+        CGFloat width = frame.size.width;
+        CGFloat height = width * self.photo.sourceFrame.size.height / self.photo.sourceFrame.size.height;
+        _imageView.bounds = CGRectMake(0, 0, width, height);
+        _imageView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+        self.scrollView.contentSize = self.imageView.frame.size;
+        
+        self.loadingView.bounds = self.scrollView.frame;
+        self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+        [self.loadingView removeAnimation];
     }else {
         frame.origin        = CGPointZero;
         CGFloat width       = frame.size.width;

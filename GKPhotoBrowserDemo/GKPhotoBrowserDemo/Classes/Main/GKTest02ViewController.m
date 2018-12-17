@@ -96,7 +96,10 @@
             }else {
                 photo.image       = [UIImage imageNamed:obj];
             }
-            photo.sourceImageView = containerView.subviews[idx];
+//            photo.sourceImageView = containerView.subviews[idx];
+            UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
+            UIView *v = containerView.subviews[idx];
+            photo.sourceFrame = [v convertRect:v.bounds toView:window];
             [photoArrs addObject:photo];
         }];
         
