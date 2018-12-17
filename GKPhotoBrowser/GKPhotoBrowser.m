@@ -215,7 +215,7 @@ static Class imageManagerClass = nil;
         _countLabel.bounds          = CGRectMake(0, 0, 80, 30);
         [self.contentView addSubview:_countLabel];
         
-        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !isLandspace) ? 50 : 30);
+        _countLabel.center = CGPointMake(GKScreenW * 0.5, (KIsiPhoneX && !isLandspace) ? 50 : 30);
         _countLabel.hidden = self.photos.count == 1;
         
         [self updateLabel];
@@ -389,7 +389,7 @@ static Class imageManagerClass = nil;
     }else {
         _countLabel.bounds = CGRectMake(0, 0, 80, 30);
 
-        _countLabel.center = CGPointMake(frame.size.width * 0.5, (KIsiPhoneX && !self.isLandspace) ? 50 : 30);
+        _countLabel.center = CGPointMake(GKScreenW * 0.5, (KIsiPhoneX && !self.isLandspace) ? 50 : 30);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {
