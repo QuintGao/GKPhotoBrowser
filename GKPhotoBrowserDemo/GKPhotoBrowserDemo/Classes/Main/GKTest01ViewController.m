@@ -79,8 +79,6 @@
     [self.dataSource enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         GKPhoto *photo = [GKPhoto new];
         photo.url = [NSURL URLWithString:obj];
-        photo.placeholderImage = [UIImage imageNamed:@"red"];
-        photo.sourceFrame = CGRectMake(0, 64, tableView.bounds.size.width, 200);
        
         [photos addObject:photo];
     }];

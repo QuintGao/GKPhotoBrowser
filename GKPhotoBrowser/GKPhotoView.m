@@ -127,13 +127,15 @@
             return;
         }
         
-        // 显示原来的图片或已缓存的图片
-        UIImage *placeholderImage = photo.placeholderImage;
+        // 优先加载缓存图片
+        UIImage *placeholderImage = [_imageProtocol imageFromMemoryForURL:photo.url];
+        // 如果没有就加载sourceImageView的image
         if (!placeholderImage) {
             placeholderImage = photo.sourceImageView.image;
         }
+        // 如果还没有就加载传入的站位图
         if (!placeholderImage) {
-            placeholderImage = [_imageProtocol imageFromMemoryForURL:photo.url];
+            placeholderImage = photo.placeholderImage;
         }
         
         self.imageView.image          = placeholderImage;

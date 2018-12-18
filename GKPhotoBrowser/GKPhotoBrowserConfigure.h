@@ -22,7 +22,7 @@
 
 #define kPhotoViewPadding           10
 
-#define kAnimationDuration          10.25f
+#define kAnimationDuration          0.25f
 
 #define LOCK(...) dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER); \
 __VA_ARGS__; \
