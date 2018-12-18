@@ -34,7 +34,7 @@
 - (instancetype)initWithFrame:(CGRect)frame loadingStyle:(GKLoadingStyle)loadingStyle {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
-        self.hidden          = YES;
+//        self.hidden          = YES;
         
         self.loadingStyle   = loadingStyle;
         
@@ -67,7 +67,7 @@
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     if (newSuperview) {
-        [self layoutAnimatedLayer];
+//        [self layoutAnimatedLayer];
     }else {
         [self.animatedLayer removeFromSuperlayer];
         self.animatedLayer = nil;
@@ -221,10 +221,6 @@
 - (void)setFrame:(CGRect)frame {
     if (!CGRectEqualToRect(frame, super.frame)) {
         [super setFrame:frame];
-        
-        if (self.superview) {
-            [self layoutAnimatedLayer];
-        }
     }
 }
 
@@ -246,10 +242,6 @@
         
         [self.backgroundLayer removeFromSuperlayer];
         self.backgroundLayer = nil;
-        
-        if (self.superview) {
-            [self layoutAnimatedLayer];
-        }
     }
     
     [self layoutIfNeeded];
@@ -295,7 +287,8 @@
     [self.failureLabel removeFromSuperview];
     self.failureLabel = nil;
     
-    self.hidden = NO;
+    [self layoutAnimatedLayer];
+    
     if (self.loadingStyle == GKLoadingStyleIndeterminate) {
         CABasicAnimation *rotateAnimation   = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
         rotateAnimation.timingFunction      = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
@@ -341,9 +334,8 @@
 }
 
 - (void)stopLoading {
-    NSLog(@"结束loading");
     [self hideLoadingView];
-    self.hidden = YES;
+//    self.hidden = YES;
 }
 
 - (void)showFailure {
