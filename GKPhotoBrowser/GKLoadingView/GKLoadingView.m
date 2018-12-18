@@ -34,6 +34,7 @@
 - (instancetype)initWithFrame:(CGRect)frame loadingStyle:(GKLoadingStyle)loadingStyle {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
+        self.hidden          = YES;
         
         self.loadingStyle   = loadingStyle;
         
@@ -294,6 +295,7 @@
     [self.failureLabel removeFromSuperview];
     self.failureLabel = nil;
     
+    self.hidden = NO;
     if (self.loadingStyle == GKLoadingStyleIndeterminate) {
         CABasicAnimation *rotateAnimation   = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
         rotateAnimation.timingFunction      = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
@@ -339,7 +341,9 @@
 }
 
 - (void)stopLoading {
+    NSLog(@"结束loading");
     [self hideLoadingView];
+    self.hidden = YES;
 }
 
 - (void)showFailure {

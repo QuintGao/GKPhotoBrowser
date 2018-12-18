@@ -142,10 +142,6 @@
         // 进度条
         [self addSubview:self.loadingView];
         
-        if (!photo.failed) {
-            [self.loadingView startLoading];
-        }
-        
         if (self.imageView.image) {
             [self adjustFrame];
         }else if (!CGRectEqualToRect(photo.sourceFrame, CGRectZero)) {
@@ -162,6 +158,10 @@
         if (photo.image.images.count > 1) {
             photo.finished = YES;
             return;
+        }
+        
+        if (!photo.failed && !cacheImage) {
+            [self.loadingView startLoading];
         }
         
         // 开始加载图片
@@ -188,6 +188,9 @@
                     [strongSelf.loadingView showFailure];
                 }else {
                     photo.finished = YES;
+                    strongSelf.scrollView.scrollEnabled = YES;
+                    [strongSelf.loadingView stopLoading];
+                    
                     if (cacheType == SDImageCacheTypeNone) {
                         [strongSelf setupPhotoWithData:data image:image];
                     }else if (cacheType == SDImageCacheTypeMemory) {
@@ -196,9 +199,6 @@
                     }else {
                         [strongSelf setupPhotoWithData:data image:image];
                     }
-                    
-                    strongSelf.scrollView.scrollEnabled = YES;
-                    [strongSelf.loadingView stopLoading];
                 }
                 [strongSelf adjustFrame];
             });
