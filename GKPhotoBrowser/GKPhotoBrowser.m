@@ -14,7 +14,6 @@ static Class imageManagerClass = nil;
 @interface GKPhotoBrowser()<UIScrollViewDelegate>
 {
     UILabel  *_countLabel;
-    CGPoint  _startLocation;
 }
 
 @property (nonatomic, strong, readwrite) UIView *contentView;
@@ -47,11 +46,16 @@ static Class imageManagerClass = nil;
 /** 状态栏是否显示 */
 @property (nonatomic, assign) BOOL isStatusBarShowing;
 
+/** 正在滑动缩放隐藏 */
+@property (nonatomic, assign) BOOL isZoomScale;
+
 @property (nonatomic, assign) BOOL isPortraitToUp;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 
 @property (nonatomic, assign) CGPoint   firstMovePoint;
+@property (nonatomic, assign) CGPoint   startLocation;
+@property (nonatomic, assign) CGRect    startFrame;
 
 @property (nonatomic, strong) id<GKWebImageProtocol> imageProtocol;
 
@@ -174,9 +178,14 @@ static Class imageManagerClass = nil;
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    if (!self.isStatusBarChanged) {
-        [self layoutSubviews];
-    }
+//    if (self.isZoomScale) {
+//        self.isZoomScale = NO;
+//        return;
+//    };
+//
+//    if (!self.isStatusBarChanged) {
+//        [self layoutSubviews];
+//    }
 }
 
 - (void)setupUI {
@@ -636,25 +645,32 @@ static Class imageManagerClass = nil;
 }
 
 - (void)handlePanZoomScale:(UIPanGestureRecognizer *)panGesture {
-    CGPoint point       = [panGesture translationInView:self.view];
-    CGPoint location    = [panGesture locationInView:self.view];
-    CGPoint velocity    = [panGesture velocityInView:self.view];
-    
     GKPhotoView *photoView = [self photoViewForIndex:self.currentIndex];
+    CGPoint point       = [panGesture translationInView:self.view];
+    CGPoint location    = [panGesture locationInView:photoView.scrollView];
+    CGPoint velocity    = [panGesture velocityInView:self.view];
     
     switch (panGesture.state) {
         case UIGestureRecognizerStateBegan:
-            _startLocation = location;
+            self.startLocation = location;
+            self.startFrame = photoView.imageView.frame;
+            self.isZoomScale = YES;
             [self handlePanBegin];
             break;
         case UIGestureRecognizerStateChanged: {
             double percent = 1 - fabs(point.y) / self.view.frame.size.height;
-            percent  = MAX(percent, 0);
-            double s = MAX(percent, 0.5);
-
-            CGAffineTransform translation = CGAffineTransformMakeTranslation(point.x / s, point.y / s);
-            CGAffineTransform scale = CGAffineTransformMakeScale(s, s);
-            photoView.imageView.transform = CGAffineTransformConcat(translation, scale);
+            double s = MAX(percent, 0.3);
+            
+            CGFloat width = self.startFrame.size.width * s;
+            CGFloat height = self.startFrame.size.height * s;
+            
+            CGFloat rateX = (self.startLocation.x - self.startFrame.origin.x) / self.startFrame.size.width;
+            CGFloat x = location.x - width * rateX;
+            
+            CGFloat rateY = (self.startLocation.y - self.startFrame.origin.y) / self.startFrame.size.height;
+            CGFloat y = location.y - height * rateY;
+            
+            photoView.imageView.frame = CGRectMake(x, y, width, height);
 
             self.view.backgroundColor = self.bgColor ? [self.bgColor colorWithAlphaComponent:percent] : [[UIColor blackColor] colorWithAlphaComponent:percent];
         }
@@ -747,6 +763,7 @@ static Class imageManagerClass = nil;
             
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
+            [self layoutSubviews];
         }completion:^(BOOL finished) {
             [self showDismissAnimation];
         }];
@@ -788,6 +805,10 @@ static Class imageManagerClass = nil;
         }
     }
     
+    if (photoView.scrollView.zoomScale > 1.0f) {
+        [photoView.scrollView setZoomScale:1.0f animated:YES];
+    }
+    
     [UIView animateWithDuration:kAnimationDuration animations:^{
         photoView.imageView.frame = sourceRect;
         if (photo.sourceImageView) {
@@ -827,7 +848,11 @@ static Class imageManagerClass = nil;
     photo.sourceImageView.alpha = 1.0;
     
     [UIView animateWithDuration:kAnimationDuration animations:^{
-        photoView.imageView.transform = CGAffineTransformIdentity;
+        if (self.hideStyle == GKPhotoBrowserHideStyleZoomScale) {
+            photoView.imageView.frame = self.startFrame;
+        }else {
+            photoView.imageView.transform = CGAffineTransformIdentity;
+        }
         self.view.backgroundColor = self.bgColor ? : [UIColor blackColor];
     }completion:^(BOOL finished) {
         
@@ -938,10 +963,9 @@ static Class imageManagerClass = nil;
             
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
-            [self layoutSubviews];
-            
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
+            [self layoutSubviews];
             
         } completion:^(BOOL finished) {
             // 记录设备方向
@@ -978,10 +1002,9 @@ static Class imageManagerClass = nil;
             self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
-            [self layoutSubviews];
-            
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
+            [self layoutSubviews];
             
         } completion:^(BOOL finished) {
             // 记录设备方向

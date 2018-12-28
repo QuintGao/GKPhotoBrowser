@@ -46,6 +46,9 @@
 /** 记录photoView缩放时的rect */
 @property (nonatomic, assign) CGRect zoomRect;
 
+/** 记录每个GKPhotoView的滑动位置 */
+@property (nonatomic, assign) CGPoint   offset;
+
 - (void)startAnimation;
 - (void)stopAnimation;
 

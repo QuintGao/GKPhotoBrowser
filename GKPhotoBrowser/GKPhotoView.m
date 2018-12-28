@@ -334,7 +334,6 @@
         // 初始化
         self.scrollView.minimumZoomScale = 1.0;
         self.scrollView.maximumZoomScale = maxScale;
-        self.scrollView.zoomScale        = 1.0;
     }else if (!CGRectEqualToRect(self.photo.sourceFrame, CGRectZero)) {
         CGFloat width = frame.size.width;
         CGFloat height = width * self.photo.sourceFrame.size.height / self.photo.sourceFrame.size.height;
@@ -364,6 +363,9 @@
     if (self.photo.isZooming) {
         [self zoomToRect:self.photo.zoomRect animated:NO];
     }
+    
+    // 重置offset
+    self.scrollView.contentOffset = self.photo.offset;
 }
 
 - (CGPoint)centerOfScrollViewContent:(UIScrollView *)scrollView {
@@ -378,6 +380,10 @@
 }
 
 #pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    self.photo.offset = scrollView.contentOffset;
+}
+
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.imageView;
 }
