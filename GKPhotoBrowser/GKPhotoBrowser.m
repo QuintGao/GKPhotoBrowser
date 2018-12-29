@@ -809,11 +809,12 @@ static Class imageManagerClass = nil;
         [photoView.scrollView setZoomScale:1.0f animated:YES];
     }
     
+    if (photo.sourceImageView) {
+        photoView.imageView.image = photo.sourceImageView.image;
+    }
+    
     [UIView animateWithDuration:kAnimationDuration animations:^{
         photoView.imageView.frame = sourceRect;
-        if (photo.sourceImageView) {
-            photoView.imageView.image = photo.sourceImageView.image;
-        }
         self.view.backgroundColor = [UIColor clearColor];
     }completion:^(BOOL finished) {
         [self dismissAnimated:NO];
