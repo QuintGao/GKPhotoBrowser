@@ -140,13 +140,13 @@ static Class imageManagerClass = nil;
     
     // 设置UI
     [self setupUI];
-    
-    // 手势和监听
-    [self addGestureAndObserver];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    // 手势和监听
+    [self addGestureAndObserver];
     
     GKPhoto *photo          = [self currentPhoto];
     GKPhotoView *photoView  = [self currentPhotoView];
@@ -175,17 +175,12 @@ static Class imageManagerClass = nil;
     }
 }
 
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     
-//    if (self.isZoomScale) {
-//        self.isZoomScale = NO;
-//        return;
-//    };
-//
-//    if (!self.isStatusBarChanged) {
-//        [self layoutSubviews];
-//    }
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:didDisappearAtIndex:)]) {
+        [self.delegate photoBrowser:self didDisappearAtIndex:self.currentIndex];
+    }
 }
 
 - (void)setupUI {
@@ -216,6 +211,7 @@ static Class imageManagerClass = nil;
         [self.coverViews enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [self.contentView addSubview:obj];
         }];
+        [self layoutSubviews];
     }else {
         _countLabel                 = [UILabel new];
         _countLabel.textColor       = [UIColor whiteColor];
@@ -759,8 +755,6 @@ static Class imageManagerClass = nil;
             
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
-            [self layoutSubviews];
-            
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             [self layoutSubviews];
@@ -1021,6 +1015,9 @@ static Class imageManagerClass = nil;
     }else {
         self.isRotation     = NO;
         self.isLandspace    = NO;
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+        [self layoutSubviews];
         
         [self deviceOrientationChangedDelegate];
     }

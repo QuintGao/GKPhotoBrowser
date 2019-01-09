@@ -256,6 +256,10 @@
     [GKCover hideCover];
 }
 
+- (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index {
+    NSLog(@"浏览器完全消失%@", browser);
+}
+
 - (void)delBtnClick:(id)sender {
     [GKCover hideCover];
     

@@ -59,6 +59,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // 布局子视图
 - (void)photoBrowser:(GKPhotoBrowser *)browser willLayoutSubViews:(NSInteger)index;
 
+// browser完全消失回调
+- (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index;
+
 @end
 
 @interface GKPhotoBrowser : UIViewController
