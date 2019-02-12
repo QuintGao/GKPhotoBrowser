@@ -18,6 +18,23 @@
 #define GKScreenW [UIScreen mainScreen].bounds.size.width
 #define GKScreenH [UIScreen mainScreen].bounds.size.height
 
+// 判断iPhone X
+#define KIsiPhoneX          ([UIScreen instancesRespondToSelector:@selector(currentMode)] ?\
+(\
+CGSizeEqualToSize(CGSizeMake(375, 812),[UIScreen mainScreen].bounds.size)\
+||\
+CGSizeEqualToSize(CGSizeMake(812, 375),[UIScreen mainScreen].bounds.size)\
+||\
+CGSizeEqualToSize(CGSizeMake(414, 896),[UIScreen mainScreen].bounds.size)\
+||\
+CGSizeEqualToSize(CGSizeMake(896, 414),[UIScreen mainScreen].bounds.size))\
+:\
+NO)
+
+// 安全区域间距
+#define kSafeTopSpace       (KIsiPhoneX ? 24.0f : 0)   // iPhone X顶部多出的距离（刘海）
+#define kSafeBottomSpace    (KIsiPhoneX ? 34.0f : 0)   // iPhone X底部多出的距离
+
 #define kMaxZoomScale               2.0f
 
 #define kPhotoViewPadding           10
