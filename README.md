@@ -1,9 +1,10 @@
-GKPhotoBrowser
-==============
+<div align=center><img src="imgs/GKPhotoBrowser.png" width="405" height="63" /></div>
 
-[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/QuintGao/GKPhotoBrowser/master/LICENSE)&nbsp;
-[![CocoaPods](http://img.shields.io/cocoapods/v/GKPhotoBrowser.svg?style=flat)](http://cocoapods.org/pods/GKPhotoBrowser)&nbsp;
-[![CocoaPods](http://img.shields.io/cocoapods/p/GKPhotoBrowser.svg?style=flat)](http://cocoadocs.org/docsets/GKPhotoBrowser)&nbsp;
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/QuintGao/GKPhotoBrowser/master/LICENSE)&nbsp;&nbsp;
+[![platform](http://img.shields.io/cocoapods/p/GKPhotoBrowser.svg?style=flat)](http://cocoadocs.org/docsets/GKPhotoBrowser)&nbsp;&nbsp;
+[![languages](https://img.shields.io/badge/language-objective--c-blue.svg)](#) &nbsp;&nbsp;
+[![cocoapods](http://img.shields.io/cocoapods/v/GKPhotoBrowser.svg?style=flat)](https://cocoapods.org/pods/GKPhotoBrowser)&nbsp;&nbsp;
+[![support](https://img.shields.io/badge/support-ios%208%2B-orange.svg)](#) 
 
 iOS仿微信、今日头条等图片浏览器
 ==============
