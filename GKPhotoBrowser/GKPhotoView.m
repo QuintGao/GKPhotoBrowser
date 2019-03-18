@@ -343,7 +343,6 @@
         
         self.loadingView.bounds = self.scrollView.frame;
         self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
-        [self.loadingView removeAnimation];
     }else {
         frame.origin        = CGPointZero;
         CGFloat width       = frame.size.width;
@@ -355,7 +354,6 @@
         
         self.loadingView.bounds = self.scrollView.frame;
         self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
-        [self.loadingView removeAnimation];
     }
     self.scrollView.contentOffset = CGPointZero;
     
