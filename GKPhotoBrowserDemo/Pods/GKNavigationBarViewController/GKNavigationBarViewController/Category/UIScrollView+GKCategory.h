@@ -10,4 +10,7 @@
 
 @interface UIScrollView (GKCategory)
 
+// 禁止手势处理，默认为NO，设置为YES表示不对手势冲突进行处理
+@property (nonatomic, assign) BOOL  gk_disableGestureHandle;
+
 @end

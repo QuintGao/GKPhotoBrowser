@@ -121,7 +121,7 @@ typedef void(^hideBlock)(void);
 + (void)hide;
 
 #pragma mark - v2.0.0
-#pragma makr - 新增功能：增加点击遮罩时是否消失的判断,notClick是否可以点击，默认是NO,代表能点击
+#pragma makr - 新增功能:增加点击遮罩时是否消失的判断,notClick是否可以点击,默认是NO,代表能点击
 
 + (void)translucentCoverFrom:(UIView *)fromView
                      content:(UIView *)contentView
@@ -159,7 +159,7 @@ typedef void(^hideBlock)(void);
 
 
 #pragma mark - v2.2.0
-#pragma mark - 全新定义构造方法，根据不同类型，显示不同遮罩
+#pragma mark - 全新定义构造方法,根据不同类型,显示不同遮罩
 
 // 常见遮罩
 + (void)topCover:(UIView *)fromView

@@ -7,23 +7,34 @@
 //
 
 #import "UIScrollView+GKCategory.h"
+#import <objc/runtime.h>
+
+static const void* GKDisableGestureHandleKey = @"GKDisableGestureHandleKey";
 
 @implementation UIScrollView (GKCategory)
+
+- (void)setGk_disableGestureHandle:(BOOL)gk_disableGestureHandle {
+    objc_setAssociatedObject(self, GKDisableGestureHandleKey, @(gk_disableGestureHandle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)gk_disableGestureHandle {
+    return [objc_getAssociatedObject(self, GKDisableGestureHandleKey) boolValue];
+}
 
 #pragma mark - 解决全屏滑动时的手势冲突
 // 当UIScrollView在水平方向滑动到第一个时，默认是不能全屏滑动返回的，通过下面的方法可实现其滑动返回。
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    if ([self panBack:gestureRecognizer]) {
-        return NO;
-    }
+    if (self.gk_disableGestureHandle) return YES;
+    
+    if ([self panBack:gestureRecognizer]) return NO;
+    
     return YES;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    if ([self panBack:gestureRecognizer]) {
-        return YES;
-    }
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if (self.gk_disableGestureHandle) return NO;
+    
+    if ([self panBack:gestureRecognizer]) return YES;
     
     return NO;
 }

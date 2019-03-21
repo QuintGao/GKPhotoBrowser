@@ -48,6 +48,9 @@
         configure.gk_navItemLeftSpace   = self.gk_navItemLeftSpace;
         configure.gk_navItemRightSpace  = self.gk_navItemRightSpace;
     }];
+    
+    // 获取状态
+    self.gk_navigationBar.gk_statusBarHidden = self.gk_statusBarHidden;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -63,14 +66,10 @@
 #pragma mark - Public Methods
 - (void)showNavLine {
     self.gk_navLineHidden = NO;
-    
-    [self.gk_navigationBar gk_navLineHideOrShow];
 }
 
 - (void)hideNavLine {
     self.gk_navLineHidden = YES;
-    
-    [self.gk_navigationBar gk_navLineHideOrShow];
 }
 
 #pragma mark - private Methods
@@ -129,19 +128,19 @@
     CGFloat width  = [UIScreen mainScreen].bounds.size.width;
     CGFloat height = [UIScreen mainScreen].bounds.size.height;
     
-    CGFloat systemVersion = [UIDevice currentDevice].systemVersion.floatValue;
-    
-    // 状态栏高度
-    CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
-    
-    // 导航栏高度：横屏(状态栏显示：52，状态栏隐藏：32) 竖屏64
     CGFloat navBarH = 0;
-    
-    // 适配iOS11 iPhone X
-    if (systemVersion >= 11.0) {
-        navBarH = ((width > height) ? 32 : 44) + statusBarHeight;
-    }else {
-        navBarH = (width > height) ? (self.gk_statusBarHidden ? 32 : 52) : (self.gk_statusBarHidden ? 44 : 64);
+    if (width > height) { // 横屏
+        if (GK_IS_iPhoneX) {
+            navBarH = GK_NAVBAR_HEIGHT;
+        }else {
+            if (width == 736.0f && height == 414.0f) { // plus横屏
+                navBarH = self.gk_statusBarHidden ? GK_NAVBAR_HEIGHT : GK_STATUSBAR_NAVBAR_HEIGHT;
+            }else { // 其他机型横屏
+                navBarH = self.gk_statusBarHidden ? 32.0f : 52.0f;
+            }
+        }
+    }else { // 竖屏
+        navBarH = self.gk_statusBarHidden ? (GK_SAVEAREA_TOP + GK_NAVBAR_HEIGHT) : GK_STATUSBAR_NAVBAR_HEIGHT;
     }
     
     self.gk_navigationBar.frame = CGRectMake(0, 0, width, navBarH);
@@ -304,6 +303,13 @@
     _gk_navLineHidden = gk_navLineHidden;
     
     self.gk_navigationBar.gk_navLineHidden = gk_navLineHidden;
+    
+    // 暂时的处理方法
+    if (GKDeviceVersion >= 11.0) {
+        self.gk_navShadowImage = gk_navLineHidden ? [UIImage new] : self.gk_navShadowImage;
+    }
+    
+    [self.gk_navigationBar layoutSubviews];
 }
 
 - (UIImage *)imageWithColor:(UIColor *)color {

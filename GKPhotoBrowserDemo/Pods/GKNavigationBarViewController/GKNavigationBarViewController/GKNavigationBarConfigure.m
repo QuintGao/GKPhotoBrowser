@@ -42,19 +42,11 @@ static GKNavigationBarConfigure *instance = nil;
 }
 
 - (void)setGk_navItemLeftSpace:(CGFloat)gk_navItemLeftSpace {
-    if (GKDeviceVersion >= 11.0f) {
-        _gk_navItemLeftSpace = gk_navItemLeftSpace;
-    }else {
-        _gk_navItemLeftSpace = gk_navItemLeftSpace + 4;
-    }
+    _gk_navItemLeftSpace = gk_navItemLeftSpace;
 }
 
 - (void)setGk_navItemRightSpace:(CGFloat)gk_navItemRightSpace {
-    if (GKDeviceVersion >= 11.0f) {
-        _gk_navItemRightSpace = gk_navItemRightSpace;
-    }else {
-        _gk_navItemRightSpace = gk_navItemRightSpace + 4;
-    }
+    _gk_navItemRightSpace = gk_navItemRightSpace;
 }
 
 - (void)setupCustomConfigure:(void (^)(GKNavigationBarConfigure *))block {

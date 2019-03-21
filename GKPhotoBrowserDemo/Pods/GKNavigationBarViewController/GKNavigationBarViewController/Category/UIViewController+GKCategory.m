@@ -20,6 +20,7 @@ static const void* GKStatusBarStyleKey  = @"GKStatusBarStyleKey";
 static const void* GKStatusBarHiddenKey = @"GKStatusBarHiddenKey";
 static const void* GKBackStyleKey       = @"GKBackStyleKey";
 static const void* GKPushDelegateKey    = @"GKPushDelegateKey";
+static const void* GKPopDelegateKey     = @"GKPopDelegateKey";
 
 @implementation UIViewController (GKCategory)
 
@@ -134,6 +135,17 @@ static const void* GKPushDelegateKey    = @"GKPushDelegateKey";
 
 - (void)setGk_backStyle:(GKNavigationBarBackStyle)gk_backStyle {
     objc_setAssociatedObject(self, GKBackStyleKey, @(gk_backStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (self.navigationController.childViewControllers.count <= 1) return;
+    
+    if (self.gk_backStyle != GKNavigationBarBackStyleNone) {
+        UIImage *backImage = self.gk_backStyle == GKNavigationBarBackStyleBlack ? GKImage(@"btn_back_black") : GKImage(@"btn_back_white");
+        
+        if ([self isKindOfClass:[GKNavigationBarViewController class]]) {
+            GKNavigationBarViewController *vc = (GKNavigationBarViewController *)self;
+            vc.gk_navLeftBarButtonItem = [UIBarButtonItem itemWithTitle:nil image:backImage target:self action:@selector(backItemClick:)];
+        }
+    }
 }
 
 - (id<GKViewControllerPushDelegate>)gk_pushDelegate {
@@ -142,6 +154,17 @@ static const void* GKPushDelegateKey    = @"GKPushDelegateKey";
 
 - (void)setGk_pushDelegate:(id<GKViewControllerPushDelegate>)gk_pushDelegate {
     objc_setAssociatedObject(self, GKPushDelegateKey, gk_pushDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (id<GKViewControllerPopDelegate>)gk_popDelegate {
+    return objc_getAssociatedObject(self, GKPopDelegateKey);
+}
+
+- (void)setGk_popDelegate:(id<GKViewControllerPopDelegate>)gk_popDelegate {
+    objc_setAssociatedObject(self, GKPopDelegateKey, gk_popDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    // 当属性改变时，发送通知
+    [[NSNotificationCenter defaultCenter] postNotificationName:GKViewControllerPropertyChangedNotification object:@{@"viewController": self}];
 }
 
 - (void)setNavBarAlpha:(CGFloat)alpha {
@@ -195,6 +218,10 @@ static const void* GKPushDelegateKey    = @"GKPushDelegateKey";
         NSLog(@"找不到可见的控制器，viewcontroller.self = %@, self.view.window = %@", self, self.view.window);
         return nil;
     }
+}
+
+- (void)backItemClick:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

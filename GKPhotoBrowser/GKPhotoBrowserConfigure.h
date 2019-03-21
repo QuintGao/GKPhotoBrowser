@@ -14,6 +14,7 @@
 #import <SDWebImage/UIView+WebCache.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/SDWebImageManager.h>
+#import <SDWebImage/SDWebImageDownloader.h>
 
 #define GKScreenW [UIScreen mainScreen].bounds.size.width
 #define GKScreenH [UIScreen mainScreen].bounds.size.height

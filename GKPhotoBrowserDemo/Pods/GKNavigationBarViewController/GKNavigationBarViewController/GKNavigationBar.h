@@ -10,6 +10,9 @@
 
 @interface GKNavigationBar : UINavigationBar
 
+// 当前控制器
+@property (nonatomic, assign) BOOL      gk_statusBarHidden;
+
 /** 导航栏背景色透明度，默认是1.0 */
 @property (nonatomic, assign) CGFloat   gk_navBarBackgroundAlpha;
 

@@ -31,7 +31,9 @@
 - (UIImage *)imageFromMemoryForURL:(NSURL *)url {
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     NSString *key = [manager cacheKeyForURL:url];
-    return [manager.imageCache imageFromCacheForKey:key];
+    
+    SDImageCache *imageCache = [SDImageCache sharedImageCache];
+    return [imageCache imageFromCacheForKey:key];
 }
 
 @end

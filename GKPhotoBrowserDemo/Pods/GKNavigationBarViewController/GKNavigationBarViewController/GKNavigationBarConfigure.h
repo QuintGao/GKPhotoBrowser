@@ -26,7 +26,7 @@
 /** 状态栏类型 */
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
 
-/** 返回按钮类型 */
+/** 返回按钮类型(此方法只可全局配置，在控制器中修改无效) */
 @property (nonatomic, assign) GKNavigationBarBackStyle backStyle;
 
 /** 导航栏左右按钮距屏幕左右的间距，默认是0，可自行调整 */

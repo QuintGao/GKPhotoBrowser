@@ -31,6 +31,7 @@ iOS自定义导航栏 - 导航栏联动效果
 ![网易云音乐](https://github.com/QuintGao/GKNavigationBarViewController/blob/master/Demo/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90.gif)
 
 ![网易新闻](https://github.com/QuintGao/GKNavigationBarViewController/blob/master/Demo/%E7%BD%91%E6%98%93%E6%96%B0%E9%97%BB.gif)
+
 ![抖音](https://github.com/QuintGao/GKNavigationBarViewController/blob/master/Demo/douyin.gif)
 
 
@@ -141,6 +142,16 @@ pod 'GKNavigationBarViewController'
 
 
 ## 时间记录(倒序)
+* 2019.3.15   -- 2.2.3  增加禁止手势冲突处理属性，可对某个UISCrollView单独处理
+* 2019.3.5     -- 2.2.2 优化根控制器的gk_popDelegate功能失效问题
+* 2019.2.24   -- 2.2.1 增加gk_popDelegate，实现该协议原来的右滑返回操作将失效
+* 2019.1.17   -- 2.2.0 优化push和pop动画
+* 2019.1.11   -- 2.1.7 解决开启左滑push功能，在根控制器多次左右滑动后出现卡死的问题
+* 2018.12.2   -- 2.1.6 导航栏处理优化，可在viewDidLoad中使用gk_navLineHidden来隐藏分割线
+* 2018.11.29 -- 2.1.5 修复在控制器中设置gk_backStyle无效的问题，其他细节微调
+* 2018.10.28 -- 2.1.4 移除对UIVideoEditorController的控制
+* 2018.10.19 -- 2.1.3 修复设置透明导航栏在iOS10以前无效的问题
+* 2018.9.27   -- 2.1.1 全面适配iPhone X系列机型，修复bug
 * 2018.9.11   -- 2.1.0 解决根控制器开启左滑push无效的问题
 * 2018.9.10   -- 2.0.8 拆分左右间距设置属性，可分别设置导航栏左右间距
 * 2018.9.7     -- 2.0.6发布，增加设置导航栏标题和隐藏分割线的属性

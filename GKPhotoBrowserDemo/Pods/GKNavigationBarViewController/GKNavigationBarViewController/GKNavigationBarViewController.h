@@ -51,7 +51,10 @@
 /** 页面标题-快速设置 */
 @property (nonatomic, copy) NSString                        *gk_navTitle;
 
-/** 是否隐藏分割线（默认NO） */
+/** 是否隐藏分割线（默认NO）注意：此方法尽量在viewDidAppear中使用，如果想在viewDidLoad中隐藏分割线，可使用以下方法
+ *  1、self.gk_navShadowColor = [UIColor clearColor]
+ *  2、self.gk_navShadowImage = [UIImage new];
+ */
 @property (nonatomic, assign) BOOL                          gk_navLineHidden;
 
 

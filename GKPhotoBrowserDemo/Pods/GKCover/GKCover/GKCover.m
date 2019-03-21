@@ -601,15 +601,15 @@ static UIColor          *_bgColor;         // 背景色
     }else if (_showStyle == GKCoverShowStyleRight) {
         _contentView.gk_centerY = _fromView.gk_height * 0.5f;
         if (_showAnimStyle == GKCoverShowAnimStyleRight) {
-            _contentView.gk_right = KScreenW + _contentView.gk_width;
+            _contentView.gk_x = _fromView.gk_width;
             [UIView animateWithDuration:kAnimDuration animations:^{
-                _contentView.gk_right = KScreenW;
+                _contentView.gk_x = _fromView.gk_width - _contentView.gk_width;
             }completion:^(BOOL finished) {
                 !_showBlock ? : _showBlock();
             }];
         }else {
             !_showBlock ? : _showBlock();
-            _contentView.gk_right = KScreenW;
+            _contentView.gk_x = _fromView.gk_width - _contentView.gk_width;
         }
     }
 }
@@ -674,12 +674,12 @@ static UIColor          *_bgColor;         // 背景色
     }else if (_showStyle == GKCoverShowStyleRight) { // 右进右出
         if (_hideAnimStyle == GKCoverHideAnimStyleRight) {
             [UIView animateWithDuration:kAnimDuration animations:^{
-                _contentView.gk_x = KScreenW;
+                _contentView.gk_x = _fromView.gk_width;
             }completion:^(BOOL finished) {
                 [self remove];
             }];
         }else{
-            _contentView.gk_x = KScreenW;
+            _contentView.gk_x = _fromView.gk_width;
             [self remove];
         }
     }
@@ -865,15 +865,15 @@ static UIColor          *_bgColor;         // 背景色
         case GKCoverShowStyleRight: { // 显示在右侧
             _contentView.gk_centerY = _fromView.gk_height * 0.5f;
             if (_showAnimStyle == GKCoverShowAnimStyleRight) {
-                _contentView.gk_right = KScreenW + _contentView.gk_width;
+                _contentView.gk_x = _fromView.gk_width;
                 [UIView animateWithDuration:kAnimDuration animations:^{
-                    _contentView.gk_right = KScreenW;
+                    _contentView.gk_x = _fromView.gk_width - _contentView.gk_width;
                 }completion:^(BOOL finished) {
                     !_showBlock ? : _showBlock();
                 }];
             }else {
                 !_showBlock ? : _showBlock();
-                _contentView.gk_right = KScreenW;
+                _contentView.gk_x = _fromView.gk_width - _contentView.gk_width;
             }
         }
             break;
@@ -951,12 +951,12 @@ static UIColor          *_bgColor;         // 背景色
         case GKCoverShowStyleRight: { // 显示在右侧
             if (_hideAnimStyle == GKCoverHideAnimStyleRight) {
                 [UIView animateWithDuration:kAnimDuration animations:^{
-                    _contentView.gk_x = KScreenW;
+                    _contentView.gk_x = _fromView.gk_width;
                 }completion:^(BOOL finished) {
                     [self remove];
                 }];
             }else{
-                _contentView.gk_x = KScreenW;
+                _contentView.gk_x = _fromView.gk_width;
                 [self remove];
             }
         }
@@ -1031,6 +1031,7 @@ static UIColor          *_bgColor;         // 背景色
     }
     
     _cover       = nil;
+    _fromView    = nil;
     _contentView = nil;
     
     // 隐藏block放到最后，修复多个cover不能隐藏的bug
@@ -1042,19 +1043,24 @@ static UIColor          *_bgColor;         // 背景色
     _contentView.gk_centerX = _fromView.gk_centerX;
     
     switch (_showStyle) {
-        case GKCoverShowStyleTop:
-        {
+        case GKCoverShowStyleTop: {
             _contentView.gk_y = 0;
         }
             break;
-        case GKCoverShowStyleCenter:
-        {
+        case GKCoverShowStyleCenter: {
             _contentView.center = _fromView.center;
         }
             break;
-        case GKCoverShowStyleBottom:
-        {
+        case GKCoverShowStyleBottom: {
             _contentView.gk_y = _fromView.gk_height - _contentView.gk_height;
+        }
+            break;
+        case GKCoverShowStyleLeft: {
+            _contentView.gk_x = 0;
+        }
+            break;
+        case GKCoverShowStyleRight: {
+            _contentView.gk_x = _fromView.gk_width - _contentView.gk_width;
         }
             break;
             
