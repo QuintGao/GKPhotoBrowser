@@ -8,12 +8,6 @@
 
 #import "GKLoadingView.h"
 
-#define GKLoadingSrcName(file) [@"GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
-
-#define GKLoadingFrameworkSrcName(file) [@"Frameworks/GKPhotoBrowser.framework/GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
-
-#define GKLoadingImage(file)  [UIImage imageNamed:GKLoadingSrcName(file)] ? : [UIImage imageNamed:GKLoadingFrameworkSrcName(file)]
-
 @interface GKLoadingView()<CAAnimationDelegate>
 
 // 动画layer
@@ -40,6 +34,7 @@
 - (instancetype)initWithFrame:(CGRect)frame loadingStyle:(GKLoadingStyle)loadingStyle {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
+//        self.hidden          = YES;
         
         self.loadingStyle   = loadingStyle;
         
@@ -66,11 +61,13 @@
     
     self.centerButton.layer.cornerRadius  = btnWH * 0.5;
     self.centerButton.layer.masksToBounds = YES;
+    
+    self.failureLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     if (newSuperview) {
-        [self layoutAnimatedLayer];
+//        [self layoutAnimatedLayer];
     }else {
         [self.animatedLayer removeFromSuperlayer];
         self.animatedLayer = nil;
@@ -204,7 +201,7 @@
     
     CALayer *maskLayer = [CALayer layer];
     
-    maskLayer.contents  = (__bridge id)[GKLoadingImage(@"angle-mask") CGImage];
+    maskLayer.contents  = (__bridge id)[GKPhotoBrowserImage(@"angle-mask") CGImage];
     maskLayer.frame     = layer.bounds;
     layer.mask          = maskLayer;
 }
@@ -224,10 +221,6 @@
 - (void)setFrame:(CGRect)frame {
     if (!CGRectEqualToRect(frame, super.frame)) {
         [super setFrame:frame];
-        
-        if (self.superview) {
-            [self layoutAnimatedLayer];
-        }
     }
 }
 
@@ -249,10 +242,6 @@
         
         [self.backgroundLayer removeFromSuperlayer];
         self.backgroundLayer = nil;
-        
-        if (self.superview) {
-            [self layoutAnimatedLayer];
-        }
     }
     
     [self layoutIfNeeded];
@@ -297,6 +286,8 @@
 - (void)startLoading {
     [self.failureLabel removeFromSuperview];
     self.failureLabel = nil;
+    
+    [self layoutAnimatedLayer];
     
     if (self.loadingStyle == GKLoadingStyleIndeterminate) {
         CABasicAnimation *rotateAnimation   = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
@@ -344,18 +335,40 @@
 
 - (void)stopLoading {
     [self hideLoadingView];
+//    self.hidden = YES;
 }
 
 - (void)showFailure {
-    [self.layer removeAllAnimations];
+    [self.animatedLayer removeFromSuperlayer];
     self.animatedLayer = nil;
+    
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
+    [self.layer removeAllAnimations];
     
     [self addSubview:self.failureLabel];
 }
 
 - (void)hideLoadingView {
+    [self.animatedLayer removeFromSuperlayer];
+    self.animatedLayer = nil;
+    
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
     [self.layer removeAllAnimations];
     [self removeFromSuperview];
+}
+
+- (void)removeAnimation {
+    [self.animatedLayer removeFromSuperlayer];
+    self.animatedLayer = nil;
+    
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
+    [self.layer removeAllAnimations];
 }
 
 - (void)startLoadingWithDuration:(NSTimeInterval)duration completion:(void (^)(GKLoadingView *, BOOL))completion {

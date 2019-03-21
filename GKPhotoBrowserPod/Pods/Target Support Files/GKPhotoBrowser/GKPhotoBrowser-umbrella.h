@@ -15,8 +15,10 @@
 #import "GKPhotoBrowser.h"
 #import "GKPhotoBrowserConfigure.h"
 #import "GKPhotoView.h"
+#import "GKScrollView.h"
 #import "GKWebImageManager.h"
 #import "GKWebImageProtocol.h"
+#import "UIImage+GKDecoder.h"
 #import "UIScrollView+GKGestureHandle.h"
 
 FOUNDATION_EXPORT double GKPhotoBrowserVersionNumber;

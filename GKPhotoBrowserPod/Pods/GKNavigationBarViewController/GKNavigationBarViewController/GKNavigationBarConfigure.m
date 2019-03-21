@@ -7,7 +7,6 @@
 //  https://github.com/QuintGao/GKNavigationBarViewController.git
 
 #import "GKNavigationBarConfigure.h"
-#import "UIBarButtonItem+GKCategory.h"
 #import "UIViewController+GKCategory.h"
 
 @implementation GKNavigationBarConfigure
@@ -37,22 +36,27 @@ static GKNavigationBarConfigure *instance = nil;
     
     self.backStyle       = GKNavigationBarBackStyleBlack;
     
-    self.navItem_space   = 0;
-    
+    self.gk_navItemLeftSpace   = 0;
+    self.gk_navItemRightSpace  = 0;
     // 待添加
 }
 
-- (void)setNavItem_space:(CGFloat)navItem_space {
-    if (GKDeviceVersion >= 11.0) {
-        _navItem_space = navItem_space;
-    }else {
-        _navItem_space = navItem_space + 4;
-    }
+- (void)setGk_navItemLeftSpace:(CGFloat)gk_navItemLeftSpace {
+    _gk_navItemLeftSpace = gk_navItemLeftSpace;
+}
+
+- (void)setGk_navItemRightSpace:(CGFloat)gk_navItemRightSpace {
+    _gk_navItemRightSpace = gk_navItemRightSpace;
 }
 
 - (void)setupCustomConfigure:(void (^)(GKNavigationBarConfigure *))block {
     [self setupDefaultConfigure];
     
+    !block ? : block(self);
+}
+
+// 更新配置
+- (void)updateConfigure:(void (^)(GKNavigationBarConfigure *configure))block {
     !block ? : block(self);
 }
 

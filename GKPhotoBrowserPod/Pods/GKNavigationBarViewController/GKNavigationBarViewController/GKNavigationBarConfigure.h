@@ -26,11 +26,16 @@
 /** 状态栏类型 */
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
 
-/** 返回按钮类型 */
+/** 返回按钮类型(此方法只可全局配置，在控制器中修改无效) */
 @property (nonatomic, assign) GKNavigationBarBackStyle backStyle;
 
 /** 导航栏左右按钮距屏幕左右的间距，默认是0，可自行调整 */
-@property (nonatomic, assign) CGFloat navItem_space;
+@property (nonatomic, assign) CGFloat   gk_navItemLeftSpace;
+
+@property (nonatomic, assign) CGFloat   gk_navItemRightSpace;
+
+/** 是否禁止调整间距，默认NO */
+@property (nonatomic, assign) BOOL      gk_disableFixSpace;
 
 + (instancetype)sharedInstance;
 
@@ -39,6 +44,9 @@
 
 // 自定义
 - (void)setupCustomConfigure:(void (^)(GKNavigationBarConfigure *configure))block;
+
+// 更新配置
+- (void)updateConfigure:(void (^)(GKNavigationBarConfigure *configure))block;
 
 // 获取当前显示的控制器
 - (UIViewController *)visibleController;

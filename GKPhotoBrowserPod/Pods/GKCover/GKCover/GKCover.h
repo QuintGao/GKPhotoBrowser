@@ -38,7 +38,7 @@ typedef void(^hideBlock)(void);
  */
 + (void)translucentCoverFrom:(UIView *)fromView
                      content:(UIView *)contentView
-                    animated:(BOOL)animated;
+                    animated:(BOOL)animated GKCoverDeprecated("使用2.4.0中的方法");
 
 /**
  *  改变透明度(仅用于半透明遮罩)
@@ -50,7 +50,7 @@ typedef void(^hideBlock)(void);
  */
 + (void)transparentCoverFrom:(UIView *)fromView
                      content:(UIView *)contentView
-                    animated:(BOOL)animated;
+                    animated:(BOOL)animated GKCoverDeprecated("使用2.4.0中的方法");
 
 #pragma mark - 固定遮罩-屏幕中间弹窗
 /**
@@ -60,7 +60,7 @@ typedef void(^hideBlock)(void);
  *  @param animated    是否动画
  */
 + (void)translucentWindowCenterCoverContent:(UIView *)contentView
-                                   animated:(BOOL)animated;
+                                   animated:(BOOL)animated GKCoverDeprecated("使用2.4.0中的方法");
 
 
 /**
@@ -70,7 +70,7 @@ typedef void(^hideBlock)(void);
  *  @param animated    是否动画
  */
 + (void)transparentWindowCenterCoverContent:(UIView *)contentView
-                                   animated:(BOOL)animated;
+                                   animated:(BOOL)animated GKCoverDeprecated("使用2.4.0中的方法");
 
 #pragma mark - v1.0.5 新增功能
 #pragma makr - 新增弹窗显示和隐藏时的block
@@ -82,7 +82,7 @@ typedef void(^hideBlock)(void);
                      content:(UIView *)contentView
                     animated:(BOOL)animated
                    showBlock:(showBlock)show
-                   hideBlock:(hideBlock)hide;
+                   hideBlock:(hideBlock)hide GKCoverDeprecated("使用2.4.0中的方法");
 
 /**
  *  全透明遮罩-底部弹窗，添加显示和隐藏的block
@@ -91,7 +91,7 @@ typedef void(^hideBlock)(void);
                      content:(UIView *)contentView
                     animated:(BOOL)animated
                    showBlock:(showBlock)show
-                   hideBlock:(hideBlock)hide;
+                   hideBlock:(hideBlock)hide GKCoverDeprecated("使用2.4.0中的方法");
 
 /**
  *  半透明遮罩-中间弹窗，添加显示和隐藏的block
@@ -99,7 +99,7 @@ typedef void(^hideBlock)(void);
 + (void)translucentWindowCenterCoverContent:(UIView *)contentView
                                    animated:(BOOL)animated
                                   showBlock:(showBlock)show
-                                  hideBlock:(hideBlock)hide;
+                                  hideBlock:(hideBlock)hide GKCoverDeprecated("使用2.4.0中的方法");
 
 /**
  *  全透明遮罩-中间弹窗，添加显示和隐藏的block
@@ -107,7 +107,7 @@ typedef void(^hideBlock)(void);
 + (void)transparentWindowCenterCoverContent:(UIView *)contentView
                                    animated:(BOOL)animated
                                   showBlock:(showBlock)show
-                                  hideBlock:(hideBlock)hide;
+                                  hideBlock:(hideBlock)hide GKCoverDeprecated("使用2.4.0中的方法");
 
 #pragma mark - v1.0.5 
 #pragma mark - 增加外部调用显示和隐藏的方法
@@ -121,25 +121,25 @@ typedef void(^hideBlock)(void);
 + (void)hide;
 
 #pragma mark - v2.0.0
-#pragma makr - 新增功能：增加点击遮罩时是否消失的判断,notClick是否可以点击，默认是NO,代表能点击
+#pragma makr - 新增功能:增加点击遮罩时是否消失的判断,notClick是否可以点击,默认是NO,代表能点击
 
 + (void)translucentCoverFrom:(UIView *)fromView
                      content:(UIView *)contentView
                     animated:(BOOL)animated
-                    notClick:(BOOL)click;
+                    notClick:(BOOL)click GKCoverDeprecated("使用2.4.0中的方法");
 
 + (void)transparentCoverFrom:(UIView *)fromView
                      content:(UIView *)contentView
                     animated:(BOOL)animated
-                    notClick:(BOOL)click;
+                    notClick:(BOOL)click GKCoverDeprecated("使用2.4.0中的方法");
 
 + (void)translucentWindowCenterCoverContent:(UIView *)contentView
                                    animated:(BOOL)animated
-                                   notClick:(BOOL)click;
+                                   notClick:(BOOL)click GKCoverDeprecated("使用2.4.0中的方法");
 
 + (void)transparentWindowCenterCoverContent:(UIView *)contentView
                                    animated:(BOOL)animated
-                                   notClick:(BOOL)click;
+                                   notClick:(BOOL)click GKCoverDeprecated("使用2.4.0中的方法");
 
 #pragma mark - v2.1.0
 #pragma mark - 新增毛玻璃遮罩效果
@@ -155,29 +155,29 @@ typedef void(^hideBlock)(void);
 + (void)blurWindowCenterCoverContent:(UIView *)contentView
                             animated:(BOOL)animated
                             notClick:(BOOL)notClick
-                               style:(UIBlurEffectStyle)style;
+                               style:(UIBlurEffectStyle)style GKCoverDeprecated("使用2.4.0中的方法");
 
 
 #pragma mark - v2.2.0
-#pragma mark - 全新定义构造方法，根据不同类型，显示不同遮罩
+#pragma mark - 全新定义构造方法,根据不同类型,显示不同遮罩
 
 // 常见遮罩
 + (void)topCover:(UIView *)fromView
      contentView:(UIView *)contentView
            style:(GKCoverStyle)style
         notClick:(BOOL)notClick
-        animated:(BOOL)animated;
+        animated:(BOOL)animated GKCoverDeprecated("使用2.4.0中的方法");
 
 + (void)bottomCoverFrom:(UIView *)fromView
             contentView:(UIView *)contentView
                   style:(GKCoverStyle)style
                notClick:(BOOL)notClick
-               animated:(BOOL)animated;
+               animated:(BOOL)animated GKCoverDeprecated("使用2.4.0中的方法");
 
 + (void)centerCover:(UIView *)contentView
               style:(GKCoverStyle)style
            notClick:(BOOL)notClick
-           animated:(BOOL)animated;
+           animated:(BOOL)animated GKCoverDeprecated("使用2.4.0中的方法");
 
 /**
  显示遮罩
@@ -194,7 +194,7 @@ typedef void(^hideBlock)(void);
             style:(GKCoverStyle)style
         showStyle:(GKCoverShowStyle)showStyle
         animStyle:(GKCoverAnimStyle)animStyle
-         notClick:(BOOL)notClick;
+         notClick:(BOOL)notClick GKCoverDeprecated("使用2.4.0中的方法");
 
 + (void)coverFrom:(UIView *)fromView
       contentView:(UIView *)contentView
@@ -203,10 +203,9 @@ typedef void(^hideBlock)(void);
         animStyle:(GKCoverAnimStyle)animStyle
          notClick:(BOOL)notClick
         showBlock:(showBlock)showBlock
-        hideBlock:(hideBlock)hideBlock;
+        hideBlock:(hideBlock)hideBlock GKCoverDeprecated("使用2.4.0中的方法");
 
-+ (void)showView;
-+ (void)hideView;
++ (void)hideView GKCoverDeprecated("使用2.4.0中的方法");
 
 #pragma mark - v2.3.1
 #pragma mark - 增加判断是否已经有cover的方法
@@ -216,6 +215,18 @@ typedef void(^hideBlock)(void);
 
 #pragma mark - v2.4.0
 #pragma mark - 分离弹出和隐藏时的动画
+
+/**
+ 显示遮罩
+
+ @param fromView 显示在此视图上
+ @param contentView 显示的内容视图
+ @param style 遮罩类型
+ @param showStyle 显示方式
+ @param showAnimStyle 显示动画类型
+ @param hideAnimStyle 隐藏动画类型
+ @param notClick 是否不可点击
+ */
 + (void)coverFrom:(UIView *)fromView
       contentView:(UIView *)contentView
             style:(GKCoverStyle)style
@@ -224,6 +235,20 @@ typedef void(^hideBlock)(void);
     hideAnimStyle:(GKCoverHideAnimStyle)hideAnimStyle
          notClick:(BOOL)notClick;
 
+
+/**
+ 显示遮罩
+
+ @param fromView 显示在此视图上
+ @param contentView 显示的内容视图
+ @param style 遮罩类型
+ @param showStyle 显示方式
+ @param showAnimStyle 显示动画类型
+ @param hideAnimStyle 隐藏动画类型
+ @param notClick 是否不可点击
+ @param showBlock 显示后的block
+ @param hideBlock 隐藏后的block
+ */
 + (void)coverFrom:(UIView *)fromView
       contentView:(UIView *)contentView
             style:(GKCoverStyle)style
@@ -234,17 +259,42 @@ typedef void(^hideBlock)(void);
         showBlock:(showBlock)showBlock
         hideBlock:(hideBlock)hideBlock;
 
+
+/**
+ 显示遮罩-隐藏状态栏
+
+ @param contentView 显示的内容视图
+ @param style 遮罩类型
+ @param showStyle 显示方式
+ @param showAnimStyle 显示动画类型
+ @param hideAnimStyle 隐藏动画类型
+ @param notClick 是否不可点击
+ @param showBlock 显示后的block
+ @param hideBlock 隐藏后的block
+ */
 + (void)coverHideStatusBarWithContentView:(UIView *)contentView
                                     style:(GKCoverStyle)style
                                 showStyle:(GKCoverShowStyle)showStyle
                             showAnimStyle:(GKCoverShowAnimStyle)showAnimStyle
                             hideAnimStyle:(GKCoverHideAnimStyle)hideAnimStyle
                                  notClick:(BOOL)notClick
-                                showBlock:(showBlock)showBlock hideBlock:(hideBlock)hideBlock;
+                                showBlock:(showBlock)showBlock
+                                hideBlock:(hideBlock)hideBlock;
 
-+ (void)showCover;
+/**
+ 隐藏视图
+ */
 + (void)hideCover;
 
+/**
+ 重新布局
+ */
 + (void)layoutSubViews;
+
+#pragma mark - 2.5.2
+// 调用此方法,主方法中的hideBlock将不再起作用
++ (void)hideCoverWithHideBlock:(hideBlock)hideBlock;
+
++ (void)changeCoverBgColor:(UIColor *)bgColor;
 
 @end

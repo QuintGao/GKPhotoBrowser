@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GKWebImageProtocol.h"
 #import "GKPhotoBrowserConfigure.h"
-
-NS_ASSUME_NONNULL_BEGIN
 
 @interface GKPhoto : NSObject
 
@@ -22,9 +21,16 @@ NS_ASSUME_NONNULL_BEGIN
 /** 来源frame */
 @property (nonatomic, assign) CGRect sourceFrame;
 
-/** 图片 */
-@property (nonatomic, strong) UIImage *image; // 完整的图片
-@property (nonatomic, strong) FLAnimatedImage *animatedImage;
+/** 图片(静态) */
+@property (nonatomic, strong) UIImage       *image;
+
+/** gif图片 */
+@property (nonatomic, strong) UIImage       *gifImage;
+@property (nonatomic, strong) NSData        *gifData;
+@property (nonatomic, assign) BOOL          isGif;
+
+// imageView对象
+@property (nonatomic, strong) UIImageView   *imageView;
 
 /** 占位图 */
 @property (nonatomic, strong) UIImage *placeholderImage;
@@ -40,6 +46,18 @@ NS_ASSUME_NONNULL_BEGIN
 /** 记录photoView缩放时的rect */
 @property (nonatomic, assign) CGRect zoomRect;
 
+/** 记录每个GKPhotoView的滑动位置 */
+@property (nonatomic, assign) CGPoint   offset;
+
+- (void)startAnimation;
+- (void)stopAnimation;
+
 @end
 
-NS_ASSUME_NONNULL_END
+@interface GKPhotoDecoder : NSOperation
+
+@property (nonatomic, assign) NSUInteger            nextIndex;
+@property (nonatomic, strong) UIImage               *curImage;
+@property (nonatomic, weak) dispatch_semaphore_t    lock;
+
+@end

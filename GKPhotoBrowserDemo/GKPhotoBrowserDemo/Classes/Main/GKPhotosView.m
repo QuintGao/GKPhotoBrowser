@@ -43,7 +43,7 @@ static CGFloat   photoH;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     for (NSInteger i = 0; i < photos.count; i++) {
-        FLAnimatedImageView *imgView = [FLAnimatedImageView new];
+        SDAnimatedImageView *imgView = [SDAnimatedImageView new];
         imgView.tag = i;
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         imgView.clipsToBounds = YES;
@@ -69,7 +69,7 @@ static CGFloat   photoH;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     for (NSInteger i = 0; i < images.count; i++) {
-        FLAnimatedImageView *imgView = [FLAnimatedImageView new];
+        SDAnimatedImageView *imgView = [SDAnimatedImageView new];
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         imgView.clipsToBounds = YES;
         imgView.tag = i;

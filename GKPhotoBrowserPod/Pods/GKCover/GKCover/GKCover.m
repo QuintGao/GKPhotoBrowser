@@ -27,6 +27,8 @@ static BOOL             _isHideStatusBar; // 遮罩是否遮盖状态栏
 static GKCoverShowAnimStyle _showAnimStyle;
 static GKCoverHideAnimStyle _hideAnimStyle;
 
+static UIColor          *_bgColor;         // 背景色
+
 @implementation GKCover
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -54,7 +56,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
 + (instancetype)translucentCoverWithTarget:(id)target action:(SEL)action
 {
     GKCover *cover = [self cover];
-    cover.backgroundColor = [UIColor blackColor];
+    cover.backgroundColor = _bgColor ? _bgColor : [UIColor blackColor];
     cover.alpha = kAlpha;
     [cover addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:target action:action]];
     
@@ -148,7 +150,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
 }
 
 #pragma mark - v2.0.2新增方法,使用更加方便
-#pragma makr - 新增功能：增加点击遮罩时是否消失的判断,canClick是否可以点击，默认是YES
+#pragma makr - 新增功能:增加点击遮罩时是否消失的判断,canClick是否可以点击,默认是YES
 
 + (void)translucentCoverFrom:(UIView *)fromView content:(UIView *)contentView animated:(BOOL)animated notClick:(BOOL)click
 {
@@ -221,7 +223,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
     GKCover *cover = [self cover];
     // 设置大小和颜色
     cover.frame = fromView.bounds;
-    cover.backgroundColor = [UIColor blackColor];
+    cover.backgroundColor = _bgColor ? _bgColor : [UIColor blackColor];
     cover.alpha = kAlpha;
     // 添加遮罩
     [fromView addSubview:cover];
@@ -378,7 +380,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
 {
     if (_animated) {
         _contentView.gk_y = KScreenH;
-        [UIView animateWithDuration:0.25 animations:^{
+        [UIView animateWithDuration:kAnimDuration animations:^{
             _contentView.gk_y = KScreenH - _contentView.gk_height;
         }completion:^(BOOL finished) {
             !_showBlock ? : _showBlock();
@@ -396,7 +398,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
     
     if (_animated && ![_fromView isKindOfClass:[UIWindow class]]) {
         
-        [UIView animateWithDuration:0.25 animations:^{
+        [UIView animateWithDuration:kAnimDuration animations:^{
             _contentView.gk_y = KScreenH;
         }completion:^(BOOL finished) {
             [_cover removeFromSuperview];
@@ -487,7 +489,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
     _cover = cover;
     
     if (style == GKCoverStyleTranslucent) { // 半透明
-        cover.backgroundColor = [UIColor blackColor];
+        cover.backgroundColor = _bgColor ? _bgColor : [UIColor blackColor];
         cover.alpha = kAlpha;
         [self addTap:cover];
     }else if (style == GKCoverStyleTransparent){  // 全透明
@@ -520,12 +522,22 @@ static GKCoverHideAnimStyle _hideAnimStyle;
     return bgView;
 }
 
++ (UIView *)gk_coverTransparentBgView
+{
+    UIView *bgView = [UIView new];
+    bgView.backgroundColor = [UIColor clearColor];
+    bgView.gk_size = _cover.gk_size;
+    bgView.userInteractionEnabled = YES;
+    [self coverAddTap:bgView];
+    return bgView;
+}
+
 + (void)showView
 {
     [_fromView addSubview:_contentView];
-    _contentView.gk_centerX = _fromView.gk_centerX;
     
     if (_showStyle == GKCoverShowStyleTop) {
+        _contentView.gk_centerX = _fromView.gk_centerX;
         if (_animStyle == GKCoverAnimStyleTop) {
             _contentView.gk_y = -_contentView.gk_height;
             [UIView animateWithDuration:kAnimDuration animations:^{
@@ -538,6 +550,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
             _contentView.gk_y = 0;
         }
     }else if (_showStyle == GKCoverShowStyleCenter){
+        _contentView.gk_centerX = _fromView.gk_centerX;
         if (_animStyle == GKCoverAnimStyleTop) { // 上进下出
             _contentView.gk_y = -_contentView.gk_height;
             [UIView animateWithDuration:kAnimDuration animations:^{
@@ -549,7 +562,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
             _contentView.center = _fromView.center;
             [self animationAlert:_contentView];
         }else if (_animStyle == GKCoverAnimStyleBottom) { // 下进上出
-            _contentView.gk_y = KScreenH;
+            _contentView.gk_y = _fromView.gk_height;
             [UIView animateWithDuration:kAnimDuration animations:^{
                 _contentView.center = _fromView.center;
             }completion:^(BOOL finished) {
@@ -560,16 +573,43 @@ static GKCoverHideAnimStyle _hideAnimStyle;
             !_showBlock ? : _showBlock();
         }
     }else if (_showStyle == GKCoverShowStyleBottom){
+        _contentView.gk_centerX = _fromView.gk_centerX;
         if (_animStyle == GKCoverAnimStyleBottom) {
-            _contentView.gk_y = KScreenH;
-            [UIView animateWithDuration:0.25 animations:^{
-                _contentView.gk_y = KScreenH - _contentView.gk_height;
+            _contentView.gk_y = _fromView.gk_height;
+            [UIView animateWithDuration:kAnimDuration animations:^{
+                _contentView.gk_y = _fromView.gk_height - _contentView.gk_height;
             }completion:^(BOOL finished) {
                 !_showBlock ? : _showBlock();
             }];
         }else{
             !_showBlock ? : _showBlock();
-            _contentView.gk_y = KScreenH - _contentView.gk_height;
+            _contentView.gk_y = _fromView.gk_height - _contentView.gk_height;
+        }
+    }else if (_showStyle == GKCoverShowStyleLeft) {
+        _contentView.gk_centerY = _fromView.gk_height * 0.5f;
+        if (_showAnimStyle == GKCoverShowStyleLeft) {
+            _contentView.gk_x = -_contentView.gk_width;
+            [UIView animateWithDuration:kAnimDuration animations:^{
+                _contentView.gk_x = 0;
+            }completion:^(BOOL finished) {
+                !_showBlock ? : _showBlock();
+            }];
+        }else {
+            !_showBlock ? : _showBlock();
+            _contentView.gk_x = 0;
+        }
+    }else if (_showStyle == GKCoverShowStyleRight) {
+        _contentView.gk_centerY = _fromView.gk_height * 0.5f;
+        if (_showAnimStyle == GKCoverShowAnimStyleRight) {
+            _contentView.gk_x = _fromView.gk_width;
+            [UIView animateWithDuration:kAnimDuration animations:^{
+                _contentView.gk_x = _fromView.gk_width - _contentView.gk_width;
+            }completion:^(BOOL finished) {
+                !_showBlock ? : _showBlock();
+            }];
+        }else {
+            !_showBlock ? : _showBlock();
+            _contentView.gk_x = _fromView.gk_width - _contentView.gk_width;
         }
     }
 }
@@ -593,7 +633,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
     }else if (_showStyle == GKCoverShowStyleCenter){
         if (_animStyle == GKCoverAnimStyleTop) { // 上进下出
             [UIView animateWithDuration:kAnimDuration animations:^{
-                _contentView.gk_y = KScreenH;
+                _contentView.gk_y = _fromView.gk_height;
             }completion:^(BOOL finished) {
                 [self remove];
             }];
@@ -611,13 +651,35 @@ static GKCoverHideAnimStyle _hideAnimStyle;
         }
     }else if (_showStyle == GKCoverShowStyleBottom){
         if (_animStyle == GKCoverAnimStyleBottom) {  // 下进下出
-            [UIView animateWithDuration:0.25 animations:^{
-                _contentView.gk_y = KScreenH;
+            [UIView animateWithDuration:kAnimDuration animations:^{
+                _contentView.gk_y = _fromView.gk_height;
             }completion:^(BOOL finished) {
                 [self remove];
             }];
         }else{
-            _contentView.gk_y = KScreenH;
+            _contentView.gk_y = _fromView.gk_height;
+            [self remove];
+        }
+    }else if (_showStyle == GKCoverShowStyleLeft) { // 左进左出
+        if (_hideAnimStyle == GKCoverAnimStyleLeft) {
+            [UIView animateWithDuration:kAnimDuration animations:^{
+                _contentView.gk_x = -_contentView.gk_width;
+            }completion:^(BOOL finished) {
+                [self remove];
+            }];
+        }else{
+            _contentView.gk_x = -_contentView.gk_width;
+            [self remove];
+        }
+    }else if (_showStyle == GKCoverShowStyleRight) { // 右进右出
+        if (_hideAnimStyle == GKCoverHideAnimStyleRight) {
+            [UIView animateWithDuration:kAnimDuration animations:^{
+                _contentView.gk_x = _fromView.gk_width;
+            }completion:^(BOOL finished) {
+                [self remove];
+            }];
+        }else{
+            _contentView.gk_x = _fromView.gk_width;
             [self remove];
         }
     }
@@ -726,14 +788,12 @@ static GKCoverHideAnimStyle _hideAnimStyle;
     [self showCover];
 }
 
-+ (void)showCover
-{
++ (void)showCover {
     [_fromView addSubview:_contentView];
-    _contentView.gk_centerX = _fromView.gk_centerX;
     
     switch (_showStyle) {
-        case GKCoverShowStyleTop:  // 显示在顶部
-        {
+        case GKCoverShowStyleTop: {  // 显示在顶部
+            _contentView.gk_centerX = _fromView.gk_centerX;
             if (_showAnimStyle == GKCoverShowAnimStyleTop) {
                 _contentView.gk_y = -_contentView.gk_height;
                 [UIView animateWithDuration:kAnimDuration animations:^{
@@ -747,8 +807,8 @@ static GKCoverHideAnimStyle _hideAnimStyle;
             }
         }
             break;
-        case GKCoverShowStyleCenter: // 显示在中间
-        {
+        case GKCoverShowStyleCenter: {  // 显示在中间
+            _contentView.gk_centerX = _fromView.gk_centerX;
             if (_showAnimStyle == GKCoverShowAnimStyleTop) { // 上进
                 _contentView.gk_y = -_contentView.gk_height;
                 [UIView animateWithDuration:kAnimDuration animations:^{
@@ -760,7 +820,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
                 _contentView.center = _fromView.center;
                 [self animationAlert:_contentView];
             }else if (_showAnimStyle == GKCoverShowAnimStyleBottom) { // 下进
-                _contentView.gk_y = KScreenH;
+                _contentView.gk_y = _fromView.gk_height;
                 [UIView animateWithDuration:kAnimDuration animations:^{
                     _contentView.center = _fromView.center;
                 }completion:^(BOOL finished) {
@@ -772,18 +832,48 @@ static GKCoverHideAnimStyle _hideAnimStyle;
             }
         }
             break;
-        case GKCoverShowStyleBottom:  // 显示在底部
-        {
+        case GKCoverShowStyleBottom: { // 显示在底部
+            _contentView.gk_centerX = _fromView.gk_centerX;
             if (_showAnimStyle == GKCoverShowAnimStyleBottom) {
-                _contentView.gk_y = KScreenH;
-                [UIView animateWithDuration:0.25 animations:^{
-                    _contentView.gk_y = KScreenH - _contentView.gk_height;
+                _contentView.gk_y = _fromView.gk_height;
+                [UIView animateWithDuration:kAnimDuration animations:^{
+                    _contentView.gk_y = _fromView.gk_height - _contentView.gk_height;
                 }completion:^(BOOL finished) {
                     !_showBlock ? : _showBlock();
                 }];
             }else{
                 !_showBlock ? : _showBlock();
-                _contentView.gk_y = KScreenH - _contentView.gk_height;
+                _contentView.gk_y = _fromView.gk_height - _contentView.gk_height;
+            }
+        }
+            break;
+        case GKCoverShowStyleLeft: { // 显示在左侧
+            _contentView.gk_centerY = _fromView.gk_height * 0.5f;
+            if (_showAnimStyle == GKCoverShowAnimStyleLeft) {
+                _contentView.gk_x = -_contentView.gk_width;
+                [UIView animateWithDuration:kAnimDuration animations:^{
+                    _contentView.gk_x = 0;
+                }completion:^(BOOL finished) {
+                    !_showBlock ? : _showBlock();
+                }];
+            }else {
+                !_showBlock ? : _showBlock();
+                _contentView.gk_x = 0;
+            }
+        }
+            break;
+        case GKCoverShowStyleRight: { // 显示在右侧
+            _contentView.gk_centerY = _fromView.gk_height * 0.5f;
+            if (_showAnimStyle == GKCoverShowAnimStyleRight) {
+                _contentView.gk_x = _fromView.gk_width;
+                [UIView animateWithDuration:kAnimDuration animations:^{
+                    _contentView.gk_x = _fromView.gk_width - _contentView.gk_width;
+                }completion:^(BOOL finished) {
+                    !_showBlock ? : _showBlock();
+                }];
+            }else {
+                !_showBlock ? : _showBlock();
+                _contentView.gk_x = _fromView.gk_width - _contentView.gk_width;
             }
         }
             break;
@@ -793,14 +883,12 @@ static GKCoverHideAnimStyle _hideAnimStyle;
     }
 }
 
-+ (void)hideCover
-{
++ (void)hideCover {
     // 这里为了防止动画未完成导致的不能及时判断cover是否存在，实际上cover再这里并没有销毁
     _hasCover = NO;
     
     switch (_showStyle) {
-        case GKCoverShowStyleTop:  // 显示在顶部
-        {
+        case GKCoverShowStyleTop: { // 显示在顶部
             if (_hideAnimStyle == GKCoverHideAnimStyleTop) {
                 [UIView animateWithDuration:kAnimDuration animations:^{
                     _contentView.gk_y = -_contentView.gk_height;
@@ -813,8 +901,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
             }
         }
             break;
-        case GKCoverShowStyleCenter:  // 显示在中间
-        {
+        case GKCoverShowStyleCenter: { // 显示在中间
             if (_hideAnimStyle == GKCoverHideAnimStyleTop) { // 上出
                 [UIView animateWithDuration:kAnimDuration animations:^{
                     _contentView.gk_y = -_contentView.gk_height;
@@ -825,7 +912,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
                 [self remove];
             }else if (_hideAnimStyle == GKCoverHideAnimStyleBottom) { // 下出
                 [UIView animateWithDuration:kAnimDuration animations:^{
-                    _contentView.gk_y = KScreenH;
+                    _contentView.gk_y = _fromView.gk_height;
                 }completion:^(BOOL finished) {
                     [self remove];
                 }];
@@ -835,16 +922,41 @@ static GKCoverHideAnimStyle _hideAnimStyle;
             }
         }
             break;
-        case GKCoverShowStyleBottom:  // 显示在底部
-        {
+        case GKCoverShowStyleBottom: { // 显示在底部
             if (_hideAnimStyle == GKCoverHideAnimStyleBottom) {
-                [UIView animateWithDuration:0.25 animations:^{
-                    _contentView.gk_y = KScreenH;
+                [UIView animateWithDuration:kAnimDuration animations:^{
+                    _contentView.gk_y = _fromView.gk_height;
                 }completion:^(BOOL finished) {
                     [self remove];
                 }];
             }else{
-                _contentView.gk_y = KScreenH;
+                _contentView.gk_y = _fromView.gk_height;
+                [self remove];
+            }
+        }
+            break;
+        case GKCoverShowStyleLeft: { // 显示在左侧
+            if (_hideAnimStyle == GKCoverHideAnimStyleLeft) {
+                [UIView animateWithDuration:kAnimDuration animations:^{
+                    _contentView.gk_x = -_contentView.gk_width;
+                }completion:^(BOOL finished) {
+                    [self remove];
+                }];
+            }else{
+                _contentView.gk_x = -_contentView.gk_width;
+                [self remove];
+            }
+        }
+            break;
+        case GKCoverShowStyleRight: { // 显示在右侧
+            if (_hideAnimStyle == GKCoverHideAnimStyleRight) {
+                [UIView animateWithDuration:kAnimDuration animations:^{
+                    _contentView.gk_x = _fromView.gk_width;
+                }completion:^(BOOL finished) {
+                    [self remove];
+                }];
+            }else{
+                _contentView.gk_x = _fromView.gk_width;
                 [self remove];
             }
         }
@@ -862,7 +974,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
  */
 + (void)setupTranslucentCover:(UIView *)cover
 {
-    cover.backgroundColor = [UIColor blackColor];
+    cover.backgroundColor = _bgColor ? _bgColor : [UIColor blackColor];
     cover.alpha = kAlpha;
     [self coverAddTap:cover];
 }
@@ -873,7 +985,7 @@ static GKCoverHideAnimStyle _hideAnimStyle;
 + (void)setupTransparentCover:(UIView *)cover
 {
     cover.backgroundColor = [UIColor clearColor];
-    [cover addSubview:[self gk_transparentBgView]];
+    [cover addSubview:[self gk_coverTransparentBgView]];
 }
 
 /**
@@ -918,10 +1030,12 @@ static GKCoverHideAnimStyle _hideAnimStyle;
         coverWindow = nil;
     }
     
-    !_hideBlock ? : _hideBlock();
-    
     _cover       = nil;
+    _fromView    = nil;
     _contentView = nil;
+    
+    // 隐藏block放到最后，修复多个cover不能隐藏的bug
+    !_hideBlock ? : _hideBlock();
 }
 
 + (void)layoutSubViews {
@@ -929,25 +1043,43 @@ static GKCoverHideAnimStyle _hideAnimStyle;
     _contentView.gk_centerX = _fromView.gk_centerX;
     
     switch (_showStyle) {
-        case GKCoverShowStyleTop:
-        {
+        case GKCoverShowStyleTop: {
             _contentView.gk_y = 0;
         }
             break;
-        case GKCoverShowStyleCenter:
-        {
+        case GKCoverShowStyleCenter: {
             _contentView.center = _fromView.center;
         }
             break;
-        case GKCoverShowStyleBottom:
-        {
-            _contentView.gk_y = KScreenH - _contentView.gk_height;
+        case GKCoverShowStyleBottom: {
+            _contentView.gk_y = _fromView.gk_height - _contentView.gk_height;
+        }
+            break;
+        case GKCoverShowStyleLeft: {
+            _contentView.gk_x = 0;
+        }
+            break;
+        case GKCoverShowStyleRight: {
+            _contentView.gk_x = _fromView.gk_width - _contentView.gk_width;
         }
             break;
             
         default:
             break;
     }
+}
+
+#pragma mark - 2.5.2
++ (void)hideCoverWithHideBlock:(hideBlock)hideBlock {
+    _hideBlock = hideBlock;
+    
+    [GKCover hideCover];
+}
+
++ (void)changeCoverBgColor:(UIColor *)bgColor {
+    _bgColor = bgColor;
+    
+    _cover.backgroundColor = bgColor;
 }
 
 @end

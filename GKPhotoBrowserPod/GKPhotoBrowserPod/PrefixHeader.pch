@@ -13,8 +13,7 @@
 #import <YYModel/YYModel.h>
 #import <GKCover/GKCover.h>
 
-#import <SDWebImage/UIImageView+WebCache.h>
-#import <FLAnimatedImage/FLAnimatedImage.h>
+#import <SDWebImage/SDWebImage.h>
 
 #import "UIView+GKFrame.h"
 

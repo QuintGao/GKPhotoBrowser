@@ -32,25 +32,98 @@
         Class class = [self class];
         
         gk_swizzled_method(class, @selector(viewDidLoad), @selector(gk_viewDidLoad));
-        gk_swizzled_method(class, @selector(pushViewController:animated:), @selector(gk_pushViewController:animated:));
+        
+        // FIXME: 修复iOS11之后push或pop动画为NO，系统不主动调用UINavigationBar的layoutSubviews方法
+        if (GKDeviceVersion >= 11.0) {
+            gk_swizzled_method(class, @selector(pushViewController:animated:), @selector(gk_pushViewController:animated:));
+            
+            gk_swizzled_method(class, @selector(popViewControllerAnimated:), @selector(gk_popViewControllerAnimated:));
+            
+            gk_swizzled_method(class, @selector(popToViewController:animated:), @selector(gk_popToViewController:animated:));
+            
+            gk_swizzled_method(class, @selector(popToRootViewControllerAnimated:), @selector(gk_popToRootViewControllerAnimated:));
+            
+            gk_swizzled_method(class, @selector(setViewControllers:animated:), @selector(gk_setViewControllers:animated:));
+        }
     });
 }
 
 - (void)gk_viewDidLoad {
-    // 隐藏系统导航栏
-    if (![self isKindOfClass:[UIImagePickerController class]]) {
-//        [self setNavigationBarHidden:YES animated:NO];
-        // 设置背景色
-        self.view.backgroundColor = [UIColor blackColor];
-        
-        // 设置代理
-        self.delegate = self.navDelegate;
-        
-        // 注册通知
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotification:) name:GKViewControllerPropertyChangedNotification object:nil];
-        
-        [self gk_viewDidLoad];
+    // 处理特殊控制器
+    if ([self isKindOfClass:[UIImagePickerController class]]) return;
+    if ([self isKindOfClass:[UIVideoEditorController class]]) return;
+    
+    // 设置代理和通知
+    // 设置背景色
+    self.view.backgroundColor = [UIColor blackColor];
+    
+    // 设置代理
+    self.delegate = self.navDelegate;
+    
+    // 注册通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotification:) name:GKViewControllerPropertyChangedNotification object:nil];
+    
+    [self gk_viewDidLoad];
+}
+
+// FIXME: 修复iOS11之后push或pop动画为NO，系统不主动调用UINavigationBar的layoutSubviews方法
+- (void)gk_pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    [self gk_pushViewController:viewController animated:animated];
+    if (!GKConfigure.gk_disableFixSpace) {
+        if (!animated) {
+            [self layoutNavBarWithViewController:viewController];
+        }
     }
+}
+
+- (nullable UIViewController *)gk_popViewControllerAnimated:(BOOL)animated {
+    UIViewController *vc = [self gk_popViewControllerAnimated:animated];
+    if (!GKConfigure.gk_disableFixSpace) {
+        if (!animated) {
+            [self layoutNavBarWithViewController:vc];
+        }
+    }
+    return vc;
+}
+
+- (nullable NSArray<__kindof UIViewController *> *)gk_popToViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    NSArray *vcs = [self gk_popToViewController:viewController animated:animated];
+    if (!GKConfigure.gk_disableFixSpace) {
+        if (!animated) {
+            [self layoutNavBarWithViewController:self.visibleViewController];
+        }
+    }
+    return vcs;
+}
+
+- (NSArray<UIViewController *> *)gk_popToRootViewControllerAnimated:(BOOL)animated {
+    NSArray *vcs = [self gk_popToRootViewControllerAnimated:animated];
+    if (!GKConfigure.gk_disableFixSpace) {
+        if (!animated) {
+            [self layoutNavBarWithViewController:self.visibleViewController];
+        }
+    }
+    return vcs;
+}
+
+- (void)gk_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated {
+    [self gk_setViewControllers:viewControllers animated:animated];
+    if (!GKConfigure.gk_disableFixSpace) {
+        if (!animated) {
+            [self layoutNavBarWithViewController:self.visibleViewController];
+        }
+    }
+}
+
+- (void)layoutNavBarWithViewController:(UIViewController *)viewController {
+    UINavigationBar *navBar = nil;
+    if ([viewController isKindOfClass:[GKNavigationBarViewController class]]) {
+        GKNavigationBarViewController *vc = (GKNavigationBarViewController *)viewController;
+        navBar = vc.gk_navigationBar;
+    }else {
+        navBar = self.navigationBar;
+    }
+    [navBar layoutSubviews];
 }
 
 - (void)dealloc {
@@ -64,11 +137,16 @@
     
     BOOL isRootVC = vc == self.viewControllers.firstObject;
     
+    // 移除手势处理方法
+//    SEL internalAction = NSSelectorFromString(@"handleNavigationTransition:");
+//    [self.panGesture removeTarget:[self systemTarget] action:internalAction];
+//    [self.panGesture removeTarget:self.navDelegate action:@selector(panGestureAction:)];
+    
+    // 重新根据属性添加手势方法
     if (vc.gk_interactivePopDisabled) { // 禁止滑动
         self.interactivePopGestureRecognizer.delegate = nil;
         self.interactivePopGestureRecognizer.enabled = NO;
     }else if (vc.gk_fullScreenPopDisabled) { // 禁止全屏滑动
-        
         [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.panGesture];
         
         if (self.gk_translationScale) {
@@ -89,41 +167,20 @@
         self.interactivePopGestureRecognizer.enabled = NO;
         [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.screenPanGesture];
         
+        // 给self.interactivePopGestureRecognizer.view 添加全屏滑动手势
         if (!isRootVC && ![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.panGesture]) {
             [self.interactivePopGestureRecognizer.view addGestureRecognizer:self.panGesture];
             self.panGesture.delegate = self.popGestureDelegate;
         }
-        if (self.gk_translationScale || self.gk_openScrollLeftPush) {
+        
+        // 添加手势处理
+        if (self.gk_translationScale || self.gk_openScrollLeftPush || self.visibleViewController.gk_popDelegate) {
             [self.panGesture addTarget:self.navDelegate action:@selector(panGestureAction:)];
         }else {
-            
             SEL internalAction = NSSelectorFromString(@"handleNavigationTransition:");
             [self.panGesture addTarget:[self systemTarget] action:internalAction];
         }
     }
-}
-
-- (void)gk_pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    // 设置默认值
-    if (self.viewControllers.count > 0) {
-        if (self.visibleViewController.gk_backStyle != GKNavigationBarBackStyleNone) {
-            // 设置返回按钮
-            if ([viewController isKindOfClass:[GKNavigationBarViewController class]]) {
-                GKNavigationBarViewController *vc = (GKNavigationBarViewController *)viewController;
-                
-                UIImage *backImage = self.visibleViewController.gk_backStyle == GKNavigationBarBackStyleBlack ? GKImage(@"btn_back_black") : GKImage(@"btn_back_white");
-                vc.gk_navLeftBarButtonItem = [UIBarButtonItem itemWithTitle:nil image:backImage target:self action:@selector(goBack)];
-            }
-        }
-    }
-    
-    if (![self.viewControllers containsObject:viewController]) {
-        [self gk_pushViewController:viewController animated:animated];
-    }
-}
-
-- (void)goBack {
-    [self popViewControllerAnimated:YES];
 }
 
 #pragma mark - StatusBar
@@ -136,7 +193,7 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return self.visibleViewController.gk_StatusBarHidden;
+    return self.visibleViewController.gk_statusBarHidden;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {

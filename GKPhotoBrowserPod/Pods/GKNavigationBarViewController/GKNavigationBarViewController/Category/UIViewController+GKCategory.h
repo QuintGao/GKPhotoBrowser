@@ -19,6 +19,16 @@ extern NSString *const GKViewControllerPropertyChangedNotification;
 
 @end
 
+@protocol GKViewControllerPopDelegate <NSObject>
+
+@optional
+// 实现下面任意一个方法，滑动返回手势都会失效
+- (void)viewControllerPopScrollBegan;
+- (void)viewControllerPopScrollUpdate:(float)progress;
+- (void)viewControllerPopScrollEnded;
+
+@end
+
 @interface UIViewController (GKCategory)
 
 /** 是否禁止当前控制器的滑动返回(包括全屏返回和边缘返回) */
@@ -37,17 +47,25 @@ extern NSString *const GKViewControllerPropertyChangedNotification;
 @property (nonatomic, assign) UIStatusBarStyle gk_statusBarStyle;
 
 /** 设置状态栏是否显示(default is NO 即不隐藏) */
-@property (nonatomic, assign) BOOL gk_StatusBarHidden;
+@property (nonatomic, assign) BOOL gk_statusBarHidden;
 
 /** 设置返回按钮的类型 */
 @property (nonatomic, assign) GKNavigationBarBackStyle gk_backStyle;
 
 /** push代理 */
-@property (nonatomic, assign) id<GKViewControllerPushDelegate> gk_pushDelegate;
+@property (nonatomic, weak) id<GKViewControllerPushDelegate> gk_pushDelegate;
+
+/** pop代理，实现gk_popDelegate，原来的滑动返回手势将失效 */
+@property (nonatomic, weak) id<GKViewControllerPopDelegate> gk_popDelegate;
 
 /**
  返回显示的控制器
  */
 - (UIViewController *)gk_visibleViewControllerIfExist;
+
+/**
+ 返回按钮点击
+ */
+- (void)backItemClick:(id)sender;
 
 @end

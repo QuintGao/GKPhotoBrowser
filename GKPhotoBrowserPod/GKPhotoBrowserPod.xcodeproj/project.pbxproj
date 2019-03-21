@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6036C3C722435051000BE576 /* GKTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6036C3BD22435051000BE576 /* GKTestViewController.m */; };
+		6036C3C822435051000BE576 /* GKSDAutoLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6036C3C022435051000BE576 /* GKSDAutoLayoutViewController.m */; };
+		6036C3C922435051000BE576 /* GKBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6036C3C222435051000BE576 /* GKBottomView.m */; };
+		6036C3CA22435051000BE576 /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6036C3C422435051000BE576 /* test.txt */; };
+		6036C3CB22435051000BE576 /* GKTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6036C3C622435051000BE576 /* GKTopView.m */; };
+		6036C3CF22435141000BE576 /* GKGIFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6036C3CE22435141000BE576 /* GKGIFViewController.m */; };
 		793D011D1FF7651C0053A2E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 793D011C1FF7651C0053A2E9 /* Assets.xcassets */; };
 		793D01201FF7651C0053A2E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 793D011E1FF7651C0053A2E9 /* LaunchScreen.storyboard */; };
 		793D01231FF7651C0053A2E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D01221FF7651C0053A2E9 /* main.m */; };
@@ -27,7 +33,6 @@
 		793D01811FF7663B0053A2E9 /* UIView+GKFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D01601FF7663B0053A2E9 /* UIView+GKFrame.m */; };
 		793D01821FF7663B0053A2E9 /* GKTimeLineViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D01631FF7663B0053A2E9 /* GKTimeLineViewCell.m */; };
 		793D01831FF7663B0053A2E9 /* GKTimeLineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D01651FF7663B0053A2E9 /* GKTimeLineViewController.m */; };
-		793D01841FF7663B0053A2E9 /* timeline.json in Resources */ = {isa = PBXBuildFile; fileRef = 793D01661FF7663B0053A2E9 /* timeline.json */; };
 		793D01851FF7663B0053A2E9 /* GKTimeLineModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D01671FF7663B0053A2E9 /* GKTimeLineModel.m */; };
 		793D01861FF7663B0053A2E9 /* timeline.txt in Resources */ = {isa = PBXBuildFile; fileRef = 793D01691FF7663B0053A2E9 /* timeline.txt */; };
 		793D01871FF7663B0053A2E9 /* GKTest01ViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D016D1FF7663B0053A2E9 /* GKTest01ViewCell.m */; };
@@ -54,6 +59,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6036C3BD22435051000BE576 /* GKTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTestViewController.m; sourceTree = "<group>"; };
+		6036C3BE22435051000BE576 /* GKTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTestViewController.h; sourceTree = "<group>"; };
+		6036C3C022435051000BE576 /* GKSDAutoLayoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKSDAutoLayoutViewController.m; sourceTree = "<group>"; };
+		6036C3C122435051000BE576 /* GKTopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTopView.h; sourceTree = "<group>"; };
+		6036C3C222435051000BE576 /* GKBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKBottomView.m; sourceTree = "<group>"; };
+		6036C3C322435051000BE576 /* GKSDAutoLayoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKSDAutoLayoutViewController.h; sourceTree = "<group>"; };
+		6036C3C422435051000BE576 /* test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
+		6036C3C522435051000BE576 /* GKBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKBottomView.h; sourceTree = "<group>"; };
+		6036C3C622435051000BE576 /* GKTopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTopView.m; sourceTree = "<group>"; };
+		6036C3CD22435141000BE576 /* GKGIFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKGIFViewController.h; sourceTree = "<group>"; };
+		6036C3CE22435141000BE576 /* GKGIFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKGIFViewController.m; sourceTree = "<group>"; };
 		7814AE75A96A31E32F710D7D /* Pods_GKPhotoBrowserPod.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GKPhotoBrowserPod.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		793D01101FF7651C0053A2E9 /* GKPhotoBrowserPod.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GKPhotoBrowserPod.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		793D011C1FF7651C0053A2E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -93,7 +109,6 @@
 		793D01631FF7663B0053A2E9 /* GKTimeLineViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTimeLineViewCell.m; sourceTree = "<group>"; };
 		793D01641FF7663B0053A2E9 /* GKTimeLineModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTimeLineModel.h; sourceTree = "<group>"; };
 		793D01651FF7663B0053A2E9 /* GKTimeLineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTimeLineViewController.m; sourceTree = "<group>"; };
-		793D01661FF7663B0053A2E9 /* timeline.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = timeline.json; sourceTree = "<group>"; };
 		793D01671FF7663B0053A2E9 /* GKTimeLineModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKTimeLineModel.m; sourceTree = "<group>"; };
 		793D01681FF7663B0053A2E9 /* GKTimeLineViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTimeLineViewCell.h; sourceTree = "<group>"; };
 		793D01691FF7663B0053A2E9 /* timeline.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = timeline.txt; sourceTree = "<group>"; };
@@ -142,6 +157,38 @@
 				7814AE75A96A31E32F710D7D /* Pods_GKPhotoBrowserPod.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6036C3BC22435051000BE576 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				6036C3BD22435051000BE576 /* GKTestViewController.m */,
+				6036C3BE22435051000BE576 /* GKTestViewController.h */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
+		6036C3BF22435051000BE576 /* SDAutoLayout */ = {
+			isa = PBXGroup;
+			children = (
+				6036C3C022435051000BE576 /* GKSDAutoLayoutViewController.m */,
+				6036C3C122435051000BE576 /* GKTopView.h */,
+				6036C3C222435051000BE576 /* GKBottomView.m */,
+				6036C3C322435051000BE576 /* GKSDAutoLayoutViewController.h */,
+				6036C3C422435051000BE576 /* test.txt */,
+				6036C3C522435051000BE576 /* GKBottomView.h */,
+				6036C3C622435051000BE576 /* GKTopView.m */,
+			);
+			path = SDAutoLayout;
+			sourceTree = "<group>";
+		};
+		6036C3CC22435141000BE576 /* GIF */ = {
+			isa = PBXGroup;
+			children = (
+				6036C3CD22435141000BE576 /* GKGIFViewController.h */,
+				6036C3CE22435141000BE576 /* GKGIFViewController.m */,
+			);
+			path = GIF;
 			sourceTree = "<group>";
 		};
 		793D01071FF7651B0053A2E9 = {
@@ -224,6 +271,9 @@
 				793D01621FF7663B0053A2E9 /* WeChat */,
 				793D01521FF7663B0053A2E9 /* Toutiao */,
 				793D014B1FF7663B0053A2E9 /* Jianshu */,
+				6036C3BF22435051000BE576 /* SDAutoLayout */,
+				6036C3BC22435051000BE576 /* Test */,
+				6036C3CC22435141000BE576 /* GIF */,
 				793D01611FF7663B0053A2E9 /* GKPhotosView.h */,
 				793D014A1FF7663B0053A2E9 /* GKPhotosView.m */,
 				793D014F1FF7663B0053A2E9 /* GKTest01ViewCell.h */,
@@ -278,7 +328,6 @@
 				793D01631FF7663B0053A2E9 /* GKTimeLineViewCell.m */,
 				793D01641FF7663B0053A2E9 /* GKTimeLineModel.h */,
 				793D01671FF7663B0053A2E9 /* GKTimeLineModel.m */,
-				793D01661FF7663B0053A2E9 /* timeline.json */,
 				793D01691FF7663B0053A2E9 /* timeline.txt */,
 			);
 			path = WeChat;
@@ -305,7 +354,6 @@
 				793D010D1FF7651C0053A2E9 /* Frameworks */,
 				793D010E1FF7651C0053A2E9 /* Resources */,
 				A0EE25DB42246BF2021626E2 /* [CP] Embed Pods Frameworks */,
-				6833D37C290D44D57CB76094 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -358,7 +406,7 @@
 		793D01081FF7651B0053A2E9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = QuintGao;
 				TargetAttributes = {
 					793D010F1FF7651C0053A2E9 = {
@@ -402,10 +450,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				793D01841FF7663B0053A2E9 /* timeline.json in Resources */,
 				793D01201FF7651C0053A2E9 /* LaunchScreen.storyboard in Resources */,
 				793D017E1FF7663B0053A2E9 /* toutiao.txt in Resources */,
 				793D01861FF7663B0053A2E9 /* timeline.txt in Resources */,
+				6036C3CA22435051000BE576 /* test.txt in Resources */,
 				793D011D1FF7651C0053A2E9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -427,49 +475,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6833D37C290D44D57CB76094 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GKPhotoBrowserPod/Pods-GKPhotoBrowserPod-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		A0EE25DB42246BF2021626E2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-GKPhotoBrowserPod/Pods-GKPhotoBrowserPod-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-GKPhotoBrowserPod/Pods-GKPhotoBrowserPod-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
-				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/GKCover/GKCover.framework",
 				"${BUILT_PRODUCTS_DIR}/GKNavigationBarViewController/GKNavigationBarViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/GKPhotoBrowser/GKPhotoBrowser.framework",
+				"${BUILT_PRODUCTS_DIR}/SDAutoLayout/SDAutoLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/YYModel/YYModel.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKCover.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKNavigationBarViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKPhotoBrowser.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDAutoLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYModel.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GKPhotoBrowserPod/Pods-GKPhotoBrowserPod-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GKPhotoBrowserPod/Pods-GKPhotoBrowserPod-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A42B59648167611912FAC58F /* [CP] Check Pods Manifest.lock */ = {
@@ -502,7 +535,9 @@
 				793D017A1FF7663B0053A2E9 /* GKToutiaoDetailViewController.m in Sources */,
 				793D017C1FF7663B0053A2E9 /* GKToutiaoViewController.m in Sources */,
 				793D01751FF7663B0053A2E9 /* AppDelegate.m in Sources */,
+				6036C3C822435051000BE576 /* GKSDAutoLayoutViewController.m in Sources */,
 				793D01231FF7651C0053A2E9 /* main.m in Sources */,
+				6036C3CB22435051000BE576 /* GKTopView.m in Sources */,
 				793D01851FF7663B0053A2E9 /* GKTimeLineModel.m in Sources */,
 				793D017D1FF7663B0053A2E9 /* GKToutiaoModel.m in Sources */,
 				793D01871FF7663B0053A2E9 /* GKTest01ViewCell.m in Sources */,
@@ -510,8 +545,11 @@
 				793D01781FF7663B0053A2E9 /* GKJianshuViewController.m in Sources */,
 				793D01831FF7663B0053A2E9 /* GKTimeLineViewController.m in Sources */,
 				793D01791FF7663B0053A2E9 /* GKBaseViewController.m in Sources */,
+				6036C3CF22435141000BE576 /* GKGIFViewController.m in Sources */,
 				793D017F1FF7663B0053A2E9 /* GKTest01ViewController.m in Sources */,
+				6036C3C722435051000BE576 /* GKTestViewController.m in Sources */,
 				793D01821FF7663B0053A2E9 /* GKTimeLineViewCell.m in Sources */,
+				6036C3C922435051000BE576 /* GKBottomView.m in Sources */,
 				793D01761FF7663B0053A2E9 /* GKMainViewController.m in Sources */,
 				793D01771FF7663B0053A2E9 /* GKPhotosView.m in Sources */,
 				793D01881FF7663B0053A2E9 /* GKTest03ViewController.m in Sources */,
@@ -576,6 +614,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -583,6 +622,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -631,6 +671,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -638,6 +679,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

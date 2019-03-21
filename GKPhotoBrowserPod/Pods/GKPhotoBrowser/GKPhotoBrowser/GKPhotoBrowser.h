@@ -31,6 +31,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // 长按事件
 - (void)photoBrowser:(GKPhotoBrowser *)browser longPressWithIndex:(NSInteger)index;
 
+// 旋转事件
+- (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandspace:(BOOL)isLandspace;
+
 // 上下滑动消失
 // 开始滑动时
 - (void)photoBrowser:(GKPhotoBrowser *)browser panBeginWithIndex:(NSInteger)index;
@@ -38,27 +41,37 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // 结束滑动时 disappear：是否消失
 - (void)photoBrowser:(GKPhotoBrowser *)browser panEndedWithIndex:(NSInteger)index willDisappear:(BOOL)disappear;
 
-
+// 布局子视图
 - (void)photoBrowser:(GKPhotoBrowser *)browser willLayoutSubViews:(NSInteger)index;
+
+// browser完全消失回调
+- (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index;
 
 @end
 
 @interface GKPhotoBrowser : UIViewController
 
-@property (nonatomic, strong, readonly) UIView *contentView;
-
-@property (nonatomic, strong, readonly) NSArray *photos;
-
-@property (nonatomic, assign, readonly) NSInteger currentIndex;
-
+/** 底部内容试图 */
+@property (nonatomic, strong, readonly) UIView        *contentView;
+/** 图片模型数组 */
+@property (nonatomic, strong, readonly) NSArray       *photos;
+/** 当前索引 */
+@property (nonatomic, assign, readonly) NSInteger     currentIndex;
+/** 是否是横屏 */
+@property (nonatomic, assign, readonly) BOOL          isLandspace;
+/** 当前设备的方向 */
+@property (nonatomic, assign, readonly) UIDeviceOrientation currentOrientation;
+/** 显示方式 */
 @property (nonatomic, assign) GKPhotoBrowserShowStyle showStyle;
-
+/** 隐藏方式 */
 @property (nonatomic, assign) GKPhotoBrowserHideStyle hideStyle;
-
+/** 图片加载方式 */
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
+/** 代理 */
 @property (nonatomic, weak) id<GKPhotoBrowserDelegate> delegate;
 
-/** 是否禁止全屏，默认是NO */
-@property (nonatomic, assign) BOOL isFullScreenDisabled;
+/** 是否禁止屏幕旋转监测 */
+@property (nonatomic, assign) BOOL isScreenRotateDisabled;
 
 /** 是否禁用默认单击事件 */
 @property (nonatomic, assign) BOOL isSingleTapDisabled;
@@ -71,6 +84,25 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 
 /** 滑动切换图片时，是否恢复上（下）一张图片的缩放程度，默认是NO */
 @property (nonatomic, assign) BOOL isResumePhotoZoom;
+
+/** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
+@property (nonatomic, assign) BOOL isFullWidthForLandSpace;
+
+/** 是否适配安全区域，默认NO，为YES时图片会自动适配iPhone X的安全区域 */
+@property (nonatomic, assign) BOOL isAdaptiveSafeArea;
+
+/**
+ 开启这个选项后 在加载gif的时候 会大大的降低内存.与YYImage对gif的内存优化思路一样 default is NO
+ */
+@property (nonatomic, assign) BOOL isLowGifMemory;
+
+/**
+ * 是否启用滑动返回手势处理（当showStyle为GKPhotoBrowserShowStylePush时有效）
+ */
+@property (nonatomic, assign) BOOL isPopGestureEnabled;
+
+/** 浏览器背景（默认黑色） */
+@property (nonatomic, strong) UIColor   *bgColor;
 
 // 初始化方法
 
@@ -99,6 +131,20 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
  @param vc 控制器
  */
 - (void)showFromVC:(UIViewController *)vc;
+
+/**
+ 移除指定位置的内容
+
+ @param index 位置索引
+ */
+- (void)removePhotoAtIndex:(NSInteger)index;
+
+/**
+ 重置图片浏览器
+
+ @param photos 图片内容数组
+ */
+- (void)resetPhotoBrowserWithPhotos:(NSArray *)photos;
 
 + (void)setImageManagerClass:(Class<GKWebImageProtocol>)cls;
 

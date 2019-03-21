@@ -7,7 +7,6 @@
 //  创建九宫格的视图
 
 #import <UIKit/UIKit.h>
-#import <FLAnimatedImage/FLAnimatedImage.h>
 
 @protocol GKPhotosViewDelegate<NSObject>
 
