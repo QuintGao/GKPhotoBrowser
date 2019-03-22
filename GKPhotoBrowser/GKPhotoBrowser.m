@@ -97,6 +97,9 @@ static Class imageManagerClass = nil;
 }
 
 - (GKPhoto *)currentPhoto {
+    if (self.currentIndex >= self.photos.count) {
+        return nil;
+    }
     return self.photos[self.currentIndex];
 }
 
