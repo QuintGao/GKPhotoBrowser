@@ -43,7 +43,11 @@ static CGFloat   photoH;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     for (NSInteger i = 0; i < photos.count; i++) {
-        SDAnimatedImageView *imgView = [SDAnimatedImageView new];
+        UIImageView *imgView = [NSClassFromString(@"SDAnimatedImageView") new];
+        if (!imgView) {
+            imgView = [NSClassFromString(@"FLAnimatedImageView") new];
+        }
+        
         imgView.tag = i;
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         imgView.clipsToBounds = YES;
@@ -69,7 +73,10 @@ static CGFloat   photoH;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     for (NSInteger i = 0; i < images.count; i++) {
-        SDAnimatedImageView *imgView = [SDAnimatedImageView new];
+        UIImageView *imgView = [NSClassFromString(@"SDAnimatedImageView") new];
+        if (!imgView) {
+            imgView = [NSClassFromString(@"FLAnimatedImageView") new];
+        }
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         imgView.clipsToBounds = YES;
         imgView.tag = i;
@@ -83,10 +90,6 @@ static CGFloat   photoH;
         if ([image.url hasPrefix:@"http"]) {
             NSString *urlStr = image.thumbnail_url ? image.thumbnail_url : image.url;
             [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
-//            [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-//                // 裁剪图片，显示中间区域
-//                imgView.image = [self cropImage:image];
-//            }];
         }else {
             imgView.image = [UIImage imageNamed:image.url];
         }
