@@ -62,7 +62,20 @@
     self.centerButton.layer.cornerRadius  = btnWH * 0.5;
     self.centerButton.layer.masksToBounds = YES;
     
-    self.failureLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    if (self.failStyle == GKPhotoBrowserFailStyleOnlyText) {
+        self.failureLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }else if (self.failStyle == GKPhotoBrowserFailStyleOnlyImage) {
+        self.failureImgView.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }else if (self.failStyle == GKPhotoBrowserFailStyleImageAndText) {
+        CGRect imgF     = self.failureImgView.frame;
+        CGRect textF    = self.failureLabel.frame;
+        
+        imgF.origin.y = (self.bounds.size.height - imgF.size.height - 10 - textF.size.height) / 2;
+        self.failureImgView.frame = imgF;
+        
+        textF.origin.y = imgF.origin.y + imgF.size.height + 10;
+        self.failureLabel.frame = textF;
+    }
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {

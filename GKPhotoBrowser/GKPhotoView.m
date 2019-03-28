@@ -172,8 +172,8 @@
         // 开始加载图片
         __weak typeof(self) weakSelf = self;
         gkWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
-            if (self.loadStyle == GKLoadingStyleDeterminate) {
-                __strong typeof(weakSelf) strongSelf = weakSelf;
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf.loadStyle == GKLoadingStyleDeterminate) {
                 // 主线程中更新进度
                 dispatch_async(dispatch_get_main_queue(), ^{
                     strongSelf.loadingView.progress = (float)receivedSize / expectedSize;
@@ -193,7 +193,7 @@
                     [strongSelf.loadingView showFailure];
                     
                     if (self.failStyle == GKPhotoBrowserFailStyleCustom) {
-                        !strongSelf.loadFailed ? : strongSelf.loadFailed();
+                        !strongSelf.loadFailed ? : strongSelf.loadFailed(self);
                     }
                 }else {
                     photo.finished = YES;

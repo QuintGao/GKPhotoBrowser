@@ -10,8 +10,9 @@
 #import "GKTest02ViewCell.h"
 
 #import "GKPhotoBrowser.h"
+#import <SVProgressHUD/SVProgressHUD.h>
 
-@interface GKTest02ViewController ()<UITableViewDataSource, UITableViewDelegate>
+@interface GKTest02ViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -142,9 +143,13 @@
         }];
         
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photoArrs currentIndex:index];
-        browser.showStyle    = GKPhotoBrowserShowStyleZoom;
-        browser.hideStyle    = GKPhotoBrowserHideStyleZoomScale;
-        browser.isLowGifMemory = YES;
+        browser.showStyle       = GKPhotoBrowserShowStyleZoom;
+        browser.hideStyle       = GKPhotoBrowserHideStyleZoomScale;
+        browser.failStyle       = GKPhotoBrowserFailStyleOnlyImage;
+        browser.failureText     = @"图片加载失败了，555";
+        browser.failureImage    = [UIImage imageNamed:@"error"];
+        browser.delegate        = self;
+        browser.isLowGifMemory  = YES;
         
         [browser showFromVC:weakSelf];
     };
@@ -157,6 +162,12 @@
     NSArray *images = self.dataSource[indexPath.row];
     
     return [GKTest02ViewCell cellHeightWithCount:images.count];
+}
+
+#pragma mark - GKPhotoBrowserDelegate
+- (void)photoBrowser:(GKPhotoBrowser *)browser loadFailAtIndex:(NSInteger)index photoView:(GKPhotoView *)photoView {
+    [SVProgressHUD setMaximumDismissTimeInterval:2.0f];
+    [SVProgressHUD showErrorWithStatus:@"加载失败"];
 }
 
 @end

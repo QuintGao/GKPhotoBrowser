@@ -654,6 +654,7 @@ static Class imageManagerClass = nil;
             self.startLocation = location;
             self.startFrame = photoView.imageView.frame;
             self.isZoomScale = YES;
+            photoView.loadingView.hidden = YES;
             [self handlePanBegin];
             break;
         case UIGestureRecognizerStateChanged: {
@@ -697,6 +698,7 @@ static Class imageManagerClass = nil;
     switch (panGesture.state) {
         case UIGestureRecognizerStateBegan:
             _startLocation = location;
+            photoView.loadingView.hidden = YES;
             [self handlePanBegin];
             break;
         case UIGestureRecognizerStateChanged:{
@@ -858,6 +860,7 @@ static Class imageManagerClass = nil;
             // 隐藏状态栏
             self.isStatusBarShow = NO;
         }
+        photoView.loadingView.hidden = NO;
         
         [self panEndedWillDisappear:NO];
     }];
@@ -1075,9 +1078,11 @@ static Class imageManagerClass = nil;
                 }
             };
             
-            photoView.loadFailed = ^{
-                if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadFailAtIndex:photoView:)]) {
-                    [weakSelf.delegate photoBrowser:weakSelf loadFailAtIndex:weakSelf.currentIndex photoView:[weakSelf currentPhotoView]];
+            photoView.loadFailed = ^(GKPhotoView * _Nonnull curPhotoView) {
+                if (curPhotoView == [weakSelf currentPhotoView]) {
+                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadFailAtIndex:photoView:)]) {
+                        [weakSelf.delegate photoBrowser:weakSelf loadFailAtIndex:weakSelf.currentIndex photoView:[weakSelf currentPhotoView]];
+                    }
                 }
             };
             
@@ -1109,6 +1114,11 @@ static Class imageManagerClass = nil;
         self.currentIndex = index;
         
         GKPhotoView *photoView = [self currentPhotoView];
+        
+        GKPhoto *photo = [self currentPhoto];
+        if (photo.failed) {
+            [photoView setupPhoto:photo];
+        }
         
         if (photoView.scrollView.zoomScale != 1.0) {
             [self removePanGesture];

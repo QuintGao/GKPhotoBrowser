@@ -44,6 +44,7 @@
 
 - (void)changeKeyframe:(CADisplayLink *)displayLink {
     NSMutableDictionary *buffer = self.currentGifImage.gk_imageBuffer;
+    if (self.currentGifImage.gk_totalFrameCount.intValue == 0) return;
     NSUInteger nextIndex = (self.currentGifImage.gk_handleIndex.intValue + 1) % self.currentGifImage.gk_totalFrameCount.intValue;
     BOOL bufferIsFull = NO;
     NSTimeInterval delay = 0;
