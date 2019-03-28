@@ -82,10 +82,13 @@
 - (GKLoadingView *)loadingView {
     if (!_loadingView) {
         _loadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.loadStyle];
+        _loadingView.failStyle   = self.failStyle;
         _loadingView.lineWidth   = 3;
         _loadingView.radius      = 12;
         _loadingView.bgColor     = [UIColor blackColor];
         _loadingView.strokeColor = [UIColor whiteColor];
+        _loadingView.failText    = self.failureText;
+        _loadingView.failImage   = self.failureImage;
     }
     return _loadingView;
 }
@@ -188,6 +191,10 @@
                     
                     [strongSelf addSubview:strongSelf.loadingView];
                     [strongSelf.loadingView showFailure];
+                    
+                    if (self.failStyle == GKPhotoBrowserFailStyleCustom) {
+                        !strongSelf.loadFailed ? : strongSelf.loadFailed();
+                    }
                 }else {
                     photo.finished = YES;
                     strongSelf.scrollView.scrollEnabled = YES;

@@ -73,4 +73,12 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserLoadStyle) {
     GKPhotoBrowserLoadStyleDeterminate           // 明确的加载方式带进度条
 };
 
+// 图片加载失败的显示方式
+typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
+    GKPhotoBrowserFailStyleOnlyText,           // 显示文字
+    GKPhotoBrowserFailStyleOnlyImage,          // 显示图片
+    GKPhotoBrowserFailStyleImageAndText,       // 显示图片+文字
+    GKPhotoBrowserFailStyleCustom              // 自定义（如：显示HUD）
+};
+
 #endif /* GKPhotoBrowserConfigure_h */

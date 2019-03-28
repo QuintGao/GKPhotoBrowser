@@ -19,6 +19,8 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
 
 + (instancetype)loadingViewWithFrame:(CGRect)frame style:(GKLoadingStyle)style;
 
+@property (nonatomic, assign) GKPhotoBrowserFailStyle  failStyle;
+
 @property (nonatomic, strong) UIButton *centerButton;
 
 /** 线条宽度：默认4 */
@@ -35,6 +37,9 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
 
 /** 进度，loadingStyle为GKLoadingStyleDeterminate时使用 */
 @property (nonatomic, assign) CGFloat progress;
+
+@property (nonatomic, copy) NSString  *failText;
+@property (nonatomic, strong) UIImage *failImage;
 
 @property (nonatomic, copy) void (^progressChange)(GKLoadingView *loadingView, CGFloat progress);
 

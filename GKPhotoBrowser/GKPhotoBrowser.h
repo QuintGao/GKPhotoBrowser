@@ -47,6 +47,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // browser完全消失回调
 - (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index;
 
+// 图片加载失败回调
+- (void)photoBrowser:(GKPhotoBrowser *)browser loadFailAtIndex:(NSInteger)index photoView:(GKPhotoView *)photoView;
+
 @end
 
 @interface GKPhotoBrowser : UIViewController
@@ -67,6 +70,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign) GKPhotoBrowserHideStyle hideStyle;
 /** 图片加载方式 */
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
+/** 图片加载失败显示方式 */
+@property (nonatomic, assign) GKPhotoBrowserFailStyle failStyle;
 /** 代理 */
 @property (nonatomic, weak) id<GKPhotoBrowserDelegate> delegate;
 
@@ -103,6 +108,10 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 
 /** 浏览器背景（默认黑色） */
 @property (nonatomic, strong) UIColor   *bgColor;
+
+// 加载失败时显示的文字或图片
+@property (nonatomic, copy) NSString    *failureText;
+@property (nonatomic, strong) UIImage   *failureImage;
 
 // 初始化方法
 

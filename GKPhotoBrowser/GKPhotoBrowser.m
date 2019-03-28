@@ -1058,10 +1058,13 @@ static Class imageManagerClass = nil;
         
         GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
-            photoView               = [self dequeueReusablePhotoView];
-            photoView.loadStyle     = self.loadStyle;
+            photoView                = [self dequeueReusablePhotoView];
+            photoView.loadStyle      = self.loadStyle;
+            photoView.failStyle      = self.failStyle;
             photoView.isFullWidthForLandSpace = self.isFullWidthForLandSpace;
             photoView.isLowGifMemory = self.isLowGifMemory;
+            photoView.failureText    = self.failureText;
+            photoView.failureImage   = self.failureImage;
             
             __typeof(self) __weak weakSelf = self;
             photoView.zoomEnded     = ^(NSInteger scale) {
@@ -1069,6 +1072,12 @@ static Class imageManagerClass = nil;
                     [weakSelf addPanGesture:NO];
                 }else {
                     [weakSelf removePanGesture];
+                }
+            };
+            
+            photoView.loadFailed = ^{
+                if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadFailAtIndex:photoView:)]) {
+                    [weakSelf.delegate photoBrowser:weakSelf loadFailAtIndex:weakSelf.currentIndex photoView:[weakSelf currentPhotoView]];
                 }
             };
             
