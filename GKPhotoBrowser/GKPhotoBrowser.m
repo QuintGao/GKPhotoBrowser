@@ -41,8 +41,6 @@ static Class imageManagerClass = nil;
 /** 正在发生屏幕旋转 */
 @property (nonatomic, assign) BOOL isRotation;
 
-/** 状态栏正在发生变化 */
-@property (nonatomic, assign) BOOL isStatusBarChanged;
 /** 状态栏是否显示 */
 @property (nonatomic, assign) BOOL isStatusBarShowing;
 
@@ -263,13 +261,6 @@ static Class imageManagerClass = nil;
 - (void)setIsStatusBarShow:(BOOL)isStatusBarShow {
     _isStatusBarShow = isStatusBarShow;
     
-    /**这一行代码打开，在有些情况下会出现pageControl位置不正确的bug */
-//    self.isStatusBarChanged = YES;
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.isStatusBarChanged = NO;
-    });
-    
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         [self prefersStatusBarHidden];
         
@@ -326,7 +317,8 @@ static Class imageManagerClass = nil;
             endRect = photoView.imageView.frame;
         }else {
             CGFloat w = GKScreenW;
-            CGFloat h = w * photo.sourceFrame.size.height / photo.sourceFrame.size.width;
+            // bug fixed：#43 CALayer position contains NaN: [nan nan]
+            CGFloat h = (photo.sourceFrame.size.width == 0) ? KScreenH : (w * photo.sourceFrame.size.height / photo.sourceFrame.size.width);
             CGFloat x = 0;
             CGFloat y = (GKScreenH - h) / 2;
             endRect = CGRectMake(x, y, w, h);
@@ -509,9 +501,7 @@ static Class imageManagerClass = nil;
         if (isFirst) {
             [self.view addGestureRecognizer:self.panGesture];
         }else {
-            UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
-            
-            if (UIDeviceOrientationIsPortrait(orientation) || self.isPortraitToUp) {
+            if (self.currentOrientation == UIDeviceOrientationPortrait || self.isPortraitToUp) {
                 [self.view addGestureRecognizer:self.panGesture];
             }
         }
@@ -912,6 +902,11 @@ static Class imageManagerClass = nil;
     
     // 旋转之后当前的设备方向
     UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
+    
+    if (currentOrientation == UIDeviceOrientationUnknown) {
+        currentOrientation = UIDeviceOrientationPortrait;
+    }
+    
     self.currentOrientation = currentOrientation;
     
     if (UIDeviceOrientationIsPortrait(self.originalOrientation)) {
@@ -1070,7 +1065,8 @@ static Class imageManagerClass = nil;
             photoView.failureImage   = self.failureImage;
             
             __typeof(self) __weak weakSelf = self;
-            photoView.zoomEnded     = ^(NSInteger scale) {
+            photoView.zoomEnded = ^(CGFloat scale) {
+                NSLog(@"%f", scale);
                 if (scale == 1.0f) {
                     [weakSelf addPanGesture:NO];
                 }else {
@@ -1164,6 +1160,7 @@ static Class imageManagerClass = nil;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     CGFloat offsetX = scrollView.contentOffset.x;
     CGFloat scrollW = self.photoScrollView.frame.size.width;
+    if (scrollW == 0) return;
     
     NSInteger index = (offsetX + scrollW * 0.5) / scrollW;
     

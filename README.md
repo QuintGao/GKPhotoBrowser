@@ -77,6 +77,8 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2019.04.15  bug fixed 1、修复WillAppear可能出现的CALayer position contains NaN: [nan nan]问题
+                      2、修复某些机型可能出现的zoom恢复原图后，不能滑动隐藏的问题
 2019.03.28  增加GKPhotoBrowserFailStyle，可自定义图片加载失败后的显示方式
 2019.03.21  适配SDWebImage 5.x版本
 2019.03.18  修复图片加载器不显示问题

@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) GKPhoto *photo;
 
-@property (nonatomic, copy) void(^zoomEnded)(NSInteger scale);
+@property (nonatomic, copy) void(^zoomEnded)(CGFloat scale);
 @property (nonatomic, copy) void(^loadFailed)(GKPhotoView *photoView);
 
 /** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
