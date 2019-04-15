@@ -318,7 +318,7 @@ static Class imageManagerClass = nil;
         }else {
             CGFloat w = GKScreenW;
             // bug fixed：#43 CALayer position contains NaN: [nan nan]
-            CGFloat h = (photo.sourceFrame.size.width == 0) ? KScreenH : (w * photo.sourceFrame.size.height / photo.sourceFrame.size.width);
+            CGFloat h = (photo.sourceFrame.size.width == 0) ? GKScreenH : (w * photo.sourceFrame.size.height / photo.sourceFrame.size.width);
             CGFloat x = 0;
             CGFloat y = (GKScreenH - h) / 2;
             endRect = CGRectMake(x, y, w, h);
