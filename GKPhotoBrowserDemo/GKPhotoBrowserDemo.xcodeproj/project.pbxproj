@@ -14,6 +14,7 @@
 		60415CB72121715000D1D54B /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = 60415CB62121715000D1D54B /* test.txt */; };
 		60415CBA2121750B00D1D54B /* GKBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 60415CB92121750B00D1D54B /* GKBottomView.m */; };
 		6064CA3021183B7900AAB2A1 /* UIImage+GKDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6064CA2F21183B7900AAB2A1 /* UIImage+GKDecoder.m */; };
+		60F9901622715A18008150AE /* GKOriginImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F9901522715A18008150AE /* GKOriginImageViewController.m */; };
 		7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7927F0CF20A97F280017FD5B /* GKTestViewController.m */; };
 		795FA5981FF333420057BDB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5971FF333420057BDB0 /* Assets.xcassets */; };
 		795FA59B1FF333420057BDB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5991FF333420057BDB0 /* LaunchScreen.storyboard */; };
@@ -97,6 +98,8 @@
 		60415CB92121750B00D1D54B /* GKBottomView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKBottomView.m; sourceTree = "<group>"; };
 		6064CA2E21183B7900AAB2A1 /* UIImage+GKDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+GKDecoder.h"; sourceTree = "<group>"; };
 		6064CA2F21183B7900AAB2A1 /* UIImage+GKDecoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+GKDecoder.m"; sourceTree = "<group>"; };
+		60F9901422715A18008150AE /* GKOriginImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKOriginImageViewController.h; sourceTree = "<group>"; };
+		60F9901522715A18008150AE /* GKOriginImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKOriginImageViewController.m; sourceTree = "<group>"; };
 		7927F0CE20A97F280017FD5B /* GKTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKTestViewController.h; sourceTree = "<group>"; };
 		7927F0CF20A97F280017FD5B /* GKTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKTestViewController.m; sourceTree = "<group>"; };
 		795FA58B1FF333420057BDB0 /* GKPhotoBrowserDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GKPhotoBrowserDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -217,6 +220,15 @@
 				60415CB62121715000D1D54B /* test.txt */,
 			);
 			path = SDAutoLayout;
+			sourceTree = "<group>";
+		};
+		60F99013227159FB008150AE /* OriginImage */ = {
+			isa = PBXGroup;
+			children = (
+				60F9901422715A18008150AE /* GKOriginImageViewController.h */,
+				60F9901522715A18008150AE /* GKOriginImageViewController.m */,
+			);
+			path = OriginImage;
 			sourceTree = "<group>";
 		};
 		7927F0CD20A97F0C0017FD5B /* Test */ = {
@@ -345,6 +357,7 @@
 				795FA5F81FF338200057BDB0 /* WeChat */,
 				795FA5E81FF338200057BDB0 /* Toutiao */,
 				795FA5E11FF3381F0057BDB0 /* Jianshu */,
+				60F99013227159FB008150AE /* OriginImage */,
 				60154B5C20D11D540000877A /* GIF */,
 				60415CAE2121643E00D1D54B /* SDAutoLayout */,
 				7927F0CD20A97F0C0017FD5B /* Test */,
@@ -632,6 +645,7 @@
 				795FA6121FF338200057BDB0 /* GKToutiaoDetailViewController.m in Sources */,
 				7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */,
 				60415CBA2121750B00D1D54B /* GKBottomView.m in Sources */,
+				60F9901622715A18008150AE /* GKOriginImageViewController.m in Sources */,
 				795FA6111FF338200057BDB0 /* GKBaseViewController.m in Sources */,
 				795FA5D41FF334100057BDB0 /* UIScrollView+GKGestureHandle.m in Sources */,
 				795FA6211FF338200057BDB0 /* GKTest01ViewCell.m in Sources */,

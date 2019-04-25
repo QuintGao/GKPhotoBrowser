@@ -165,7 +165,7 @@
 }
 
 #pragma mark - GKPhotoBrowserDelegate
-- (void)photoBrowser:(GKPhotoBrowser *)browser loadFailAtIndex:(NSInteger)index photoView:(GKPhotoView *)photoView {
+- (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index {
     [SVProgressHUD setMaximumDismissTimeInterval:2.0f];
     [SVProgressHUD showErrorWithStatus:@"加载失败"];
 }

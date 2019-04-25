@@ -16,11 +16,12 @@ static Class imageManagerClass = nil;
     UILabel  *_countLabel;
 }
 
-@property (nonatomic, strong, readwrite) UIView *contentView;
+@property (nonatomic, strong, readwrite) UIView         *contentView;
 
-@property (nonatomic, strong, readwrite) NSArray *photos;
-@property (nonatomic, assign, readwrite) NSInteger currentIndex;
-@property (nonatomic, assign, readwrite) BOOL       isLandspace;
+@property (nonatomic, strong, readwrite) NSArray        *photos;
+@property (nonatomic, assign, readwrite) NSInteger      currentIndex;
+@property (nonatomic, strong, readwrite) GKPhotoView    *curPhotoView;
+@property (nonatomic, assign, readwrite) BOOL           isLandspace;
 @property (nonatomic, assign, readwrite) UIDeviceOrientation currentOrientation;
 
 @property (nonatomic, strong) UIScrollView *photoScrollView;
@@ -151,6 +152,10 @@ static Class imageManagerClass = nil;
     
     GKPhoto *photo          = [self currentPhoto];
     GKPhotoView *photoView  = [self currentPhotoView];
+    self.curPhotoView = photoView;
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:didSelectAtIndex:)]) {
+        [self.delegate photoBrowser:self didSelectAtIndex:self.currentIndex];
+    }
     
     if ([_imageProtocol imageFromMemoryForURL:photo.url] || photo.image) {
         [photoView setupPhoto:photo];
@@ -473,6 +478,10 @@ static Class imageManagerClass = nil;
     [self setupPhotoViews];
     
     [self layoutSubviews];
+}
+
+- (void)loadCurrentPhotoImage {
+    [self.curPhotoView loadOriginImage];
 }
 
 #pragma mark - Private Methods
@@ -1056,17 +1065,17 @@ static Class imageManagerClass = nil;
         
         GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
-            photoView                = [self dequeueReusablePhotoView];
-            photoView.loadStyle      = self.loadStyle;
-            photoView.failStyle      = self.failStyle;
+            photoView                 = [self dequeueReusablePhotoView];
+            photoView.loadStyle       = self.loadStyle;
+            photoView.originLoadStyle = self.originLoadStyle;
+            photoView.failStyle       = self.failStyle;
             photoView.isFullWidthForLandSpace = self.isFullWidthForLandSpace;
-            photoView.isLowGifMemory = self.isLowGifMemory;
-            photoView.failureText    = self.failureText;
-            photoView.failureImage   = self.failureImage;
+            photoView.isLowGifMemory  = self.isLowGifMemory;
+            photoView.failureText     = self.failureText;
+            photoView.failureImage    = self.failureImage;
             
             __typeof(self) __weak weakSelf = self;
             photoView.zoomEnded = ^(CGFloat scale) {
-                NSLog(@"%f", scale);
                 if (scale == 1.0f) {
                     [weakSelf addPanGesture:NO];
                 }else {
@@ -1075,9 +1084,17 @@ static Class imageManagerClass = nil;
             };
             
             photoView.loadFailed = ^(GKPhotoView * _Nonnull curPhotoView) {
-                if (curPhotoView == [weakSelf currentPhotoView]) {
-                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadFailAtIndex:photoView:)]) {
-                        [weakSelf.delegate photoBrowser:weakSelf loadFailAtIndex:weakSelf.currentIndex photoView:[weakSelf currentPhotoView]];
+                if (curPhotoView == self.curPhotoView) {
+                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadFailedAtIndex:)]) {
+                        [weakSelf.delegate photoBrowser:weakSelf loadFailedAtIndex:weakSelf.currentIndex];
+                    }
+                }
+            };
+            
+            photoView.loadProgressBlock = ^(GKPhotoView * _Nonnull curPhotoView, float progress) {
+                if (curPhotoView == self.curPhotoView) {
+                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:)]) {
+                        [weakSelf.delegate photoBrowser:weakSelf loadImageAtIndex:weakSelf.currentIndex progress:progress];
                     }
                 }
             };
@@ -1167,9 +1184,10 @@ static Class imageManagerClass = nil;
     // 滚动结束，开始gif动画
     GKPhotoView *currentPhotoView = [self currentPhotoView];
     [currentPhotoView startGifAnimation];
+    self.curPhotoView = [self currentPhotoView];
     
-    if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollEndedIndex:)]) {
-        [self.delegate photoBrowser:self scrollEndedIndex:index];
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:didSelectAtIndex:)]) {
+        [self.delegate photoBrowser:self didSelectAtIndex:index];
     }
     
     if (self.isResumePhotoZoom) {

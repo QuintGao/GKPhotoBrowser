@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) void(^zoomEnded)(CGFloat scale);
 @property (nonatomic, copy) void(^loadFailed)(GKPhotoView *photoView);
+@property (nonatomic, copy) void(^loadProgressBlock)(GKPhotoView *photoView, float progress);
 
 /** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
 @property (nonatomic, assign) BOOL isFullWidthForLandSpace;
@@ -41,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isLayoutSubViews;
 
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle originLoadStyle;
 @property (nonatomic, assign) GKPhotoBrowserFailStyle failStyle;
 
 @property (nonatomic, copy) NSString    *failureText;
@@ -51,11 +53,14 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置数据
 - (void)setupPhoto:(GKPhoto *)photo;
 
-- (void)adjustFrame;
+// 加载原图（必须传originUrl）
+- (void)loadOriginImage;
 
 // 缩放
 - (void)zoomToRect:(CGRect)rect animated:(BOOL)animated;
 
+// 跳转布局
+- (void)adjustFrame;
 // 重新布局
 - (void)resetFrame;
 

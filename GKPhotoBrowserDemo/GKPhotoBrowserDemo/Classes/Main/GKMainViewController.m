@@ -54,6 +54,8 @@
                         @"class" : @"GKToutiaoViewController"},
                       @{@"text"  : @"简书",
                         @"class" : @"GKJianshuViewController"},
+                      @{@"text"  : @"加载原图",
+                        @"class" : @"GKOriginImageViewController"},
                       @{@"text"  : @"SDAutoLayout",
                         @"class" : @"GKSDAutoLayoutViewController"},
                       @{@"text"  : @"测试",
