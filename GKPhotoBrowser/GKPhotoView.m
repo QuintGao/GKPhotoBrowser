@@ -168,12 +168,30 @@
         
         NSURL *url = isOrigin ? photo.originUrl : photo.url;
         
-        // 缓存图片
-        UIImage *cacheImage = [_imageProtocol imageFromMemoryForURL:url];
-        photo.image = cacheImage.images.count == 0 ? cacheImage.images.firstObject : cacheImage;
+        // 获取原图的缓存图片，如果有缓存就显示原图
+        UIImage *originCacheImage = [_imageProtocol imageFromMemoryForURL:photo.originUrl];
+        NSData *originImageData = [[SDImageCache sharedImageCache] diskImageDataForKey:photo.originUrl.absoluteString];
         
-        if (photo.image.images.count > 1) {
+        if (originCacheImage && originImageData) {
+            photo.originFinished = YES;
+            !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0, YES);
+            
+            [self setupPhotoWithData:originImageData image:originCacheImage];
+            [self adjustFrame];
+            
+            return;
+        }
+        
+        // 获取图片缓存
+        UIImage *cacheImage = [_imageProtocol imageFromMemoryForURL:url];
+        NSData *cacheData = [[SDImageCache sharedImageCache] diskImageDataForKey:photo.url.absoluteString];
+        
+        if (cacheImage && cacheData) {
             photo.finished = YES;
+            !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0, NO);
+            [self setupPhotoWithData:cacheData image:cacheImage];
+            [self adjustFrame];
+            
             return;
         }
         
@@ -189,14 +207,15 @@
         __weak typeof(self) weakSelf = self;
         gkWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (expectedSize == 0) return;
             float progress = (float)receivedSize / expectedSize;
             if (progress <= 0) progress = 0;
             
             // 图片加载中，回调进度
             if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
-                !self.loadProgressBlock ? : self.loadProgressBlock(self, progress);
+                !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, YES);
             }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
-                !self.loadProgressBlock ? : self.loadProgressBlock(self, progress);
+                !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, NO);
             }else if (strongSelf.loadStyle == GKLoadingStyleDeterminate || strongSelf.originLoadStyle == GKLoadingStyleDeterminate) {
                 // 主线程更新进度
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -227,17 +246,15 @@
                     
                     // 图片加载完成，回调进度
                     if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
-                        !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f);
+                        !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f, YES);
                     }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
-                        !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f);
+                        !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f, NO);
                     }
                     
                     strongSelf.scrollView.scrollEnabled = YES;
                     [strongSelf.loadingView stopLoading];
                     
-                    if (cacheType == SDImageCacheTypeNone) {
-                        [strongSelf setupPhotoWithData:data image:image];
-                    }else if (cacheType == SDImageCacheTypeMemory) {
+                    if (cacheType == SDImageCacheTypeMemory) {
                         NSData *imageData = [[SDImageCache sharedImageCache] diskImageDataForKey:photo.url.absoluteString];
                         [strongSelf setupPhotoWithData:imageData image:image];
                     }else {
@@ -333,6 +350,7 @@
 #pragma mark - 调整frame
 - (void)adjustFrame {
     CGRect frame = self.scrollView.frame;
+    if (frame.size.width == 0 || frame.size.height == 0) return;
     
     if (self.imageView.image) {
         CGSize imageSize = self.imageView.image.size;
@@ -377,6 +395,7 @@
         self.scrollView.minimumZoomScale = 1.0;
         self.scrollView.maximumZoomScale = maxScale;
     }else if (!CGRectEqualToRect(self.photo.sourceFrame, CGRectZero)) {
+        if (self.photo.sourceFrame.size.width == 0 || self.photo.sourceFrame.size.height == 0) return;
         CGFloat width = frame.size.width;
         CGFloat height = width * self.photo.sourceFrame.size.height / self.photo.sourceFrame.size.height;
         _imageView.bounds = CGRectMake(0, 0, width, height);

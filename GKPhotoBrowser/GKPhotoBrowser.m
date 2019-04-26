@@ -659,6 +659,7 @@ static Class imageManagerClass = nil;
         case UIGestureRecognizerStateChanged: {
             double percent = 1 - fabs(point.y) / self.view.frame.size.height;
             double s = MAX(percent, 0.3);
+            if (self.startFrame.size.width == 0 || self.startFrame.size.height == 0) return;
             
             CGFloat width = self.startFrame.size.width * s;
             CGFloat height = self.startFrame.size.height * s;
@@ -1091,10 +1092,10 @@ static Class imageManagerClass = nil;
                 }
             };
             
-            photoView.loadProgressBlock = ^(GKPhotoView * _Nonnull curPhotoView, float progress) {
+            photoView.loadProgressBlock = ^(GKPhotoView * _Nonnull curPhotoView, float progress, BOOL isOriginImage) {
                 if (curPhotoView == self.curPhotoView) {
-                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:)]) {
-                        [weakSelf.delegate photoBrowser:weakSelf loadImageAtIndex:weakSelf.currentIndex progress:progress];
+                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
+                        [weakSelf.delegate photoBrowser:weakSelf loadImageAtIndex:weakSelf.currentIndex progress:progress isOriginImage:isOriginImage];
                     }
                 }
             };

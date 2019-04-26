@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) void(^zoomEnded)(CGFloat scale);
 @property (nonatomic, copy) void(^loadFailed)(GKPhotoView *photoView);
-@property (nonatomic, copy) void(^loadProgressBlock)(GKPhotoView *photoView, float progress);
+@property (nonatomic, copy) void(^loadProgressBlock)(GKPhotoView *photoView, float progress, BOOL isOriginImage);
 
 /** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
 @property (nonatomic, assign) BOOL isFullWidthForLandSpace;

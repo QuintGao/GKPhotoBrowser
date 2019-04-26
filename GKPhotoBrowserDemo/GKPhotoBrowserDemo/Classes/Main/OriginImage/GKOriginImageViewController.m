@@ -41,7 +41,6 @@
     [thumbnailImageUrls addObject:@"http://ww2.sinaimg.cn/thumbnail/9c2b5f31jw1f6bqtinmpyj20dw0ae76e.jpg"];
     [thumbnailImageUrls addObject:@"http://ww1.sinaimg.cn/thumbnail/536e7093jw1f6bqdj3lpjj20va134ana.jpg"];
     [thumbnailImageUrls addObject:@"http://ww1.sinaimg.cn/thumbnail/75b1a75fjw1f6bqn35ij6j20ck0g8jtf.jpg"];
-    [thumbnailImageUrls addObject:@"http://ww1.sinaimg.cn/thumbnail/86afb21egw1f6bq3lq0itj20gg0c2myt.jpg"];
     self.thumbImgs = thumbnailImageUrls;
     
     NSMutableArray *originalImageUrls = [NSMutableArray array];
@@ -52,11 +51,9 @@
     [originalImageUrls addObject:@"http://ww2.sinaimg.cn/large/9c2b5f31jw1f6bqtinmpyj20dw0ae76e.jpg"];
     [originalImageUrls addObject:@"http://ww1.sinaimg.cn/large/536e7093jw1f6bqdj3lpjj20va134ana.jpg"];
     [originalImageUrls addObject:@"http://ww1.sinaimg.cn/large/75b1a75fjw1f6bqn35ij6j20ck0g8jtf.jpg"];
-    [originalImageUrls addObject:@"http://ww1.sinaimg.cn/large/86afb21egw1f6bq3lq0itj20gg0c2myt.jpg"];
     self.originImgs = originalImageUrls;
     
     [self.collectionView reloadData];
-    
 }
 
 #pragma mark - <UICollectionViewDataSource, UICollectionViewDelegate>
@@ -125,16 +122,18 @@
     
 }
 
-- (void)photoBrowser:(GKPhotoBrowser *)browser loadImageAtIndex:(NSInteger)index progress:(float)progress {
+- (void)photoBrowser:(GKPhotoBrowser *)browser loadImageAtIndex:(NSInteger)index progress:(float)progress isOriginImage:(BOOL)isOriginImage {
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSString *text = [NSString stringWithFormat:@"%.f%%", progress * 100];
-        [self.originBtn setTitle:text forState:UIControlStateNormal];
-        
-        if (progress == 1.0) {
-            self.originBtn.hidden = YES;
-        }
-    });
+    if (isOriginImage) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *text = [NSString stringWithFormat:@"%.f%%", progress * 100];
+            [self.originBtn setTitle:text forState:UIControlStateNormal];
+            
+            if (progress == 1.0) {
+                self.originBtn.hidden = YES;
+            }
+        });
+    }
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser didSelectAtIndex:(NSInteger)index {
