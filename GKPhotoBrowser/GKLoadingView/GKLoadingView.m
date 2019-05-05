@@ -38,14 +38,13 @@
         
         self.loadingStyle   = loadingStyle;
         
-        self.centerButton   = [UIButton new];
-        [self addSubview:self.centerButton];
-        
         // 设置默认值
         self.lineWidth      = 4;
         self.radius         = 24;
         self.bgColor        = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         self.strokeColor    = [UIColor whiteColor];
+        
+        [self addSubview:self.centerButton];
     }
     return self;
 }
@@ -114,6 +113,14 @@
 - (UIButton *)centerButton {
     if (!_centerButton) {
         _centerButton = [UIButton new];
+        // centerButton必须保持在loadingView内部
+        CGFloat btnWH = self.radius * 2 - self.lineWidth;
+        
+        _centerButton.bounds = CGRectMake(0, 0, btnWH, btnWH);
+        _centerButton.center = CGPointMake(CGRectGetWidth(self.bounds) * 0.5, CGRectGetHeight(self.bounds) * 0.5);
+        
+        _centerButton.layer.cornerRadius  = btnWH * 0.5;
+        _centerButton.layer.masksToBounds = YES;
     }
     return _centerButton;
 }
@@ -390,6 +397,19 @@
         textF.origin.y = imgF.origin.y + imgF.size.height + 10;
         self.failureLabel.frame = textF;
     }
+}
+
+- (void)hideFailure {
+    [self.animatedLayer removeFromSuperlayer];
+    self.animatedLayer = nil;
+    
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
+    [self.layer removeAllAnimations];
+    
+    [self.failureLabel removeFromSuperview];
+    [self.failureImgView removeFromSuperview];
 }
 
 - (void)hideLoadingView {

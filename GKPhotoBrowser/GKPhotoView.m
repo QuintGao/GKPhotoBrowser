@@ -126,6 +126,7 @@
         // 已经加载成功，无需再加载
         if (photo.image) {
             [self.loadingView stopLoading];
+            [self.loadingView hideFailure];
             
             photo.finished = YES; // 加载完成
             
@@ -156,6 +157,7 @@
         self.scrollView.scrollEnabled = NO;
         // 进度条
         [self addSubview:self.loadingView];
+        [self.loadingView hideFailure];
         
         if (self.imageView.image) {
             [self adjustFrame];
@@ -232,11 +234,13 @@
                     photo.failed = YES;
                     [strongSelf.loadingView stopLoading];
                     
-                    if (self.failStyle == GKPhotoBrowserFailStyleCustom) {
-                        !strongSelf.loadFailed ? : strongSelf.loadFailed(self);
-                    }else {
-                        [strongSelf addSubview:strongSelf.loadingView];
-                        [strongSelf.loadingView showFailure];
+                    if ([photo.url.absoluteString isEqualToString:imageURL.absoluteString]) {
+                        if (self.failStyle == GKPhotoBrowserFailStyleCustom) {
+                            !strongSelf.loadFailed ? : strongSelf.loadFailed(self);
+                        }else {
+                            [strongSelf addSubview:strongSelf.loadingView];
+                            [strongSelf.loadingView showFailure];
+                        }
                     }
                 }else {
                     photo.finished = YES;
@@ -452,7 +456,7 @@
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
-    !self.zoomEnded ? : self.zoomEnded(scrollView.zoomScale);
+    !self.zoomEnded ? : self.zoomEnded(self, scrollView.zoomScale);
 }
 
 - (void)cancelCurrentImageLoad {

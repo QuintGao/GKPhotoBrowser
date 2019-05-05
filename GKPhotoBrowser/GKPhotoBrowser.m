@@ -1076,16 +1076,18 @@ static Class imageManagerClass = nil;
             photoView.failureImage    = self.failureImage;
             
             __typeof(self) __weak weakSelf = self;
-            photoView.zoomEnded = ^(CGFloat scale) {
-                if (scale == 1.0f) {
-                    [weakSelf addPanGesture:NO];
-                }else {
-                    [weakSelf removePanGesture];
+            photoView.zoomEnded = ^(GKPhotoView * _Nonnull curPhotoView, CGFloat scale) {
+                if (curPhotoView.tag == self.curPhotoView.tag) {
+                    if (scale == 1.0f) {
+                        [weakSelf addPanGesture:NO];
+                    }else {
+                        [weakSelf removePanGesture];
+                    }
                 }
             };
             
             photoView.loadFailed = ^(GKPhotoView * _Nonnull curPhotoView) {
-                if (curPhotoView == self.curPhotoView) {
+                if (curPhotoView.tag == self.curPhotoView.tag) {
                     if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadFailedAtIndex:)]) {
                         [weakSelf.delegate photoBrowser:weakSelf loadFailedAtIndex:weakSelf.currentIndex];
                     }
@@ -1093,7 +1095,7 @@ static Class imageManagerClass = nil;
             };
             
             photoView.loadProgressBlock = ^(GKPhotoView * _Nonnull curPhotoView, float progress, BOOL isOriginImage) {
-                if (curPhotoView == self.curPhotoView) {
+                if (curPhotoView.tag == self.curPhotoView.tag) {
                     if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
                         [weakSelf.delegate photoBrowser:weakSelf loadImageAtIndex:weakSelf.currentIndex progress:progress isOriginImage:isOriginImage];
                     }
@@ -1128,6 +1130,7 @@ static Class imageManagerClass = nil;
         self.currentIndex = index;
         
         GKPhotoView *photoView = [self currentPhotoView];
+        self.curPhotoView = photoView;
         
         GKPhoto *photo = [self currentPhoto];
         if (photo.failed) {

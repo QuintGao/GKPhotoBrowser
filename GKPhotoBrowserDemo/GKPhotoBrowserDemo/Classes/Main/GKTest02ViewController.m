@@ -62,10 +62,10 @@
           @"http://ww1.sinaimg.cn/large/85cccab3gw1ete5mkvd3kg20dw07en7y.jpg",
           @"https://upfile2.asqql.com/upfile/2009pasdfasdfic2009s305985-ts/gif_spic/2018-5/201852021281430160.gif",
           @"http://s1.dwstatic.com/group1/M00/AC/19/ee76abfe1e23a8ad93665c5863c89a21.gif"],
-        @[@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435195&di=725c10ff470cf0282d148b7ec8e32a1d&imgtype=0&src=http%3A%2F%2Fb.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F9358d109b3de9c8210ea114f6581800a18d84367.jpg",
-          @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435195&di=70b2e4e0c6f1d7613d9a7154b9477f81&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F80cb39dbb6fd5266776325d5a218972bd50736a2.jpg",
-          @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435195&di=69a986cc38212178c27dc157195f0700&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F241f95cad1c8a786a18336ce6e09c93d71cf5040.jpg",
-          @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435195&di=0342f8813a4135448d31297876d2540c&imgtype=0&src=http%3A%2F%2Fb.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Fcc11728b4710b9128942bd3ecafdfc039345226a.jpg",
+        @[@"http://dpic.tiankong.com/kl/6r/QJ64756485931.jpg",
+          @"http://dpic.tiankong.com/kl/6r/QJ64756485932.jpg",
+          @"http://dpic.tiankong.com/kl/6r/QJ64756485933.jpg",
+          @"http://dpic.tiankong.com/kl/6r/QJ64756485934.jpg",
           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435194&di=1b0564b35bd718e2e4593a5374740ce3&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F1b4c510fd9f9d72ad30cb6dcdd2a2834359bbb83.jpg",
           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435194&di=541a696a6b096a51c650a7473ac32ff3&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F6159252dd42a28349109a6cb52b5c9ea14cebf47.jpg",
           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435193&di=496f021c6db03f1cb9a6fa1af9fa50b9&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4d086e061d950a7be91b560503d162d9f3d3c9c1.jpg",
@@ -145,7 +145,19 @@
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photoArrs currentIndex:index];
         browser.showStyle       = GKPhotoBrowserShowStyleZoom;
         browser.hideStyle       = GKPhotoBrowserHideStyleZoomScale;
-        browser.failStyle       = GKPhotoBrowserFailStyleOnlyImage;
+        
+        if (indexPath.row == 2) {
+            if (index == 0) {
+                browser.failStyle = GKPhotoBrowserFailStyleOnlyText;
+            }else if (index == 1) {
+                browser.failStyle = GKPhotoBrowserFailStyleOnlyImage;
+            }else if (index == 2) {
+                browser.failStyle = GKPhotoBrowserFailStyleImageAndText;
+            }else if (index == 3) {
+                browser.failStyle = GKPhotoBrowserFailStyleCustom;
+            }
+        }
+//        browser.failStyle       = GKPhotoBrowserFailStyleOnlyImage;
         browser.failureText     = @"图片加载失败了，555";
         browser.failureImage    = [UIImage imageNamed:@"error"];
         browser.delegate        = self;

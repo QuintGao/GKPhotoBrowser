@@ -150,8 +150,10 @@
 #pragma mark - 懒加载
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
+        CGFloat itemWH = (KScreenW - 40) / 3 - 0.01;
+        
         UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
-        layout.itemSize = CGSizeMake((KScreenW - 40)/3, (KScreenW - 40)/3);
+        layout.itemSize = CGSizeMake(itemWH, itemWH);
         layout.minimumLineSpacing = 10.0f;
         layout.minimumInteritemSpacing = 10.0f;
         layout.sectionInset = UIEdgeInsetsMake(10, 10, 0, 10);

@@ -58,6 +58,8 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
 
 - (void)showFailure;
 
+- (void)hideFailure;
+
 - (void)hideLoadingView;
 
 - (void)removeAnimation;

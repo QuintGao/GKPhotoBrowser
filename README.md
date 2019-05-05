@@ -77,6 +77,7 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2019.05.05  细节优化，修复可能出现的黑圈闪动问题
 2019.04.26  增加支持查看原图功能
 2019.04.15  bug fixed 1、修复WillAppear可能出现的CALayer position contains NaN: [nan nan]问题
                       2、修复某些机型可能出现的zoom恢复原图后，不能滑动隐藏的问题

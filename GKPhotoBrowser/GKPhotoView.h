@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) GKPhoto *photo;
 
-@property (nonatomic, copy) void(^zoomEnded)(CGFloat scale);
+@property (nonatomic, copy) void(^zoomEnded)(GKPhotoView *photoView, CGFloat scale);
 @property (nonatomic, copy) void(^loadFailed)(GKPhotoView *photoView);
 @property (nonatomic, copy) void(^loadProgressBlock)(GKPhotoView *photoView, float progress, BOOL isOriginImage);
 
