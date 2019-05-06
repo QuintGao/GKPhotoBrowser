@@ -176,8 +176,9 @@
         
         if (originCacheImage && originImageData) {
             photo.originFinished = YES;
+            self.scrollView.scrollEnabled = YES;
+            [self.loadingView stopLoading];
             !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0, YES);
-            
             [self setupPhotoWithData:originImageData image:originCacheImage];
             [self adjustFrame];
             
@@ -190,6 +191,8 @@
         
         if (cacheImage && cacheData) {
             photo.finished = YES;
+            self.scrollView.scrollEnabled = YES;
+            [self.loadingView stopLoading];
             !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0, NO);
             [self setupPhotoWithData:cacheData image:cacheImage];
             [self adjustFrame];
