@@ -74,13 +74,14 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    
-    UIImageView *imgView = [cell viewWithTag:([cell hash] + indexPath.item)];
-    
     NSMutableArray *photos = [NSMutableArray new];
     [self.thumbImgs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         GKPhoto *photo = [GKPhoto new];
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:idx inSection:0];
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        UIImageView *imgView = [cell viewWithTag:([cell hash] + indexPath.item)];
+        
         photo.sourceImageView = imgView;
         photo.url = [NSURL URLWithString:obj];
         photo.originUrl = [NSURL URLWithString:self.originImgs[idx]];

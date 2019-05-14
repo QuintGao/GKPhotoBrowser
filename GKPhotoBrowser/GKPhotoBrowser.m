@@ -657,6 +657,7 @@ static Class imageManagerClass = nil;
             [self handlePanBegin];
             break;
         case UIGestureRecognizerStateChanged: {
+            if (self.view.frame.size.height == 0) return;
             double percent = 1 - fabs(point.y) / self.view.frame.size.height;
             double s = MAX(percent, 0.3);
             if (self.startFrame.size.width == 0 || self.startFrame.size.height == 0) return;
@@ -703,6 +704,7 @@ static Class imageManagerClass = nil;
             break;
         case UIGestureRecognizerStateChanged:{
             photoView.imageView.transform = CGAffineTransformMakeTranslation(0, point.y);
+            if (self.view.frame.size.height == 0) return;
             double percent = 1 - fabs(point.y) / self.view.frame.size.height * 0.5;
             
             self.view.backgroundColor = self.bgColor ? [self.bgColor colorWithAlphaComponent:percent] : [[UIColor blackColor] colorWithAlphaComponent:percent];
