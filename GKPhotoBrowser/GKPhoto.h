@@ -53,7 +53,14 @@
 /** 记录每个GKPhotoView的滑动位置 */
 @property (nonatomic, assign) CGPoint       offset;
 
+/**
+ 开始gif动画
+ */
 - (void)startAnimation;
+
+/**
+ 停止gif动画
+ */
 - (void)stopAnimation;
 
 @end
