@@ -112,14 +112,14 @@ static Class imageManagerClass = nil;
 
 - (instancetype)initWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)currentIndex {
     if (self = [super init]) {
-        
         self.photos       = photos;
         self.currentIndex = currentIndex;
         
         // 初始化
-        self.isStatusBarShow            = NO;
-        self.isHideSourceView           = YES;
-        self.isFullWidthForLandSpace    = YES;
+        self.isStatusBarShow         = NO;
+        self.isHideSourceView        = YES;
+        self.isFullWidthForLandSpace = YES;
+        self.maxZoomScale            = 2.0f;
         
         _visiblePhotoViews  = [NSMutableArray new];
         _reusablePhotoViews = [NSMutableSet new];
@@ -507,7 +507,7 @@ static Class imageManagerClass = nil;
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
         [self removePanGesture];
     }else {
-        if (isFirst) {
+        if (isFirst || self.isScreenRotateDisabled) { // 第一次进入或禁止处理屏幕旋转，直接添加手势
             [self.view addGestureRecognizer:self.panGesture];
         }else {
             if (self.currentOrientation == UIDeviceOrientationPortrait || self.isPortraitToUp) {
@@ -774,7 +774,6 @@ static Class imageManagerClass = nil;
 }
 
 - (void)showDismissAnimation {
-    
     GKPhotoView *photoView = [self photoViewForIndex:self.currentIndex];
     GKPhoto *photo = self.photos[self.currentIndex];
     
@@ -1076,6 +1075,7 @@ static Class imageManagerClass = nil;
             photoView.isLowGifMemory  = self.isLowGifMemory;
             photoView.failureText     = self.failureText;
             photoView.failureImage    = self.failureImage;
+            photoView.maxZoomScale    = self.maxZoomScale;
             
             __typeof(self) __weak weakSelf = self;
             photoView.zoomEnded = ^(GKPhotoView * _Nonnull curPhotoView, CGFloat scale) {
@@ -1166,7 +1166,6 @@ static Class imageManagerClass = nil;
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
     if (self.isRotation) return;
     
     [self updateReusableViews];

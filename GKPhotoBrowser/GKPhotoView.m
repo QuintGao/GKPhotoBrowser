@@ -397,7 +397,7 @@
 
         maxScale = frame.size.width / imageF.size.width > maxScale ? frame.size.width / imageF.size.width : maxScale;
         // 超过了设置的最大的才算数
-        maxScale = maxScale > kMaxZoomScale ? maxScale : kMaxZoomScale;
+        maxScale = maxScale > self.maxZoomScale ? maxScale : self.maxZoomScale;
         // 初始化
         self.scrollView.minimumZoomScale = 1.0;
         self.scrollView.maximumZoomScale = maxScale;

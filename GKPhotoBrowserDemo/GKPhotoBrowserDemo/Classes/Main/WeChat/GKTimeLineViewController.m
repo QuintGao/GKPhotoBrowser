@@ -116,23 +116,21 @@
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
         browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
-//        browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
-//        browser.isStatusBarShow     = YES;
-//        browser.isResumePhotoZoom   = YES;
-//        browser.isAdaptiveSafeArea = YES;
-//        [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
-//
-//            CGFloat pointY = 0;
-//            if (photoBrowser.isLandspace) {
-//                pointY = superFrame.size.height - 20;
-//            }else {
-//                pointY = superFrame.size.height - 10;
-//            }
-//
-//            weakSelf.pageControl.center = CGPointMake(superFrame.size.width * 0.5, pointY);
-//
-//            weakSelf.count ++;
-//        }];
+        browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
+        
+        [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
+
+            CGFloat pointY = 0;
+            if (photoBrowser.isLandspace) {
+                pointY = superFrame.size.height - 20;
+            }else {
+                pointY = superFrame.size.height - 10;
+            }
+
+            weakSelf.pageControl.center = CGPointMake(superFrame.size.width * 0.5, pointY);
+
+            weakSelf.count ++;
+        }];
         
         browser.delegate = weakSelf;
         

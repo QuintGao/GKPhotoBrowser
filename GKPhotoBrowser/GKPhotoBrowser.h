@@ -113,6 +113,11 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
  */
 @property (nonatomic, assign) BOOL isPopGestureEnabled;
 
+/**
+ 图片最大放大倍数
+ */
+@property (nonatomic, assign) CGFloat maxZoomScale;
+
 /** 浏览器背景（默认黑色） */
 @property (nonatomic, strong) UIColor   *bgColor;
 
