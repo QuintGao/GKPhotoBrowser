@@ -269,9 +269,11 @@
 //
 //    self.pageControl.numberOfPages = arr.count;
     
-    [self.browser removePhotoAtIndex:self.currentIndex];
+//    [self.browser removePhotoAtIndex:self.currentIndex];
+//
+//    self.pageControl.numberOfPages = self.browser.photos.count;
     
-    self.pageControl.numberOfPages = self.browser.photos.count;
+    [self.browser selectedPhotoWithIndex:5 animated:NO];
 }
 
 - (void)saveBtnClick:(id)sender {

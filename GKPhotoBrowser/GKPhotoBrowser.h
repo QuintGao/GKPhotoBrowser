@@ -154,6 +154,13 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 - (void)showFromVC:(UIViewController *)vc;
 
 /**
+ 选中指定位置的内容
+
+ @param index 位置索引
+ */
+- (void)selectedPhotoWithIndex:(NSInteger)index animated:(BOOL)animated;
+
+/**
  移除指定位置的内容
 
  @param index 位置索引

@@ -452,6 +452,13 @@ static Class imageManagerClass = nil;
     }
 }
 
+- (void)selectedPhotoWithIndex:(NSInteger)index animated:(BOOL)animated{
+    if (index < 0 || index >= self.photos.count) return;
+    
+    CGPoint offset = CGPointMake(self.photoScrollView.frame.size.width * index, 0);
+    [self.photoScrollView setContentOffset:offset animated:animated];
+}
+
 - (void)removePhotoAtIndex:(NSInteger)index {
     if (index < 0 || index >= self.photos.count) return;
     
