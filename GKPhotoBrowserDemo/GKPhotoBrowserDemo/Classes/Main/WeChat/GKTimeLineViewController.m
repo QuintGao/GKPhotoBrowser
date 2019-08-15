@@ -228,26 +228,24 @@
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser willLayoutSubViews:(NSInteger)index {
-    
-    
-//    UIView *contentView = browser.contentView;
-//
-//    [self.fromView removeFromSuperview];
-//
-//    if (browser.contentView.size.width > browser.contentView.size.height) { // 横屏
-//        [contentView addSubview:self.fromView];
-//        self.fromView.frame = CGRectMake(0, 0, contentView.bounds.size.width, contentView.bounds.size.height);
-//    }else {
-//        [browser.view addSubview:self.fromView];
-//        self.fromView.frame = CGRectMake(0, 0, contentView.bounds.size.width, contentView.bounds.size.height);
-//    }
-//
-//    self.actionSheet.width = contentView.frame.size.width;
-//    [self.actionSheet.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        obj.width = contentView.frame.size.width;
-//    }];
-//
-//    [GKCover layoutSubViews];
+    UIView *contentView = browser.contentView;
+
+    [self.fromView removeFromSuperview];
+
+    if (browser.contentView.size.width > browser.contentView.size.height) { // 横屏
+        [contentView addSubview:self.fromView];
+        self.fromView.frame = CGRectMake(0, 0, contentView.bounds.size.width, contentView.bounds.size.height);
+    }else {
+        [browser.view addSubview:self.fromView];
+        self.fromView.frame = CGRectMake(0, 0, contentView.bounds.size.width, contentView.bounds.size.height);
+    }
+
+    self.actionSheet.width = contentView.frame.size.width;
+    [self.actionSheet.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.width = contentView.frame.size.width;
+    }];
+
+    [GKCover layoutSubViews];
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandspace:(BOOL)isLandspace {
@@ -260,20 +258,18 @@
 
 - (void)delBtnClick:(id)sender {
     [GKCover hideCover];
-    
-//    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
-//
-//    [arr removeObjectAtIndex:self.browser.currentIndex];
-//
-//    [self.browser resetPhotoBrowserWithPhotos:arr];
-//
-//    self.pageControl.numberOfPages = arr.count;
-    
-//    [self.browser removePhotoAtIndex:self.currentIndex];
-//
-//    self.pageControl.numberOfPages = self.browser.photos.count;
-    
-    [self.browser selectedPhotoWithIndex:5 animated:NO];
+
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
+
+    [arr removeObjectAtIndex:self.browser.currentIndex];
+
+    [self.browser resetPhotoBrowserWithPhotos:arr];
+
+    self.pageControl.numberOfPages = arr.count;
+
+    [self.browser removePhotoAtIndex:self.currentIndex];
+
+    self.pageControl.numberOfPages = self.browser.photos.count;
 }
 
 - (void)saveBtnClick:(id)sender {

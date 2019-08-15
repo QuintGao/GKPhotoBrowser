@@ -53,6 +53,11 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // browser加载失败自定义弹窗
 - (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index;
 
+// browser UIScrollViewDelegate
+- (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidScroll:(UIScrollView *)scrollView;
+- (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
+- (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
+
 @end
 
 @interface GKPhotoBrowser : UIViewController
@@ -152,6 +157,11 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
  @param vc 控制器
  */
 - (void)showFromVC:(UIViewController *)vc;
+
+/**
+ 隐藏图片浏览器
+ */
+- (void)dismiss;
 
 /**
  选中指定位置的内容

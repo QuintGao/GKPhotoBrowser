@@ -8,6 +8,7 @@
 
 #import "GKPhotoBrowser.h"
 #import "GKWebImageManager.h"
+#import "GKPanGestureRecognizer.h"
 
 static Class imageManagerClass = nil;
 
@@ -50,7 +51,7 @@ static Class imageManagerClass = nil;
 
 @property (nonatomic, assign) BOOL isPortraitToUp;
 
-@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, strong) GKPanGestureRecognizer *panGesture;
 
 @property (nonatomic, assign) CGPoint   firstMovePoint;
 @property (nonatomic, assign) CGPoint   startLocation;
@@ -88,9 +89,10 @@ static Class imageManagerClass = nil;
     return _photoScrollView;
 }
 
-- (UIPanGestureRecognizer *)panGesture {
+- (GKPanGestureRecognizer *)panGesture {
     if (!_panGesture) {
-        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        _panGesture = [[GKPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        _panGesture.direction = GKPanGestureRecognizerDirectionVertical;
     }
     return _panGesture;
 }
@@ -452,6 +454,28 @@ static Class imageManagerClass = nil;
     }
 }
 
+- (void)dismiss {
+    GKPhotoView *photoView = [self currentPhotoView];
+    photoView.isLayoutSubViews = YES;
+    
+    // 状态栏恢复到竖屏
+    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    
+    if (self.showStyle == GKPhotoBrowserShowStylePush) {
+        [self delDeviceOrientationObserver];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+    }else {
+        // 显示状态栏
+        self.isStatusBarShow = YES;
+        
+        // 防止返回时跳动
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self recoverAnimation];
+        });
+    }
+}
+
 - (void)selectedPhotoWithIndex:(NSInteger)index animated:(BOOL)animated{
     if (index < 0 || index >= self.photos.count) return;
     
@@ -553,31 +577,13 @@ static Class imageManagerClass = nil;
 
 #pragma mark - Gesture Handle
 - (void)handleSingleTap:(UITapGestureRecognizer *)tap {
-    GKPhotoView *photoView = [self currentPhotoView];
-    photoView.isLayoutSubViews = YES;
+    if (self.isSingleTapDisabled) return;
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:singleTapWithIndex:)]) {
         [self.delegate photoBrowser:self singleTapWithIndex:self.currentIndex];
     }
     
-    if (self.isSingleTapDisabled) return;
-    
-    // 状态栏恢复到竖屏
-    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
-    
-    if (self.showStyle == GKPhotoBrowserShowStylePush) {
-        [self delDeviceOrientationObserver];
-        
-        [self.navigationController popViewControllerAnimated:YES];
-    }else {
-        // 显示状态栏
-        self.isStatusBarShow = YES;
-        
-        // 防止返回时跳动
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self recoverAnimation];
-        });
-    }
+    [self dismiss];
 }
 
 - (void)handleDoubleTap:(UITapGestureRecognizer *)tap {
@@ -750,7 +756,6 @@ static Class imageManagerClass = nil;
 }
 
 - (void)recoverAnimation {
-    
     UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     
@@ -1183,6 +1188,10 @@ static Class imageManagerClass = nil;
     [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj stopGifAnimation];
     }];
+    
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidScroll:)]) {
+        [self.delegate photoBrowser:self scrollViewDidScroll:scrollView];
+    }
 }
 
 // scrollView结束滚动时调用
@@ -1216,6 +1225,10 @@ static Class imageManagerClass = nil;
     }else {
         [self addPanGesture:NO];
     }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
 }
 
 @end
