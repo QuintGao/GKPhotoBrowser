@@ -1225,10 +1225,16 @@ static Class imageManagerClass = nil;
     }else {
         [self addPanGesture:NO];
     }
+    
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndDecelerating:)]) {
+        [self.delegate photoBrowser:self scrollViewDidEndDecelerating:scrollView];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndDragging:willDecelerate:)]) {
+        [self.delegate photoBrowser:self scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
 }
 
 @end
