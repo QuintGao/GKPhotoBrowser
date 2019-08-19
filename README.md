@@ -4,8 +4,8 @@
 
 
 [![Build Status](http://img.shields.io/travis/QuintGao/GKPhotoBrowser/master.svg?style=flat)](https://travis-ci.org/QuintGao/GKPhotoBrowser)
-[![Pod Version](http://img.shields.io/cocoapods/v/GKPhotoBrowser.svg?style=flat)](http://cocoadocs.org/pods/GKPhotoBrowser/)
-[![Pod Platform](http://img.shields.io/cocoapods/p/GKPhotoBrowser.svg?style=flat)](http://cocoadocs.org/docsets/GKPhotoBrowser/)
+[![Pod Version](http://img.shields.io/cocoapods/v/GKPhotoBrowser.svg?style=flat)](https://cocoapods.org/pods/GKPhotoBrowser)
+[![Pod Platform](http://img.shields.io/cocoapods/p/GKPhotoBrowser.svg?style=flat)](https://cocoadocs.org/docsets/GKPhotoBrowser/)
 [![Pod License](http://img.shields.io/cocoapods/l/GKPhotoBrowser.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![languages](https://img.shields.io/badge/language-objective--c-blue.svg)](#) 
 [![support](https://img.shields.io/badge/support-ios%208%2B-orange.svg)](#) 
