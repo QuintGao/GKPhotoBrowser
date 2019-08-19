@@ -3,7 +3,7 @@
 </p>
 
 
-[![Build Status](http://img.shields.io/travis/GKPhotoBrowser/GKPhotoBrowser/master.svg?style=flat)](https://travis-ci.org/GKPhotoBrowser/GKPhotoBrowser)
+[![Build Status](http://img.shields.io/travis/GKPhotoBrowser/GKPhotoBrowser/master.svg?style=flat)](https://travis-ci.org/QuintGao/GKPhotoBrowser)
 [![Pod Version](http://img.shields.io/cocoapods/v/GKPhotoBrowser.svg?style=flat)](http://cocoadocs.org/docsets/GKPhotoBrowser/)
 [![Pod Platform](http://img.shields.io/cocoapods/p/GKPhotoBrowser.svg?style=flat)](http://cocoadocs.org/docsets/GKPhotoBrowser/)
 [![Pod License](http://img.shields.io/cocoapods/l/GKPhotoBrowser.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0.html)
