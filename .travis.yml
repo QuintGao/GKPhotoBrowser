@@ -1,7 +1,5 @@
 language: objective-c
 osx_image: xcode10
-xcode_project: Framework/GKPhotoBrowser.xcodeproj
-xcode_scheme: GKPhotoBrowser
 
 before_install:
 - env
