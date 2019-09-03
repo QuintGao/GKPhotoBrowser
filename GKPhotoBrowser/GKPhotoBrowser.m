@@ -194,7 +194,7 @@ static Class imageManagerClass = nil;
 - (void)setupUI {
     [self.navigationController setNavigationBarHidden:YES];
     
-    self.view.backgroundColor   = self.bgColor ? : [UIColor blackColor];
+    self.view.backgroundColor = self.bgColor ? : [UIColor blackColor];
     
     CGFloat width  = self.view.bounds.size.width;
     CGFloat height = self.view.bounds.size.height;
@@ -373,29 +373,26 @@ static Class imageManagerClass = nil;
     
     self.photoScrollView.frame  = frame;
     self.photoScrollView.center = CGPointMake(pointX, photoScrollH * 0.5);
-    
     self.photoScrollView.contentOffset = CGPointMake(self.currentIndex * photoScrollW, 0);
-    
     self.photoScrollView.contentSize = CGSizeMake(photoScrollW * self.photos.count, 0);
     
     // 调整所有显示的photoView的frame
     CGFloat w = photoScrollW - kPhotoViewPadding * 2;
     CGFloat h = photoScrollH;
-    CGFloat x = 0;
+    __block CGFloat x = 0;
     CGFloat y = 0;
     
-    for (GKPhotoView *photoView in _visiblePhotoViews) {
+    [_visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
         x = kPhotoViewPadding + photoView.tag * (kPhotoViewPadding * 2 + w);
         
         photoView.frame = CGRectMake(x, y, w, h);
         [photoView resetFrame];
-    }
+    }];
     
     if (self.coverViews) {
         !self.layoutBlock ? : self.layoutBlock(self, self.contentView.bounds);
     }else {
         _countLabel.bounds = CGRectMake(0, 0, 80, 30);
-
         _countLabel.center = CGPointMake(GKScreenW * 0.5, (KIsiPhoneX && !self.isLandspace) ? 50 : 30);
     }
     
@@ -436,14 +433,11 @@ static Class imageManagerClass = nil;
 }
 
 - (void)setupCoverViews:(NSArray *)coverViews layoutBlock:(layoutBlock)layoutBlock {
-    
     self.coverViews  = coverViews;
-    
     self.layoutBlock = layoutBlock;
 }
 
 - (void)showFromVC:(UIViewController *)vc {
-    
     self.fromVC = vc;
     
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
@@ -771,7 +765,6 @@ static Class imageManagerClass = nil;
             }
             // 设置frame
             self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
-            
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
             [self.view setNeedsLayout];
@@ -824,6 +817,9 @@ static Class imageManagerClass = nil;
     if (photo.sourceImageView) {
         photoView.imageView.image = photo.sourceImageView.image;
     }
+    
+    // Fix bug：解决长图点击隐藏时可能出现的闪动bug
+    sourceRect.origin.y += photoView.scrollView.contentOffset.y;
     
     [UIView animateWithDuration:kAnimationDuration animations:^{
         photoView.imageView.frame = sourceRect;
@@ -979,13 +975,11 @@ static Class imageManagerClass = nil;
             }
             // 设置frame
             self.contentView.bounds = CGRectMake(0, 0, width, MIN(screenBounds.size.width, screenBounds.size.height));
-            
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             [self layoutSubviews];
-            
         } completion:^(BOOL finished) {
             // 记录设备方向
             self.originalOrientation = currentOrientation;
@@ -1056,7 +1050,7 @@ static Class imageManagerClass = nil;
 // 更新可复用的图片视图
 - (void)updateReusableViews {
     NSMutableArray *viewsForRemove = [NSMutableArray new];
-    for (GKPhotoView *photoView in _visiblePhotoViews) {
+    [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
         if ((photoView.frame.origin.x + photoView.frame.size.width < self.photoScrollView.contentOffset.x - self.photoScrollView.frame.size.width) || (photoView.frame.origin.x > self.photoScrollView.contentOffset.x + 2 * self.photoScrollView.frame.size.width)) {
             [photoView removeFromSuperview];
             GKPhoto *photo = nil;
@@ -1064,16 +1058,15 @@ static Class imageManagerClass = nil;
             [photoView setupPhoto:photo];
             
             [viewsForRemove addObject:photoView];
-            [_reusablePhotoViews addObject:photoView];
+            [self.reusablePhotoViews addObject:photoView];
         }
-    }
-    [_visiblePhotoViews removeObjectsInArray:viewsForRemove];
+    }];
+    [self.visiblePhotoViews removeObjectsInArray:viewsForRemove];
 }
 
 // 设置图片视图
 - (void)setupPhotoViews {
     NSInteger index = self.photoScrollView.contentOffset.x / self.photoScrollView.frame.size.width + 0.5;
-    
     for (NSInteger i = index - 1; i <= index + 1; i++) {
         if (i < 0 || i >= self.photos.count) continue;
         

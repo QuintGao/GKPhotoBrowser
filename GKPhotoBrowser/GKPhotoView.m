@@ -214,16 +214,15 @@
             if (progress <= 0) progress = 0;
             
             // 图片加载中，回调进度
-            if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
-                !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, YES);
-            }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
-                !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, NO);
-            }else if (strongSelf.loadStyle == GKLoadingStyleDeterminate || strongSelf.originLoadStyle == GKLoadingStyleDeterminate) {
-                // 主线程更新进度
-                dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
+                    !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, YES);
+                }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
+                    !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, NO);
+                }else if (strongSelf.loadStyle == GKLoadingStyleDeterminate || strongSelf.originLoadStyle == GKLoadingStyleDeterminate) {
                     strongSelf.loadingView.progress = progress;
-                });
-            }
+                }
+            });
         };
 
         gkWebImageCompletionBlock completionBlock = ^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
