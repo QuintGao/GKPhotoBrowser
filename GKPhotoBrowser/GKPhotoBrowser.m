@@ -811,7 +811,7 @@ static Class imageManagerClass = nil;
     }
     
     if (photoView.scrollView.zoomScale > 1.0f) {
-        [photoView.scrollView setZoomScale:1.0f animated:YES];
+        [photoView.scrollView setZoomScale:1.0f animated:NO];
     }
     
     if (photo.sourceImageView) {
@@ -819,6 +819,7 @@ static Class imageManagerClass = nil;
     }
     
     // Fix bug：解决长图点击隐藏时可能出现的闪动bug
+    sourceRect.origin.x -= photoView.scrollView.contentOffset.x;
     sourceRect.origin.y += photoView.scrollView.contentOffset.y;
     
     [UIView animateWithDuration:kAnimationDuration animations:^{
