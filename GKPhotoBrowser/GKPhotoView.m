@@ -214,16 +214,15 @@
             if (progress <= 0) progress = 0;
             
             // 图片加载中，回调进度
-            if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
-                !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, YES);
-            }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
-                !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, NO);
-            }else if (strongSelf.loadStyle == GKLoadingStyleDeterminate || strongSelf.originLoadStyle == GKLoadingStyleDeterminate) {
-                // 主线程更新进度
-                dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
+                    !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, YES);
+                }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
+                    !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, NO);
+                }else if (strongSelf.loadStyle == GKLoadingStyleDeterminate || strongSelf.originLoadStyle == GKLoadingStyleDeterminate) {
                     strongSelf.loadingView.progress = progress;
-                });
-            }
+                }
+            });
         };
 
         gkWebImageCompletionBlock completionBlock = ^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
@@ -390,18 +389,17 @@
         }
         
         // 根据图片大小找到最大缩放等级，保证最大缩放时候，不会有黑边
-        CGFloat maxScale = frame.size.height / imageF.size.height;
-
-        maxScale = frame.size.width / imageF.size.width > maxScale ? frame.size.width / imageF.size.width : maxScale;
-        // 超过了设置的最大的才算数
-        maxScale = maxScale > self.maxZoomScale ? maxScale : self.maxZoomScale;
+        // 找到最大的缩放比例
+        CGFloat scaleH = frame.size.height / imageF.size.height;
+        CGFloat scaleW = frame.size.width / imageF.size.width;
+        CGFloat maxScale = MAX(MAX(scaleH, scaleW), self.maxZoomScale);
         // 初始化
         self.scrollView.minimumZoomScale = 1.0;
         self.scrollView.maximumZoomScale = maxScale;
     }else if (!CGRectEqualToRect(self.photo.sourceFrame, CGRectZero)) {
         if (self.photo.sourceFrame.size.width == 0 || self.photo.sourceFrame.size.height == 0) return;
         CGFloat width = frame.size.width;
-        CGFloat height = width * self.photo.sourceFrame.size.height / self.photo.sourceFrame.size.height;
+        CGFloat height = width * self.photo.sourceFrame.size.height / self.photo.sourceFrame.size.width;
         _imageView.bounds = CGRectMake(0, 0, width, height);
         _imageView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
         self.scrollView.contentSize = self.imageView.frame.size;

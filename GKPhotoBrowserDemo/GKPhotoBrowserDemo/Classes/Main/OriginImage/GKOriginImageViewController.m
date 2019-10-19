@@ -41,6 +41,7 @@
     [thumbnailImageUrls addObject:@"http://ww2.sinaimg.cn/thumbnail/9c2b5f31jw1f6bqtinmpyj20dw0ae76e.jpg"];
     [thumbnailImageUrls addObject:@"http://ww1.sinaimg.cn/thumbnail/536e7093jw1f6bqdj3lpjj20va134ana.jpg"];
     [thumbnailImageUrls addObject:@"http://ww1.sinaimg.cn/thumbnail/75b1a75fjw1f6bqn35ij6j20ck0g8jtf.jpg"];
+    [thumbnailImageUrls addObject:@"https://img.aiyinsitanfm.com/data/img/album/content/2018/10/16/728170c229bc4465a0c3084e2abaa86e.jpg?imageView2/q/10"];
     self.thumbImgs = thumbnailImageUrls;
     
     NSMutableArray *originalImageUrls = [NSMutableArray array];
@@ -51,6 +52,7 @@
     [originalImageUrls addObject:@"http://ww2.sinaimg.cn/large/9c2b5f31jw1f6bqtinmpyj20dw0ae76e.jpg"];
     [originalImageUrls addObject:@"http://ww1.sinaimg.cn/large/536e7093jw1f6bqdj3lpjj20va134ana.jpg"];
     [originalImageUrls addObject:@"http://ww1.sinaimg.cn/large/75b1a75fjw1f6bqn35ij6j20ck0g8jtf.jpg"];
+    [originalImageUrls addObject:@"https://img.aiyinsitanfm.com/data/img/album/content/2018/10/16/728170c229bc4465a0c3084e2abaa86e.jpg"];
     self.originImgs = originalImageUrls;
     
     [self.collectionView reloadData];
