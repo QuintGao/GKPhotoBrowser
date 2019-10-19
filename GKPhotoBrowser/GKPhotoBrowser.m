@@ -819,6 +819,9 @@ static Class imageManagerClass = nil;
     }
     
     // Fix bug：解决长图点击隐藏时可能出现的闪动bug
+    UIViewContentMode mode = photo.sourceImageView ? photo.sourceImageView.contentMode : UIViewContentModeScaleAspectFill;
+    
+    photoView.imageView.contentMode = mode;
     sourceRect.origin.x -= photoView.scrollView.contentOffset.x;
     sourceRect.origin.y += photoView.scrollView.contentOffset.y;
     
