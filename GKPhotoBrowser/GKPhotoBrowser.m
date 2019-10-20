@@ -453,7 +453,9 @@ static Class imageManagerClass = nil;
     photoView.isLayoutSubViews = YES;
     
     // 状态栏恢复到竖屏
-    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    if (@available(iOS 13.0, *)) {} else {
+        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    }
     
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
         [self delDeviceOrientationObserver];
@@ -561,7 +563,9 @@ static Class imageManagerClass = nil;
         photo.sourceImageView.alpha = 1.0;
     }
     
-    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    if (@available(iOS 13.0, *)) {} else {
+        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    }
     
     // 移除屏幕旋转监听
     [self delDeviceOrientationObserver];
@@ -966,7 +970,9 @@ static Class imageManagerClass = nil;
         
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
-            [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+            if (@available(iOS 13.0, *)) {} else {
+                [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+            }
             
             float rotation = currentOrientation == UIDeviceOrientationLandscapeRight ? 1.5 : 0.5;
             
@@ -1006,7 +1012,9 @@ static Class imageManagerClass = nil;
         
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
-            [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+            if (@available(iOS 13.0, *)) {} else {
+                [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+            }
             
             // 旋转view
             self.contentView.transform = currentOrientation == UIDeviceOrientationPortrait ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);

@@ -127,15 +127,13 @@ static CGFloat   photoH;
         if (self.images) {
             GKTimeLineImage *image = self.images.firstObject;
             
-            photoW = (KScreenW/2);
-            photoH = (KScreenW/2)*1.1;
-//            if (image.width > maxWidth) {
-//                photoW = maxWidth;
-//                photoH = maxWidth / image.scale;
-//            }else {
-//                photoW = image.width;
-//                photoH = image.height;
-//            }
+            if (image.width > maxWidth) {
+                photoW = maxWidth;
+                photoH = maxWidth / image.scale;
+            }else {
+                photoW = image.width;
+                photoH = image.height;
+            }
         }else {
             photoW = subview.image.size.width;
             photoH = subview.image.size.height;
@@ -222,15 +220,14 @@ static CGFloat   photoH;
     
     if (count == 1) {
         GKTimeLineImage *image = images.firstObject;
-        photosW = (KScreenW/2);
-        photosH = (KScreenW/2)*1.1;
-//        if (image.width > width) {
-//            photosW = width;
-//            photosH = width / image.scale;
-//        }else {
-//            photosW = image.width;
-//            photosH = image.height;
-//        }
+        
+        if (image.width > width) {
+            photosW = width;
+            photosH = width / image.scale;
+        }else {
+            photosW = image.width;
+            photosH = image.height;
+        }
     }else {
         NSInteger cols = count == 4 ? 2 : photosMaxCol;
         NSInteger rows = (count + cols - 1) / cols;
