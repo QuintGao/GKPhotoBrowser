@@ -76,7 +76,6 @@ static Class imageManagerClass = nil;
         _photoScrollView.showsVerticalScrollIndicator   = NO;
         _photoScrollView.showsHorizontalScrollIndicator = NO;
         _photoScrollView.backgroundColor                = [UIColor clearColor];
-        _photoScrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, GKScreenW);
         if (self.showStyle == GKPhotoBrowserShowStylePush) {
             if (self.isPopGestureEnabled) {
                 _photoScrollView.gk_gestureHandleEnabled = YES;

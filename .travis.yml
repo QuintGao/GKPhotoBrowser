@@ -1,14 +1,16 @@
 language: objective-c
-osx_image: xcode10
-script: true
+xcode_project: GKPhotoBrowserDemo.xcodeproj
 
+env:
+  global:
+    - FRAMEWORK_NAME=GKPhotoBrowser
 before_install:
-- env
-- locale
-- gem install xcpretty --no-rdoc --no-ri --no-document --quiet
-- xcpretty --version
-- xcodebuild -version
-- xcodebuild -showsdks
+  - gem install xcpretty
+  
+script:
+  - xcodebuild -project $xcode_project -scheme $FRAMEWORK_NAME build | xcpretty
+  - pod lib lint
+  - carthage build --no-skip-current
 
-after_success:
-- bash <(curl -s https://codecov.io/bash)
+notifications:
+  email: false
