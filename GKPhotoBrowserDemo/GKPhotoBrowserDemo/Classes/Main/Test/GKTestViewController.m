@@ -30,6 +30,7 @@
     [super viewDidLoad];
     
     self.gk_navigationItem.title = @"test02";
+    self.view.backgroundColor = [UIColor whiteColor];
     
     
     GKBottomView *btmView = [GKBottomView new];

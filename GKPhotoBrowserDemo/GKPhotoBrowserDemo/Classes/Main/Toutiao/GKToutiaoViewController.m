@@ -244,9 +244,7 @@
 - (void)closeBtnClick:(id)sender {
     self.selectCell.photosView.alpha = 1.0;
     
-    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
-    
-    [self.browser dismissViewControllerAnimated:YES completion:nil];
+    [self.browser dismiss];
 }
 
 - (void)moreBtnClick:(id)sender {
