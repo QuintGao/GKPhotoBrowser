@@ -76,6 +76,7 @@ static Class imageManagerClass = nil;
         _photoScrollView.showsVerticalScrollIndicator   = NO;
         _photoScrollView.showsHorizontalScrollIndicator = NO;
         _photoScrollView.backgroundColor                = [UIColor clearColor];
+        _photoScrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, GKScreenW);
         if (self.showStyle == GKPhotoBrowserShowStylePush) {
             if (self.isPopGestureEnabled) {
                 _photoScrollView.gk_gestureHandleEnabled = YES;
@@ -357,7 +358,7 @@ static Class imageManagerClass = nil;
 }
 
 - (void)updateLabel {
-    _countLabel.text = [NSString stringWithFormat:@"%zd/%zd", self.currentIndex + 1, self.photos.count];
+    _countLabel.text = [NSString stringWithFormat:@"%zd/%zd", (long)(self.currentIndex + 1), (long)self.photos.count];
 }
 
 - (void)layoutSubviews {
