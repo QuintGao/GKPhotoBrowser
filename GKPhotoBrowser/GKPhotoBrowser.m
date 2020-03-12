@@ -59,6 +59,19 @@ static Class imageManagerClass = nil;
 
 @property (nonatomic, strong) id<GKWebImageProtocol> imageProtocol;
 
+/** 20200312 是否已经开始开始监听屏幕旋转,用于修复issue 67 和 issue 71
+ 添加本参数的原因说明：
+ (1).iOS 13.x要求
+ endGeneratingDeviceOrientationNotifications 和
+ beginGeneratingDeviceOrientationNotifications 需要成对调用，如果已经调用过beginGeneratingDeviceOrientationNotifications，再次调用的话，会导致crash。
+ 报错：NSInternalInconsistencyException原因：threading violation: expected the main thread
+ (2).解决GKPhotoBrowser可能在endGeneratingDeviceOrientationNotifications时影响了App本身的屏幕旋转监听的问题。
+ **/
+@property(nonatomic, assign) BOOL isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared;
+
+
+/// 20200312 用于防止多次addObserver，添加监听UIDeviceOrientationDidChangeNotification通知的flag
+@property(nonatomic, assign) BOOL isOrientationNotiObserverAdded;
 @end
 
 @implementation GKPhotoBrowser
@@ -122,6 +135,8 @@ static Class imageManagerClass = nil;
         self.isHideSourceView        = YES;
         self.isFullWidthForLandSpace = YES;
         self.maxZoomScale            = 2.0f;
+        // 20200312
+        self.isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared = [UIDevice currentDevice].isGeneratingDeviceOrientationNotifications;
         
         _visiblePhotoViews  = [NSMutableArray new];
         _reusablePhotoViews = [NSMutableSet new];
@@ -357,7 +372,7 @@ static Class imageManagerClass = nil;
 }
 
 - (void)updateLabel {
-    _countLabel.text = [NSString stringWithFormat:@"%zd/%zd", self.currentIndex + 1, self.photos.count];
+    _countLabel.text = [NSString stringWithFormat:@"%zd/%zd", (long)(self.currentIndex + 1), (long)self.photos.count];
 }
 
 - (void)layoutSubviews {
@@ -905,14 +920,24 @@ static Class imageManagerClass = nil;
 - (void)addDeviceOrientationObserver {
     // 默认设备方向：竖屏
     self.originalOrientation = UIDeviceOrientationPortrait;
+    // 20200312 尚未添加observer的情况下才添加，防止多次重复添加
+    if(!_isOrientationNotiObserverAdded)
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+        _isOrientationNotiObserverAdded = YES;
+    }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 }
 
 - (void)delDeviceOrientationObserver {
+    // 20200312 如果在唤起GKPhotoBrowser前，app已经开启屏幕旋转通知GeneratingDeviceOrientationNotifications，那么无需停止，否则会影响全局的其他监听屏幕旋转的功能。
+    if(self.isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared)
+        return;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    if([UIDevice currentDevice].isGeneratingDeviceOrientationNotifications)
+        [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 }
 
 - (void)deviceOrientationDidChange {

@@ -9,8 +9,9 @@
 #import "GKTimeLineViewController.h"
 #import "GKTimeLineViewCell.h"
 #import "GKPhotoBrowser.h"
+#import <CoreServices/UTCoreTypes.h>
 
-@interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
+@interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate, UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -52,6 +53,7 @@
 
 - (void)setupUI {
     self.gk_navigationItem.title = @"朋友圈";
+    self.gk_navRightBarButtonItem = [UIBarButtonItem itemWithTitle:@"发布" target:self action:@selector(tabkePhoto)];
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.top        = self.gk_navigationBar.bottom;
@@ -130,7 +132,7 @@
             if (photoBrowser.isLandspace) {
                 pointY = superFrame.size.height - 20;
             }else {
-                pointY = superFrame.size.height - 10;
+                pointY = superFrame.size.height - 10 - (KIsiPhoneX ? kSafeBottomSpace : 0);
             }
 
             weakSelf.pageControl.center = CGPointMake(superFrame.size.width * 0.5, pointY);
@@ -284,6 +286,26 @@
     GKPhoto *photo = self.browser.photos[self.browser.currentIndex];
     
     UIImageWriteToSavedPhotosAlbum(photo.image, self, @selector(image:didFinishSavingWithError:contextInfo:), (__bridge void *)self);
+}
+
+- (void)tabkePhoto {
+    UIImagePickerControllerSourceType sourceType   = UIImagePickerControllerSourceTypeCamera;
+    UIImagePickerController           *imagePicker = [UIImagePickerController new];
+    imagePicker.delegate = self;
+    imagePicker.sourceType             = sourceType;
+    imagePicker.modalPresentationStyle = UIModalPresentationFullScreen;
+    imagePicker.videoMaximumDuration   = 60;
+    imagePicker.mediaTypes             = @[(NSString *)kUTTypeVideo, (NSString *)kUTTypeImage];
+    [imagePicker setCameraDevice:UIImagePickerControllerCameraDeviceRear];
+    [self presentViewController:imagePicker animated:YES completion:nil];
+}
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)cancelBtnClick:(id)sender {
