@@ -10,7 +10,7 @@
 #import "GKTest02ViewCell.h"
 
 #import "GKPhotoBrowser.h"
-#import <SVProgressHUD/SVProgressHUD.h>
+//#import <SVProgressHUD/SVProgressHUD.h>
 
 @interface GKTest02ViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -178,8 +178,8 @@
 
 #pragma mark - GKPhotoBrowserDelegate
 - (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index {
-    [SVProgressHUD setMaximumDismissTimeInterval:2.0f];
-    [SVProgressHUD showErrorWithStatus:@"加载失败"];
+//    [SVProgressHUD setMaximumDismissTimeInterval:2.0f];
+//    [SVProgressHUD showErrorWithStatus:@"加载失败"];
 }
 
 @end

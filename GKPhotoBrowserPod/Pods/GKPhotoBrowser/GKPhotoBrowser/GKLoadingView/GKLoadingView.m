@@ -22,6 +22,7 @@
 @property (nonatomic, copy) void(^completion)(GKLoadingView *loadingView, BOOL finished);
 
 @property (nonatomic, strong) UILabel       *failureLabel;
+@property (nonatomic, strong) UIImageView   *failureImgView;
 
 @end
 
@@ -34,18 +35,16 @@
 - (instancetype)initWithFrame:(CGRect)frame loadingStyle:(GKLoadingStyle)loadingStyle {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
-//        self.hidden          = YES;
         
         self.loadingStyle   = loadingStyle;
-        
-        self.centerButton   = [UIButton new];
-        [self addSubview:self.centerButton];
         
         // 设置默认值
         self.lineWidth      = 4;
         self.radius         = 24;
         self.bgColor        = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         self.strokeColor    = [UIColor whiteColor];
+        
+        [self addSubview:self.centerButton];
     }
     return self;
 }
@@ -62,7 +61,20 @@
     self.centerButton.layer.cornerRadius  = btnWH * 0.5;
     self.centerButton.layer.masksToBounds = YES;
     
-    self.failureLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    if (self.failStyle == GKPhotoBrowserFailStyleOnlyText) {
+        self.failureLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }else if (self.failStyle == GKPhotoBrowserFailStyleOnlyImage) {
+        self.failureImgView.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }else if (self.failStyle == GKPhotoBrowserFailStyleImageAndText) {
+        CGRect imgF     = self.failureImgView.frame;
+        CGRect textF    = self.failureLabel.frame;
+        
+        imgF.origin.y = (self.bounds.size.height - imgF.size.height - 10 - textF.size.height) / 2;
+        self.failureImgView.frame = imgF;
+        
+        textF.origin.y = imgF.origin.y + imgF.size.height + 10;
+        self.failureLabel.frame = textF;
+    }
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -101,6 +113,14 @@
 - (UIButton *)centerButton {
     if (!_centerButton) {
         _centerButton = [UIButton new];
+        // centerButton必须保持在loadingView内部
+        CGFloat btnWH = self.radius * 2 - self.lineWidth;
+        
+        _centerButton.bounds = CGRectMake(0, 0, btnWH, btnWH);
+        _centerButton.center = CGPointMake(CGRectGetWidth(self.bounds) * 0.5, CGRectGetHeight(self.bounds) * 0.5);
+        
+        _centerButton.layer.cornerRadius  = btnWH * 0.5;
+        _centerButton.layer.masksToBounds = YES;
     }
     return _centerButton;
 }
@@ -168,13 +188,24 @@
         _failureLabel           = [UILabel new];
         _failureLabel.font      = [UIFont systemFontOfSize:16.0f];
         _failureLabel.textColor = [UIColor whiteColor];
-        _failureLabel.text      = @"图片加载失败，请检查网络后重试";
+        _failureLabel.text      = self.failText ? self.failText : @"图片加载失败";
         _failureLabel.textAlignment = NSTextAlignmentCenter;
         [_failureLabel sizeToFit];
         
         _failureLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
     }
     return _failureLabel;
+}
+
+- (UIImageView *)failureImgView {
+    if (!_failureImgView) {
+        _failureImgView = [UIImageView new];
+        _failureImgView.image = self.failImage ? self.failImage : GKPhotoBrowserImage(@"loading_error");
+        [_failureImgView sizeToFit];
+        
+        _failureImgView.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }
+    return _failureImgView;
 }
 
 - (void)setupIndeterminateAnim:(CAShapeLayer *)layer {
@@ -287,6 +318,9 @@
     [self.failureLabel removeFromSuperview];
     self.failureLabel = nil;
     
+    [self.failureImgView removeFromSuperview];
+    self.failureImgView = nil;
+    
     [self layoutAnimatedLayer];
     
     if (self.loadingStyle == GKLoadingStyleIndeterminate) {
@@ -335,7 +369,6 @@
 
 - (void)stopLoading {
     [self hideLoadingView];
-//    self.hidden = YES;
 }
 
 - (void)showFailure {
@@ -347,7 +380,36 @@
     
     [self.layer removeAllAnimations];
     
-    [self addSubview:self.failureLabel];
+    if (self.failStyle == GKPhotoBrowserFailStyleOnlyText) {
+        [self addSubview:self.failureLabel];
+    }else if (self.failStyle == GKPhotoBrowserFailStyleOnlyImage) {
+        [self addSubview:self.failureImgView];
+    }else if (self.failStyle == GKPhotoBrowserFailStyleImageAndText) {
+        [self addSubview:self.failureLabel];
+        [self addSubview:self.failureImgView];
+    
+        CGRect imgF     = self.failureImgView.frame;
+        CGRect textF    = self.failureLabel.frame;
+        
+        imgF.origin.y = (self.bounds.size.height - imgF.size.height - 10 - textF.size.height) / 2;
+        self.failureImgView.frame = imgF;
+        
+        textF.origin.y = imgF.origin.y + imgF.size.height + 10;
+        self.failureLabel.frame = textF;
+    }
+}
+
+- (void)hideFailure {
+    [self.animatedLayer removeFromSuperlayer];
+    self.animatedLayer = nil;
+    
+    [self.backgroundLayer removeFromSuperlayer];
+    self.backgroundLayer = nil;
+    
+    [self.layer removeAllAnimations];
+    
+    [self.failureLabel removeFromSuperview];
+    [self.failureImgView removeFromSuperview];
 }
 
 - (void)hideLoadingView {

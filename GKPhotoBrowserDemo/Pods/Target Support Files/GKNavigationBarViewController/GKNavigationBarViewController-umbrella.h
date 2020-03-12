@@ -12,11 +12,11 @@
 
 #import "GKCategory.h"
 #import "UIBarButtonItem+GKCategory.h"
+#import "UIImage+GKCategory.h"
 #import "UINavigationController+GKCategory.h"
 #import "UINavigationItem+GKCategory.h"
 #import "UIScrollView+GKCategory.h"
 #import "UIViewController+GKCategory.h"
-#import "UIViewController+GKRotation.h"
 #import "GKCommon.h"
 #import "GKNavigationBar.h"
 #import "GKNavigationBarConfigure.h"

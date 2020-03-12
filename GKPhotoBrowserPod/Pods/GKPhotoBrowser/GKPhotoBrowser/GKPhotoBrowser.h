@@ -22,8 +22,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // 滚动到一半时索引改变
 - (void)photoBrowser:(GKPhotoBrowser *)browser didChangedIndex:(NSInteger)index;
 
-// 滚动结束时索引改变
-- (void)photoBrowser:(GKPhotoBrowser *)browser scrollEndedIndex:(NSInteger)index;
+// 选择photoView时回调
+- (void)photoBrowser:(GKPhotoBrowser *)browser didSelectAtIndex:(NSInteger)index;
 
 // 单击事件
 - (void)photoBrowser:(GKPhotoBrowser *)browser singleTapWithIndex:(NSInteger)index;
@@ -47,6 +47,17 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // browser完全消失回调
 - (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index;
 
+// browser自定义加载方式时回调
+- (void)photoBrowser:(GKPhotoBrowser *)browser loadImageAtIndex:(NSInteger)index progress:(float)progress isOriginImage:(BOOL)isOriginImage;
+
+// browser加载失败自定义弹窗
+- (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index;
+
+// browser UIScrollViewDelegate
+- (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidScroll:(UIScrollView *)scrollView;
+- (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
+- (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
+
 @end
 
 @interface GKPhotoBrowser : UIViewController
@@ -57,6 +68,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, strong, readonly) NSArray       *photos;
 /** 当前索引 */
 @property (nonatomic, assign, readonly) NSInteger     currentIndex;
+/** 当前显示的photoView */
+@property (nonatomic, strong, readonly) GKPhotoView   *curPhotoView;
 /** 是否是横屏 */
 @property (nonatomic, assign, readonly) BOOL          isLandspace;
 /** 当前设备的方向 */
@@ -67,6 +80,10 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign) GKPhotoBrowserHideStyle hideStyle;
 /** 图片加载方式 */
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
+/** 原图加载加载方式 */
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle originLoadStyle;
+/** 图片加载失败显示方式 */
+@property (nonatomic, assign) GKPhotoBrowserFailStyle failStyle;
 /** 代理 */
 @property (nonatomic, weak) id<GKPhotoBrowserDelegate> delegate;
 
@@ -101,8 +118,17 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
  */
 @property (nonatomic, assign) BOOL isPopGestureEnabled;
 
+/**
+ 图片最大放大倍数
+ */
+@property (nonatomic, assign) CGFloat maxZoomScale;
+
 /** 浏览器背景（默认黑色） */
 @property (nonatomic, strong) UIColor   *bgColor;
+
+// 加载失败时显示的文字或图片
+@property (nonatomic, copy) NSString    *failureText;
+@property (nonatomic, strong) UIImage   *failureImage;
 
 // 初始化方法
 
@@ -133,6 +159,18 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 - (void)showFromVC:(UIViewController *)vc;
 
 /**
+ 隐藏图片浏览器
+ */
+- (void)dismiss;
+
+/**
+ 选中指定位置的内容
+
+ @param index 位置索引
+ */
+- (void)selectedPhotoWithIndex:(NSInteger)index animated:(BOOL)animated;
+
+/**
  移除指定位置的内容
 
  @param index 位置索引
@@ -145,6 +183,11 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
  @param photos 图片内容数组
  */
 - (void)resetPhotoBrowserWithPhotos:(NSArray *)photos;
+
+/**
+ 加载原图方法，外部调用
+ */
+- (void)loadCurrentPhotoImage;
 
 + (void)setImageManagerClass:(Class<GKWebImageProtocol>)cls;
 

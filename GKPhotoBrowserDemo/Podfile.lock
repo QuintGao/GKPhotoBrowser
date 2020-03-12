@@ -16,13 +16,13 @@ PODS:
     - AFNetworking/NSURLSession
   - FLAnimatedImage (1.0.12)
   - GKCover (2.5.4)
-  - GKNavigationBarViewController (2.3.4)
+  - GKNavigationBarViewController (2.4.4)
   - ReactiveObjC (3.1.1)
   - SDAutoLayout (2.2.1)
-  - SDWebImage (4.4.7):
-    - SDWebImage/Core (= 4.4.7)
-  - SDWebImage/Core (4.4.7)
-  - SDWebImage/GIF (4.4.7):
+  - SDWebImage (4.4.8):
+    - SDWebImage/Core (= 4.4.8)
+  - SDWebImage/Core (4.4.8)
+  - SDWebImage/GIF (4.4.8):
     - FLAnimatedImage (~> 1.0)
     - SDWebImage/Core
   - SVProgressHUD (2.2.5)
@@ -55,13 +55,13 @@ SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GKCover: 5340b5d73adf127a72a4a7649fe3bc6f734f7d23
-  GKNavigationBarViewController: 92f856c67ec7f21a3d9466ddb1521315a0e13856
+  GKNavigationBarViewController: e9fb3f7a0bc644a37999673bc0fba8f6cd6104bc
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
-  SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
+  SDWebImage: 783af2c3fa36291a250030c4752ee370a9a51d13
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
 PODFILE CHECKSUM: 7a19b7875cfc370b1df00bfb67d3af092af93fa0
 
-COCOAPODS: 1.8.0.beta.1
+COCOAPODS: 1.8.4

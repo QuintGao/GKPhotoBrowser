@@ -7,7 +7,7 @@ target 'GKPhotoBrowserPod' do
   pod 'GKNavigationBarViewController'
   pod 'YYModel'
   pod 'GKCover'
-  pod 'SDWebImage', '~> 5.0.0-beta6'
+  pod 'SDWebImage'
   pod 'SDAutoLayout'
   pod 'GKPhotoBrowser'
 

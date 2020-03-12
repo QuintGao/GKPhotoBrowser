@@ -42,19 +42,3 @@
 - (void)imageViewShowFinished;
 
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

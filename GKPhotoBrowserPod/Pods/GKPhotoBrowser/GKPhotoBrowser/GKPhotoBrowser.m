@@ -8,6 +8,7 @@
 
 #import "GKPhotoBrowser.h"
 #import "GKWebImageManager.h"
+#import "GKPanGestureRecognizer.h"
 
 static Class imageManagerClass = nil;
 
@@ -16,11 +17,12 @@ static Class imageManagerClass = nil;
     UILabel  *_countLabel;
 }
 
-@property (nonatomic, strong, readwrite) UIView *contentView;
+@property (nonatomic, strong, readwrite) UIView         *contentView;
 
-@property (nonatomic, strong, readwrite) NSArray *photos;
-@property (nonatomic, assign, readwrite) NSInteger currentIndex;
-@property (nonatomic, assign, readwrite) BOOL       isLandspace;
+@property (nonatomic, strong, readwrite) NSArray        *photos;
+@property (nonatomic, assign, readwrite) NSInteger      currentIndex;
+@property (nonatomic, strong, readwrite) GKPhotoView    *curPhotoView;
+@property (nonatomic, assign, readwrite) BOOL           isLandspace;
 @property (nonatomic, assign, readwrite) UIDeviceOrientation currentOrientation;
 
 @property (nonatomic, strong) UIScrollView *photoScrollView;
@@ -41,8 +43,6 @@ static Class imageManagerClass = nil;
 /** 正在发生屏幕旋转 */
 @property (nonatomic, assign) BOOL isRotation;
 
-/** 状态栏正在发生变化 */
-@property (nonatomic, assign) BOOL isStatusBarChanged;
 /** 状态栏是否显示 */
 @property (nonatomic, assign) BOOL isStatusBarShowing;
 
@@ -51,7 +51,7 @@ static Class imageManagerClass = nil;
 
 @property (nonatomic, assign) BOOL isPortraitToUp;
 
-@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, strong) GKPanGestureRecognizer *panGesture;
 
 @property (nonatomic, assign) CGPoint   firstMovePoint;
 @property (nonatomic, assign) CGPoint   startLocation;
@@ -89,14 +89,18 @@ static Class imageManagerClass = nil;
     return _photoScrollView;
 }
 
-- (UIPanGestureRecognizer *)panGesture {
+- (GKPanGestureRecognizer *)panGesture {
     if (!_panGesture) {
-        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        _panGesture = [[GKPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        _panGesture.direction = GKPanGestureRecognizerDirectionVertical;
     }
     return _panGesture;
 }
 
 - (GKPhoto *)currentPhoto {
+    if (self.currentIndex >= self.photos.count) {
+        return nil;
+    }
     return self.photos[self.currentIndex];
 }
 
@@ -110,14 +114,14 @@ static Class imageManagerClass = nil;
 
 - (instancetype)initWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)currentIndex {
     if (self = [super init]) {
-        
         self.photos       = photos;
         self.currentIndex = currentIndex;
         
         // 初始化
-        self.isStatusBarShow            = NO;
-        self.isHideSourceView           = YES;
-        self.isFullWidthForLandSpace    = YES;
+        self.isStatusBarShow         = NO;
+        self.isHideSourceView        = YES;
+        self.isFullWidthForLandSpace = YES;
+        self.maxZoomScale            = 2.0f;
         
         _visiblePhotoViews  = [NSMutableArray new];
         _reusablePhotoViews = [NSMutableSet new];
@@ -150,6 +154,10 @@ static Class imageManagerClass = nil;
     
     GKPhoto *photo          = [self currentPhoto];
     GKPhotoView *photoView  = [self currentPhotoView];
+    self.curPhotoView = photoView;
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:didSelectAtIndex:)]) {
+        [self.delegate photoBrowser:self didSelectAtIndex:self.currentIndex];
+    }
     
     if ([_imageProtocol imageFromMemoryForURL:photo.url] || photo.image) {
         [photoView setupPhoto:photo];
@@ -186,7 +194,7 @@ static Class imageManagerClass = nil;
 - (void)setupUI {
     [self.navigationController setNavigationBarHidden:YES];
     
-    self.view.backgroundColor   = self.bgColor ? : [UIColor blackColor];
+    self.view.backgroundColor = self.bgColor ? : [UIColor blackColor];
     
     CGFloat width  = self.view.bounds.size.width;
     CGFloat height = self.view.bounds.size.height;
@@ -260,13 +268,6 @@ static Class imageManagerClass = nil;
 - (void)setIsStatusBarShow:(BOOL)isStatusBarShow {
     _isStatusBarShow = isStatusBarShow;
     
-    /**这一行代码打开，在有些情况下会出现pageControl位置不正确的bug */
-//    self.isStatusBarChanged = YES;
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.isStatusBarChanged = NO;
-    });
-    
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         [self prefersStatusBarHidden];
         
@@ -323,7 +324,8 @@ static Class imageManagerClass = nil;
             endRect = photoView.imageView.frame;
         }else {
             CGFloat w = GKScreenW;
-            CGFloat h = w * photo.sourceFrame.size.height / photo.sourceFrame.size.width;
+            // bug fixed：#43 CALayer position contains NaN: [nan nan]
+            CGFloat h = (photo.sourceFrame.size.width == 0) ? GKScreenH : (w * photo.sourceFrame.size.height / photo.sourceFrame.size.width);
             CGFloat x = 0;
             CGFloat y = (GKScreenH - h) / 2;
             endRect = CGRectMake(x, y, w, h);
@@ -371,29 +373,26 @@ static Class imageManagerClass = nil;
     
     self.photoScrollView.frame  = frame;
     self.photoScrollView.center = CGPointMake(pointX, photoScrollH * 0.5);
-    
     self.photoScrollView.contentOffset = CGPointMake(self.currentIndex * photoScrollW, 0);
-    
     self.photoScrollView.contentSize = CGSizeMake(photoScrollW * self.photos.count, 0);
     
     // 调整所有显示的photoView的frame
     CGFloat w = photoScrollW - kPhotoViewPadding * 2;
     CGFloat h = photoScrollH;
-    CGFloat x = 0;
+    __block CGFloat x = 0;
     CGFloat y = 0;
     
-    for (GKPhotoView *photoView in _visiblePhotoViews) {
+    [_visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
         x = kPhotoViewPadding + photoView.tag * (kPhotoViewPadding * 2 + w);
         
         photoView.frame = CGRectMake(x, y, w, h);
         [photoView resetFrame];
-    }
+    }];
     
     if (self.coverViews) {
         !self.layoutBlock ? : self.layoutBlock(self, self.contentView.bounds);
     }else {
         _countLabel.bounds = CGRectMake(0, 0, 80, 30);
-
         _countLabel.center = CGPointMake(GKScreenW * 0.5, (KIsiPhoneX && !self.isLandspace) ? 50 : 30);
     }
     
@@ -434,14 +433,11 @@ static Class imageManagerClass = nil;
 }
 
 - (void)setupCoverViews:(NSArray *)coverViews layoutBlock:(layoutBlock)layoutBlock {
-    
     self.coverViews  = coverViews;
-    
     self.layoutBlock = layoutBlock;
 }
 
 - (void)showFromVC:(UIViewController *)vc {
-    
     self.fromVC = vc;
     
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
@@ -450,6 +446,37 @@ static Class imageManagerClass = nil;
         self.modalPresentationCapturesStatusBarAppearance = YES;
         [vc presentViewController:self animated:NO completion:nil];
     }
+}
+
+- (void)dismiss {
+    GKPhotoView *photoView = [self currentPhotoView];
+    photoView.isLayoutSubViews = YES;
+    
+    // 状态栏恢复到竖屏
+    if (@available(iOS 13.0, *)) {} else {
+        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    }
+    
+    if (self.showStyle == GKPhotoBrowserShowStylePush) {
+        [self delDeviceOrientationObserver];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+    }else {
+        // 显示状态栏
+        self.isStatusBarShow = YES;
+        
+        // 防止返回时跳动
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self recoverAnimation];
+        });
+    }
+}
+
+- (void)selectedPhotoWithIndex:(NSInteger)index animated:(BOOL)animated{
+    if (index < 0 || index >= self.photos.count) return;
+    
+    CGPoint offset = CGPointMake(self.photoScrollView.frame.size.width * index, 0);
+    [self.photoScrollView setContentOffset:offset animated:animated];
 }
 
 - (void)removePhotoAtIndex:(NSInteger)index {
@@ -480,6 +507,10 @@ static Class imageManagerClass = nil;
     [self layoutSubviews];
 }
 
+- (void)loadCurrentPhotoImage {
+    [self.curPhotoView loadOriginImage];
+}
+
 #pragma mark - Private Methods
 
 - (void)addGestureRecognizer {
@@ -503,12 +534,10 @@ static Class imageManagerClass = nil;
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
         [self removePanGesture];
     }else {
-        if (isFirst) {
+        if (isFirst || self.isScreenRotateDisabled) { // 第一次进入或禁止处理屏幕旋转，直接添加手势
             [self.view addGestureRecognizer:self.panGesture];
         }else {
-            UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
-            
-            if (UIDeviceOrientationIsPortrait(orientation) || self.isPortraitToUp) {
+            if (self.currentOrientation == UIDeviceOrientationPortrait || self.isPortraitToUp) {
                 [self.view addGestureRecognizer:self.panGesture];
             }
         }
@@ -534,7 +563,9 @@ static Class imageManagerClass = nil;
         photo.sourceImageView.alpha = 1.0;
     }
     
-    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    if (@available(iOS 13.0, *)) {} else {
+        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    }
     
     // 移除屏幕旋转监听
     [self delDeviceOrientationObserver];
@@ -544,31 +575,13 @@ static Class imageManagerClass = nil;
 
 #pragma mark - Gesture Handle
 - (void)handleSingleTap:(UITapGestureRecognizer *)tap {
-    GKPhotoView *photoView = [self currentPhotoView];
-    photoView.isLayoutSubViews = YES;
+    if (self.isSingleTapDisabled) return;
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:singleTapWithIndex:)]) {
         [self.delegate photoBrowser:self singleTapWithIndex:self.currentIndex];
     }
     
-    if (self.isSingleTapDisabled) return;
-    
-    // 状态栏恢复到竖屏
-    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
-    
-    if (self.showStyle == GKPhotoBrowserShowStylePush) {
-        [self delDeviceOrientationObserver];
-        
-        [self.navigationController popViewControllerAnimated:YES];
-    }else {
-        // 显示状态栏
-        self.isStatusBarShow = YES;
-        
-        // 防止返回时跳动
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self recoverAnimation];
-        });
-    }
+    [self dismiss];
 }
 
 - (void)handleDoubleTap:(UITapGestureRecognizer *)tap {
@@ -651,11 +664,14 @@ static Class imageManagerClass = nil;
             self.startLocation = location;
             self.startFrame = photoView.imageView.frame;
             self.isZoomScale = YES;
+            photoView.loadingView.hidden = YES;
             [self handlePanBegin];
             break;
         case UIGestureRecognizerStateChanged: {
+            if (self.view.frame.size.height == 0) return;
             double percent = 1 - fabs(point.y) / self.view.frame.size.height;
             double s = MAX(percent, 0.3);
+            if (self.startFrame.size.width == 0 || self.startFrame.size.height == 0) return;
             
             CGFloat width = self.startFrame.size.width * s;
             CGFloat height = self.startFrame.size.height * s;
@@ -694,10 +710,12 @@ static Class imageManagerClass = nil;
     switch (panGesture.state) {
         case UIGestureRecognizerStateBegan:
             _startLocation = location;
+            photoView.loadingView.hidden = YES;
             [self handlePanBegin];
             break;
         case UIGestureRecognizerStateChanged:{
             photoView.imageView.transform = CGAffineTransformMakeTranslation(0, point.y);
+            if (self.view.frame.size.height == 0) return;
             double percent = 1 - fabs(point.y) / self.view.frame.size.height * 0.5;
             
             self.view.backgroundColor = self.bgColor ? [self.bgColor colorWithAlphaComponent:percent] : [[UIColor blackColor] colorWithAlphaComponent:percent];
@@ -736,7 +754,6 @@ static Class imageManagerClass = nil;
 }
 
 - (void)recoverAnimation {
-    
     UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     
@@ -752,7 +769,6 @@ static Class imageManagerClass = nil;
             }
             // 设置frame
             self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
-            
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
             [self.view setNeedsLayout];
@@ -767,7 +783,6 @@ static Class imageManagerClass = nil;
 }
 
 - (void)showDismissAnimation {
-    
     GKPhotoView *photoView = [self photoViewForIndex:self.currentIndex];
     GKPhoto *photo = self.photos[self.currentIndex];
     
@@ -800,12 +815,19 @@ static Class imageManagerClass = nil;
     }
     
     if (photoView.scrollView.zoomScale > 1.0f) {
-        [photoView.scrollView setZoomScale:1.0f animated:YES];
+        [photoView.scrollView setZoomScale:1.0f animated:NO];
     }
     
     if (photo.sourceImageView) {
         photoView.imageView.image = photo.sourceImageView.image;
     }
+    
+    // Fix bug：解决长图点击隐藏时可能出现的闪动bug
+    UIViewContentMode mode = photo.sourceImageView ? photo.sourceImageView.contentMode : UIViewContentModeScaleAspectFill;
+    
+    photoView.imageView.contentMode = mode;
+    sourceRect.origin.x -= photoView.scrollView.contentOffset.x;
+    sourceRect.origin.y += photoView.scrollView.contentOffset.y;
     
     [UIView animateWithDuration:kAnimationDuration animations:^{
         photoView.imageView.frame = sourceRect;
@@ -855,6 +877,7 @@ static Class imageManagerClass = nil;
             // 隐藏状态栏
             self.isStatusBarShow = NO;
         }
+        photoView.loadingView.hidden = NO;
         
         [self panEndedWillDisappear:NO];
     }];
@@ -906,6 +929,11 @@ static Class imageManagerClass = nil;
     
     // 旋转之后当前的设备方向
     UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
+    
+    if (currentOrientation == UIDeviceOrientationUnknown) {
+        currentOrientation = UIDeviceOrientationPortrait;
+    }
+    
     self.currentOrientation = currentOrientation;
     
     if (UIDeviceOrientationIsPortrait(self.originalOrientation)) {
@@ -942,7 +970,9 @@ static Class imageManagerClass = nil;
         
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
-            [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+            if (@available(iOS 13.0, *)) {} else {
+                [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+            }
             
             float rotation = currentOrientation == UIDeviceOrientationLandscapeRight ? 1.5 : 0.5;
             
@@ -955,13 +985,11 @@ static Class imageManagerClass = nil;
             }
             // 设置frame
             self.contentView.bounds = CGRectMake(0, 0, width, MIN(screenBounds.size.width, screenBounds.size.height));
-            
             self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
             
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             [self layoutSubviews];
-            
         } completion:^(BOOL finished) {
             // 记录设备方向
             self.originalOrientation = currentOrientation;
@@ -984,7 +1012,9 @@ static Class imageManagerClass = nil;
         
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
-            [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+            if (@available(iOS 13.0, *)) {} else {
+                [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+            }
             
             // 旋转view
             self.contentView.transform = currentOrientation == UIDeviceOrientationPortrait ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
@@ -1032,7 +1062,7 @@ static Class imageManagerClass = nil;
 // 更新可复用的图片视图
 - (void)updateReusableViews {
     NSMutableArray *viewsForRemove = [NSMutableArray new];
-    for (GKPhotoView *photoView in _visiblePhotoViews) {
+    [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
         if ((photoView.frame.origin.x + photoView.frame.size.width < self.photoScrollView.contentOffset.x - self.photoScrollView.frame.size.width) || (photoView.frame.origin.x > self.photoScrollView.contentOffset.x + 2 * self.photoScrollView.frame.size.width)) {
             [photoView removeFromSuperview];
             GKPhoto *photo = nil;
@@ -1040,32 +1070,54 @@ static Class imageManagerClass = nil;
             [photoView setupPhoto:photo];
             
             [viewsForRemove addObject:photoView];
-            [_reusablePhotoViews addObject:photoView];
+            [self.reusablePhotoViews addObject:photoView];
         }
-    }
-    [_visiblePhotoViews removeObjectsInArray:viewsForRemove];
+    }];
+    [self.visiblePhotoViews removeObjectsInArray:viewsForRemove];
 }
 
 // 设置图片视图
 - (void)setupPhotoViews {
     NSInteger index = self.photoScrollView.contentOffset.x / self.photoScrollView.frame.size.width + 0.5;
-    
     for (NSInteger i = index - 1; i <= index + 1; i++) {
         if (i < 0 || i >= self.photos.count) continue;
         
         GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
-            photoView               = [self dequeueReusablePhotoView];
-            photoView.loadStyle     = self.loadStyle;
+            photoView                 = [self dequeueReusablePhotoView];
+            photoView.loadStyle       = self.loadStyle;
+            photoView.originLoadStyle = self.originLoadStyle;
+            photoView.failStyle       = self.failStyle;
             photoView.isFullWidthForLandSpace = self.isFullWidthForLandSpace;
-            photoView.isLowGifMemory = self.isLowGifMemory;
+            photoView.isLowGifMemory  = self.isLowGifMemory;
+            photoView.failureText     = self.failureText;
+            photoView.failureImage    = self.failureImage;
+            photoView.maxZoomScale    = self.maxZoomScale;
             
             __typeof(self) __weak weakSelf = self;
-            photoView.zoomEnded     = ^(NSInteger scale) {
-                if (scale == 1.0f) {
-                    [weakSelf addPanGesture:NO];
-                }else {
-                    [weakSelf removePanGesture];
+            photoView.zoomEnded = ^(GKPhotoView * _Nonnull curPhotoView, CGFloat scale) {
+                if (curPhotoView.tag == weakSelf.curPhotoView.tag) {
+                    if (scale == 1.0f) {
+                        [weakSelf addPanGesture:NO];
+                    }else {
+                        [weakSelf removePanGesture];
+                    }
+                }
+            };
+            
+            photoView.loadFailed = ^(GKPhotoView * _Nonnull curPhotoView) {
+                if (curPhotoView.tag == weakSelf.curPhotoView.tag) {
+                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadFailedAtIndex:)]) {
+                        [weakSelf.delegate photoBrowser:weakSelf loadFailedAtIndex:weakSelf.currentIndex];
+                    }
+                }
+            };
+            
+            photoView.loadProgressBlock = ^(GKPhotoView * _Nonnull curPhotoView, float progress, BOOL isOriginImage) {
+                if (curPhotoView.tag == weakSelf.curPhotoView.tag) {
+                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
+                        [weakSelf.delegate photoBrowser:weakSelf loadImageAtIndex:weakSelf.currentIndex progress:progress isOriginImage:isOriginImage];
+                    }
                 }
             };
             
@@ -1097,6 +1149,12 @@ static Class imageManagerClass = nil;
         self.currentIndex = index;
         
         GKPhotoView *photoView = [self currentPhotoView];
+        self.curPhotoView = photoView;
+        
+        GKPhoto *photo = [self currentPhoto];
+        if (photo.failed) {
+            [photoView setupPhoto:photo];
+        }
         
         if (photoView.scrollView.zoomScale != 1.0) {
             [self removePanGesture];
@@ -1125,7 +1183,6 @@ static Class imageManagerClass = nil;
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
     if (self.isRotation) return;
     
     [self updateReusableViews];
@@ -1136,21 +1193,27 @@ static Class imageManagerClass = nil;
     [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj stopGifAnimation];
     }];
+    
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidScroll:)]) {
+        [self.delegate photoBrowser:self scrollViewDidScroll:scrollView];
+    }
 }
 
 // scrollView结束滚动时调用
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     CGFloat offsetX = scrollView.contentOffset.x;
     CGFloat scrollW = self.photoScrollView.frame.size.width;
+    if (scrollW == 0) return;
     
     NSInteger index = (offsetX + scrollW * 0.5) / scrollW;
     
     // 滚动结束，开始gif动画
     GKPhotoView *currentPhotoView = [self currentPhotoView];
     [currentPhotoView startGifAnimation];
+    self.curPhotoView = [self currentPhotoView];
     
-    if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollEndedIndex:)]) {
-        [self.delegate photoBrowser:self scrollEndedIndex:index];
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:didSelectAtIndex:)]) {
+        [self.delegate photoBrowser:self didSelectAtIndex:index];
     }
     
     if (self.isResumePhotoZoom) {
@@ -1166,6 +1229,16 @@ static Class imageManagerClass = nil;
         [self removePanGesture];
     }else {
         [self addPanGesture:NO];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndDecelerating:)]) {
+        [self.delegate photoBrowser:self scrollViewDidEndDecelerating:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndDragging:willDecelerate:)]) {
+        [self.delegate photoBrowser:self scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
 }
 

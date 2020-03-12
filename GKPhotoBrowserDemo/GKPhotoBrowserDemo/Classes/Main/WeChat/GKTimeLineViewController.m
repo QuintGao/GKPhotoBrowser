@@ -44,6 +44,12 @@
     [self setupData];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    NSLog(@"GKTimeLineViewController viewWillAppear");
+}
+
 - (void)setupUI {
     self.gk_navigationItem.title = @"朋友圈";
     

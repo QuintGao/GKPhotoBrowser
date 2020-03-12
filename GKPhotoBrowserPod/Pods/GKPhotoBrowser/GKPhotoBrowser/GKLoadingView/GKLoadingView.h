@@ -12,12 +12,15 @@
 typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
     GKLoadingStyleIndeterminate,      // 不明确的加载方式
     GKLoadingStyleIndeterminateMask,  // 不明确的加载方式带阴影
-    GKLoadingStyleDeterminate         // 明确的加载方式--进度条
+    GKLoadingStyleDeterminate,        // 明确的加载方式--进度条
+    GKLoadingStyleCustom              // 自定义
 };
 
 @interface GKLoadingView : UIView
 
 + (instancetype)loadingViewWithFrame:(CGRect)frame style:(GKLoadingStyle)style;
+
+@property (nonatomic, assign) GKPhotoBrowserFailStyle  failStyle;
 
 @property (nonatomic, strong) UIButton *centerButton;
 
@@ -36,6 +39,9 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
 /** 进度，loadingStyle为GKLoadingStyleDeterminate时使用 */
 @property (nonatomic, assign) CGFloat progress;
 
+@property (nonatomic, copy) NSString  *failText;
+@property (nonatomic, strong) UIImage *failImage;
+
 @property (nonatomic, copy) void (^progressChange)(GKLoadingView *loadingView, CGFloat progress);
 
 @property (nonatomic, copy) void (^tapToReload)(void);
@@ -51,6 +57,8 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
 - (void)stopLoading;
 
 - (void)showFailure;
+
+- (void)hideFailure;
 
 - (void)hideLoadingView;
 

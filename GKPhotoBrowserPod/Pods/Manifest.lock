@@ -15,13 +15,13 @@ PODS:
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
   - GKCover (2.5.4)
-  - GKNavigationBarViewController (2.2.3)
-  - GKPhotoBrowser (1.4.7):
+  - GKNavigationBarViewController (2.4.4)
+  - GKPhotoBrowser (1.5.8):
     - SDWebImage
   - SDAutoLayout (2.2.1)
-  - SDWebImage (5.0.0-beta6):
-    - SDWebImage/Core (= 5.0.0-beta6)
-  - SDWebImage/Core (5.0.0-beta6)
+  - SDWebImage (5.5.2):
+    - SDWebImage/Core (= 5.5.2)
+  - SDWebImage/Core (5.5.2)
   - YYModel (1.0.4)
 
 DEPENDENCIES:
@@ -30,11 +30,11 @@ DEPENDENCIES:
   - GKNavigationBarViewController
   - GKPhotoBrowser
   - SDAutoLayout
-  - SDWebImage (~> 5.0.0-beta6)
+  - SDWebImage
   - YYModel
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - AFNetworking
     - GKCover
     - GKNavigationBarViewController
@@ -46,12 +46,12 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   GKCover: 5340b5d73adf127a72a4a7649fe3bc6f734f7d23
-  GKNavigationBarViewController: f0a6fc2f93212ecbc977dee924d38ee40191a532
-  GKPhotoBrowser: ec590f2cabd6180ff39bbc8c8d8030f235ddf7aa
+  GKNavigationBarViewController: e9fb3f7a0bc644a37999673bc0fba8f6cd6104bc
+  GKPhotoBrowser: 906f2661106e11f2b3b2e386c6284331764bb4d5
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
-  SDWebImage: 2840a50a41156efccf460df67218b32029177897
+  SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: 6a5e71b25f469f7477368d66ce3e0289fd5b0c6e
+PODFILE CHECKSUM: cc70d57172bbbf97ed1d8974d178a5d0e4d8c479
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.8.4

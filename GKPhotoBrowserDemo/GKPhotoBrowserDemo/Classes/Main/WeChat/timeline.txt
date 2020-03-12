@@ -31,6 +31,22 @@
         ]
     },
     {
+        "name": "你好哈哈哈",
+        "icon": {
+            "url": "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=4189389586,2981112649&fm=26&gp=0.jpg",
+            "width": "300",
+            "height": "300"
+        },
+        "content": "GKPhotoBrowser-显示gif图片",
+        "images": [
+            {
+                "url": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1573836232050&di=0c11c5981121123749a1fde28161cf59&imgtype=0&src=http%3A%2F%2Fww1.sinaimg.cn%2Flarge%2F85cccab3gw1etdpmu08n8g20dw05x7wh.jpg",
+                "width": "500",
+                "height": "213"
+            }
+        ]
+    },
+    {
         "name": "高清大图",
         "icon": {
             "url": "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1214248342,1256011437&fm=27&gp=0.jpg",

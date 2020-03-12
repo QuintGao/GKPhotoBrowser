@@ -15,11 +15,6 @@
 
 @property (nonatomic, strong) UINavigationItem  *gk_navigationItem;
 
-@property (nonatomic, assign) CGFloat           last_navItemLeftSpace;
-@property (nonatomic, assign) CGFloat           last_navItemRightSpace;
-
-@property (nonatomic, assign) BOOL              isSettingItemSpace;
-
 @end
 
 @implementation GKNavigationBarViewController
@@ -45,6 +40,14 @@
         [self.view bringSubviewToFront:self.gk_navigationBar];
     }
     
+    if (self.gk_navItemLeftSpace == GKNavigationBarItemSpace) {
+        self.gk_navItemLeftSpace = GKConfigure.gk_navItemLeftSpace;
+    }
+    
+    if (self.gk_navItemRightSpace == GKNavigationBarItemSpace) {
+        self.gk_navItemRightSpace = GKConfigure.gk_navItemRightSpace;
+    }
+    
     // 重置navitem_space
     [GKConfigure updateConfigure:^(GKNavigationBarConfigure *configure) {
         configure.gk_navItemLeftSpace   = self.gk_navItemLeftSpace;
@@ -60,8 +63,8 @@
     
     // 重置navitem_space
     [GKConfigure updateConfigure:^(GKNavigationBarConfigure *configure) {
-        configure.gk_navItemLeftSpace  = self.last_navItemLeftSpace;
-        configure.gk_navItemRightSpace = self.last_navItemRightSpace;
+        configure.gk_navItemLeftSpace  = configure.navItemLeftSpace;
+        configure.gk_navItemRightSpace = configure.navItemRightSpace;
     }];
 }
 
@@ -74,13 +77,15 @@
     self.gk_navLineHidden = YES;
 }
 
+- (void)refreshNavBarFrame {
+    [self setupNavBarFrame];
+}
+
 #pragma mark - private Methods
 /**
  设置自定义导航条
  */
 - (void)setupCustomNavBar {
-    
-    self.automaticallyAdjustsScrollViewInsets = NO;
     
     [self.view addSubview:self.gk_navigationBar];
     
@@ -93,7 +98,6 @@
  设置导航栏外观
  */
 - (void)setupNavBarAppearance {
-    
     GKNavigationBarConfigure *configure = [GKNavigationBarConfigure sharedInstance];
     
     if (configure.backgroundColor) {
@@ -108,15 +112,10 @@
         self.gk_navTitleFont = configure.titleFont;
     }
     
-    self.gk_statusBarHidden     = configure.statusBarHidden;
-    self.gk_statusBarStyle      = configure.statusBarStyle;
     self.gk_backStyle           = configure.backStyle;
-    self.isSettingItemSpace     = YES;
-    self.gk_navItemLeftSpace    = configure.gk_navItemLeftSpace;
-    self.gk_navItemRightSpace   = configure.gk_navItemRightSpace;
-    self.last_navItemLeftSpace  = configure.gk_navItemLeftSpace;
-    self.last_navItemRightSpace = configure.gk_navItemRightSpace;
-    self.isSettingItemSpace     = NO;
+    
+    self.gk_navItemLeftSpace    = GKNavigationBarItemSpace;
+    self.gk_navItemRightSpace   = GKNavigationBarItemSpace;
 }
 
 - (void)viewWillLayoutSubviews {
@@ -141,7 +140,7 @@
             }
         }
     }else { // 竖屏
-        navBarH = self.gk_statusBarHidden ? (GK_SAVEAREA_TOP + GK_NAVBAR_HEIGHT) : GK_STATUSBAR_NAVBAR_HEIGHT;
+        navBarH = self.gk_statusBarHidden ? (GK_SAFEAREA_TOP + GK_NAVBAR_HEIGHT) : GK_STATUSBAR_NAVBAR_HEIGHT;
     }
     
     self.gk_navigationBar.frame = CGRectMake(0, 0, width, navBarH);
@@ -164,7 +163,6 @@
 
 #pragma mark - 控制状态栏的方法
 - (BOOL)prefersStatusBarHidden {
-    [self setupNavBarFrame];
     return self.gk_statusBarHidden;
 }
 
@@ -203,11 +201,7 @@
 - (void)setGk_navBackgroundColor:(UIColor *)gk_navBackgroundColor {
     _gk_navBackgroundColor = gk_navBackgroundColor;
     
-    if (gk_navBackgroundColor == [UIColor clearColor]) {
-        [self.gk_navigationBar setBackgroundImage:[self imageWithColor:[UIColor clearColor]] forBarMetrics:UIBarMetricsDefault];
-    }else {
-        [self.gk_navigationBar setBackgroundImage:[self imageWithColor:gk_navBackgroundColor] forBarMetrics:UIBarMetricsDefault];
-    }
+    [self.gk_navigationBar setBackgroundImage:[UIImage gk_imageWithColor:gk_navBackgroundColor] forBarMetrics:UIBarMetricsDefault];
 }
 
 - (void)setGk_navBackgroundImage:(UIImage *)gk_navBackgroundImage {
@@ -219,7 +213,7 @@
 - (void)setGk_navShadowColor:(UIColor *)gk_navShadowColor {
     _gk_navShadowColor = gk_navShadowColor;
     
-    self.gk_navigationBar.shadowImage = [self changeImage:GKImage(@"nav_line") withColor:gk_navShadowColor];
+    self.gk_navigationBar.shadowImage = [UIImage gk_changeImage:[UIImage imageNamed:@"nav_line"] color:gk_navShadowColor];
 }
 
 - (void)setGk_navShadowImage:(UIImage *)gk_navShadowImage {
@@ -283,21 +277,19 @@
 - (void)setGk_navItemLeftSpace:(CGFloat)gk_navItemLeftSpace {
     _gk_navItemLeftSpace = gk_navItemLeftSpace;
     
-    if (self.isSettingItemSpace) return;
+    if (gk_navItemLeftSpace == GKNavigationBarItemSpace) return;
     
     [GKConfigure updateConfigure:^(GKNavigationBarConfigure *configure) {
         configure.gk_navItemLeftSpace   = gk_navItemLeftSpace;
-        configure.gk_navItemRightSpace  = self.gk_navItemRightSpace;
     }];
 }
 
 - (void)setGk_navItemRightSpace:(CGFloat)gk_navItemRightSpace {
     _gk_navItemRightSpace = gk_navItemRightSpace;
 
-    if (self.isSettingItemSpace) return;
+    if (gk_navItemRightSpace == GKNavigationBarItemSpace) return;
     
     [GKConfigure updateConfigure:^(GKNavigationBarConfigure *configure) {
-        configure.gk_navItemLeftSpace   = self.gk_navItemLeftSpace;
         configure.gk_navItemRightSpace  = gk_navItemRightSpace;
     }];
 }
@@ -315,42 +307,4 @@
     [self.gk_navigationBar layoutSubviews];
 }
 
-- (UIImage *)imageWithColor:(UIColor *)color {
-    return [self imageWithColor:color size:CGSizeMake(1.0, 1.0)];
-}
-
-- (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size {
-    CGRect rect = CGRectMake(0, 0, size.width, size.height);
-    
-    UIGraphicsBeginImageContext(size);
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, color.CGColor);
-    
-    CGContextFillRect(context, rect);
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    
-    return image;
-}
-
-- (UIImage *)changeImage:(UIImage *)img withColor:(UIColor *)color {
-    UIGraphicsBeginImageContextWithOptions(img.size, NO, img.scale);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextTranslateCTM(context, 0, img.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    CGContextSetBlendMode(context, kCGBlendModeNormal);
-    CGRect rect = CGRectMake(0, 0, img.size.width, img.size.height);
-    CGContextClipToMask(context, rect, img.CGImage);
-    [color setFill];
-    CGContextFillRect(context, rect);
-    UIImage*newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
 @end
-
