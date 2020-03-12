@@ -408,7 +408,7 @@ static Class imageManagerClass = nil;
         !self.layoutBlock ? : self.layoutBlock(self, self.contentView.bounds);
     }else {
         _countLabel.bounds = CGRectMake(0, 0, 80, 30);
-        _countLabel.center = CGPointMake(GKScreenW * 0.5, (KIsiPhoneX && !self.isLandspace) ? 50 : 30);
+        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !self.isLandspace) ? 50 : 30);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {

@@ -81,6 +81,7 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2020.03.12  修复crash ![#67](https://github.com/QuintGao/GKPhotoBrowser/issues/67) ![#71](https://github.com/QuintGao/GKPhotoBrowser/issues/71) 感谢![chimingzi](https://github.com/chimingzi)，解决编译报错![#65](https://github.com/QuintGao/GKPhotoBrowser/issues/65)
 2019.10.20  优化长图闪动问题，适配iOS13
 2019.10.12  优化长图放大后点击隐藏时的闪动问题
 2019.08.15  1、修复只有一张图片时的滑动问题
