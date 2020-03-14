@@ -23,6 +23,8 @@
 
 @property (nonatomic, strong) id operation;
 
+@property (nonatomic, assign) CGFloat realZoomScale;
+
 @end
 
 @implementation GKPhotoView
@@ -392,10 +394,16 @@
         // 找到最大的缩放比例
         CGFloat scaleH = frame.size.height / imageF.size.height;
         CGFloat scaleW = frame.size.width / imageF.size.width;
-        CGFloat maxScale = MAX(MAX(scaleH, scaleW), self.maxZoomScale);
+        self.realZoomScale = MAX(MAX(scaleH, scaleW), self.maxZoomScale);
+        
+        if (self.doubleZoomScale == self.maxZoomScale) {
+            self.doubleZoomScale = self.realZoomScale;
+        }else if (self.doubleZoomScale > self.realZoomScale) {
+            self.doubleZoomScale = self.realZoomScale;
+        }
         // 初始化
         self.scrollView.minimumZoomScale = 1.0;
-        self.scrollView.maximumZoomScale = maxScale;
+        self.scrollView.maximumZoomScale = self.doubleZoomScale;
     }else if (!CGRectEqualToRect(self.photo.sourceFrame, CGRectZero)) {
         if (self.photo.sourceFrame.size.width == 0 || self.photo.sourceFrame.size.height == 0) return;
         CGFloat width = frame.size.width;
@@ -455,6 +463,12 @@
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     !self.zoomEnded ? : self.zoomEnded(self, scrollView.zoomScale);
+    
+    if (scale == 1) {
+        self.scrollView.maximumZoomScale = self.doubleZoomScale;
+    }else {
+        self.scrollView.maximumZoomScale = self.realZoomScale;
+    }
 }
 
 - (void)cancelCurrentImageLoad {

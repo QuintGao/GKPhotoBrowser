@@ -23,7 +23,6 @@ static Class imageManagerClass = nil;
 @property (nonatomic, assign, readwrite) NSInteger      currentIndex;
 @property (nonatomic, strong, readwrite) GKPhotoView    *curPhotoView;
 @property (nonatomic, assign, readwrite) BOOL           isLandspace;
-@property (nonatomic, assign, readwrite) UIDeviceOrientation currentOrientation;
 
 @property (nonatomic, strong) UIScrollView *photoScrollView;
 
@@ -37,7 +36,9 @@ static Class imageManagerClass = nil;
 @property (nonatomic, strong) NSArray *coverViews;
 @property (nonatomic, copy) layoutBlock layoutBlock;
 
-/** 记录上一次的设备方向 */
+/** 当前设备方向 */
+@property (nonatomic, assign, readwrite) UIDeviceOrientation currentOrientation;
+/** 上一次的设备方向 */
 @property (nonatomic, assign) UIDeviceOrientation originalOrientation;
 
 /** 正在发生屏幕旋转 */
@@ -76,51 +77,6 @@ static Class imageManagerClass = nil;
 
 @implementation GKPhotoBrowser
 
-#pragma mark - 懒加载
-- (UIScrollView *)photoScrollView {
-    if (!_photoScrollView) {
-        CGRect frame = self.view.bounds;
-        frame.origin.x   -= kPhotoViewPadding;
-        frame.size.width += (2 * kPhotoViewPadding);
-        _photoScrollView = [[UIScrollView alloc] initWithFrame:frame];
-        _photoScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _photoScrollView.pagingEnabled  = YES;
-        _photoScrollView.delegate       = self;
-        _photoScrollView.showsVerticalScrollIndicator   = NO;
-        _photoScrollView.showsHorizontalScrollIndicator = NO;
-        _photoScrollView.backgroundColor                = [UIColor clearColor];
-        if (self.showStyle == GKPhotoBrowserShowStylePush) {
-            if (self.isPopGestureEnabled) {
-                _photoScrollView.gk_gestureHandleEnabled = YES;
-            }
-        }
-        
-        if (@available(iOS 11.0, *)) {
-            _photoScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        }
-    }
-    return _photoScrollView;
-}
-
-- (GKPanGestureRecognizer *)panGesture {
-    if (!_panGesture) {
-        _panGesture = [[GKPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-        _panGesture.direction = GKPanGestureRecognizerDirectionVertical;
-    }
-    return _panGesture;
-}
-
-- (GKPhoto *)currentPhoto {
-    if (self.currentIndex >= self.photos.count) {
-        return nil;
-    }
-    return self.photos[self.currentIndex];
-}
-
-- (GKPhotoView *)currentPhotoView {
-    return [self photoViewForIndex:self.currentIndex];
-}
-
 + (instancetype)photoBrowserWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)currentIndex {
     return [[self alloc] initWithPhotos:photos currentIndex:currentIndex];
 }
@@ -134,7 +90,8 @@ static Class imageManagerClass = nil;
         self.isStatusBarShow         = NO;
         self.isHideSourceView        = YES;
         self.isFullWidthForLandSpace = YES;
-        self.maxZoomScale            = 2.0f;
+        self.maxZoomScale            = kMaxZoomScale;
+        self.doubleZoomScale         = self.maxZoomScale;
         // 20200312
         self.isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared = [UIDevice currentDevice].isGeneratingDeviceOrientationNotifications;
         
@@ -243,7 +200,7 @@ static Class imageManagerClass = nil;
         _countLabel.bounds          = CGRectMake(0, 0, 80, 30);
         [self.contentView addSubview:_countLabel];
         
-        _countLabel.center = CGPointMake(GKScreenW * 0.5, (KIsiPhoneX && !isLandspace) ? 50 : 30);
+        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !isLandspace) ? 50 : 30);
         _countLabel.hidden = self.photos.count == 1;
         
         [self updateLabel];
@@ -297,6 +254,14 @@ static Class imageManagerClass = nil;
         [self delDeviceOrientationObserver];
     }else {
         [self addDeviceOrientationObserver];
+    }
+}
+
+- (void)setDoubleZoomScale:(CGFloat)doubleZoomScale {
+    if (doubleZoomScale > self.maxZoomScale) {
+        _doubleZoomScale = self.maxZoomScale;
+    }else {
+        _doubleZoomScale = doubleZoomScale;
     }
 }
 
@@ -505,7 +470,7 @@ static Class imageManagerClass = nil;
 
 - (void)resetPhotoBrowserWithPhotos:(NSArray *)photos {
     if (photos.count == 0) {
-        [self handleSingleTap:nil];
+        [self dismiss];
         return;
     }
     
@@ -1118,6 +1083,7 @@ static Class imageManagerClass = nil;
             photoView.failureText     = self.failureText;
             photoView.failureImage    = self.failureImage;
             photoView.maxZoomScale    = self.maxZoomScale;
+            photoView.doubleZoomScale = self.doubleZoomScale;
             
             __typeof(self) __weak weakSelf = self;
             photoView.zoomEnded = ^(GKPhotoView * _Nonnull curPhotoView, CGFloat scale) {
@@ -1265,6 +1231,51 @@ static Class imageManagerClass = nil;
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndDragging:willDecelerate:)]) {
         [self.delegate photoBrowser:self scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
+}
+
+#pragma mark - 懒加载
+- (UIScrollView *)photoScrollView {
+    if (!_photoScrollView) {
+        CGRect frame = self.view.bounds;
+        frame.origin.x   -= kPhotoViewPadding;
+        frame.size.width += (2 * kPhotoViewPadding);
+        _photoScrollView = [[UIScrollView alloc] initWithFrame:frame];
+        _photoScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _photoScrollView.pagingEnabled  = YES;
+        _photoScrollView.delegate       = self;
+        _photoScrollView.showsVerticalScrollIndicator   = NO;
+        _photoScrollView.showsHorizontalScrollIndicator = NO;
+        _photoScrollView.backgroundColor                = [UIColor clearColor];
+        if (self.showStyle == GKPhotoBrowserShowStylePush) {
+            if (self.isPopGestureEnabled) {
+                _photoScrollView.gk_gestureHandleEnabled = YES;
+            }
+        }
+        
+        if (@available(iOS 11.0, *)) {
+            _photoScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+    }
+    return _photoScrollView;
+}
+
+- (GKPanGestureRecognizer *)panGesture {
+    if (!_panGesture) {
+        _panGesture = [[GKPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        _panGesture.direction = GKPanGestureRecognizerDirectionVertical;
+    }
+    return _panGesture;
+}
+
+- (GKPhoto *)currentPhoto {
+    if (self.currentIndex >= self.photos.count) {
+        return nil;
+    }
+    return self.photos[self.currentIndex];
+}
+
+- (GKPhotoView *)currentPhotoView {
+    return [self photoViewForIndex:self.currentIndex];
 }
 
 @end

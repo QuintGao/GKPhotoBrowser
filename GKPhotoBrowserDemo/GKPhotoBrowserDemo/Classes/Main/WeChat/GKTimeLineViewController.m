@@ -125,6 +125,8 @@
         browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
         browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
         browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
+        browser.maxZoomScale = 4.0f;
+        browser.doubleZoomScale = 2.0f;
         
         [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
 
