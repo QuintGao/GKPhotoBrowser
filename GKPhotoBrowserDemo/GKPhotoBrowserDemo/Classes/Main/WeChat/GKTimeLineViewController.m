@@ -9,9 +9,8 @@
 #import "GKTimeLineViewController.h"
 #import "GKTimeLineViewCell.h"
 #import "GKPhotoBrowser.h"
-#import <CoreServices/UTCoreTypes.h>
 
-@interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate, UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+@interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -43,12 +42,6 @@
     [self setupUI];
     
     [self setupData];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    NSLog(@"GKTimeLineViewController viewWillAppear");
 }
 
 - (void)setupUI {
@@ -291,23 +284,7 @@
 }
 
 - (void)tabkePhoto {
-    UIImagePickerControllerSourceType sourceType   = UIImagePickerControllerSourceTypeCamera;
-    UIImagePickerController           *imagePicker = [UIImagePickerController new];
-    imagePicker.delegate = self;
-    imagePicker.sourceType             = sourceType;
-    imagePicker.modalPresentationStyle = UIModalPresentationFullScreen;
-    imagePicker.videoMaximumDuration   = 60;
-    imagePicker.mediaTypes             = @[(NSString *)kUTTypeVideo, (NSString *)kUTTypeImage];
-    [imagePicker setCameraDevice:UIImagePickerControllerCameraDeviceRear];
-    [self presentViewController:imagePicker animated:YES completion:nil];
-}
-#pragma mark - UIImagePickerControllerDelegate
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    [picker dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 - (void)cancelBtnClick:(id)sender {
@@ -316,7 +293,6 @@
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
 {
-    
     NSLog(@"image = %@, error = %@, contextInfo = %@", image, error, contextInfo);
 }
 
