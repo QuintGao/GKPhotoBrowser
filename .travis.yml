@@ -11,7 +11,5 @@ before_install:
 script:
   - set -o pipefail
 
-  - xcodebuild clean build -workspace GKPhotoBrowserDemo/GKPhotoBrowserDemo.xcworkspace -scheme GKPhotoBrowserDemo -sdk iphonesimulator -configuration Debug | xcpretty -c
-
 after_success:
   - bash <(curl -s https://codecov.io/bash)
