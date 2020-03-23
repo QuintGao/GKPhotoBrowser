@@ -23,7 +23,6 @@ static Class imageManagerClass = nil;
 @property (nonatomic, assign, readwrite) NSInteger      currentIndex;
 @property (nonatomic, strong, readwrite) GKPhotoView    *curPhotoView;
 @property (nonatomic, assign, readwrite) BOOL           isLandspace;
-@property (nonatomic, assign, readwrite) UIDeviceOrientation currentOrientation;
 
 @property (nonatomic, strong) UIScrollView *photoScrollView;
 
@@ -37,7 +36,9 @@ static Class imageManagerClass = nil;
 @property (nonatomic, strong) NSArray *coverViews;
 @property (nonatomic, copy) layoutBlock layoutBlock;
 
-/** 记录上一次的设备方向 */
+/** 当前设备方向 */
+@property (nonatomic, assign, readwrite) UIDeviceOrientation currentOrientation;
+/** 上一次的设备方向 */
 @property (nonatomic, assign) UIDeviceOrientation originalOrientation;
 
 /** 正在发生屏幕旋转 */
@@ -59,54 +60,22 @@ static Class imageManagerClass = nil;
 
 @property (nonatomic, strong) id<GKWebImageProtocol> imageProtocol;
 
+/** 20200312 是否已经开始开始监听屏幕旋转,用于修复issue 67 和 issue 71
+ 添加本参数的原因说明：
+ (1).iOS 13.x要求
+ endGeneratingDeviceOrientationNotifications 和
+ beginGeneratingDeviceOrientationNotifications 需要成对调用，如果已经调用过beginGeneratingDeviceOrientationNotifications，再次调用的话，会导致crash。
+ 报错：NSInternalInconsistencyException原因：threading violation: expected the main thread
+ (2).解决GKPhotoBrowser可能在endGeneratingDeviceOrientationNotifications时影响了App本身的屏幕旋转监听的问题。
+ **/
+@property(nonatomic, assign) BOOL isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared;
+
+
+/// 20200312 用于防止多次addObserver，添加监听UIDeviceOrientationDidChangeNotification通知的flag
+@property(nonatomic, assign) BOOL isOrientationNotiObserverAdded;
 @end
 
 @implementation GKPhotoBrowser
-
-#pragma mark - 懒加载
-- (UIScrollView *)photoScrollView {
-    if (!_photoScrollView) {
-        CGRect frame = self.view.bounds;
-        frame.origin.x   -= kPhotoViewPadding;
-        frame.size.width += (2 * kPhotoViewPadding);
-        _photoScrollView = [[UIScrollView alloc] initWithFrame:frame];
-        _photoScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _photoScrollView.pagingEnabled  = YES;
-        _photoScrollView.delegate       = self;
-        _photoScrollView.showsVerticalScrollIndicator   = NO;
-        _photoScrollView.showsHorizontalScrollIndicator = NO;
-        _photoScrollView.backgroundColor                = [UIColor clearColor];
-        if (self.showStyle == GKPhotoBrowserShowStylePush) {
-            if (self.isPopGestureEnabled) {
-                _photoScrollView.gk_gestureHandleEnabled = YES;
-            }
-        }
-        
-        if (@available(iOS 11.0, *)) {
-            _photoScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        }
-    }
-    return _photoScrollView;
-}
-
-- (GKPanGestureRecognizer *)panGesture {
-    if (!_panGesture) {
-        _panGesture = [[GKPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-        _panGesture.direction = GKPanGestureRecognizerDirectionVertical;
-    }
-    return _panGesture;
-}
-
-- (GKPhoto *)currentPhoto {
-    if (self.currentIndex >= self.photos.count) {
-        return nil;
-    }
-    return self.photos[self.currentIndex];
-}
-
-- (GKPhotoView *)currentPhotoView {
-    return [self photoViewForIndex:self.currentIndex];
-}
 
 + (instancetype)photoBrowserWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)currentIndex {
     return [[self alloc] initWithPhotos:photos currentIndex:currentIndex];
@@ -121,7 +90,10 @@ static Class imageManagerClass = nil;
         self.isStatusBarShow         = NO;
         self.isHideSourceView        = YES;
         self.isFullWidthForLandSpace = YES;
-        self.maxZoomScale            = 2.0f;
+        self.maxZoomScale            = kMaxZoomScale;
+        self.doubleZoomScale         = self.maxZoomScale;
+        // 20200312
+        self.isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared = [UIDevice currentDevice].isGeneratingDeviceOrientationNotifications;
         
         _visiblePhotoViews  = [NSMutableArray new];
         _reusablePhotoViews = [NSMutableSet new];
@@ -228,7 +200,7 @@ static Class imageManagerClass = nil;
         _countLabel.bounds          = CGRectMake(0, 0, 80, 30);
         [self.contentView addSubview:_countLabel];
         
-        _countLabel.center = CGPointMake(GKScreenW * 0.5, (KIsiPhoneX && !isLandspace) ? 50 : 30);
+        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !isLandspace) ? 50 : 30);
         _countLabel.hidden = self.photos.count == 1;
         
         [self updateLabel];
@@ -282,6 +254,14 @@ static Class imageManagerClass = nil;
         [self delDeviceOrientationObserver];
     }else {
         [self addDeviceOrientationObserver];
+    }
+}
+
+- (void)setDoubleZoomScale:(CGFloat)doubleZoomScale {
+    if (doubleZoomScale > self.maxZoomScale) {
+        _doubleZoomScale = self.maxZoomScale;
+    }else {
+        _doubleZoomScale = doubleZoomScale;
     }
 }
 
@@ -357,7 +337,7 @@ static Class imageManagerClass = nil;
 }
 
 - (void)updateLabel {
-    _countLabel.text = [NSString stringWithFormat:@"%zd/%zd", self.currentIndex + 1, self.photos.count];
+    _countLabel.text = [NSString stringWithFormat:@"%zd/%zd", (long)(self.currentIndex + 1), (long)self.photos.count];
 }
 
 - (void)layoutSubviews {
@@ -393,7 +373,7 @@ static Class imageManagerClass = nil;
         !self.layoutBlock ? : self.layoutBlock(self, self.contentView.bounds);
     }else {
         _countLabel.bounds = CGRectMake(0, 0, 80, 30);
-        _countLabel.center = CGPointMake(GKScreenW * 0.5, (KIsiPhoneX && !self.isLandspace) ? 50 : 30);
+        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !self.isLandspace) ? 50 : 30);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {
@@ -490,7 +470,7 @@ static Class imageManagerClass = nil;
 
 - (void)resetPhotoBrowserWithPhotos:(NSArray *)photos {
     if (photos.count == 0) {
-        [self handleSingleTap:nil];
+        [self dismiss];
         return;
     }
     
@@ -905,14 +885,24 @@ static Class imageManagerClass = nil;
 - (void)addDeviceOrientationObserver {
     // 默认设备方向：竖屏
     self.originalOrientation = UIDeviceOrientationPortrait;
+    // 20200312 尚未添加observer的情况下才添加，防止多次重复添加
+    if(!_isOrientationNotiObserverAdded)
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+        _isOrientationNotiObserverAdded = YES;
+    }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 }
 
 - (void)delDeviceOrientationObserver {
+    // 20200312 如果在唤起GKPhotoBrowser前，app已经开启屏幕旋转通知GeneratingDeviceOrientationNotifications，那么无需停止，否则会影响全局的其他监听屏幕旋转的功能。
+    if(self.isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared)
+        return;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    if([UIDevice currentDevice].isGeneratingDeviceOrientationNotifications)
+        [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 }
 
 - (void)deviceOrientationDidChange {
@@ -1093,6 +1083,7 @@ static Class imageManagerClass = nil;
             photoView.failureText     = self.failureText;
             photoView.failureImage    = self.failureImage;
             photoView.maxZoomScale    = self.maxZoomScale;
+            photoView.doubleZoomScale = self.doubleZoomScale;
             
             __typeof(self) __weak weakSelf = self;
             photoView.zoomEnded = ^(GKPhotoView * _Nonnull curPhotoView, CGFloat scale) {
@@ -1240,6 +1231,51 @@ static Class imageManagerClass = nil;
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndDragging:willDecelerate:)]) {
         [self.delegate photoBrowser:self scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
+}
+
+#pragma mark - 懒加载
+- (UIScrollView *)photoScrollView {
+    if (!_photoScrollView) {
+        CGRect frame = self.view.bounds;
+        frame.origin.x   -= kPhotoViewPadding;
+        frame.size.width += (2 * kPhotoViewPadding);
+        _photoScrollView = [[UIScrollView alloc] initWithFrame:frame];
+        _photoScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _photoScrollView.pagingEnabled  = YES;
+        _photoScrollView.delegate       = self;
+        _photoScrollView.showsVerticalScrollIndicator   = NO;
+        _photoScrollView.showsHorizontalScrollIndicator = NO;
+        _photoScrollView.backgroundColor                = [UIColor clearColor];
+        if (self.showStyle == GKPhotoBrowserShowStylePush) {
+            if (self.isPopGestureEnabled) {
+                _photoScrollView.gk_gestureHandleEnabled = YES;
+            }
+        }
+        
+        if (@available(iOS 11.0, *)) {
+            _photoScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+    }
+    return _photoScrollView;
+}
+
+- (GKPanGestureRecognizer *)panGesture {
+    if (!_panGesture) {
+        _panGesture = [[GKPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        _panGesture.direction = GKPanGestureRecognizerDirectionVertical;
+    }
+    return _panGesture;
+}
+
+- (GKPhoto *)currentPhoto {
+    if (self.currentIndex >= self.photos.count) {
+        return nil;
+    }
+    return self.photos[self.currentIndex];
+}
+
+- (GKPhotoView *)currentPhotoView {
+    return [self photoViewForIndex:self.currentIndex];
 }
 
 @end

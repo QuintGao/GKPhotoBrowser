@@ -1,16 +1,19 @@
 language: objective-c
-xcode_project: GKPhotoBrowserDemo.xcodeproj
+osx_image: xcode11.3.1
 
-env:
-  global:
-    - FRAMEWORK_NAME=GKPhotoBrowser
 before_install:
-  - gem install xcpretty
-  
-script:
-  - xcodebuild -project $xcode_project -scheme $FRAMEWORK_NAME build | xcpretty
-  - pod lib lint
-  - carthage build --no-skip-current
+  - env
+  - locale
+  - xcpretty --version
+  - xcodebuild -version
+  - xcodebuild -showsdks
 
-notifications:
-  email: false
+script:
+  - set -o pipefail
+
+  - xcodebuild clean build -workspace GKPhotoBrowser.xcworkspace -scheme HudDemo -sdk iphonesimulator -configuration Debug | xcpretty -c
+  - xcodebuild clean build -workspace GKPhotoBrowser.xcworkspace -scheme HudDemoTV -sdk appletvsimulator -configuration Debug | xcpretty -c
+  - xcodebuild clean build test -workspace GKPhotoBrowser.xcworkspace -scheme HudTests -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPad Air (3rd generation),OS=13.2.2" -configuration Debug GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES | xcpretty -c
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

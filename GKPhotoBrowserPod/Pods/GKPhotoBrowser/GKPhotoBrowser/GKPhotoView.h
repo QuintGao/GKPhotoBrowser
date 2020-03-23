@@ -36,6 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** 图片最大放大倍数 */
 @property (nonatomic, assign) CGFloat maxZoomScale;
 
+/** 双击放大倍数 */
+@property (nonatomic, assign) CGFloat doubleZoomScale;
+
 /**
  开启这个选项后 在加载gif的时候 会大大的降低内存.与YYImage对gif的内存优化思路一样 default is NO
  */

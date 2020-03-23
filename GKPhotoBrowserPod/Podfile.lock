@@ -16,12 +16,12 @@ PODS:
     - AFNetworking/NSURLSession
   - GKCover (2.5.4)
   - GKNavigationBarViewController (2.4.4)
-  - GKPhotoBrowser (1.5.8):
+  - GKPhotoBrowser (1.6.0):
     - SDWebImage
   - SDAutoLayout (2.2.1)
-  - SDWebImage (5.5.2):
-    - SDWebImage/Core (= 5.5.2)
-  - SDWebImage/Core (5.5.2)
+  - SDWebImage (5.6.1):
+    - SDWebImage/Core (= 5.6.1)
+  - SDWebImage/Core (5.6.1)
   - YYModel (1.0.4)
 
 DEPENDENCIES:
@@ -47,11 +47,11 @@ SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   GKCover: 5340b5d73adf127a72a4a7649fe3bc6f734f7d23
   GKNavigationBarViewController: e9fb3f7a0bc644a37999673bc0fba8f6cd6104bc
-  GKPhotoBrowser: 906f2661106e11f2b3b2e386c6284331764bb4d5
+  GKPhotoBrowser: bcdc3f93cbbbce1339bc9fc57ff90c3a203213cf
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
-  SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
+  SDWebImage: 7edb9c3ea661e77a66661f7f044de8c1b55d1120
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
 PODFILE CHECKSUM: cc70d57172bbbf97ed1d8974d178a5d0e4d8c479
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1

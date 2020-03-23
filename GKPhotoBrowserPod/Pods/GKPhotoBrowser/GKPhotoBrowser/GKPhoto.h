@@ -69,6 +69,6 @@
 
 @property (nonatomic, assign) NSUInteger            nextIndex;
 @property (nonatomic, strong) UIImage               *curImage;
-@property (nonatomic, weak) dispatch_semaphore_t    lock;
+@property (nonatomic, assign) dispatch_semaphore_t  lock;
 
 @end
