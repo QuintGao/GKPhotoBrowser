@@ -280,6 +280,7 @@
     GKPhoto *photo = self.browser.photos[self.browser.currentIndex];
     
     UIImageWriteToSavedPhotosAlbum(photo.image, self, @selector(image:didFinishSavingWithError:contextInfo:), (__bridge void *)self);
+    
 }
 
 - (void)tabkePhoto {
