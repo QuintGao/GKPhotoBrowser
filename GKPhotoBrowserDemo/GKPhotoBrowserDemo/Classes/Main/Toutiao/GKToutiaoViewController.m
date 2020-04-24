@@ -199,10 +199,10 @@
 - (void)resetCoverFrame:(CGRect)frame index:(NSInteger)index{
     
     self.closeBtn.left = 15;
-    self.closeBtn.top  = 20 + GK_SAVEAREA_TOP;
+    self.closeBtn.top  = 20 + GK_SAFEAREA_TOP;
 
     self.moreBtn.left  = frame.size.width - 15 - self.moreBtn.width;
-    self.moreBtn.top   = 20 + GK_SAVEAREA_TOP;
+    self.moreBtn.top   = 20 + GK_SAFEAREA_TOP;
 
     BOOL isLandspace = frame.size.width > frame.size.height;
 
