@@ -49,8 +49,6 @@
 /// 是否隐藏导航栏分割线，默认为NO
 @property (nonatomic, assign) BOOL                          gk_navLineHidden;
 
-
-
 /// 显示导航栏分割线
 - (void)showNavLine;
 

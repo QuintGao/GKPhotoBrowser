@@ -7,8 +7,13 @@
 //
 
 #import "GKPhotoBrowser.h"
-#import "GKWebImageManager.h"
 #import "GKPanGestureRecognizer.h"
+
+#if __has_include(<GKYYWebImageManager.h>)
+#import "GKYYWebImageManager.h"
+#else
+#import "GKSDWebImageManager.h"
+#endif
 
 static Class imageManagerClass = nil;
 
@@ -98,9 +103,12 @@ static Class imageManagerClass = nil;
         _visiblePhotoViews  = [NSMutableArray new];
         _reusablePhotoViews = [NSMutableSet new];
         
+        
+        imageManagerClass = NSClassFromString(@"GKSDWebImageManager");
         if (!imageManagerClass) {
-            imageManagerClass = [GKWebImageManager class];
+            imageManagerClass = NSClassFromString(@"GKYYWebImageManager");
         }
+        
         self.imageProtocol = [imageManagerClass new];
     }
     return self;
@@ -127,15 +135,16 @@ static Class imageManagerClass = nil;
     GKPhoto *photo          = [self currentPhoto];
     GKPhotoView *photoView  = [self currentPhotoView];
     self.curPhotoView = photoView;
-    if ([self.delegate respondsToSelector:@selector(photoBrowser:didSelectAtIndex:)]) {
-        [self.delegate photoBrowser:self didSelectAtIndex:self.currentIndex];
-    }
     
     if ([_imageProtocol imageFromMemoryForURL:photo.url] || photo.image) {
         [photoView setupPhoto:photo];
     }else {
         photoView.imageView.image = photo.placeholderImage ? photo.placeholderImage : photo.sourceImageView.image;
         [photoView adjustFrame];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:didSelectAtIndex:)]) {
+        [self.delegate photoBrowser:self didSelectAtIndex:self.currentIndex];
     }
     
     switch (self.showStyle) {
@@ -408,10 +417,6 @@ static Class imageManagerClass = nil;
 }
 
 #pragma mark - Public Methods
-+ (void)setImageManagerClass:(Class<GKWebImageProtocol>)cls {
-    imageManagerClass = cls;
-}
-
 - (void)setupCoverViews:(NSArray *)coverViews layoutBlock:(layoutBlock)layoutBlock {
     self.coverViews  = coverViews;
     self.layoutBlock = layoutBlock;
@@ -532,8 +537,6 @@ static Class imageManagerClass = nil;
 
 - (void)dismissAnimated:(BOOL)animated {
     GKPhoto *photo = [self currentPhoto];
-    
-    [photo stopAnimation];
     
     if (animated) {
         [UIView animateWithDuration:kAnimationDuration animations:^{
@@ -1079,7 +1082,6 @@ static Class imageManagerClass = nil;
             photoView.originLoadStyle = self.originLoadStyle;
             photoView.failStyle       = self.failStyle;
             photoView.isFullWidthForLandSpace = self.isFullWidthForLandSpace;
-            photoView.isLowGifMemory  = self.isLowGifMemory;
             photoView.failureText     = self.failureText;
             photoView.failureImage    = self.failureImage;
             photoView.maxZoomScale    = self.maxZoomScale;
@@ -1180,10 +1182,10 @@ static Class imageManagerClass = nil;
     
     [self setupPhotoViews];
     
-    // 滑动中，停止gif动画
-    [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [obj stopGifAnimation];
-    }];
+//    // 滑动中，停止gif动画
+//    [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        [obj stopGifAnimation];
+//    }];
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidScroll:)]) {
         [self.delegate photoBrowser:self scrollViewDidScroll:scrollView];
@@ -1198,9 +1200,9 @@ static Class imageManagerClass = nil;
     
     NSInteger index = (offsetX + scrollW * 0.5) / scrollW;
     
-    // 滚动结束，开始gif动画
-    GKPhotoView *currentPhotoView = [self currentPhotoView];
-    [currentPhotoView startGifAnimation];
+//     滚动结束，开始gif动画
+//    GKPhotoView *currentPhotoView = [self currentPhotoView];
+//    [currentPhotoView startGifAnimation];
     self.curPhotoView = [self currentPhotoView];
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:didSelectAtIndex:)]) {
@@ -1271,6 +1273,7 @@ static Class imageManagerClass = nil;
     if (self.currentIndex >= self.photos.count) {
         return nil;
     }
+    
     return self.photos[self.currentIndex];
 }
 

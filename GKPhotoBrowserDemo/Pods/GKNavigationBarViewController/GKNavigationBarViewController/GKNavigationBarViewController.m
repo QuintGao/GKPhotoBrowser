@@ -56,6 +56,11 @@
     
     // 获取状态
     self.gk_navigationBar.gk_statusBarHidden = self.gk_statusBarHidden;
+    
+    // 返回按钮样式
+    if (self.gk_backStyle == GKNavigationBarBackStyleNone) {
+        self.gk_backStyle = GKConfigure.backStyle;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -213,7 +218,7 @@
 - (void)setGk_navShadowColor:(UIColor *)gk_navShadowColor {
     _gk_navShadowColor = gk_navShadowColor;
     
-    self.gk_navigationBar.shadowImage = [UIImage gk_changeImage:[UIImage imageNamed:@"nav_line"] color:gk_navShadowColor];
+    self.gk_navigationBar.shadowImage = [UIImage gk_changeImage:[UIImage gk_imageNamed:@"nav_line"] color:gk_navShadowColor];
 }
 
 - (void)setGk_navShadowImage:(UIImage *)gk_navShadowImage {
@@ -299,9 +304,16 @@
     
     self.gk_navigationBar.gk_navLineHidden = gk_navLineHidden;
     
-    // 暂时的处理方法
-    if (GKDeviceVersion >= 11.0) {
-        self.gk_navShadowImage = gk_navLineHidden ? [UIImage new] : self.gk_navShadowImage;
+    if (@available(iOS 11.0, *)) {
+        UIImage *shadowImage = nil;
+        if (gk_navLineHidden) {
+            shadowImage = [UIImage new];
+        }else if (self.gk_navShadowImage) {
+            shadowImage = self.gk_navShadowImage;
+        }else if (self.gk_navShadowColor) {
+            shadowImage = [UIImage gk_changeImage:[UIImage gk_imageNamed:@"nav_line"] color:self.gk_navShadowColor];
+        }
+        self.gk_navigationBar.shadowImage = shadowImage;
     }
     
     [self.gk_navigationBar layoutSubviews];

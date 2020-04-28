@@ -109,11 +109,6 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign) BOOL isAdaptiveSafeArea;
 
 /**
- 开启这个选项后 在加载gif的时候 会大大的降低内存.与YYImage对gif的内存优化思路一样 default is NO
- */
-@property (nonatomic, assign) BOOL isLowGifMemory;
-
-/**
  * 是否启用滑动返回手势处理（当showStyle为GKPhotoBrowserShowStylePush时有效）
  */
 @property (nonatomic, assign) BOOL isPopGestureEnabled;
@@ -189,8 +184,6 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
  加载原图方法，外部调用
  */
 - (void)loadCurrentPhotoImage;
-
-+ (void)setImageManagerClass:(Class<GKWebImageProtocol>)cls;
 
 @end
 

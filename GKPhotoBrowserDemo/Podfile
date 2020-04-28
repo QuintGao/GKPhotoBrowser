@@ -8,12 +8,11 @@ target 'GKPhotoBrowserDemo' do
   
   pod 'AFNetworking'
   pod 'SDWebImage'
-  pod 'SDWebImage/GIF'
+  pod 'YYWebImage', '~> 1.0.5'
   pod 'GKNavigationBarViewController'
   pod 'YYModel'
   pod 'GKCover'
   pod 'SDAutoLayout'
-  pod 'ReactiveObjC'
   pod 'SVProgressHUD'
 
 end

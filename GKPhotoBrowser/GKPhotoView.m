@@ -7,7 +7,35 @@
 //
 
 #import "GKPhotoView.h"
-#import <SDWebImage/UIImage+MultiFormat.h>
+
+@implementation GKScrollView
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer == self.panGestureRecognizer) {
+        if (gestureRecognizer.state == UIGestureRecognizerStatePossible) {
+            if ([self isScrollViewOnTopOrBottom]) {
+                return NO;
+            }
+        }
+    }
+    return YES;
+}
+
+// 判断是否滑动到顶部或底部
+- (BOOL)isScrollViewOnTopOrBottom {
+    CGPoint translation = [self.panGestureRecognizer translationInView:self];
+    if (translation.y > 0 && self.contentOffset.y <= 0) {
+        return YES;
+    }
+    CGFloat maxOffsetY = floor(self.contentSize.height - self.bounds.size.height);
+    if (translation.y < 0 && self.contentOffset.y >= maxOffsetY) {
+        return YES;
+    }
+    return NO;
+}
+
+@end
 
 @interface GKPhotoView()
 
@@ -20,8 +48,6 @@
 @property (nonatomic, strong, readwrite) GKPhoto        *photo;
 
 @property (nonatomic, strong) id<GKWebImageProtocol>    imageProtocol;
-
-@property (nonatomic, strong) id operation;
 
 @property (nonatomic, assign) CGFloat realZoomScale;
 
@@ -71,7 +97,7 @@
 
 - (UIImageView *)imageView {
     if (!_imageView) {
-        _imageView               = [UIImageView new];
+        _imageView               = [_imageProtocol.imageViewClass new];
         _imageView.frame         = CGRectMake(0, 0, GKScreenW, GKScreenH);
         _imageView.clipsToBounds = YES;
     }
@@ -114,7 +140,6 @@
     [_imageProtocol cancelImageRequestWithImageView:self.imageView];
     
     if (photo) {
-        [photo stopAnimation];
         [self.imageView removeFromSuperview];
         self.imageView = nil;
         [self.scrollView addSubview:self.imageView];
@@ -122,22 +147,24 @@
         // 每次设置数据时，恢复缩放
         [self.scrollView setZoomScale:1.0 animated:NO];
         
-        // 已经加载成功，无需再加载
         if (photo.image) {
+            self.imageView.image = photo.image;
             [self.loadingView stopLoading];
             [self.loadingView hideFailure];
-            
-            photo.finished = YES; // 加载完成
-            
-            if (photo.isGif) {
-                [self setupPhotoWithData:self.photo.gifData image:self.photo.image];
-            }else {
-                self.imageView.image = photo.image;
-            }
+            [self.loadingView removeFromSuperview];
             
             [self adjustFrame];
             
             return;
+        }
+        
+        // 获取原图的缓存
+        if ([_imageProtocol imageFromMemoryForURL:photo.originUrl]) {
+            photo.originFinished = YES;
+        }
+
+        if ([_imageProtocol imageFromMemoryForURL:photo.url]) {
+            photo.finished = YES;
         }
         
         // 优先加载缓存图片
@@ -164,42 +191,14 @@
             [self adjustFrame];
         }
         
-        // 正在加载
-        if (self.operation) return;
-        
-        NSURL *url = isOrigin ? photo.originUrl : photo.url;
-        
-        // 获取原图的缓存图片，如果有缓存就显示原图
-        UIImage *originCacheImage = [_imageProtocol imageFromMemoryForURL:photo.originUrl];
-        NSData *originImageData = [[SDImageCache sharedImageCache] diskImageDataForKey:photo.originUrl.absoluteString];
-        
-        if (originCacheImage && originImageData) {
-            photo.originFinished = YES;
-            self.scrollView.scrollEnabled = YES;
-            [self.loadingView stopLoading];
-            !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0, YES);
-            [self setupPhotoWithData:originImageData image:originCacheImage];
-            [self adjustFrame];
-            
-            return;
+        NSURL *url = nil;
+        if (photo.originFinished) {
+            url = photo.originUrl;
+        }else {
+            url = isOrigin ? photo.originUrl : photo.url;
         }
         
-        // 获取图片缓存
-        UIImage *cacheImage = [_imageProtocol imageFromMemoryForURL:url];
-        NSData *cacheData = [[SDImageCache sharedImageCache] diskImageDataForKey:photo.url.absoluteString];
-        
-        if (cacheImage && cacheData) {
-            photo.finished = YES;
-            self.scrollView.scrollEnabled = YES;
-            [self.loadingView stopLoading];
-            !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0, NO);
-            [self setupPhotoWithData:cacheData image:cacheImage];
-            [self adjustFrame];
-            
-            return;
-        }
-        
-        if (!photo.failed && !cacheImage) {
+        if (!photo.failed && !placeholderImage) {
             if (isOrigin && self.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
                 [self.loadingView startLoading];
             }else if (!isOrigin && self.loadStyle != GKPhotoBrowserLoadStyleCustom) {
@@ -207,10 +206,9 @@
             }
         }
         
-        // 开始加载图片
-        __weak typeof(self) weakSelf = self;
-        gkWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
+        __weak __typeof(self) weakSelf = self;
+        GKWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
+            __strong __typeof(weakSelf) strongSelf = weakSelf;
             if (expectedSize == 0) return;
             float progress = (float)receivedSize / expectedSize;
             if (progress <= 0) progress = 0;
@@ -226,16 +224,15 @@
                 }
             });
         };
-
-        gkWebImageCompletionBlock completionBlock = ^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
+        
+        GKWebImageCompletionBlock completionBlock = ^(UIImage *image, NSURL *url, BOOL finished, NSError *error) {
+            __strong __typeof(weakSelf) strongSelf = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
-                strongSelf.operation = nil;
                 if (error) {
                     photo.failed = YES;
                     [strongSelf.loadingView stopLoading];
                     
-                    if ([photo.url.absoluteString isEqualToString:imageURL.absoluteString]) {
+                    if ([photo.url.absoluteString isEqualToString:url.absoluteString]) {
                         if (self.failStyle == GKPhotoBrowserFailStyleCustom) {
                             !strongSelf.loadFailed ? : strongSelf.loadFailed(self);
                         }else {
@@ -245,6 +242,7 @@
                     }
                 }else {
                     photo.finished = YES;
+                    photo.image = image;
                     if (isOrigin) {
                         photo.originFinished = YES;
                     }
@@ -258,72 +256,16 @@
                     
                     strongSelf.scrollView.scrollEnabled = YES;
                     [strongSelf.loadingView stopLoading];
-                    
-                    if (cacheType == SDImageCacheTypeMemory) {
-                        NSData *imageData = [[SDImageCache sharedImageCache] diskImageDataForKey:photo.url.absoluteString];
-                        [strongSelf setupPhotoWithData:imageData image:image];
-                    }else {
-                        [strongSelf setupPhotoWithData:data image:image];
-                    }
                 }
                 [strongSelf adjustFrame];
             });
         };
         
-        self.operation = [_imageProtocol loadImageWithURL:url progress:progressBlock completed:completionBlock];
+        [_imageProtocol setImageForImageView:self.imageView url:url placeholderImage:placeholderImage progress:progressBlock completion:completionBlock];
     }else {
         self.imageView.image = nil;
         
         [self adjustFrame];
-    }
-}
-
-- (void)setupPhotoWithData:(NSData *)data image:(UIImage *)image {
-    if (!data && !image) {
-        self.photo.failed = YES;
-        [self.loadingView showFailure];
-        return;
-    }
-    
-    UIImage *currentImage = image.images.count == 1 ? image.images.firstObject : image;
-    if (currentImage.images.count > 1) {
-        self.photo.image = currentImage;
-        self.photo.isGif = NO;
-        
-        self.imageView.image = currentImage;
-        
-        return;
-    }
-    
-    if (!currentImage) {
-        currentImage = [UIImage imageWithData:data];
-    }
-    
-    if (!data) {
-        self.photo.image = currentImage;
-        self.photo.isGif = NO;
-    }
-    
-    // gif图片
-    if ([NSData sd_imageFormatForImageData:data] == SDImageFormatGIF) {
-        self.photo.gifData  = data;
-        self.photo.isGif    = YES;
-        self.photo.image    = currentImage;
-        if (self.isLowGifMemory) {
-            self.photo.gifImage  = currentImage;
-            self.photo.imageView = self.imageView;
-            
-            [self.photo startAnimation];
-        }else {
-            self.photo.gifImage = [UIImage sdOverdue_animatedGIFWithData:data];
-        }
-        
-        self.imageView.image = self.photo.gifImage;
-    }else {
-        self.photo.isGif = NO;
-        self.photo.image = currentImage;
-        
-        self.imageView.image = self.photo.image;
     }
 }
 
@@ -333,22 +275,6 @@
     
     if (self.photo) {
         [self adjustFrame];
-    }
-}
-
-- (void)startGifAnimation {
-    if (self.photo.gifData) {
-        [self setupPhotoWithData:self.photo.gifData image:self.photo.image];
-    }
-}
-
-- (void)stopGifAnimation {
-    if (self.photo) {
-        if (self.isLowGifMemory) {
-            [self.photo stopAnimation];
-        }else {
-            self.imageView.image = self.photo.image;
-        }
     }
 }
 
@@ -472,7 +398,7 @@
 }
 
 - (void)cancelCurrentImageLoad {
-    [self.imageView sd_cancelCurrentImageLoad];
+    [_imageProtocol cancelImageRequestWithImageView:self.imageView];
 }
 
 - (void)dealloc {

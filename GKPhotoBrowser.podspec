@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GKPhotoBrowser"
-  s.version      = "1.6.0"
+  s.version      = "2.0.0"
   s.summary      = "iOS自定义图片浏览器，支持CocoaPods"
   s.homepage     = "https://github.com/QuintGao/GKPhotoBrowser"
   s.license      = "MIT"
@@ -9,9 +9,17 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "8.0"
   s.ios.deployment_target = "8.0"
   s.source       = { :git => "https://github.com/QuintGao/GKPhotoBrowser.git", :tag => s.version.to_s }
-  s.source_files  = "GKPhotoBrowser/**/*.{h,m}"
-  s.public_header_files = "GKPhotoBrowser/**/*.h"
-  s.resource      = "GKPhotoBrowser/GKPhotoBrowser.bundle"
-  s.frameworks    = "Foundation", "UIKit"
-  s.dependency    "SDWebImage"
+  
+  s.default_subspec = 'SD'
+  s.resource = 'GKPhotoBrowser/GKPhotoBrowser.bundle'
+  
+  s.subspec 'SD' do |sd|
+    sd.source_files = 'GKPhotoBrowser/*.{h,m}', 'GKPhotoBrowser/SDWebImage/*.{h,m}'
+    sd.dependency 'SDWebImage', '~> 5.0'
+  end
+  
+  s.subspec 'YY' do |yy|
+    yy.source_files = 'GKPhotoBrowser/*.{h,m}', 'GKPhotoBrowser/YYWebImage/*.{h,m}'
+    yy.dependency 'YYWebImage', '~> 1.0.5'
+  end
 end

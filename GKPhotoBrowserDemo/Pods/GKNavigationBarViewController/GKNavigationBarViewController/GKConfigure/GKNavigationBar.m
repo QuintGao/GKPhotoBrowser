@@ -24,7 +24,7 @@
     [super layoutSubviews];
     
     // 这里为了适配iOS11，需要遍历所有的子控件，并向下移动状态栏的高度
-    if (GKDeviceVersion >= 11.0) {
+    if (@available(iOS 11.0, *)) {
         [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj isKindOfClass:NSClassFromString(@"_UIBarBackground")]) {
                 CGRect frame = obj.frame;
@@ -74,12 +74,14 @@
     _gk_navBarBackgroundAlpha = gk_navBarBackgroundAlpha;
     
     [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (GKDeviceVersion >= 10.0f && [obj isKindOfClass:NSClassFromString(@"_UIBarBackground")]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (obj.alpha != gk_navBarBackgroundAlpha) {
-                    obj.alpha = gk_navBarBackgroundAlpha;
-                }
-            });
+        if (@available(iOS 10.0, *)) {
+            if ([obj isKindOfClass:NSClassFromString(@"_UIBarBackground")]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (obj.alpha != gk_navBarBackgroundAlpha) {
+                        obj.alpha = gk_navBarBackgroundAlpha;
+                    }
+                });
+            }
         }else if ([obj isKindOfClass:NSClassFromString(@"_UINavigationBarBackground")]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (obj.alpha != gk_navBarBackgroundAlpha) {

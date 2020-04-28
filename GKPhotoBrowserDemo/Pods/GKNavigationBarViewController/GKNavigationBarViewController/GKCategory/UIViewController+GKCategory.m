@@ -34,9 +34,7 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
 }
 
 - (void)gk_viewDidAppear:(BOOL)animated {
-    
-    // 在每次视图出现的时候重新设置当前控制器的手势
-    [[NSNotificationCenter defaultCenter] postNotificationName:GKViewControllerPropertyChangedNotification object:@{@"viewController": self}];
+    [self postPropertyChangeNotification];
     
     [self gk_viewDidAppear:animated];
 }
@@ -58,8 +56,7 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
 - (void)setGk_interactivePopDisabled:(BOOL)gk_interactivePopDisabled {
     objc_setAssociatedObject(self, GKInteractivePopKey, @(gk_interactivePopDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    // 当属性改变时，发送通知
-    [[NSNotificationCenter defaultCenter] postNotificationName:GKViewControllerPropertyChangedNotification object:@{@"viewController": self}];
+    [self postPropertyChangeNotification];
 }
 
 - (BOOL)gk_fullScreenPopDisabled {
@@ -69,8 +66,7 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
 - (void)setGk_fullScreenPopDisabled:(BOOL)gk_fullScreenPopDisabled {
     objc_setAssociatedObject(self, GKFullScreenPopKey, @(gk_fullScreenPopDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    // 当属性改变时，发送通知
-    [[NSNotificationCenter defaultCenter] postNotificationName:GKViewControllerPropertyChangedNotification object:@{@"viewController": self}];
+    [self postPropertyChangeNotification];
 }
 
 - (CGFloat)gk_popMaxAllowedDistanceToLeftEdge {
@@ -80,12 +76,12 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
 - (void)setGk_popMaxAllowedDistanceToLeftEdge:(CGFloat)gk_popMaxAllowedDistanceToLeftEdge {
     objc_setAssociatedObject(self, GKPopMaxDistanceKey, @(gk_popMaxAllowedDistanceToLeftEdge), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    // 当属性改变时，发送通知
-    [[NSNotificationCenter defaultCenter] postNotificationName:GKViewControllerPropertyChangedNotification object:@{@"viewController": self}];
+    [self postPropertyChangeNotification];
 }
 
 - (CGFloat)gk_navBarAlpha {
-    return [objc_getAssociatedObject(self, GKNavBarAlphaKey) floatValue];
+    id obj = objc_getAssociatedObject(self, GKNavBarAlphaKey);
+    return obj ? [obj floatValue] : 1.0f;
 }
 
 - (void)setGk_navBarAlpha:(CGFloat)gk_navBarAlpha {
@@ -102,12 +98,7 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
 - (void)setGk_statusBarStyle:(UIStatusBarStyle)gk_statusBarStyle {
     objc_setAssociatedObject(self, GKStatusBarStyleKey, @(gk_statusBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        // 调用隐藏方法
-        [self preferredStatusBarStyle];
-        
-        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
-    }
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (BOOL)gk_statusBarHidden {
@@ -118,12 +109,7 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
 - (void)setGk_statusBarHidden:(BOOL)gk_statusBarHidden {
     objc_setAssociatedObject(self, GKStatusBarHiddenKey, @(gk_statusBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        // 调用隐藏方法
-        [self prefersStatusBarHidden];
-        
-        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
-    }
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (GKNavigationBarBackStyle)gk_backStyle {
@@ -154,6 +140,8 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
 
 - (void)setGk_pushDelegate:(id<GKViewControllerPushDelegate>)gk_pushDelegate {
     objc_setAssociatedObject(self, GKPushDelegateKey, gk_pushDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self postPropertyChangeNotification];
 }
 
 - (id<GKViewControllerPopDelegate>)gk_popDelegate {
@@ -163,8 +151,7 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
 - (void)setGk_popDelegate:(id<GKViewControllerPopDelegate>)gk_popDelegate {
     objc_setAssociatedObject(self, GKPopDelegateKey, gk_popDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    // 当属性改变时，发送通知
-    [[NSNotificationCenter defaultCenter] postNotificationName:GKViewControllerPropertyChangedNotification object:@{@"viewController": self}];
+    [self postPropertyChangeNotification];
 }
 
 - (void)setNavBarAlpha:(CGFloat)alpha {
@@ -222,6 +209,10 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
 
 - (void)backItemClick:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)postPropertyChangeNotification {
+    [[NSNotificationCenter defaultCenter] postNotificationName:GKViewControllerPropertyChangedNotification object:@{@"viewController": self}];
 }
 
 @end

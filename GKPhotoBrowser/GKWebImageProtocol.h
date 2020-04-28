@@ -8,16 +8,19 @@
 
 #import "GKPhotoBrowserConfigure.h"
 
-typedef void (^gkWebImageProgressBlock)(NSInteger receivedSize, NSInteger expectedSize);
+typedef void (^GKWebImageProgressBlock)(NSInteger receivedSize, NSInteger expectedSize);
 
-typedef void (^gkWebImageCompletionBlock)(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL);
+typedef void (^GKWebImageCompletionBlock)(UIImage * _Nullable image, NSURL * _Nullable url, BOOL finished, NSError * _Nullable error);
 
 @protocol GKWebImageProtocol<NSObject>
 
-// 加载图片
-- (id _Nonnull )loadImageWithURL:(nullable NSURL *)url
-                        progress:(nullable gkWebImageProgressBlock)progress
-                       completed:(nullable gkWebImageCompletionBlock)completion;
+- (Class _Nonnull)imageViewClass;
+
+- (void)setImageForImageView:(nullable UIImageView *)imageView
+                         url:(nullable NSURL *)url
+            placeholderImage:(nullable UIImage *)placeholderImage
+                    progress:(nullable GKWebImageProgressBlock)progressBlock
+                  completion:(nullable GKWebImageCompletionBlock)completionBlock;
 
 - (void)cancelImageRequestWithImageView:(nullable UIImageView *)imageView;
 

@@ -1,6 +1,13 @@
 # GKCover
 
-已支持CocoaPods：pod 'GKCover' ,'~>2.4.9'
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/QuintGao/GKCover/master/LICENSE)&nbsp;&nbsp;
+[![platform](http://img.shields.io/cocoapods/p/GKCover.svg?style=flat)](http://cocoadocs.org/docsets/GKCover)&nbsp;&nbsp;
+[![languages](https://img.shields.io/badge/language-objective--c-blue.svg)](#) &nbsp;&nbsp;
+[![cocoapods](http://img.shields.io/cocoapods/v/GKCover.svg?style=flat)](https://cocoapods.org/pods/GKCover)&nbsp;&nbsp;
+[![support](https://img.shields.io/badge/support-ios%208%2B-orange.svg)](#) 
+
+一行代码实现遮罩视图，让你的弹窗更easy
+==============
 
 ## 说明
     关于iPhone X及iOS 11的适配问题，在底部弹出视图时，建议自行将弹出视图的底部距离增加安全区域的距离，防止遮挡。
@@ -141,6 +148,8 @@ UIView *customView = [UIView new];
     新增改变遮罩背景色方法
 2.5.4版本：2019.3.11
     优化代码，防止内存泄漏
+2.5.5版本：2020.04.11
+    优化，解决多处调用隐藏block可以导致的bug
 ```
 
 ## 技术支持：

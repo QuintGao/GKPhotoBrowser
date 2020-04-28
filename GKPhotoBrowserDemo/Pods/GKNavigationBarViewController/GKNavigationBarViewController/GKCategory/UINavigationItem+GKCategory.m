@@ -115,9 +115,10 @@
             NSDictionary *oriSels = @{@"_UINavigationBarContentView": @"layoutSubviews",
                                       @"_UINavigationBarContentViewLayout": @"_updateMarginConstraints"
                                     };
-            
+            // bug fixed：这里要用NSObject.class 不能用self，不然会导致crash
+            // 具体可看 注意系统库的坑之load函数调用多次 http://satanwoo.github.io/2017/11/02/load-twice/
             [oriSels enumerateKeysAndObjectsUsingBlock:^(NSString *cls, NSString *oriSel, BOOL * _Nonnull stop) {
-                gk_swizzled_method(NSClassFromString(cls), oriSel, self);
+                gk_swizzled_method(NSClassFromString(cls), oriSel, NSObject.class);
             }];
         }
     });

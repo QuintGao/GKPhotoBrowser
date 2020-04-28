@@ -10,7 +10,7 @@
 #import "GKTest02ViewCell.h"
 
 #import "GKPhotoBrowser.h"
-//#import <SVProgressHUD/SVProgressHUD.h>
+#import <SVProgressHUD/SVProgressHUD.h>
 
 @interface GKTest02ViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -52,7 +52,7 @@
 - (void)setupData {
     
     self.dataSource = @[
-        @[@"001", @"002", @"004"],
+        @[@"001", @"002", @"003"],
         @[@"http://ww2.sinaimg.cn/large/85d77acdgw1f4hzsolyscg20cy07xkjp.jpg",
           @"http://ww2.sinaimg.cn/large/85ccde71gw1f9ksx38wjrg20dw05ah0v.jpg",
           @"http://ww1.sinaimg.cn/large/85cccab3gw1etdecj1njlg20dw06lnpd.jpg",
@@ -157,11 +157,11 @@
                 browser.failStyle = GKPhotoBrowserFailStyleCustom;
             }
         }
+        browser.loadStyle = GKLoadingStyleDeterminate;
 //        browser.failStyle       = GKPhotoBrowserFailStyleOnlyImage;
         browser.failureText     = @"图片加载失败了，555";
         browser.failureImage    = [UIImage imageNamed:@"error"];
         browser.delegate        = self;
-        browser.isLowGifMemory  = YES;
         
         [browser showFromVC:weakSelf];
     };
@@ -178,8 +178,8 @@
 
 #pragma mark - GKPhotoBrowserDelegate
 - (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index {
-//    [SVProgressHUD setMaximumDismissTimeInterval:2.0f];
-//    [SVProgressHUD showErrorWithStatus:@"加载失败"];
+    [SVProgressHUD setMaximumDismissTimeInterval:2.0f];
+    [SVProgressHUD showErrorWithStatus:@"加载失败"];
 }
 
 @end

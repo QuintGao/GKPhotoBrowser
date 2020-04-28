@@ -9,12 +9,7 @@
 #ifndef GKPhotoBrowserConfigure_h
 #define GKPhotoBrowserConfigure_h
 
-#import "UIImage+GKDecoder.h"
 #import "UIScrollView+GKGestureHandle.h"
-#import <SDWebImage/UIView+WebCache.h>
-#import <SDWebImage/UIImageView+WebCache.h>
-#import <SDWebImage/SDWebImageManager.h>
-#import <SDWebImage/SDWebImageDownloader.h>
 
 #define GKScreenW [UIScreen mainScreen].bounds.size.width
 #define GKScreenH [UIScreen mainScreen].bounds.size.height
@@ -41,10 +36,6 @@ NO)
 #define kPhotoViewPadding           10
 
 #define kAnimationDuration          0.25f
-
-#define LOCK(...) dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER); \
-__VA_ARGS__; \
-dispatch_semaphore_signal(_lock);
 
 #define GKPhotoBrowserSrcName(file) [@"GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
 

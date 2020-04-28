@@ -44,14 +44,14 @@
     }
     
     self.toViewController.view.layer.shadowColor   = [[UIColor blackColor] CGColor];
-    self.toViewController.view.layer.shadowOpacity = 0.6;
-    self.toViewController.view.layer.shadowRadius  = 8;
+    self.toViewController.view.layer.shadowOpacity = 0.2;
+    self.toViewController.view.layer.shadowRadius  = 4;
     
     // 执行动画
     [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
         self.shadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
         if (self.scale) {
-            if (GKDeviceVersion >= 11.0) {
+            if (@available(iOS 11.0, *)) {
                 CGRect frame = fromView.frame;
                 frame.origin.x     = GKConfigure.gk_translationX;
                 frame.origin.y     = GKConfigure.gk_translationY;

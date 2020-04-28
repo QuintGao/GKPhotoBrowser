@@ -13,8 +13,6 @@
 
 #define GKConfigure [GKNavigationBarConfigure sharedInstance]
 
-#define GKDeviceVersion [[[UIDevice currentDevice] systemVersion] floatValue]
-
 // 屏幕相关
 #define GK_SCREEN_WIDTH                 [UIScreen mainScreen].bounds.size.width
 #define GK_SCREEN_HEIGHT                [UIScreen mainScreen].bounds.size.height

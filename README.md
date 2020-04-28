@@ -16,13 +16,14 @@ iOS仿微信、今日头条等图片浏览器
 ## 重要
 如果在使用过程中遇到问题，请先检查使用的版本是否是最新版本（可在说明最上面的pod后面查看），如果不是最新版本，请先更新到最后版本，看看问题是否存在，如果依然存在，可提issue说明或加我QQ1094887059直接问我，最好能提供demo。
 
+2.0.0版本之后修改了对gif图片的加载方式，仅支持SDWebImage 5.x 和 YYWebImage 1.0.5，如果你想使用YYWebImage，请使用pod 'GKPhotoBrowser/YY'
+
 ## 说明
 GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的有仿微信、今日头条等的图片浏览器。
 
 参考：
     [KSPhotoBrowser](https://github.com/skx926/KSPhotoBrowser)，
     [MJPhotoBrowser(已弃用)](https://github.com/Sunnyyoung/MJPhotoBrowser)
-    对于gif图片的加载，参考了[LBPhotoBrowser](https://github.com/tianliangyihou/LBPhotoBrowser)
 
 ## 主要功能
 
@@ -81,6 +82,7 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2020.04.28  2.0.0版本 优化GIF图片显示，支持SDWebImage 5.x 和 YYWebImage 
 2020.03.14  1.6.0版本，增加双击放大倍数
 2020.03.12  修复crash #67,#71 感谢chimingzi，解决编译报错#65
 2019.10.20  优化长图闪动问题，适配iOS13

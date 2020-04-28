@@ -8,11 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "GKPhoto.h"
-#import "GKScrollView.h"
 #import "GKWebImageProtocol.h"
 #import "GKLoadingView.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@interface GKScrollView : UIScrollView
+
+@end
 
 @class GKPhotoView;
 
@@ -39,11 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 /** 双击放大倍数 */
 @property (nonatomic, assign) CGFloat doubleZoomScale;
 
-/**
- 开启这个选项后 在加载gif的时候 会大大的降低内存.与YYImage对gif的内存优化思路一样 default is NO
- */
-@property (nonatomic, assign) BOOL isLowGifMemory;
-
 /** 是否重新布局 */
 @property (nonatomic, assign) BOOL isLayoutSubViews;
 
@@ -69,9 +67,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)adjustFrame;
 // 重新布局
 - (void)resetFrame;
-
-- (void)startGifAnimation;
-- (void)stopGifAnimation;
 
 @end
 

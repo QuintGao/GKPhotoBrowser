@@ -884,6 +884,8 @@ static UIColor          *_bgColor;         // 背景色
 }
 
 + (void)hideCover {
+    if (!_cover) return;
+    if (!_hasCover) return;
     // 这里为了防止动画未完成导致的不能及时判断cover是否存在，实际上cover再这里并没有销毁
     _hasCover = NO;
     
