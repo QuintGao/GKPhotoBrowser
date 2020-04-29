@@ -297,4 +297,12 @@
     NSLog(@"image = %@, error = %@, contextInfo = %@", image, error, contextInfo);
 }
 
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 @end
