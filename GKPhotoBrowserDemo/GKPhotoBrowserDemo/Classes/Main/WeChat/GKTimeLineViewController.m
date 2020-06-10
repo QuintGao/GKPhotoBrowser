@@ -9,8 +9,9 @@
 #import "GKTimeLineViewController.h"
 #import "GKTimeLineViewCell.h"
 #import "GKPhotoBrowser.h"
+#import <TZImagePickerController/TZImagePickerController.h>
 
-@interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
+@interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate, TZImagePickerControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -118,7 +119,7 @@
         browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
         browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
         browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
-        browser.maxZoomScale = 4.0f;
+        browser.maxZoomScale = 20.0f;
         browser.doubleZoomScale = 2.0f;
         
         [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
@@ -148,6 +149,15 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     GKTimeLineFrame *f = self.dataFrames[indexPath.row];
     return f.cellHeight;
+}
+
+#pragma mark - TZImagePickerControllerDelegate
+- (void)tz_imagePickerControllerDidCancel:(TZImagePickerController *)picker {
+    
+}
+
+- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
+    NSLog(@"%@", photos);
 }
 
 #pragma mark - GKPhotoBrowserDelegate
@@ -285,7 +295,9 @@
 }
 
 - (void)tabkePhoto {
-    
+    TZImagePickerController *pickerVC = [[TZImagePickerController alloc] initWithMaxImagesCount:1 delegate:self];
+    pickerVC.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:pickerVC animated:YES completion:nil];
 }
 
 - (void)cancelBtnClick:(id)sender {

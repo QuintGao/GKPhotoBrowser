@@ -139,6 +139,10 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 
 - (instancetype)initWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)currentIndex;
 
+/// 自定义图片请求类
+/// @param protocol 需实现GKWebImageProtocol协议
+- (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol;
+
 /**
  为浏览器添加自定义遮罩视图
 

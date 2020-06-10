@@ -114,6 +114,10 @@ static Class imageManagerClass = nil;
     return self;
 }
 
+- (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol {
+    self.imageProtocol = protocol;
+}
+
 - (instancetype)init {
     NSAssert(NO, @"Use initWithPhotos:currentIndex: instead.");
     return nil;
@@ -558,11 +562,12 @@ static Class imageManagerClass = nil;
 
 #pragma mark - Gesture Handle
 - (void)handleSingleTap:(UITapGestureRecognizer *)tap {
-    if (self.isSingleTapDisabled) return;
-    
     if ([self.delegate respondsToSelector:@selector(photoBrowser:singleTapWithIndex:)]) {
         [self.delegate photoBrowser:self singleTapWithIndex:self.currentIndex];
     }
+    
+    // 禁言默认单击事件
+    if (self.isSingleTapDisabled) return;
     
     [self dismiss];
 }
