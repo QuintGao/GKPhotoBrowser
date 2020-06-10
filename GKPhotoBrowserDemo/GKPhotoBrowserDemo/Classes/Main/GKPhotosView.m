@@ -14,6 +14,7 @@ static CGFloat   photoH;
 
 #import "GKPhotosView.h"
 #import "GKTimeLineModel.h"
+#import <SDWebImage/SDWebImage.h>
 
 @interface GKPhotosView()
 
@@ -60,6 +61,9 @@ static CGFloat   photoH;
         
         if ([url hasPrefix:@"http"]) {
             [imgView sd_setImageWithURL:[NSURL URLWithString:url]];
+        }else if ([url hasSuffix:@"gif"]){
+            SDAnimatedImage *animatedImage = [SDAnimatedImage imageNamed:url];
+            imgView.image = animatedImage;
         }else {
             imgView.image = [UIImage imageNamed:url];
         }
@@ -90,6 +94,8 @@ static CGFloat   photoH;
         if ([image.url hasPrefix:@"http"]) {
             NSString *urlStr = image.thumbnail_url ? image.thumbnail_url : image.url;
             [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
+        }else if ([image.url hasSuffix:@"gif"]){
+            [imgView sd_setImageWithURL:[NSURL fileURLWithPath:image.url]];
         }else {
             imgView.image = [UIImage imageNamed:image.url];
         }

@@ -10,7 +10,10 @@
 #import "GKTest02ViewCell.h"
 
 #import "GKPhotoBrowser.h"
+#import "GKYYWebImageManager.h"
 #import <SVProgressHUD/SVProgressHUD.h>
+#import <SDWebImage/SDWebImage.h>
+#import <YYWebImage/YYWebImage.h>
 
 @interface GKTest02ViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -52,7 +55,7 @@
 - (void)setupData {
     
     self.dataSource = @[
-        @[@"001", @"002", @"003"],
+        @[@"001", @"002", @"003", @"test.gif"],
         @[@"http://ww2.sinaimg.cn/large/85d77acdgw1f4hzsolyscg20cy07xkjp.jpg",
           @"http://ww2.sinaimg.cn/large/85ccde71gw1f9ksx38wjrg20dw05ah0v.jpg",
           @"http://ww1.sinaimg.cn/large/85cccab3gw1etdecj1njlg20dw06lnpd.jpg",
@@ -136,7 +139,13 @@
             if ([obj hasPrefix:@"http"]) {
                 photo.url         = [NSURL URLWithString:obj];
             }else {
-                photo.image       = [UIImage imageNamed:obj];
+//                photo.image       = [UIImage imageNamed:obj];
+                
+                // 如果使用SDWebImage，请使用SDAnimatedImage加载本地图片
+                // photo.image = [SDAnimatedImage imageNamed:obj];
+                
+                // 如果使用YYWebImage，请使用YYImage加载本地图片
+                photo.image = [YYImage imageNamed:obj];;
             }
             photo.sourceImageView = containerView.subviews[idx];
             [photoArrs addObject:photo];
@@ -145,6 +154,8 @@
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photoArrs currentIndex:index];
         browser.showStyle       = GKPhotoBrowserShowStyleZoom;
         browser.hideStyle       = GKPhotoBrowserHideStyleZoomScale;
+        // 指定imageProtocol
+        [browser setupWebImageProtocol:[GKYYWebImageManager new]];
         
         if (indexPath.row == 2) {
             if (index == 0) {

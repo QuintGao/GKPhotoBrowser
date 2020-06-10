@@ -51,6 +51,7 @@
 		795FA6231FF338200057BDB0 /* GKTest02ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA6071FF338200057BDB0 /* GKTest02ViewController.m */; };
 		795FA6281FF34F230057BDB0 /* GKPhotoBrowser.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */; };
 		795FA6291FF34F230057BDB0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6271FF34F220057BDB0 /* README.md */; };
+		79B33755249111E100590023 /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = 79B33754249111E100590023 /* test.gif */; };
 		90EEF67CE4A0A3BDF6976160 /* Pods_GKPhotoBrowserDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -171,6 +172,7 @@
 		795FA6251FF3383E0057BDB0 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GKPhotoBrowser.podspec; path = ../../GKPhotoBrowser.podspec; sourceTree = "<group>"; };
 		795FA6271FF34F220057BDB0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		79B33754249111E100590023 /* test.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test.gif; sourceTree = "<group>"; };
 		E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GKPhotoBrowserDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE7DA052FCA02BBA178A7C45 /* Pods-GKPhotoBrowserDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GKPhotoBrowserDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -295,6 +297,7 @@
 				795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */,
 				795FA6271FF34F220057BDB0 /* README.md */,
 				600DD281230A3EA000A88D16 /* .travis.yml */,
+				79B33754249111E100590023 /* test.gif */,
 			);
 			path = GKPhotoBrowserDemo;
 			sourceTree = "<group>";
@@ -559,6 +562,7 @@
 			files = (
 				795FA6281FF34F230057BDB0 /* GKPhotoBrowser.podspec in Resources */,
 				795FA59B1FF333420057BDB0 /* LaunchScreen.storyboard in Resources */,
+				79B33755249111E100590023 /* test.gif in Resources */,
 				795FA5D91FF334100057BDB0 /* GKPhotoBrowser.bundle in Resources */,
 				600DD282230A3EA000A88D16 /* .travis.yml in Resources */,
 				795FA6161FF338200057BDB0 /* toutiao.txt in Resources */,
