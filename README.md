@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/QuintGao/GKPhotoBrowser/blob/master/GKPhotoBrowser_logo.png" title="GKPhotoBrowser logo" float=left>
+  <img src="https://github.com/QuintGao/GKPhotoBrowser/blob/master/GKPhotoBrowserDemo/GKPhotoBrowserDemo/Assets.xcassets/GKPhotoBrowser_logo.imageset/GKPhotoBrowser_logo.png" title="GKPhotoBrowser logo" float=left>
 </p>
 
 
