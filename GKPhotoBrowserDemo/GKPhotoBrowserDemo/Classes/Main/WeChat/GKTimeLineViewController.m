@@ -10,6 +10,9 @@
 #import "GKTimeLineViewCell.h"
 #import "GKPhotoBrowser.h"
 #import <TZImagePickerController/TZImagePickerController.h>
+#import <SDWebImage/SDWebImage.h>
+#import <YYWebImage/YYWebImage.h>
+#import <SVProgressHUD/SVProgressHUD.h>
 
 @interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate, TZImagePickerControllerDelegate>
 
@@ -290,8 +293,35 @@
     
     GKPhoto *photo = self.browser.photos[self.browser.currentIndex];
     
-    UIImageWriteToSavedPhotosAlbum(photo.image, self, @selector(image:didFinishSavingWithError:contextInfo:), (__bridge void *)self);
+    NSData *imageData = nil;
     
+    if ([photo.image isKindOfClass:[SDAnimatedImage class]]) {
+        imageData = [(SDAnimatedImage *)photo.image animatedImageData];
+    }else if ([photo.image isKindOfClass:[YYImage class]]) {
+        imageData = [(YYImage *)photo.image animatedImageData];
+    }else {
+        imageData = [photo.image sd_imageData];
+    }
+    
+    if (!imageData) return;
+    
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        if (@available(iOS 9, *)) {
+            PHAssetCreationRequest *request = [PHAssetCreationRequest creationRequestForAsset];
+            [request addResourceWithType:PHAssetResourceTypePhoto data:imageData options:nil];
+            request.creationDate = [NSDate date];
+        }
+    } completionHandler:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                NSLog(@"保存照片成功");
+                [SVProgressHUD showSuccessWithStatus:@"图片保存成功"];
+            } else if (error) {
+                [SVProgressHUD showErrorWithStatus:@"保存保存失败"];
+                NSLog(@"保存照片出错:%@",error.localizedDescription);
+            }
+        });
+    }];
 }
 
 - (void)tabkePhoto {
