@@ -37,6 +37,9 @@
     self.mainTable.dataSource = self;
     self.mainTable.delegate   = self;
     [self.mainTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"mainTableCell"];
+    if (@available(iOS 11.0, *)) {
+        self.mainTable.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     [self.view addSubview:self.mainTable];
 }
 
@@ -71,6 +74,8 @@
     [super viewWillLayoutSubviews];
     
     self.mainTable.frame = self.view.bounds;
+    self.mainTable.top        = self.gk_navigationBar.bottom;
+    self.mainTable.height     = self.view.height - self.gk_navigationBar.height;
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate

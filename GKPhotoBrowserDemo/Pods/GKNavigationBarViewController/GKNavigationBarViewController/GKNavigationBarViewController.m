@@ -135,7 +135,11 @@
     
     CGFloat navBarH = 0;
     if (width > height) { // 横屏
-        if (GK_IS_iPhoneX) {
+        if (GK_IS_iPad) {
+            CGFloat statusBarH = [UIApplication sharedApplication].statusBarFrame.size.height;
+            CGFloat navigaBarH = self.navigationController.navigationBar.frame.size.height;
+            navBarH = statusBarH + navigaBarH;
+        }else if (GK_IS_iPhoneX) {
             navBarH = GK_NAVBAR_HEIGHT;
         }else {
             if (width == 736.0f && height == 414.0f) { // plus横屏
@@ -151,19 +155,6 @@
     self.gk_navigationBar.frame = CGRectMake(0, 0, width, navBarH);
     self.gk_navigationBar.gk_statusBarHidden = self.gk_statusBarHidden;
     [self.gk_navigationBar layoutSubviews];
-}
-
-#pragma mark - 控制屏幕旋转的方法
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    return UIInterfaceOrientationPortrait;
 }
 
 #pragma mark - 控制状态栏的方法

@@ -36,6 +36,9 @@ CGSizeEqualToSize(CGSizeMake(896, 414),[UIScreen mainScreen].bounds.size))\
 :\
 NO)
 
+// 判断是否是iPad
+#define GK_IS_iPad      UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
+
 // 导航栏间距，用于不同控制器之间的间距
 static const CGFloat GKNavigationBarItemSpace = -1;
 

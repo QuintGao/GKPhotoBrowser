@@ -62,8 +62,20 @@
 
 #pragma mark - Notification Handle
 - (void)handleNotification:(NSNotification *)notify {
-    
+    // 获取通知传递的控制器
     UIViewController *vc = (UIViewController *)notify.object[@"viewController"];
+    
+    // 禁止手势处理
+    if (self.gk_disabledGestureHandle || vc.navigationController.gk_disabledGestureHandle) {
+        self.interactivePopGestureRecognizer.delegate = nil;
+        self.interactivePopGestureRecognizer.enabled = NO;
+        [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.screenPanGesture];
+        [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.panGesture];
+        return;
+    }
+    
+    // 不处理导航控制器
+    if ([vc isKindOfClass:[UINavigationController class]]) return;
     
     BOOL isRootVC = vc == self.viewControllers.firstObject;
     
@@ -71,7 +83,6 @@
     if (vc.gk_interactivePopDisabled) { // 禁止滑动
         self.interactivePopGestureRecognizer.delegate = nil;
         self.interactivePopGestureRecognizer.enabled = NO;
-        
         [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.screenPanGesture];
         [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.panGesture];
     }else if (vc.gk_fullScreenPopDisabled) { // 禁止全屏滑动
@@ -117,6 +128,10 @@
 }
 
 - (BOOL)gk_openScrollLeftPush {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (BOOL)gk_disabledGestureHandle {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
@@ -180,6 +195,10 @@
 
 - (void)setGk_openScrollLeftPush:(BOOL)gk_openScrollLeftPush {
     objc_setAssociatedObject(self, @selector(gk_openScrollLeftPush), @(gk_openScrollLeftPush), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setGk_disabledGestureHandle:(BOOL)gk_disabledGestureHandle {
+    objc_setAssociatedObject(self, @selector(gk_disabledGestureHandle), @(gk_disabledGestureHandle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

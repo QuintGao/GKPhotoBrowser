@@ -90,6 +90,14 @@
     NSLog(@"%@ dealloc", NSStringFromClass([self class]));
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.tableView.frame = self.view.bounds;
+    self.tableView.top        = self.gk_navigationBar.bottom;
+    self.tableView.height     = self.view.height - self.gk_navigationBar.height;
+}
+
 #pragma mark - UITableViewDataSource & UITableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataFrames.count;
