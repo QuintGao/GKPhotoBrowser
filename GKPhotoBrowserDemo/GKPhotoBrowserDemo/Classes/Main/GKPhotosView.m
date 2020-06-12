@@ -62,8 +62,7 @@ static CGFloat   photoH;
         if ([url hasPrefix:@"http"]) {
             [imgView sd_setImageWithURL:[NSURL URLWithString:url]];
         }else if ([url hasSuffix:@"gif"]){
-            SDAnimatedImage *animatedImage = [SDAnimatedImage imageNamed:url];
-            imgView.image = animatedImage;
+            imgView.image = [SDAnimatedImage imageNamed:url];
         }else {
             imgView.image = [UIImage imageNamed:url];
         }
@@ -95,7 +94,7 @@ static CGFloat   photoH;
             NSString *urlStr = image.thumbnail_url ? image.thumbnail_url : image.url;
             [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
         }else if ([image.url hasSuffix:@"gif"]){
-            [imgView sd_setImageWithURL:[NSURL fileURLWithPath:image.url]];
+            imgView.image = [SDAnimatedImage imageNamed:image.url];
         }else {
             imgView.image = [UIImage imageNamed:image.url];
         }
