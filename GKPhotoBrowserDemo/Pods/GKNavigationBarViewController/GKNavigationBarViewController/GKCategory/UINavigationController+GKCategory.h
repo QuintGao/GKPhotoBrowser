@@ -23,4 +23,7 @@
 /** 是否开启左滑push操作，默认是NO，此时不可禁用控制器的滑动返回手势 */
 @property (nonatomic, assign) BOOL gk_openScrollLeftPush;
 
+/** 是否禁止导航控制器的手势处理，默认NO，如果设置为YES，则手势操作将失效(包括全屏手势和边缘手势) */
+@property (nonatomic, assign) BOOL gk_disabledGestureHandle;
+
 @end
