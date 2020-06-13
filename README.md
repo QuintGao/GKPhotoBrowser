@@ -22,6 +22,13 @@ iOS仿微信、今日头条等图片浏览器
 
 如果在使用过程中遇到问题，请先检查使用的版本是否是最新版本（可在说明最上面的pod后面查看），如果不是最新版本，请先更新到最后版本，看看问题是否存在，如果依然存在，可提issue说明或加我QQ1094887059直接问我，最好能提供demo。
 
+关于本地gif图片的加载，可使用下面的方法
+1、 如果使用SDWebImage，请使用SDAnimatedImage加载本地图片
+``` photo.image = [SDAnimatedImage imageNamed:obj];```
+
+2、如果使用YYWebImage，请使用YYImage加载本地图片
+``` photo.image = [YYImage imageNamed:obj];```
+
 ## 说明
 GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的有仿微信、今日头条等的图片浏览器。
 
