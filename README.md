@@ -16,18 +16,20 @@ iOS仿微信、今日头条等图片浏览器
 ## 重要
 ##### 2.0.0版本升级指南：
 2.0.0之后修改了对gif图片的加载方式，仅支持SDWebImage 5.x 和 YYWebImage 1.0.5，
-如果你的SDWebImage版本低于5.0，请升级到5.0以上
-如果你想使用YYWebImage加载图片，请使用pod 'GKPhotoBrowser/YY'
+1、使用SDWebImage加载图片，请使用pod 'GKPhotoBrowser' 或 'GKPhotoBrowser/SD'   2、使用YYWebImage加载图片，请使用pod 'GKPhotoBrowser/YY'
 
 
 如果在使用过程中遇到问题，请先检查使用的版本是否是最新版本（可在说明最上面的pod后面查看），如果不是最新版本，请先更新到最后版本，看看问题是否存在，如果依然存在，可提issue说明或加我QQ1094887059直接问我，最好能提供demo。
 
-关于本地gif图片的加载，可使用下面的方法  
+##### 关于本地gif图片的加载 
 1、 如果使用SDWebImage，请使用SDAnimatedImage加载本地图片  
 ``` photo.image = [SDAnimatedImage imageNamed:obj];```
 
 2、如果使用YYWebImage，请使用YYImage加载本地图片  
 ``` photo.image = [YYImage imageNamed:obj];```
+
+##### 对于支持屏幕旋转的APP及iPad的适配
+需要设置属性isFollowSystemRotation为YES，此时isScreenRotateDisabled属性将失效
 
 ## 说明
 GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的有仿微信、今日头条等的图片浏览器。
@@ -38,7 +40,8 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
 
 ## 主要功能
 
-    * 支持单击、双击手势，支持缩放
+    * 支持iPhone、iPad
+    * 支持单击、双击、长按手势，支持滑动缩放
     * 支持多种显示方式（none，zoom，push）
     * 支持多种隐藏方式（zoom，zoomScale，zoomSlide)
     * 支持多种加载方式（不明确，不明确带阴影，明确进度）

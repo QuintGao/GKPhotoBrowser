@@ -194,7 +194,7 @@ static Class imageManagerClass = nil;
     }
     
     self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
-    self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
+    self.contentView.center = self.view.center;
     self.contentView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.contentView];
     
@@ -235,6 +235,7 @@ static Class imageManagerClass = nil;
 - (void)addGestureAndObserver {
     [self addGestureRecognizer];
     
+    if (self.isFollowSystemRotation) return;
     if (!self.isScreenRotateDisabled) {
         [self addDeviceOrientationObserver];
     }
@@ -400,15 +401,11 @@ static Class imageManagerClass = nil;
 
 #pragma mark - 屏幕旋转
 - (BOOL)shouldAutorotate {
-    return NO;
+    return self.isFollowSystemRotation ? YES : NO;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    return UIInterfaceOrientationPortrait;
+    return self.isFollowSystemRotation ? UIInterfaceOrientationMaskAll : UIInterfaceOrientationMaskPortrait;
 }
 
 #pragma mark - 状态栏
@@ -441,9 +438,11 @@ static Class imageManagerClass = nil;
     GKPhotoView *photoView = [self currentPhotoView];
     photoView.isLayoutSubViews = YES;
     
-    // 状态栏恢复到竖屏
-    if (@available(iOS 13.0, *)) {} else {
-        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    if (!self.isFollowSystemRotation) {
+        // 状态栏恢复到竖屏
+        if (@available(iOS 13.0, *)) {} else {
+            [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+        }
     }
     
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
@@ -501,17 +500,19 @@ static Class imageManagerClass = nil;
 }
 
 #pragma mark - Private Methods
-
 - (void)addGestureRecognizer {
+    // 单击手势
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleTap.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:singleTap];
     
+    // 双击手势
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:doubleTap];
     [singleTap requireGestureRecognizerToFail:doubleTap];
     
+    // 长按手势
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     [self.view addGestureRecognizer:longPress];
     
@@ -550,8 +551,10 @@ static Class imageManagerClass = nil;
         photo.sourceImageView.alpha = 1.0;
     }
     
-    if (@available(iOS 13.0, *)) {} else {
-        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    if (!self.isFollowSystemRotation) {
+        if (@available(iOS 13.0, *)) {} else {
+            [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+        }
     }
     
     // 移除屏幕旋转监听
@@ -745,7 +748,7 @@ static Class imageManagerClass = nil;
     UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     
-    if (UIDeviceOrientationIsLandscape(orientation)) {
+    if (!self.isFollowSystemRotation && UIDeviceOrientationIsLandscape(orientation)) {
         [UIView animateWithDuration:kAnimationDuration animations:^{
             // 旋转view
             self.contentView.transform = CGAffineTransformIdentity;
@@ -757,7 +760,7 @@ static Class imageManagerClass = nil;
             }
             // 设置frame
             self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
-            self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
+            self.contentView.center = self.view.center;
             
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
@@ -891,6 +894,7 @@ static Class imageManagerClass = nil;
 
 #pragma mark - 屏幕旋转相关
 - (void)addDeviceOrientationObserver {
+    if (self.isFollowSystemRotation) return;
     // 默认设备方向：竖屏
     self.originalOrientation = UIDeviceOrientationPortrait;
     // 20200312 尚未添加observer的情况下才添加，防止多次重复添加
@@ -904,6 +908,7 @@ static Class imageManagerClass = nil;
 }
 
 - (void)delDeviceOrientationObserver {
+    if (self.isFollowSystemRotation) return;
     // 20200312 如果在唤起GKPhotoBrowser前，app已经开启屏幕旋转通知GeneratingDeviceOrientationNotifications，那么无需停止，否则会影响全局的其他监听屏幕旋转的功能。
     if(self.isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared)
         return;
@@ -914,6 +919,7 @@ static Class imageManagerClass = nil;
 }
 
 - (void)deviceOrientationDidChange {
+    if (self.isFollowSystemRotation) return;
     if (self.isScreenRotateDisabled) return;
     
     self.isRotation = YES;
@@ -983,7 +989,7 @@ static Class imageManagerClass = nil;
             }
             // 设置frame
             self.contentView.bounds = CGRectMake(0, 0, width, MIN(screenBounds.size.width, screenBounds.size.height));
-            self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
+            self.contentView.center = self.view.center;
             
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
@@ -1023,7 +1029,7 @@ static Class imageManagerClass = nil;
             }
             // 设置frame
             self.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
-            self.contentView.center = [UIApplication sharedApplication].keyWindow.center;
+            self.contentView.center = self.view.center;
             
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
@@ -1187,11 +1193,6 @@ static Class imageManagerClass = nil;
     
     [self setupPhotoViews];
     
-//    // 滑动中，停止gif动画
-//    [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        [obj stopGifAnimation];
-//    }];
-    
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidScroll:)]) {
         [self.delegate photoBrowser:self scrollViewDidScroll:scrollView];
     }
@@ -1205,9 +1206,6 @@ static Class imageManagerClass = nil;
     
     NSInteger index = (offsetX + scrollW * 0.5) / scrollW;
     
-//     滚动结束，开始gif动画
-//    GKPhotoView *currentPhotoView = [self currentPhotoView];
-//    [currentPhotoView startGifAnimation];
     self.curPhotoView = [self currentPhotoView];
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:didSelectAtIndex:)]) {
@@ -1238,6 +1236,31 @@ static Class imageManagerClass = nil;
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndDragging:willDecelerate:)]) {
         [self.delegate photoBrowser:self scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    if (!self.isFollowSystemRotation) return;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.3 animations:^{
+            CGFloat width = self.view.bounds.size.width;
+            CGFloat height = self.view.bounds.size.height;
+            if (self.isAdaptiveSafeArea) {
+                if (width > height) {
+                    width -= (GK_SAFEAREA_TOP + GK_SAFEAREA_BTM);
+                }else {
+                    height -= (GK_SAFEAREA_TOP + GK_SAFEAREA_BTM);
+                }
+            }
+            
+            self.contentView.bounds = CGRectMake(0, 0, width, height);
+            self.contentView.center = self.view.center;
+            
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+            [self layoutSubviews];
+        }];
+    });
 }
 
 #pragma mark - 懒加载

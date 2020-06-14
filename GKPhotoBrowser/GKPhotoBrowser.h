@@ -87,6 +87,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /** 代理 */
 @property (nonatomic, weak) id<GKPhotoBrowserDelegate> delegate;
 
+/** 是否跟随系统旋转，默认是NO，如果设置为YES，isScreenRotateDisabled属性将失效 */ 
+@property (nonatomic, assign) BOOL isFollowSystemRotation;
+
 /** 是否禁止屏幕旋转监测 */
 @property (nonatomic, assign) BOOL isScreenRotateDisabled;
 

@@ -154,6 +154,7 @@
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photoArrs currentIndex:index];
         browser.showStyle       = GKPhotoBrowserShowStyleZoom;
         browser.hideStyle       = GKPhotoBrowserHideStyleZoomScale;
+        
         // 指定imageProtocol
         [browser setupWebImageProtocol:[GKYYWebImageManager new]];
         
