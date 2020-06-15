@@ -34,8 +34,6 @@ static Class imageManagerClass = nil;
 @property (nonatomic, strong) NSMutableArray *visiblePhotoViews;
 @property (nonatomic, strong) NSMutableSet *reusablePhotoViews;
 
-@property (nonatomic, strong) UIViewController *fromVC;
-
 @property (nonatomic, assign) BOOL isShow;
 
 @property (nonatomic, strong) NSArray *coverViews;
@@ -75,9 +73,9 @@ static Class imageManagerClass = nil;
  **/
 @property(nonatomic, assign) BOOL isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared;
 
-
 /// 20200312 用于防止多次addObserver，添加监听UIDeviceOrientationDidChangeNotification通知的flag
 @property(nonatomic, assign) BOOL isOrientationNotiObserverAdded;
+
 @end
 
 @implementation GKPhotoBrowser
@@ -94,6 +92,7 @@ static Class imageManagerClass = nil;
         // 初始化
         self.isStatusBarShow         = NO;
         self.isHideSourceView        = YES;
+        self.statusBarStyle          = UIStatusBarStyleLightContent;
         self.isFullWidthForLandSpace = YES;
         self.maxZoomScale            = kMaxZoomScale;
         self.doubleZoomScale         = self.maxZoomScale;
@@ -414,7 +413,7 @@ static Class imageManagerClass = nil;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return self.fromVC.preferredStatusBarStyle;
+    return self.statusBarStyle;
 }
 
 #pragma mark - Public Methods
@@ -424,11 +423,10 @@ static Class imageManagerClass = nil;
 }
 
 - (void)showFromVC:(UIViewController *)vc {
-    self.fromVC = vc;
-    
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
         [vc.navigationController pushViewController:self animated:YES];
     }else {
+        self.modalPresentationStyle = UIModalPresentationFullScreen;
         self.modalPresentationCapturesStatusBarAppearance = YES;
         [vc presentViewController:self animated:NO completion:nil];
     }

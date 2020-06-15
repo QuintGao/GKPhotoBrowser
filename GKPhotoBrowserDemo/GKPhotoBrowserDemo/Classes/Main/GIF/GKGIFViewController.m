@@ -10,12 +10,11 @@
 #import <WebKit/WebKit.h>
 #import "GKPhotoBrowser.h"
 
-@interface GKGIFViewController ()<WKNavigationDelegate, GKPhotoBrowserDelegate, UIWebViewDelegate>
+@interface GKGIFViewController ()<WKNavigationDelegate, GKPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 
 @property (nonatomic, strong) WKWebView *webView;
-//@property (nonatomic, strong) UIWebView *webView;
 
 @property (nonatomic, strong) NSArray *imgUrls;
 
@@ -33,7 +32,6 @@
     self.gk_navigationItem.title = @"详情";
     self.view.backgroundColor = [UIColor whiteColor];
     
-    //    [self addUIWebView];
     [self addWKWebView];
 }
 
@@ -81,30 +79,6 @@
     }
     
     decisionHandler(WKNavigationActionPolicyAllow);
-}
-
-#pragma mark - UIWebViewDelegate
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [self getImgsJSToUIWebView:webView];
-}
-
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    
-    NSString *url = request.URL.absoluteString;
-    
-    if ([url hasPrefix:@"imgurl:"]) {
-        
-        NSString *imgUrl = [url substringFromIndex:7];
-        
-        NSInteger index = [self.imgUrls indexOfObject:imgUrl];
-        
-        if (index >=0 && index < self.imgUrls.count) {
-            [self showImageWithArray:self.imgUrls index:index];
-        }
-        
-        return NO;
-    }
-    return YES;
 }
 
 - (void)showImageWithArray:(NSArray *)imageUrls index:(NSInteger)index {
@@ -234,67 +208,6 @@
         }
         self.imgFrames = imgFrames;
     }];
-}
-
-- (void)getImgsJSToUIWebView:(UIWebView *)webView {
-    // 获取图片地址
-    NSString *getImgUrlsJS = @"\
-    function getImgUrls() {\
-    var imgs = document.getElementsByTagName('img');\
-    var strs = '';\
-    for (var i = 0; i < imgs.length; i++) {\
-    var img = imgs[i];\
-    var str = (i == imgs.length - 1) ? '' : '||';\
-    strs += img.src + str;\
-    }\
-    return strs;\
-    }";
-    
-    [webView stringByEvaluatingJavaScriptFromString:getImgUrlsJS];
-    
-    NSString *strs = [webView stringByEvaluatingJavaScriptFromString:@"getImgUrls()"];
-    self.imgUrls = [strs componentsSeparatedByString:@"||"];
-    
-    // 获取图片frame
-    NSString *getImgFramesJS = @"\
-    function getImgFrames() {\
-    var imgs = document.getElementsByTagName('img');\
-    var strs = '';\
-    for (var i = 0; i < imgs.length; i++) {\
-    var img = imgs[i];\
-    var imgX = img.offsetLeft;\
-    var imgY = img.offsetTop;\
-    var imgW = img.offsetWidth;\
-    var imgH = img.offsetHeight;\
-    var frame = {'x': imgX, 'y': imgY, 'w': imgW, 'h': imgH};\
-    var str = (i == imgs.length - 1) ? '' : '||';\
-    strs += JSON.stringify(frame) + str;\
-    }\
-    return strs;\
-    }";
-    
-    [webView stringByEvaluatingJavaScriptFromString:getImgFramesJS];
-    
-    NSString *str = [webView stringByEvaluatingJavaScriptFromString:@"getImgFrames()"];
-    
-    NSArray *frames = [str componentsSeparatedByString:@"||"];
-    
-    NSMutableArray *imgFrames = [NSMutableArray new];
-    
-    for (NSString *s in frames) {
-        
-        NSData *data = [s dataUsingEncoding:NSUTF8StringEncoding];
-        
-        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        
-        CGRect rect = CGRectMake([dic[@"x"] floatValue],
-                                 [dic[@"y"] floatValue],
-                                 [dic[@"w"] floatValue],
-                                 [dic[@"h"] floatValue]);
-        [imgFrames addObject:NSStringFromCGRect(rect)];
-    }
-    
-    self.imgFrames = imgFrames;
 }
 
 - (NSString *)getHtmlString {
