@@ -15,8 +15,8 @@ iOS仿微信、今日头条等图片浏览器
 
 ## 重要
 ##### 2.0.0版本升级指南：
-2.0.0之后修改了对gif图片的加载方式，仅支持SDWebImage 5.x 和 YYWebImage 1.0.5，
-1、使用SDWebImage加载图片，请使用pod 'GKPhotoBrowser' 或 'GKPhotoBrowser/SD'   2、使用YYWebImage加载图片，请使用pod 'GKPhotoBrowser/YY'
+2.0.0之后修改了对gif图片的加载方式，仅支持SDWebImage 5.x 和 YYWebImage 1.0.5  
+1、使用SDWebImage加载图片，请使用pod 'GKPhotoBrowser' 或 'GKPhotoBrowser/SD'     2、使用YYWebImage加载图片，请使用pod 'GKPhotoBrowser/YY'  
 
 
 如果在使用过程中遇到问题，请先检查使用的版本是否是最新版本（可在说明最上面的pod后面查看），如果不是最新版本，请先更新到最后版本，看看问题是否存在，如果依然存在，可提issue说明或加我QQ1094887059直接问我，最好能提供demo。

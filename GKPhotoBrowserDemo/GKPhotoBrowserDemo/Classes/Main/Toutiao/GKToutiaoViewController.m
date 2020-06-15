@@ -67,6 +67,14 @@
     [self.tableView reloadData];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.tableView.frame = self.view.bounds;
+    self.tableView.top = self.gk_navigationBar.bottom;
+    self.tableView.height = self.view.height - self.gk_navigationBar.height;
+}
+
 - (void)dealloc {
     NSLog(@"头条dealloc");
 }
@@ -126,6 +134,9 @@
     browser.isStatusBarShow     = YES;  // 显示状态栏
     browser.isHideSourceView    = NO;
     browser.delegate            = self;
+    if (kIsiPad) {
+        browser.isFollowSystemRotation = YES;
+    }
     
     [browser setupCoverViews:@[self.closeBtn, self.moreBtn, self.bottomView] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
 

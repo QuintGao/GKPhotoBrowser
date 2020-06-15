@@ -40,6 +40,12 @@
     [self.webView loadRequest:request];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.webView.frame = CGRectMake(0, self.gk_navigationBar.bottom, KScreenW, KScreenH - self.gk_navigationBar.height);
+}
+
 #pragma mark - WKNavigationDelegate
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     
@@ -113,7 +119,9 @@
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
     browser.showStyle = GKPhotoBrowserShowStylePush;
     browser.isPopGestureEnabled = YES;
-    
+    if (kIsiPad) {
+        browser.isFollowSystemRotation = YES;
+    }
     [browser showFromVC:self];
 }
 

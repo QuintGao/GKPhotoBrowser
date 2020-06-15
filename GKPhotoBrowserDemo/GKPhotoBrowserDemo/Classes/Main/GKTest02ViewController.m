@@ -52,6 +52,14 @@
     [self.view addSubview:self.tableView];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.tableView.frame = self.view.bounds;
+    self.tableView.top = self.gk_navigationBar.bottom;
+    self.tableView.height = self.view.height - self.gk_navigationBar.height;
+}
+
 - (void)setupData {
     
     self.dataSource = @[
@@ -174,6 +182,9 @@
         browser.failureText     = @"图片加载失败了，555";
         browser.failureImage    = [UIImage imageNamed:@"error"];
         browser.delegate        = self;
+        if (kIsiPad) {
+            browser.isFollowSystemRotation = YES;
+        }
         
         [browser showFromVC:weakSelf];
     };

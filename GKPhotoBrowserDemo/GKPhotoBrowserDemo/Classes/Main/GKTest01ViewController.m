@@ -46,6 +46,14 @@
     [self.view addSubview:self.tableView];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.tableView.frame = self.view.bounds;
+    self.tableView.top = self.gk_navigationBar.bottom;
+    self.tableView.height = self.view.height - self.gk_navigationBar.height;
+}
+
 - (void)setupData {
     self.dataSource = @[@"http://c.hiphotos.baidu.com/image/pic/item/d50735fae6cd7b89bcbbb642062442a7d8330e1f.jpg",
                         @"http://e.hiphotos.baidu.com/image/pic/item/21a4462309f79052f4d5baff05f3d7ca7acbd52d.jpg",
@@ -87,6 +95,9 @@
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:indexPath.row];
     browser.showStyle = GKPhotoBrowserShowStyleNone;
     browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate;
+    if (kIsiPad) {
+        browser.isFollowSystemRotation = YES;
+    }
     [browser showFromVC:self];
 }
 

@@ -46,14 +46,11 @@
     [self.webView loadHTMLString:[self getHtmlString] baseURL:nil];
 }
 
-//- (void)addUIWebView {
-//    CGRect frame = CGRectMake(0, self.gk_navigationBar.bottom, KScreenW, KScreenH - self.gk_navigationBar.height);
-//    self.webView = [[UIWebView alloc] initWithFrame:frame];
-//    self.webView.delegate = self;
-//    [self.view addSubview:self.webView];
-//
-//    [self.webView loadHTMLString:[self getHtmlString] baseURL:nil];
-//}
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.webView.frame = CGRectMake(0, self.gk_navigationBar.bottom, KScreenW, KScreenH - self.gk_navigationBar.height);
+}
 
 #pragma mark - WKNavigationDelegate
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
@@ -150,6 +147,9 @@
     browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
     
     browser.delegate  = self;
+    if (kIsiPad) {
+        browser.isFollowSystemRotation = YES;
+    }
     
     [browser showFromVC:self];
 }

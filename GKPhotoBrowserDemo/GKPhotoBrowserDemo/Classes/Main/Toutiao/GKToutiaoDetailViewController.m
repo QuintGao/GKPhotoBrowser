@@ -47,6 +47,12 @@
     [self.webView loadHTMLString:[self getHtmlString] baseURL:nil];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.webView.frame = CGRectMake(0, self.gk_navigationBar.bottom, KScreenW, KScreenH - self.gk_navigationBar.height);
+}
+
 //- (void)addUIWebView {
 //    CGRect frame = CGRectMake(0, self.gk_navigationBar.bottom, KScreenW, KScreenH - self.gk_navigationBar.height);
 //    self.webView = [[UIWebView alloc] initWithFrame:frame];
@@ -149,7 +155,9 @@
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
     browser.showStyle = GKPhotoBrowserShowStyleZoom;
     browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
-    
+    if (kIsiPad) {
+        browser.isFollowSystemRotation = YES;
+    }
     browser.delegate  = self;
     
     [browser showFromVC:self];

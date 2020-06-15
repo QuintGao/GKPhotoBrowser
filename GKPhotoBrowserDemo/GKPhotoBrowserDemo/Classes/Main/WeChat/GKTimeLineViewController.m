@@ -133,6 +133,11 @@
         browser.maxZoomScale = 20.0f;
         browser.doubleZoomScale = 2.0f;
         
+        // 当你的APP支持屏幕旋转时此属性必须设置为YES
+        if (kIsiPad) { // ipad 默认支持屏幕旋转，这里设置为YES
+            browser.isFollowSystemRotation = YES;
+        }
+        
         [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
 
             CGFloat pointY = 0;
