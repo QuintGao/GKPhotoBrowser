@@ -1247,9 +1247,9 @@ static Class imageManagerClass = nil;
             CGFloat height = self.view.bounds.size.height;
             if (self.isAdaptiveSafeArea) {
                 if (width > height) {
-                    width -= (GK_SAFEAREA_TOP + GK_SAFEAREA_BTM);
+                    width -= (kSafeTopSpace + kSafeBottomSpace);
                 }else {
-                    height -= (GK_SAFEAREA_TOP + GK_SAFEAREA_BTM);
+                    height -= (kSafeTopSpace + kSafeBottomSpace);
                 }
             }
             
