@@ -99,6 +99,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /** 是否显示状态栏，默认NO：不显示状态栏 */
 @property (nonatomic, assign) BOOL isStatusBarShow;
 
+/** 状态栏样式，默认Light */
+@property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
+
 /** 滑动消失时是否隐藏原来的视图：默认YES */
 @property (nonatomic, assign) BOOL isHideSourceView;
 

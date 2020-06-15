@@ -53,6 +53,14 @@
     [self.view addSubview:self.tableView];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.tableView.frame = self.view.bounds;
+    self.tableView.top = self.gk_navigationBar.bottom;
+    self.tableView.height = self.view.height - self.gk_navigationBar.height;
+}
+
 - (void)setupData {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"txt"];
     
@@ -109,6 +117,9 @@
         browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate; // 加载方式
         
         browser.delegate = weakSelf;
+        if (kIsiPad) {
+            browser.isFollowSystemRotation = YES;
+        }
     
         
         weakSelf.topView = [[GKTopView alloc] init];

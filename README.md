@@ -14,12 +14,12 @@ iOS仿微信、今日头条等图片浏览器
 ==============
 
 ## 重要
-##### 2.0.0版本升级指南：
-2.0.0之后修改了对gif图片的加载方式，仅支持SDWebImage 5.x 和 YYWebImage 1.0.5，
-1、使用SDWebImage加载图片，请使用pod 'GKPhotoBrowser' 或 'GKPhotoBrowser/SD'   2、使用YYWebImage加载图片，请使用pod 'GKPhotoBrowser/YY'
-
-
 如果在使用过程中遇到问题，请先检查使用的版本是否是最新版本（可在说明最上面的pod后面查看），如果不是最新版本，请先更新到最后版本，看看问题是否存在，如果依然存在，可提issue说明或加我QQ1094887059直接问我，最好能提供demo。
+
+##### 2.0.0版本升级指南：
+2.0.0之后修改了对gif图片的加载方式，仅支持SDWebImage 5.x 和 YYWebImage 1.0.5  
+1、使用SDWebImage加载图片，请使用pod 'GKPhotoBrowser' 或 'GKPhotoBrowser/SD'    
+2、使用YYWebImage加载图片，请使用pod 'GKPhotoBrowser/YY'  
 
 ##### 关于本地gif图片的加载 
 1、 如果使用SDWebImage，请使用SDAnimatedImage加载本地图片  
@@ -54,10 +54,10 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ```
  NSMutableArray *photos = [NSMutableArray new];
  [self.dataSource enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
- GKPhoto *photo = [GKPhoto new];
- photo.url = [NSURL URLWithString:obj];
+    GKPhoto *photo = [GKPhoto new];
+    photo.url = [NSURL URLWithString:obj];
  
- [photos addObject:photo];
+    [photos addObject:photo];
  }];
  ```
  
@@ -96,6 +96,7 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ## 更新
  
 ```
+2020.06.15  2.0.3版本 适配支持屏幕旋转的APP及iPad
 2020.06.10  2.0.1版本 优化图片单击的处理，支持自定义图片加载类
 2020.04.28  2.0.0版本 优化GIF图片显示，支持SDWebImage 5.x 和 YYWebImage 
 2020.03.14  1.6.0版本，增加双击放大倍数

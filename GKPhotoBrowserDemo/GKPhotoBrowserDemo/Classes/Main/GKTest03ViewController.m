@@ -47,6 +47,14 @@
     [self.view addSubview:self.tableView];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.tableView.frame = self.view.bounds;
+    self.tableView.top = self.gk_navigationBar.bottom;
+    self.tableView.height = self.view.height - self.gk_navigationBar.height;
+}
+
 - (void)setupData {
     self.dataSource = @[
                         @[@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435195&di=725c10ff470cf0282d148b7ec8e32a1d&imgtype=0&src=http%3A%2F%2Fb.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F9358d109b3de9c8210ea114f6581800a18d84367.jpg",@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435195&di=70b2e4e0c6f1d7613d9a7154b9477f81&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F80cb39dbb6fd5266776325d5a218972bd50736a2.jpg",@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435195&di=69a986cc38212178c27dc157195f0700&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F241f95cad1c8a786a18336ce6e09c93d71cf5040.jpg",@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435195&di=0342f8813a4135448d31297876d2540c&imgtype=0&src=http%3A%2F%2Fb.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Fcc11728b4710b9128942bd3ecafdfc039345226a.jpg",@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435194&di=1b0564b35bd718e2e4593a5374740ce3&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F1b4c510fd9f9d72ad30cb6dcdd2a2834359bbb83.jpg",@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435194&di=541a696a6b096a51c650a7473ac32ff3&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F6159252dd42a28349109a6cb52b5c9ea14cebf47.jpg",@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435193&di=496f021c6db03f1cb9a6fa1af9fa50b9&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4d086e061d950a7be91b560503d162d9f3d3c9c1.jpg",@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435194&di=541a696a6b096a51c650a7473ac32ff3&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F6159252dd42a28349109a6cb52b5c9ea14cebf47.jpg",@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509084435193&di=496f021c6db03f1cb9a6fa1af9fa50b9&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4d086e061d950a7be91b560503d162d9f3d3c9c1.jpg"],
@@ -86,7 +94,7 @@
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         
         browser.showStyle    = GKPhotoBrowserShowStylePush;
-        
+        browser.isFollowSystemRotation = YES;
         [browser showFromVC:weakSelf];
     };
     

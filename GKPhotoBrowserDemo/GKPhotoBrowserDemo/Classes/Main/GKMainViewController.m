@@ -61,11 +61,11 @@
                         @"class" : @"GKOriginImageViewController"},
                       @{@"text"  : @"SDAutoLayout",
                         @"class" : @"GKSDAutoLayoutViewController"},
-                      @{@"text"  : @"测试",
-                        @"class" : @"GKTestViewController"},
                       @{@"text"  : @"GIF图片",
-                        @"class" : @"GKGIFViewController"}
-                      ];
+                        @"class" : @"GKGIFViewController"},
+//                      @{@"text"  : @"测试",
+//                        @"class" : @"GKTestViewController"},
+    ];
     
     [self.mainTable reloadData];
 }

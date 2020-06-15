@@ -16,6 +16,8 @@
 
 #import "UIView+GKFrame.h"
 
+#define kIsiPad UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
+
 #define kScreenW [UIScreen mainScreen].bounds.size.width
 #define kScreenH [UIScreen mainScreen].bounds.size.height
 

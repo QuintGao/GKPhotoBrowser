@@ -58,6 +58,12 @@
     [self.collectionView reloadData];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.collectionView.frame = CGRectMake(0, self.gk_navigationBar.bottom, KScreenW, KScreenH - self.gk_navigationBar.height);
+}
+
 #pragma mark - <UICollectionViewDataSource, UICollectionViewDelegate>
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return self.thumbImgs.count;
@@ -96,6 +102,9 @@
     browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminate;
     browser.originLoadStyle = GKPhotoBrowserLoadStyleCustom;
     browser.delegate = self;
+    if (kIsiPad) {
+        browser.isFollowSystemRotation = YES;
+    }
     self.browser = browser;
     
     UIButton *originBtn = [UIButton new];
