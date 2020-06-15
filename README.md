@@ -54,10 +54,10 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  ```
  NSMutableArray *photos = [NSMutableArray new];
  [self.dataSource enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
- GKPhoto *photo = [GKPhoto new];
- photo.url = [NSURL URLWithString:obj];
+    GKPhoto *photo = [GKPhoto new];
+    photo.url = [NSURL URLWithString:obj];
  
- [photos addObject:photo];
+    [photos addObject:photo];
  }];
  ```
  
