@@ -7,6 +7,16 @@
 //
 
 #import "GKPhotoView.h"
+#import "GKPhotoManager.h"
+
+static dispatch_queue_t GKPhotoProcessingQueue(void) {
+    static dispatch_queue_t queue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create("com.gk.photobrowser", DISPATCH_QUEUE_CONCURRENT);
+    });
+    return queue;
+}
 
 @implementation GKScrollView
 
@@ -147,17 +157,6 @@
         // 每次设置数据时，恢复缩放
         [self.scrollView setZoomScale:1.0 animated:NO];
         
-        if (photo.image) {
-            self.imageView.image = photo.image;
-            [self.loadingView stopLoading];
-            [self.loadingView hideFailure];
-            [self.loadingView removeFromSuperview];
-            
-            [self adjustFrame];
-            
-            return;
-        }
-        
         // 获取原图的缓存
         if ([_imageProtocol imageFromMemoryForURL:photo.originUrl]) {
             photo.originFinished = YES;
@@ -181,6 +180,47 @@
         self.imageView.image          = placeholderImage;
         self.imageView.contentMode    = photo.sourceImageView.contentMode;
         self.scrollView.scrollEnabled = NO;
+        
+        if (photo.image) {
+            self.imageView.image = photo.image;
+            [self.loadingView stopLoading];
+            [self.loadingView hideFailure];
+            [self.loadingView removeFromSuperview];
+            
+            [self adjustFrame];
+            
+            return;
+        }else if (photo.imageAsset) {
+            [self addSubview:self.loadingView];
+            [self.loadingView hideFailure];
+            [self adjustFrame];
+            
+            if (!photo.failed && !placeholderImage) {
+                if (isOrigin && self.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
+                    [self.loadingView startLoading];
+                }else if (!isOrigin && self.loadStyle != GKPhotoBrowserLoadStyleCustom) {
+                    [self.loadingView startLoading];
+                }
+            }
+            
+            [GKPhotoManager loadImageDataWithImageAsset:photo.imageAsset completion:^(NSData * _Nullable data) {
+                if (data) {
+                    __weak __typeof(self) wSelf = self;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        __strong __typeof(wSelf) self = wSelf;
+                        photo.image = [UIImage imageWithData:data];
+                        self.imageView.image = photo.image;
+                        [self.loadingView stopLoading];
+                        [self.loadingView hideFailure];
+                        [self.loadingView removeFromSuperview];
+                        [self adjustFrame];
+                    });
+                }
+            }];
+            
+            return;
+        }
+        
         // 进度条
         [self addSubview:self.loadingView];
         [self.loadingView hideFailure];

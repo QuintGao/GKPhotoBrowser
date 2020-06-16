@@ -426,7 +426,6 @@ static Class imageManagerClass = nil;
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
         [vc.navigationController pushViewController:self animated:YES];
     }else {
-        self.modalPresentationStyle = UIModalPresentationFullScreen;
         self.modalPresentationCapturesStatusBarAppearance = YES;
         [vc presentViewController:self animated:NO completion:nil];
     }

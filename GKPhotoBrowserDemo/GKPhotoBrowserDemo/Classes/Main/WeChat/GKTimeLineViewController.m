@@ -9,12 +9,12 @@
 #import "GKTimeLineViewController.h"
 #import "GKTimeLineViewCell.h"
 #import "GKPhotoBrowser.h"
-#import <TZImagePickerController/TZImagePickerController.h>
 #import <SDWebImage/SDWebImage.h>
 #import <YYWebImage/YYWebImage.h>
 #import <SVProgressHUD/SVProgressHUD.h>
+#import "GKPublishViewController.h"
 
-@interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate, TZImagePickerControllerDelegate>
+@interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -165,15 +165,6 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     GKTimeLineFrame *f = self.dataFrames[indexPath.row];
     return f.cellHeight;
-}
-
-#pragma mark - TZImagePickerControllerDelegate
-- (void)tz_imagePickerControllerDidCancel:(TZImagePickerController *)picker {
-    
-}
-
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-    NSLog(@"%@", photos);
 }
 
 #pragma mark - GKPhotoBrowserDelegate
@@ -338,9 +329,8 @@
 }
 
 - (void)tabkePhoto {
-    TZImagePickerController *pickerVC = [[TZImagePickerController alloc] initWithMaxImagesCount:1 delegate:self];
-    pickerVC.modalPresentationStyle = UIModalPresentationFullScreen;
-    [self presentViewController:pickerVC animated:YES completion:nil];
+    GKPublishViewController *publishVC = [GKPublishViewController new];
+    [self.navigationController pushViewController:publishVC animated:YES];
 }
 
 - (void)cancelBtnClick:(id)sender {

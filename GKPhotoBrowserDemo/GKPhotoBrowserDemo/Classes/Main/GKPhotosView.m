@@ -101,6 +101,29 @@ static CGFloat   photoH;
     }
 }
 
+- (void)setPhotoImages:(NSArray *)photoImages {
+    _photoImages = photoImages;
+    
+    // 防止出现重用
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    for (NSInteger i = 0; i < photoImages.count; i++) {
+        UIImageView *imgView = [NSClassFromString(@"SDAnimatedImageView") new];
+        if (!imgView) {
+            imgView = [UIImageView new];
+        }
+        imgView.contentMode = UIViewContentModeScaleAspectFill;
+        imgView.clipsToBounds = YES;
+        imgView.tag = i;
+        [self addSubview:imgView];
+        
+        imgView.userInteractionEnabled = YES;
+        [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgClick:)]];
+        
+        imgView.image = photoImages[i];
+    }
+}
+
 - (UIImage *)cropImage:(UIImage *)image {
     CGRect rect;
     
