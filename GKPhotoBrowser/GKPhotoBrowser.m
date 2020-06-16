@@ -1272,6 +1272,7 @@ static Class imageManagerClass = nil;
         _photoScrollView.delegate       = self;
         _photoScrollView.showsVerticalScrollIndicator   = NO;
         _photoScrollView.showsHorizontalScrollIndicator = NO;
+        _photoScrollView.alwaysBounceHorizontal         = YES;
         _photoScrollView.backgroundColor                = [UIColor clearColor];
         if (self.showStyle == GKPhotoBrowserShowStylePush) {
             if (self.isPopGestureEnabled) {
