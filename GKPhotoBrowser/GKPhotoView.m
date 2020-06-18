@@ -9,15 +9,6 @@
 #import "GKPhotoView.h"
 #import "GKPhotoManager.h"
 
-static dispatch_queue_t GKPhotoProcessingQueue(void) {
-    static dispatch_queue_t queue;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        queue = dispatch_queue_create("com.gk.photobrowser", DISPATCH_QUEUE_CONCURRENT);
-    });
-    return queue;
-}
-
 @implementation GKScrollView
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -208,7 +199,7 @@ static dispatch_queue_t GKPhotoProcessingQueue(void) {
                     __weak __typeof(self) wSelf = self;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         __strong __typeof(wSelf) self = wSelf;
-                        photo.image = [UIImage imageWithData:data];
+                        photo.image = [self.imageProtocol imageWithGIFData:data];
                         self.imageView.image = photo.image;
                         [self.loadingView stopLoading];
                         [self.loadingView hideFailure];

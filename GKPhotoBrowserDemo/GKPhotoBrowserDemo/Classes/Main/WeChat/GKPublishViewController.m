@@ -10,6 +10,7 @@
 #import <TZImagePickerController/TZImagePickerController.h>
 #import "GKPhotosView.h"
 #import "GKPhotoBrowser.h"
+#import "GKYYWebImageManager.h"
 
 @interface GKPublishViewController ()<TZImagePickerControllerDelegate, GKPhotosViewDelegate>
 
@@ -39,6 +40,7 @@
     TZImagePickerController *pickerVC = [[TZImagePickerController alloc] initWithMaxImagesCount:9 delegate:self];
     pickerVC.allowTakeVideo = NO;
     pickerVC.allowPickingVideo = NO;
+    pickerVC.allowPickingGif = YES;
     pickerVC.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:pickerVC animated:YES completion:nil];
 }
@@ -55,6 +57,15 @@
     
     CGFloat height = [GKPhotosView sizeWithCount:photos.count width:(kScreenW - 60 - 50 - 20) andMargin:5].height;
     self.photoView.frame = CGRectMake(0, 150, (kScreenW - 60 - 50 - 20), height);
+}
+
+- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingGifImage:(UIImage *)animatedImage sourceAssets:(PHAsset *)asset {
+    self.assets = @[asset];
+    
+    self.photoView.photoImages = @[animatedImage];
+    
+    CGFloat height = [GKPhotosView sizeWithCount:1 width:(kScreenH - 60 - 50 - 20) andMargin:5].height;
+    self.photoView.frame = CGRectMake(0, 150, (KScreenW - 60 - 50 - 20), height);
 }
 
 #pragma mark - GKPhotosViewDelegate

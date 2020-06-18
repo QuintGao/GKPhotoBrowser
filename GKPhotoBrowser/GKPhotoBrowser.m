@@ -488,6 +488,7 @@ static Class imageManagerClass = nil;
     
     [self updateReusableViews];
     [self setupPhotoViews];
+    [self updateLabel];
     
     [self layoutSubviews];
 }

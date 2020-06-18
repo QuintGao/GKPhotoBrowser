@@ -43,15 +43,6 @@ NO)
 
 #define GKPhotoBrowserImage(file)  [UIImage imageNamed:GKPhotoBrowserSrcName(file)] ? : [UIImage imageNamed:GKPhotoBrowserFrameworkSrcName(file)]
 
-#define GK_DISPATCH_ASYNC(queue, block)\
-if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(queue)) == 0) {\
-block();\
-} else {\
-dispatch_async(queue, block);\
-}
-
-#define GK_DISPATCH_ASYNC_MAIN(block) GK_DISPATCH_ASYNC(dispatch_get_main_queue(), block)
-
 // 图片浏览器的显示方式
 typedef NS_ENUM(NSUInteger, GKPhotoBrowserShowStyle) {
     GKPhotoBrowserShowStyleNone,       // 直接显示，默认方式

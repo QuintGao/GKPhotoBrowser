@@ -279,17 +279,19 @@
 - (void)delBtnClick:(id)sender {
     [GKCover hideCover];
 
-    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
+//    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
+//
+//    [arr removeObjectAtIndex:self.browser.currentIndex];
+//
+//    [self.browser resetPhotoBrowserWithPhotos:arr];
+//
+//    self.pageControl.numberOfPages = arr.count;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.browser removePhotoAtIndex:self.currentIndex];
 
-    [arr removeObjectAtIndex:self.browser.currentIndex];
-
-    [self.browser resetPhotoBrowserWithPhotos:arr];
-
-    self.pageControl.numberOfPages = arr.count;
-
-    [self.browser removePhotoAtIndex:self.currentIndex];
-
-    self.pageControl.numberOfPages = self.browser.photos.count;
+        self.pageControl.numberOfPages = self.browser.photos.count;
+    });
 }
 
 - (void)saveBtnClick:(id)sender {
