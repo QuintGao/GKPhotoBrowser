@@ -29,7 +29,7 @@
     }];
 }
 
-- (UIImage *)imageWithGIFData:(NSData *)data {
+- (UIImage *)imageWithData:(NSData *)data {
     return [UIImage yy_imageWithSmallGIFData:data scale:UIScreen.mainScreen.scale];
 }
 

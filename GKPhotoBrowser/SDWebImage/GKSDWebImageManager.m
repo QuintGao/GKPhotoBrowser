@@ -37,7 +37,7 @@
     }];
 }
 
-- (UIImage *)imageWithGIFData:(NSData *)data {
+- (UIImage *)imageWithData:(NSData *)data {
     return [UIImage sd_imageWithGIFData:data];
 }
 

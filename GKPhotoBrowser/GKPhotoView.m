@@ -199,7 +199,7 @@
                     __weak __typeof(self) wSelf = self;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         __strong __typeof(wSelf) self = wSelf;
-                        photo.image = [self.imageProtocol imageWithGIFData:data];
+                        photo.image = [self.imageProtocol imageWithData:data];
                         self.imageView.image = photo.image;
                         [self.loadingView stopLoading];
                         [self.loadingView hideFailure];
