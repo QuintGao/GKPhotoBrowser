@@ -174,6 +174,7 @@
         
         if (photo.image) {
             self.imageView.image = photo.image;
+            self.scrollView.scrollEnabled = YES;
             [self.loadingView stopLoading];
             [self.loadingView hideFailure];
             [self.loadingView removeFromSuperview];
@@ -201,6 +202,7 @@
                         __strong __typeof(wSelf) self = wSelf;
                         photo.image = [self.imageProtocol imageWithData:data];
                         self.imageView.image = photo.image;
+                        self.scrollView.scrollEnabled = YES;
                         [self.loadingView stopLoading];
                         [self.loadingView hideFailure];
                         [self.loadingView removeFromSuperview];

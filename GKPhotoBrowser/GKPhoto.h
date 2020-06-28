@@ -31,9 +31,6 @@
 /** 相册图片资源 */
 @property (nonatomic, strong) PHAsset       *imageAsset;
 
-// imageView对象
-@property (nonatomic, strong) UIImageView   *imageView;
-
 /** 占位图 */
 @property (nonatomic, strong) UIImage       *placeholderImage;
 
