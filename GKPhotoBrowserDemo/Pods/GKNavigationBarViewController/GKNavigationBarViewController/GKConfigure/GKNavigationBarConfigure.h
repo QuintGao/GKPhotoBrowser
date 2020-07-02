@@ -56,6 +56,8 @@
 @property (nonatomic, assign, readonly) CGFloat navItemLeftSpace;
 @property (nonatomic, assign, readonly) CGFloat navItemRightSpace;
 
+@property (nonatomic, strong, readonly) NSArray *shieldVCs;
+
 + (instancetype)sharedInstance;
 
 // 统一配置导航栏外观，最好在AppDelegate中配置
@@ -66,6 +68,9 @@
 
 // 更新配置
 - (void)updateConfigure:(void (^)(GKNavigationBarConfigure *configure))block;
+
+// 屏蔽某些控制器对导航栏间距调整的影响
+- (void)setupShieldVCs:(NSArray *)vcs;
 
 // 获取当前显示的控制器
 - (UIViewController *)visibleController;

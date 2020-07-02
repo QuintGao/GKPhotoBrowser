@@ -21,6 +21,8 @@ static const void* GKStatusBarHiddenKey     = @"GKStatusBarHiddenKey";
 static const void* GKBackStyleKey           = @"GKBackStyleKey";
 static const void* GKPushDelegateKey        = @"GKPushDelegateKey";
 static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
+static const void* GKNavItemLeftSpaceKey    = @"GKNavItemLeftSpaceKey";
+static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
 
 @implementation UIViewController (GKCategory)
 
@@ -29,14 +31,57 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
     // 保证其只执行一次
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        gk_swizzled_method(self, @"viewDidLoad", self);
+        gk_swizzled_method(self, @"viewWillAppear:", self);
         gk_swizzled_method(self, @"viewDidAppear:" ,self);
     });
+}
+
+- (void)gk_viewDidLoad {
+    // 初始化导航栏间距
+    self.gk_navItemLeftSpace    = GKNavigationBarItemSpace;
+    self.gk_navItemRightSpace   = GKNavigationBarItemSpace;
+    
+    [self gk_viewDidLoad];
 }
 
 - (void)gk_viewDidAppear:(BOOL)animated {
     [self postPropertyChangeNotification];
     
     [self gk_viewDidAppear:animated];
+}
+
+- (void)gk_viewWillAppear:(BOOL)animated {
+    if ([self isKindOfClass:[UINavigationController class]]) return;
+    if ([self isKindOfClass:[UITabBarController class]]) return;
+    if (!self.navigationController) return;
+    
+    __block BOOL exist = NO;
+    [GKConfigure.shieldVCs enumerateObjectsUsingBlock:^(UIViewController *vc, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([self isKindOfClass:vc.class]) {
+            exist = YES;
+            *stop = YES;
+        }
+    }];
+    if (exist) return;
+    
+    // bug fix：#41
+    // 每次控制器出现的时候重置导航栏间距
+    if (self.gk_navItemLeftSpace == GKNavigationBarItemSpace) {
+        self.gk_navItemLeftSpace = GKConfigure.navItemLeftSpace;
+    }
+    
+    if (self.gk_navItemRightSpace == GKNavigationBarItemSpace) {
+        self.gk_navItemRightSpace = GKConfigure.navItemRightSpace;
+    }
+    
+    // 重置navitem_space
+    [GKConfigure updateConfigure:^(GKNavigationBarConfigure *configure) {
+        configure.gk_navItemLeftSpace   = self.gk_navItemLeftSpace;
+        configure.gk_navItemRightSpace  = self.gk_navItemRightSpace;
+    }];
+    
+    [self gk_viewWillAppear:animated];
 }
 
 #pragma mark - StatusBar
@@ -152,6 +197,34 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
     objc_setAssociatedObject(self, GKPopDelegateKey, gk_popDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     [self postPropertyChangeNotification];
+}
+
+- (CGFloat)gk_navItemLeftSpace {
+    return [objc_getAssociatedObject(self, GKNavItemLeftSpaceKey) floatValue];
+}
+
+- (void)setGk_navItemLeftSpace:(CGFloat)gk_navItemLeftSpace {
+    objc_setAssociatedObject(self, GKNavItemLeftSpaceKey, @(gk_navItemLeftSpace), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (gk_navItemLeftSpace == GKNavigationBarItemSpace) return;
+    
+    [GKConfigure updateConfigure:^(GKNavigationBarConfigure * _Nonnull configure) {
+        configure.gk_navItemLeftSpace = gk_navItemLeftSpace;
+    }];
+}
+
+- (CGFloat)gk_navItemRightSpace {
+    return [objc_getAssociatedObject(self, GKNavItemRightSpaceKey) floatValue];
+}
+
+- (void)setGk_navItemRightSpace:(CGFloat)gk_navItemRightSpace {
+    objc_setAssociatedObject(self, GKNavItemRightSpaceKey, @(gk_navItemRightSpace), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (gk_navItemRightSpace == GKNavigationBarItemSpace) return;
+    
+    [GKConfigure updateConfigure:^(GKNavigationBarConfigure *configure) {
+        configure.gk_navItemRightSpace = gk_navItemRightSpace;
+    }];
 }
 
 - (void)setNavBarAlpha:(CGFloat)alpha {

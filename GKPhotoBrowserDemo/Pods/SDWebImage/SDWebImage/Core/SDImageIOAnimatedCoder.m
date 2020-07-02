@@ -215,7 +215,7 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
             maxPixelSize = MAX(thumbnailSize.width, thumbnailSize.height);
         }
         decodingOptions[(__bridge NSString *)kCGImageSourceThumbnailMaxPixelSize] = @(maxPixelSize);
-        decodingOptions[(__bridge NSString *)kCGImageSourceCreateThumbnailFromImageIfAbsent] = @(YES);
+        decodingOptions[(__bridge NSString *)kCGImageSourceCreateThumbnailFromImageAlways] = @(YES);
         imageRef = CGImageSourceCreateThumbnailAtIndex(source, index, (__bridge CFDictionaryRef)decodingOptions);
     }
     if (!imageRef) {
@@ -468,7 +468,7 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
     NSUInteger pixelWidth = CGImageGetWidth(imageRef);
     NSUInteger pixelHeight = CGImageGetHeight(imageRef);
     CGFloat finalPixelSize = 0;
-    if (maxPixelSize.width > 0 && maxPixelSize.height > 0 && pixelWidth > 0 && pixelHeight > 0) {
+    if (maxPixelSize.width > 0 && maxPixelSize.height > 0 && pixelWidth > maxPixelSize.width && pixelHeight > maxPixelSize.height) {
         CGFloat pixelRatio = pixelWidth / pixelHeight;
         CGFloat maxPixelSizeRatio = maxPixelSize.width / maxPixelSize.height;
         if (pixelRatio > maxPixelSizeRatio) {

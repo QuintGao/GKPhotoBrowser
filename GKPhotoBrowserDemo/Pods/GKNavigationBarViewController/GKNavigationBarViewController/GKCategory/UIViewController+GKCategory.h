@@ -59,6 +59,10 @@ extern NSString *const GKViewControllerPropertyChangedNotification;
 /** pop代理，如果设置了gk_popDelegate，原来的滑动返回手势将失效 */
 @property (nonatomic, weak) id<GKViewControllerPopDelegate> gk_popDelegate;
 
+/** 导航栏左右按钮距离屏幕边缘的距离，需在设置左右item之前设置此属性 */
+@property (nonatomic, assign) CGFloat gk_navItemLeftSpace;
+@property (nonatomic, assign) CGFloat gk_navItemRightSpace;
+
 /**
  返回显示的控制器
  */
