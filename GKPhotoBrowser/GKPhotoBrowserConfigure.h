@@ -31,16 +31,19 @@ NO)
 #define kSafeTopSpace       (KIsiPhoneX ? 24.0f : 0)   // iPhone X顶部多出的距离（刘海）
 #define kSafeBottomSpace    (KIsiPhoneX ? 34.0f : 0)   // iPhone X底部多出的距离
 
+// 默认最大缩放程度
 #define kMaxZoomScale               2.0f
 
+// 默认图片间距
 #define kPhotoViewPadding           10
 
+// 默认动画时间
 #define kAnimationDuration          0.3f
 
+// 加载本地图片
 #define GKPhotoBrowserSrcName(file) [@"GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
 
 #define GKPhotoBrowserFrameworkSrcName(file) [@"Frameworks/GKPhotoBrowser.framework/GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
-
 #define GKPhotoBrowserImage(file)  [UIImage imageNamed:GKPhotoBrowserSrcName(file)] ? : [UIImage imageNamed:GKPhotoBrowserFrameworkSrcName(file)]
 
 // 图片浏览器的显示方式

@@ -173,6 +173,7 @@
         self.scrollView.scrollEnabled = NO;
         
         if (photo.image) {
+            photo.finished = YES;
             self.imageView.image = photo.image;
             self.scrollView.scrollEnabled = YES;
             [self.loadingView stopLoading];
@@ -200,6 +201,7 @@
                     __weak __typeof(self) wSelf = self;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         __strong __typeof(wSelf) self = wSelf;
+                        photo.finished = YES;
                         photo.image = [self.imageProtocol imageWithData:data];
                         self.imageView.image = photo.image;
                         self.scrollView.scrollEnabled = YES;
@@ -231,70 +233,80 @@
             url = isOrigin ? photo.originUrl : photo.url;
         }
         
-        if (!photo.failed && !placeholderImage) {
-            if (isOrigin && self.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
-                [self.loadingView startLoading];
-            }else if (!isOrigin && self.loadStyle != GKPhotoBrowserLoadStyleCustom) {
-                [self.loadingView startLoading];
+        if (url.absoluteString.length > 0) {
+            if (!photo.failed && !placeholderImage) {
+                if (isOrigin && self.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
+                    [self.loadingView startLoading];
+                }else if (!isOrigin && self.loadStyle != GKPhotoBrowserLoadStyleCustom) {
+                    [self.loadingView startLoading];
+                }
             }
-        }
-        
-        __weak __typeof(self) weakSelf = self;
-        GKWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
-            __strong __typeof(weakSelf) strongSelf = weakSelf;
-            if (expectedSize == 0) return;
-            float progress = (float)receivedSize / expectedSize;
-            if (progress <= 0) progress = 0;
             
-            // 图片加载中，回调进度
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
-                    !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, YES);
-                }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
-                    !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, NO);
-                }else if (strongSelf.loadStyle == GKLoadingStyleDeterminate || strongSelf.originLoadStyle == GKLoadingStyleDeterminate) {
-                    strongSelf.loadingView.progress = progress;
-                }
-            });
-        };
-        
-        GKWebImageCompletionBlock completionBlock = ^(UIImage *image, NSURL *url, BOOL finished, NSError *error) {
-            __strong __typeof(weakSelf) strongSelf = weakSelf;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error) {
-                    photo.failed = YES;
-                    [strongSelf.loadingView stopLoading];
-                    
-                    if ([photo.url.absoluteString isEqualToString:url.absoluteString]) {
-                        if (self.failStyle == GKPhotoBrowserFailStyleCustom) {
-                            !strongSelf.loadFailed ? : strongSelf.loadFailed(self);
-                        }else {
-                            [strongSelf addSubview:strongSelf.loadingView];
-                            [strongSelf.loadingView showFailure];
-                        }
-                    }
-                }else {
-                    photo.finished = YES;
-                    photo.image = image;
-                    if (isOrigin) {
-                        photo.originFinished = YES;
-                    }
-                    
-                    // 图片加载完成，回调进度
+            __weak __typeof(self) weakSelf = self;
+            GKWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
+                __strong __typeof(weakSelf) strongSelf = weakSelf;
+                if (expectedSize == 0) return;
+                float progress = (float)receivedSize / expectedSize;
+                if (progress <= 0) progress = 0;
+                
+                // 图片加载中，回调进度
+                dispatch_async(dispatch_get_main_queue(), ^{
                     if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
-                        !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f, YES);
+                        !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, YES);
                     }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
-                        !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f, NO);
+                        !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, NO);
+                    }else if (strongSelf.loadStyle == GKLoadingStyleDeterminate || strongSelf.originLoadStyle == GKLoadingStyleDeterminate) {
+                        strongSelf.loadingView.progress = progress;
                     }
-                    
-                    strongSelf.scrollView.scrollEnabled = YES;
-                    [strongSelf.loadingView stopLoading];
-                }
-                [strongSelf adjustFrame];
-            });
-        };
-        
-        [_imageProtocol setImageForImageView:self.imageView url:url placeholderImage:placeholderImage progress:progressBlock completion:completionBlock];
+                });
+            };
+            
+            GKWebImageCompletionBlock completionBlock = ^(UIImage *image, NSURL *url, BOOL finished, NSError *error) {
+                __strong __typeof(weakSelf) strongSelf = weakSelf;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error) {
+                        photo.failed = YES;
+                        [strongSelf.loadingView stopLoading];
+                        
+                        if ([photo.url.absoluteString isEqualToString:url.absoluteString]) {
+                            if (self.failStyle == GKPhotoBrowserFailStyleCustom) {
+                                !strongSelf.loadFailed ? : strongSelf.loadFailed(self);
+                            }else {
+                                [strongSelf addSubview:strongSelf.loadingView];
+                                [strongSelf.loadingView showFailure];
+                            }
+                        }
+                    }else {
+                        photo.finished = YES;
+                        photo.image = image;
+                        if (isOrigin) {
+                            photo.originFinished = YES;
+                        }
+                        
+                        // 图片加载完成，回调进度
+                        if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
+                            !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f, YES);
+                        }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
+                            !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f, NO);
+                        }
+                        
+                        strongSelf.scrollView.scrollEnabled = YES;
+                        [strongSelf.loadingView stopLoading];
+                    }
+                    [strongSelf adjustFrame];
+                });
+            };
+            
+            [_imageProtocol setImageForImageView:self.imageView url:url placeholderImage:placeholderImage progress:progressBlock completion:completionBlock];
+        }else {
+            if (self.imageView.image) {
+                photo.finished = YES;
+                photo.image = self.imageView.image;
+                self.scrollView.scrollEnabled = YES;
+            }
+            
+            [self adjustFrame];
+        }
     }else {
         self.imageView.image = nil;
         
