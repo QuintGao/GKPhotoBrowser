@@ -91,7 +91,7 @@
         [photos addObject:photo];
     }];
     
-    
+
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:indexPath.row];
     browser.showStyle = GKPhotoBrowserShowStyleNone;
     browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate;
