@@ -126,6 +126,16 @@
         weakSelf.pageControl.currentPage = index;
         weakSelf.pageControl.hidesForSinglePage = YES;
         
+        CGSize size = [weakSelf.pageControl sizeForNumberOfPages:photos.count];
+        weakSelf.pageControl.frame = CGRectMake(0, 0, size.width, size.height);
+        
+        if (@available(iOS 14.0, *)) {
+            weakSelf.pageControl.backgroundStyle = UIPageControlBackgroundStyleMinimal;
+        }
+        if (@available(iOS 14.0, *)) {
+            weakSelf.pageControl.allowsContinuousInteraction = YES;
+        }
+        
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
         browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
