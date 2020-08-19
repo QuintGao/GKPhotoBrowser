@@ -17,7 +17,7 @@
 
 static Class imageManagerClass = nil;
 
-@interface GKPhotoBrowser()<UIScrollViewDelegate>
+@interface GKPhotoBrowser()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
 {
     UILabel  *_countLabel;
 }
@@ -502,11 +502,15 @@ static Class imageManagerClass = nil;
     // 单击手势
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleTap.numberOfTapsRequired = 1;
+	singleTap.delaysTouchesEnded = NO;
+	singleTap.delegate = self;
     [self.view addGestureRecognizer:singleTap];
     
     // 双击手势
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
+	doubleTap.delaysTouchesEnded = NO;
+	doubleTap.delegate = self;
     [self.view addGestureRecognizer:doubleTap];
     [singleTap requireGestureRecognizerToFail:doubleTap];
     
@@ -559,6 +563,16 @@ static Class imageManagerClass = nil;
     [self delDeviceOrientationObserver];
     
     [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+	if ([touch.view isKindOfClass:UIButton.class]) {
+        return NO;
+    }
+    
+    return YES;
 }
 
 #pragma mark - Gesture Handle
