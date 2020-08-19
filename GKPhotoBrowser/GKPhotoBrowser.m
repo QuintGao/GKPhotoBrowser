@@ -167,6 +167,10 @@ static Class imageManagerClass = nil;
     }
 }
 
+- (void)didReceiveMemoryWarning {
+    
+}
+
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
