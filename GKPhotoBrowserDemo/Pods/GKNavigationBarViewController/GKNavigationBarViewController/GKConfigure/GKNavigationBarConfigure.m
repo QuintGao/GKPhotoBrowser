@@ -14,8 +14,6 @@
 @property (nonatomic, assign) CGFloat navItemLeftSpace;
 @property (nonatomic, assign) CGFloat navItemRightSpace;
 
-@property (nonatomic, strong) NSArray *shieldVCs;
-
 @end
 
 @implementation GKNavigationBarConfigure
@@ -80,15 +78,6 @@ static GKNavigationBarConfigure *instance = nil;
 // 更新配置
 - (void)updateConfigure:(void (^)(GKNavigationBarConfigure *configure))block {
     !block ? : block(self);
-}
-
-- (void)setupShieldVCs:(NSArray *)vcs {
-    self.shieldVCs = vcs;
-}
-
-// 获取当前显示的控制器
-- (UIViewController *)visibleController {
-    return [[[UIApplication sharedApplication].windows firstObject].rootViewController gk_visibleViewControllerIfExist];
 }
 
 - (CGFloat)gk_fixedSpace {

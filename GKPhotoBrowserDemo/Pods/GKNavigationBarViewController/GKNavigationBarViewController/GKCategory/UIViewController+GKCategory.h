@@ -50,6 +50,9 @@ extern NSString *const GKViewControllerPropertyChangedNotification;
 /** 设置状态栏是否隐藏(default is NO 即不隐藏) */
 @property (nonatomic, assign) BOOL gk_statusBarHidden;
 
+/** 自定义返回按钮图片 */
+@property (nonatomic, strong) UIImage *gk_backImage;
+
 /** 设置返回按钮的类型 */
 @property (nonatomic, assign) GKNavigationBarBackStyle gk_backStyle;
 
@@ -62,11 +65,6 @@ extern NSString *const GKViewControllerPropertyChangedNotification;
 /** 导航栏左右按钮距离屏幕边缘的距离，需在设置左右item之前设置此属性 */
 @property (nonatomic, assign) CGFloat gk_navItemLeftSpace;
 @property (nonatomic, assign) CGFloat gk_navItemRightSpace;
-
-/**
- 返回显示的控制器
- */
-- (UIViewController *)gk_visibleViewControllerIfExist;
 
 /**
  返回按钮点击

@@ -81,19 +81,30 @@
 - (void)setupNavBarAppearance {
     GKNavigationBarConfigure *configure = [GKNavigationBarConfigure sharedInstance];
     
+    // 设置默认背景色
     if (configure.backgroundColor) {
         self.gk_navBackgroundColor = configure.backgroundColor;
     }
     
+    // 设置默认标题颜色
     if (configure.titleColor) {
         self.gk_navTitleColor = configure.titleColor;
     }
     
+    // 设置默认标题字体
     if (configure.titleFont) {
         self.gk_navTitleFont = configure.titleFont;
     }
     
-    self.gk_backStyle           = configure.backStyle;
+    // 设置默认返回图片
+    if (self.gk_backImage == nil) {
+        self.gk_backImage = configure.backImage;
+    }
+    
+    // 设置默认返回样式
+    if (self.gk_backStyle == GKNavigationBarBackStyleNone) {
+        self.gk_backStyle = configure.backStyle;
+    }
 }
 
 - (void)viewWillLayoutSubviews {

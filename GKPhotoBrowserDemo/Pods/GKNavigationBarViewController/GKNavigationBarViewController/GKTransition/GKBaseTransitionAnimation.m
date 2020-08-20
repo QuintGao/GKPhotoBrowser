@@ -8,10 +8,6 @@
 
 #import "GKBaseTransitionAnimation.h"
 
-@interface GKBaseTransitionAnimation()
-
-@end
-
 @implementation GKBaseTransitionAnimation
 
 + (instancetype)transitionWithScale:(BOOL)scale {

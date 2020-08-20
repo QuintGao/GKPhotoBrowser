@@ -49,8 +49,8 @@ typedef NS_ENUM(NSUInteger, GKNavigationBarBackStyle) {
 };
 
 // 使用static inline创建静态内联函数，方便调用
-static inline void gk_swizzled_method(Class oldClass ,NSString *oldSelector, Class newClass) {
-    NSString *newSelector = [NSString stringWithFormat:@"gk_%@", oldSelector];
+static inline void gk_swizzled_method(NSString *prefix, Class oldClass ,NSString *oldSelector, Class newClass) {
+    NSString *newSelector = [NSString stringWithFormat:@"%@_%@", prefix, oldSelector];
     
     SEL originalSelector = NSSelectorFromString(oldSelector);
     SEL swizzledSelector = NSSelectorFromString(newSelector);

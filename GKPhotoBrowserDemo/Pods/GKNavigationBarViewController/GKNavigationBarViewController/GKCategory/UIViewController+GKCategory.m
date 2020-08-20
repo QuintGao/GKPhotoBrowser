@@ -18,6 +18,7 @@ static const void* GKPopMaxDistanceKey      = @"GKPopMaxDistanceKey";
 static const void* GKNavBarAlphaKey         = @"GKNavBarAlphaKey";
 static const void* GKStatusBarStyleKey      = @"GKStatusBarStyleKey";
 static const void* GKStatusBarHiddenKey     = @"GKStatusBarHiddenKey";
+static const void* GKBackImageKey           = @"GKBackImageKey";
 static const void* GKBackStyleKey           = @"GKBackStyleKey";
 static const void* GKPushDelegateKey        = @"GKPushDelegateKey";
 static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
@@ -31,9 +32,13 @@ static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
     // 保证其只执行一次
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        gk_swizzled_method(self, @"viewDidLoad", self);
-        gk_swizzled_method(self, @"viewWillAppear:", self);
-        gk_swizzled_method(self, @"viewDidAppear:" ,self);
+        NSArray <NSString *> *oriSels = @[@"viewDidLoad",
+                                          @"viewWillAppear:",
+                                          @"viewDidAppear:"];
+        
+        [oriSels enumerateObjectsUsingBlock:^(NSString * _Nonnull oriSel, NSUInteger idx, BOOL * _Nonnull stop) {
+            gk_swizzled_method(@"gk", self, oriSel, self);
+        }];
     });
 }
 
@@ -54,13 +59,24 @@ static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
 - (void)gk_viewWillAppear:(BOOL)animated {
     if ([self isKindOfClass:[UINavigationController class]]) return;
     if ([self isKindOfClass:[UITabBarController class]]) return;
+    if ([self isKindOfClass:[UIAlertController class]]) return;
+    if ([self isKindOfClass:[UIImagePickerController class]]) return;
+    if ([self isKindOfClass:[UIVideoEditorController class]]) return;
+    if ([NSStringFromClass(self.class) isEqualToString:@"PUPhotoPickerHostViewController"]) return;
     if (!self.navigationController) return;
     
     __block BOOL exist = NO;
-    [GKConfigure.shieldVCs enumerateObjectsUsingBlock:^(UIViewController *vc, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([self isKindOfClass:vc.class]) {
-            exist = YES;
-            *stop = YES;
+    [GKConfigure.shiledItemSpaceVCs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[UIViewController class]]) {
+            if ([self isKindOfClass:[obj class]]) {
+                exist = YES;
+                *stop = YES;
+            }
+        }else if ([obj isKindOfClass:[NSString class]]) {
+            if ([NSStringFromClass(self.class) isEqualToString:obj]) {
+                exist = YES;
+                *stop = YES;
+            }
         }
     }];
     if (exist) return;
@@ -166,17 +182,17 @@ static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
 - (void)setGk_backStyle:(GKNavigationBarBackStyle)gk_backStyle {
     objc_setAssociatedObject(self, GKBackStyleKey, @(gk_backStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if (self.navigationController.childViewControllers.count <= 1) return;
+    [self setBackItemImage:self.gk_backImage];
+}
+
+- (UIImage *)gk_backImage {
+    return objc_getAssociatedObject(self, GKBackImageKey);
+}
+
+- (void)setGk_backImage:(UIImage *)gk_backImage {
+    objc_setAssociatedObject(self, GKBackImageKey, gk_backImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if (self.gk_backStyle != GKNavigationBarBackStyleNone) {
-        NSString *imageName = self.gk_backStyle == GKNavigationBarBackStyleBlack ? @"btn_back_black" : @"btn_back_white";
-        UIImage *backImage = [UIImage gk_imageNamed:imageName];
-        
-        if ([self isKindOfClass:[GKNavigationBarViewController class]]) {
-            GKNavigationBarViewController *vc = (GKNavigationBarViewController *)self;
-            vc.gk_navLeftBarButtonItem = [UIBarButtonItem itemWithTitle:nil image:backImage target:self action:@selector(backItemClick:)];
-        }
-    }
+    [self setBackItemImage:gk_backImage];
 }
 
 - (id<GKViewControllerPushDelegate>)gk_pushDelegate {
@@ -258,26 +274,25 @@ static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
     navBar.clipsToBounds = alpha == 0.0;
 }
 
-- (UIViewController *)gk_visibleViewControllerIfExist {
+- (void)setBackItemImage:(UIImage *)image {
+    // 根控制器不作处理
+    if (self.navigationController.childViewControllers.count <= 1) return;
     
-    if (self.presentedViewController) {
-        return [self.presentedViewController gk_visibleViewControllerIfExist];
+    // 非GKNavigationBarViewController不作处理
+    if (![self isKindOfClass:[GKNavigationBarViewController class]]) return;
+    
+    if (!image) {
+        if (self.gk_backStyle != GKNavigationBarBackStyleNone) {
+            NSString *imageName = self.gk_backStyle == GKNavigationBarBackStyleBlack ? @"btn_back_black" : @"btn_back_white";
+            image = [UIImage gk_imageNamed:imageName];
+        }
     }
     
-    if ([self isKindOfClass:[UINavigationController class]]) {
-        return [((UINavigationController *)self).topViewController gk_visibleViewControllerIfExist];
-    }
+    // 没有image
+    if (!image) return;
     
-    if ([self isKindOfClass:[UITabBarController class]]) {
-        return [((UITabBarController *)self).selectedViewController gk_visibleViewControllerIfExist];
-    }
-    
-    if ([self isViewLoaded] && self.view.window) {
-        return self;
-    }else {
-        NSLog(@"找不到可见的控制器，viewcontroller.self = %@, self.view.window = %@", self, self.view.window);
-        return nil;
-    }
+    GKNavigationBarViewController *vc = (GKNavigationBarViewController *)self;
+    vc.gk_navLeftBarButtonItem = [UIBarButtonItem itemWithTitle:nil image:image target:self action:@selector(backItemClick:)];
 }
 
 - (void)backItemClick:(id)sender {
