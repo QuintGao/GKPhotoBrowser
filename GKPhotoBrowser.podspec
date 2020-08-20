@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GKPhotoBrowser"
-  s.version      = "2.0.9"
+  s.version      = "2.1.0"
   s.summary      = "iOS自定义图片浏览器，支持CocoaPods"
   s.homepage     = "https://github.com/QuintGao/GKPhotoBrowser"
   s.license      = "MIT"
@@ -20,6 +20,6 @@ Pod::Spec.new do |s|
   
   s.subspec 'YY' do |yy|
     yy.source_files = 'GKPhotoBrowser/*.{h,m}', 'GKPhotoBrowser/YYWebImage/*.{h,m}'
-    yy.dependency 'YYWebImage', '~> 1.0.5'
+    yy.dependency 'YYWebImage'
   end
 end
