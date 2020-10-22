@@ -13,6 +13,12 @@
 
 #define GKConfigure [GKNavigationBarConfigure sharedInstance]
 
+// 判断是否是iPhoneX系列手机（带物理凹槽的刘海屏）
+#define GK_IS_iPhoneX                   [GKConfigure gk_isNotchedScreen]
+
+// 判断是否是iPad
+#define GK_IS_iPad      UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
+
 // 屏幕相关
 #define GK_SCREEN_WIDTH                 [UIScreen mainScreen].bounds.size.width
 #define GK_SCREEN_HEIGHT                [UIScreen mainScreen].bounds.size.height
@@ -22,22 +28,6 @@
 #define GK_NAVBAR_HEIGHT                44.0f   // 导航栏高度
 #define GK_STATUSBAR_NAVBAR_HEIGHT      (GK_STATUSBAR_HEIGHT + GK_NAVBAR_HEIGHT) // 状态栏+导航栏高度
 #define GK_TABBAR_HEIGHT                (GK_IS_iPhoneX ? 83.0f : 49.0f)  //tabbar高度
-
-// 判断是否是iPhone X系列
-#define GK_IS_iPhoneX      ([UIScreen instancesRespondToSelector:@selector(currentMode)] ?\
-(\
-CGSizeEqualToSize(CGSizeMake(375, 812),[UIScreen mainScreen].bounds.size)\
-||\
-CGSizeEqualToSize(CGSizeMake(812, 375),[UIScreen mainScreen].bounds.size)\
-||\
-CGSizeEqualToSize(CGSizeMake(414, 896),[UIScreen mainScreen].bounds.size)\
-||\
-CGSizeEqualToSize(CGSizeMake(896, 414),[UIScreen mainScreen].bounds.size))\
-:\
-NO)
-
-// 判断是否是iPad
-#define GK_IS_iPad      UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
 
 // 导航栏间距，用于不同控制器之间的间距
 static const CGFloat GKNavigationBarItemSpace = -1;

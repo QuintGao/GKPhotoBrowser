@@ -86,15 +86,15 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  
  1、仿微信
  
- ![wechat.gif](https://github.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/wechat.gif)
+ ![wechat.gif](https://gitee.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/wechat.gif)
  
  2、今日头条
  
- ![toutiao.gif](https://github.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/toutiao.gif)
+ ![toutiao.gif](https://gitee.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/toutiao.gif)
  
  3、简书
  
- ![jianshu.gif](https://github.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/jianshu.gif)
+ ![jianshu.gif](https://gitee.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/jianshu.gif)
  
  ## 更新
  

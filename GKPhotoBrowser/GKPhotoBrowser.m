@@ -102,7 +102,6 @@ static Class imageManagerClass = nil;
         _visiblePhotoViews  = [NSMutableArray new];
         _reusablePhotoViews = [NSMutableSet new];
         
-        
         imageManagerClass = NSClassFromString(@"GKSDWebImageManager");
         if (!imageManagerClass) {
             imageManagerClass = NSClassFromString(@"GKYYWebImageManager");

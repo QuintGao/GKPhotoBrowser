@@ -2,49 +2,30 @@
 //  GKPhotoBrowserConfigure.h
 //  GKPhotoBrowser
 //
-//  Created by QuintGao on 2017/10/23.
-//  Copyright © 2017年 QuintGao. All rights reserved.
+//  Created by QuintGao on 2020/10/19.
+//  Copyright © 2020年 QuintGao. All rights reserved.
 //
 
-#ifndef GKPhotoBrowserConfigure_h
-#define GKPhotoBrowserConfigure_h
-
+#import <UIKit/UIKit.h>
 #import "UIScrollView+GKGestureHandle.h"
 
-#define GKScreenW [UIScreen mainScreen].bounds.size.width
-#define GKScreenH [UIScreen mainScreen].bounds.size.height
-
+#define GKScreenW           [UIScreen mainScreen].bounds.size.width
+#define GKScreenH           [UIScreen mainScreen].bounds.size.height
 // 判断iPhone X
-#define KIsiPhoneX          ([UIScreen instancesRespondToSelector:@selector(currentMode)] ?\
-(\
-CGSizeEqualToSize(CGSizeMake(375, 812),[UIScreen mainScreen].bounds.size)\
-||\
-CGSizeEqualToSize(CGSizeMake(812, 375),[UIScreen mainScreen].bounds.size)\
-||\
-CGSizeEqualToSize(CGSizeMake(414, 896),[UIScreen mainScreen].bounds.size)\
-||\
-CGSizeEqualToSize(CGSizeMake(896, 414),[UIScreen mainScreen].bounds.size))\
-:\
-NO)
-
+#define KIsiPhoneX          [GKPhotoBrowserConfigure gk_isIPhoneXSeries]
 // 安全区域间距
 #define kSafeTopSpace       (KIsiPhoneX ? 24.0f : 0)   // iPhone X顶部多出的距离（刘海）
 #define kSafeBottomSpace    (KIsiPhoneX ? 34.0f : 0)   // iPhone X底部多出的距离
 
 // 默认最大缩放程度
 #define kMaxZoomScale               2.0f
-
 // 默认图片间距
 #define kPhotoViewPadding           10
-
 // 默认动画时间
 #define kAnimationDuration          0.3f
 
 // 加载本地图片
-#define GKPhotoBrowserSrcName(file) [@"GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
-
-#define GKPhotoBrowserFrameworkSrcName(file) [@"Frameworks/GKPhotoBrowser.framework/GKPhotoBrowser.bundle" stringByAppendingPathComponent:file]
-#define GKPhotoBrowserImage(file)  [UIImage imageNamed:GKPhotoBrowserSrcName(file)] ? : [UIImage imageNamed:GKPhotoBrowserFrameworkSrcName(file)]
+#define GKPhotoBrowserImage(name)  [GKPhotoBrowserConfigure gk_imageWithName:name]
 
 // 图片浏览器的显示方式
 typedef NS_ENUM(NSUInteger, GKPhotoBrowserShowStyle) {
@@ -76,4 +57,13 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
     GKPhotoBrowserFailStyleCustom              // 自定义（如：显示HUD）
 };
 
-#endif /* GKPhotoBrowserConfigure_h */
+@interface GKPhotoBrowserConfigure : NSObject
+
+/// 判断是否是刘海屏
++ (BOOL)gk_isIPhoneXSeries;
+
+/// 根据图片名字获取图片
+/// @param name 图片名字
++ (UIImage *)gk_imageWithName:(NSString *)name;
+
+@end

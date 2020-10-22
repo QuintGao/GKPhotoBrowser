@@ -10,10 +10,6 @@
 
 @implementation GKBaseTransitionAnimation
 
-+ (instancetype)transitionWithScale:(BOOL)scale {
-    return [[self alloc] initWithScale:scale];
-}
-
 - (instancetype)initWithScale:(BOOL)scale {
     if (self = [super init]) {
         self.scale = scale;
@@ -43,6 +39,10 @@
     self.transitionContext  = transitionContext;
     
     [self animateTransition];
+}
+
+- (NSTimeInterval)animationDuration {
+    return [self transitionDuration:self.transitionContext];
 }
 
 // 子类重写

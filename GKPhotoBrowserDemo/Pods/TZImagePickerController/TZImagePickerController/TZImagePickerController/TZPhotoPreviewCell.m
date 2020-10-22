@@ -61,7 +61,7 @@
             strongSelf.imageProgressUpdateBlock(progress);
         }
     }];
-    [self addSubview:self.previewView];
+    [self.contentView addSubview:self.previewView];
 }
 
 - (void)setModel:(TZAssetModel *)model {
@@ -342,8 +342,8 @@
     CGFloat progressY = (self.tz_height - progressWH) / 2;
     _progressView.frame = CGRectMake(progressX, progressY, progressWH, progressWH);
     [self recoverSubviews];
-    _iCloudErrorIcon.frame = CGRectMake(20, [TZCommonTools tz_isIPhoneX] ? 88 + 10 : 64 + 10, 28, 28);
-    _iCloudErrorLabel.frame = CGRectMake(53, [TZCommonTools tz_isIPhoneX] ? 88 + 10 : 64 + 10, self.tz_width - 63, 28);
+    _iCloudErrorIcon.frame = CGRectMake(20, [TZCommonTools tz_statusBarHeight] + 44 + 10, 28, 28);
+    _iCloudErrorLabel.frame = CGRectMake(53, [TZCommonTools tz_statusBarHeight] + 44 + 10, self.tz_width - 63, 28);
 }
 
 #pragma mark - UITapGestureRecognizer Event
@@ -418,9 +418,9 @@
     [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlay"] forState:UIControlStateNormal];
     [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlayHL"] forState:UIControlStateHighlighted];
     [_playButton addTarget:self action:@selector(playButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_playButton];
-    [self addSubview:_iCloudErrorIcon];
-    [self addSubview:_iCloudErrorLabel];
+    [self.contentView addSubview:_playButton];
+    [self.contentView addSubview:_iCloudErrorIcon];
+    [self.contentView addSubview:_iCloudErrorLabel];
 }
 
 - (void)setModel:(TZAssetModel *)model {
@@ -484,8 +484,8 @@
     [super layoutSubviews];
     _playerLayer.frame = self.bounds;
     _playButton.frame = CGRectMake(0, 64, self.tz_width, self.tz_height - 64 - 44);
-    _iCloudErrorIcon.frame = CGRectMake(20, [TZCommonTools tz_isIPhoneX] ? 88 + 10 : 64 + 10, 28, 28);
-    _iCloudErrorLabel.frame = CGRectMake(53, [TZCommonTools tz_isIPhoneX] ? 88 + 10 : 64 + 10, self.tz_width - 63, 28);
+    _iCloudErrorIcon.frame = CGRectMake(20, [TZCommonTools tz_statusBarHeight] + 44 + 10, 28, 28);
+    _iCloudErrorLabel.frame = CGRectMake(53, [TZCommonTools tz_statusBarHeight] + 44 + 10, self.tz_width - 63, 28);
 }
 
 - (void)photoPreviewCollectionViewDidScroll {
@@ -544,7 +544,7 @@
         __strong typeof(weakSelf) strongSelf = weakSelf;
         [strongSelf signleTapAction];
     }];
-    [self addSubview:_previewView];
+    [self.contentView addSubview:_previewView];
 }
 
 - (void)setModel:(TZAssetModel *)model {
