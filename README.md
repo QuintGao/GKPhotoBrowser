@@ -86,20 +86,21 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  
  1、仿微信
  
- ![wechat.gif](https://gitee.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/wechat.gif)
+ ![wechat.gif](https://github.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/wechat.gif)
  
  2、今日头条
  
- ![toutiao.gif](https://gitee.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/toutiao.gif)
+ ![toutiao.gif](https://github.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/toutiao.gif)
  
  3、简书
  
- ![jianshu.gif](https://gitee.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/jianshu.gif)
+ ![jianshu.gif](https://github.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/jianshu.gif)
  
  ## 更新
  
 ```
 
+2020.10.22  2.1.1版本 修改刘海屏手机判断方法，适配iPhone 12系列机型
 2020.08.19  2.1.0版本 修复自定义coverView中UIButton点击响应延迟问题
 2020.07.02  2.0.8版本 修复加载本地图片不能双击放大的bug
 2020.06.18  2.0.4版本 修复删除图片bug，增加对PHAsset的支持
