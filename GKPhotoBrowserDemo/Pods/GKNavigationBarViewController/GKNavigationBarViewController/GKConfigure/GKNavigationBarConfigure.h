@@ -83,10 +83,16 @@
 /// 获取APP当前最顶层的可见viewController
 - (UIViewController *)visibleViewController;
 
+/// 判断是否是有缺口的屏幕（刘海屏）
 - (BOOL)gk_isNotchedScreen;
 
-#pragma mark - 内部方法
+/// 安全区域
+- (UIEdgeInsets)gk_safeAreaInsets;
 
+/// 状态栏frame
+- (CGRect)gk_statusBarFrame;
+
+#pragma mark - 内部方法
 /// 获取当前item修复间距
 - (CGFloat)gk_fixedSpace;
 

@@ -120,7 +120,7 @@
     CGFloat navBarH = 0;
     if (width > height) { // 横屏
         if (GK_IS_iPad) {
-            CGFloat statusBarH = [UIApplication sharedApplication].statusBarFrame.size.height;
+            CGFloat statusBarH = [GKConfigure gk_statusBarFrame].size.height;
             CGFloat navigaBarH = self.navigationController.navigationBar.frame.size.height;
             navBarH = statusBarH + navigaBarH;
         }else if (GK_IS_iPhoneX) {

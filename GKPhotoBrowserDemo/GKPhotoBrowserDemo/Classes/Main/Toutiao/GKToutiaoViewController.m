@@ -235,10 +235,10 @@
     CGFloat maxHeight = isLandspace ? 100.0f : 120.0f;
     
     if (size.height > maxHeight) {
-        self.contentView.frame = CGRectMake(0, 15, KScreenW, maxHeight);
+        self.contentView.frame = CGRectMake(0, 15, width, maxHeight);
         self.contentView.contentSize = CGSizeMake(0, size.height);
     }else {
-        self.contentView.frame = CGRectMake(0, 15, KScreenW, size.height);
+        self.contentView.frame = CGRectMake(0, 15, width, size.height);
         self.contentView.contentSize = CGSizeZero;
     }
     
