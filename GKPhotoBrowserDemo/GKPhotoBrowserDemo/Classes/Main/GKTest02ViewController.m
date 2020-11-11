@@ -185,7 +185,7 @@
 //        browser.failStyle       = GKPhotoBrowserFailStyleOnlyImage;
         browser.failureText     = @"图片加载失败了，555";
         browser.failureImage    = [UIImage imageNamed:@"error"];
-        browser.delegate        = self;
+        browser.delegate        = weakSelf;
         if (kIsiPad) {
             browser.isFollowSystemRotation = YES;
         }
