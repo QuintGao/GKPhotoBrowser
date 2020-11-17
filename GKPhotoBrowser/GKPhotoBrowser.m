@@ -440,9 +440,12 @@ static Class imageManagerClass = nil;
     
     if (!self.isFollowSystemRotation) {
         // 状态栏恢复到竖屏
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         if (@available(iOS 13.0, *)) {} else {
             [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
         }
+#pragma clang diagnostic pop
     }
     
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
@@ -558,7 +561,10 @@ static Class imageManagerClass = nil;
     
     if (!self.isFollowSystemRotation) {
         if (@available(iOS 13.0, *)) {} else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+#pragma clang diagnostic pop
         }
     }
     
@@ -990,7 +996,10 @@ static Class imageManagerClass = nil;
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
             if (@available(iOS 13.0, *)) {} else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+#pragma clang diagnostic pop
             }
             
             float rotation = currentOrientation == UIDeviceOrientationLandscapeRight ? 1.5 : 0.5;
@@ -1032,7 +1041,10 @@ static Class imageManagerClass = nil;
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
             if (@available(iOS 13.0, *)) {} else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+#pragma clang diagnostic pop
             }
             
             // 旋转view

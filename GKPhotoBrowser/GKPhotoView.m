@@ -303,6 +303,7 @@
                 photo.finished = YES;
                 photo.image = self.imageView.image;
                 self.scrollView.scrollEnabled = YES;
+                [self.loadingView stopLoading];
             }
             
             [self adjustFrame];
