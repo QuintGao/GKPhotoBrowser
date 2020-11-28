@@ -50,6 +50,9 @@ extern NSString *const GKViewControllerPropertyChangedNotification;
 /** 设置状态栏是否隐藏(default is NO 即不隐藏) */
 @property (nonatomic, assign) BOOL gk_statusBarHidden;
 
+/** 自定义返回按钮图片 */
+@property (nonatomic, strong) UIImage *gk_backImage;
+
 /** 设置返回按钮的类型 */
 @property (nonatomic, assign) GKNavigationBarBackStyle gk_backStyle;
 
@@ -59,14 +62,22 @@ extern NSString *const GKViewControllerPropertyChangedNotification;
 /** pop代理，如果设置了gk_popDelegate，原来的滑动返回手势将失效 */
 @property (nonatomic, weak) id<GKViewControllerPopDelegate> gk_popDelegate;
 
-/**
- 返回显示的控制器
- */
-- (UIViewController *)gk_visibleViewControllerIfExist;
+/** 自定义push转场动画 */
+@property (nonatomic, weak) id<UIViewControllerAnimatedTransitioning> gk_pushTransition;
+
+/** 自定义pop转场动画 */
+@property (nonatomic, weak) id<UIViewControllerAnimatedTransitioning> gk_popTransition;
+
+/** 导航栏左右按钮距离屏幕边缘的距离，需在设置左右item之前设置此属性 */
+@property (nonatomic, assign) CGFloat gk_navItemLeftSpace;
+@property (nonatomic, assign) CGFloat gk_navItemRightSpace;
 
 /**
  返回按钮点击
  */
 - (void)backItemClick:(id)sender;
+
+/// 获取当前controller里的最高层可见viewController（可见的意思是还会判断self.view.window是否存在）
+- (UIViewController *)gk_visibleViewControllerIfExist;
 
 @end

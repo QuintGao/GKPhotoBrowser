@@ -29,6 +29,10 @@
     }];
 }
 
+- (UIImage *)imageWithData:(NSData *)data {
+    return [UIImage yy_imageWithSmallGIFData:data scale:UIScreen.mainScreen.scale];
+}
+
 - (void)cancelImageRequestWithImageView:(UIImageView *)imageView {
     [imageView yy_cancelCurrentImageRequest];
 }

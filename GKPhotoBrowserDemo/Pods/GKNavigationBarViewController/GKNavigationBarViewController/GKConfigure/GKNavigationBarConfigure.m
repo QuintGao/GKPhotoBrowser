@@ -80,14 +80,80 @@ static GKNavigationBarConfigure *instance = nil;
     !block ? : block(self);
 }
 
-// 获取当前显示的控制器
-- (UIViewController *)visibleController {
-    return [[[UIApplication sharedApplication].windows firstObject].rootViewController gk_visibleViewControllerIfExist];
+- (UIViewController *)visibleViewController {
+    return [[GKConfigure getKeyWindow].rootViewController gk_visibleViewControllerIfExist];
+}
+
+- (UIEdgeInsets)gk_safeAreaInsets {
+    UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
+    if (@available(iOS 11.0, *)) {
+        UIWindow *keyWindow = [GKConfigure getKeyWindow];
+        if (keyWindow) {
+            return keyWindow.safeAreaInsets;
+        }else { // 如果获取到的window是空
+            // 对于刘海屏，当window没有创建的时候，可根据状态栏设置安全区域顶部高度
+            // iOS14之后顶部安全区域不再是固定的44，所以修改为以下方式获取
+            if ([GKConfigure gk_isNotchedScreen]) {
+                safeAreaInsets = UIEdgeInsetsMake([GKConfigure gk_statusBarFrame].size.height, 0, 34, 0);
+            }
+        }
+    }
+    return safeAreaInsets;
+}
+
+- (CGRect)gk_statusBarFrame {
+    return [UIApplication sharedApplication].statusBarFrame;
+}
+
+- (BOOL)gk_isNotchedScreen {
+    if (@available(iOS 11.0, *)) {
+        UIWindow *keyWindow = [GKConfigure getKeyWindow];
+        if (keyWindow) {
+            return keyWindow.safeAreaInsets.bottom > 0;
+        }
+    }
+    
+    // 当iOS11以下或获取不到keyWindow时用以下方案
+    CGSize screenSize = UIScreen.mainScreen.bounds.size;
+    return (CGSizeEqualToSize(screenSize, CGSizeMake(375, 812)) ||
+            CGSizeEqualToSize(screenSize, CGSizeMake(812, 375)) ||
+            CGSizeEqualToSize(screenSize, CGSizeMake(414, 896)) ||
+            CGSizeEqualToSize(screenSize, CGSizeMake(896, 414)) ||
+            CGSizeEqualToSize(screenSize, CGSizeMake(390, 844)) ||
+            CGSizeEqualToSize(screenSize, CGSizeMake(844, 390)) ||
+            CGSizeEqualToSize(screenSize, CGSizeMake(428, 926)) ||
+            CGSizeEqualToSize(screenSize, CGSizeMake(926, 428)));
 }
 
 - (CGFloat)gk_fixedSpace {
     CGSize screentSize = [UIScreen mainScreen].bounds.size;
     return MIN(screentSize.width, screentSize.height) > 375 ? 20 : 16;
+}
+
+- (UIWindow *)getKeyWindow {
+    UIWindow *window = nil;
+    if (@available(iOS 13.0, *)) {
+        for (UIWindowScene *windowScene in [UIApplication sharedApplication].connectedScenes) {
+            if (windowScene.activationState == UISceneActivationStateForegroundActive) {
+                for (UIWindow *w in windowScene.windows) {
+                    if (window.isKeyWindow) {
+                        window = w;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    // 没有获取到window
+    if (!window) {
+        for (UIWindow *w in [UIApplication sharedApplication].windows) {
+            if (w.isKeyWindow) {
+                window = w;
+                break;
+            }
+        }
+    }
+    return window;
 }
 
 @end

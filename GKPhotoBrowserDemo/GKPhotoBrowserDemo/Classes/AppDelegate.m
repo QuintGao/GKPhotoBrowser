@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "GKMainViewController.h"
+#import "GKPhotoBrowserConfigure.h"
 
 @interface AppDelegate ()
 
@@ -35,10 +36,7 @@
     
     [self.window makeKeyAndVisible];
     
-    
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    
-    NSLog(@"%@", path);
+    NSLog(@"%d", KIsiPhoneX);
     
     return YES;
 }

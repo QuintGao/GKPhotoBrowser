@@ -14,6 +14,7 @@
 #import <SDWebImage/SDWebImageDownloader.h>
 #import <SDWebImage/SDImageCache.h>
 #import <SDWebImage/SDAnimatedImageView.h>
+#import <SDWebImage/UIImage+GIF.h>
 #else
 #import "UIImageView+WebCache.h"
 #import "UIView+WebCache.h"
@@ -34,6 +35,10 @@
     } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
         !completion ? : completion(image, imageURL, !error, error);
     }];
+}
+
+- (UIImage *)imageWithData:(NSData *)data {
+    return [UIImage sd_imageWithGIFData:data];
 }
 
 - (void)cancelImageRequestWithImageView:(UIImageView *)imageView {

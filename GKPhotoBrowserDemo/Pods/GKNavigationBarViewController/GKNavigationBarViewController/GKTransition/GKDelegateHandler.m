@@ -97,11 +97,20 @@
 
 #pragma mark - UINavigationControllerDelegate
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
+    
+    if (fromVC.gk_pushTransition && operation == UINavigationControllerOperationPush) {
+        return fromVC.gk_pushTransition;
+    }
+    
+    if (fromVC.gk_popTransition && operation == UINavigationControllerOperationPop) {
+        return fromVC.gk_popTransition;
+    }
+    
     if ((self.navigationController.gk_translationScale) || (self.navigationController.gk_openScrollLeftPush && self.pushTransition)) {
         if (operation == UINavigationControllerOperationPush) {
-            return [GKPushTransitionAnimation transitionWithScale:self.navigationController.gk_translationScale];
+            return [[GKPushTransitionAnimation alloc] initWithScale:self.navigationController.gk_translationScale];
         }else if (operation == UINavigationControllerOperationPop) {
-            return [GKPopTransitionAnimation transitionWithScale:self.navigationController.gk_translationScale];
+            return [[GKPopTransitionAnimation alloc] initWithScale:self.navigationController.gk_translationScale];
         }
     }
     

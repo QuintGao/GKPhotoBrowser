@@ -17,13 +17,15 @@ iOS自定义导航栏 - 导航栏联动效果
   [iOS自定义导航栏-导航栏联动（二）](http://www.jianshu.com/p/5ba9b12ec933),[GKNavigationBarViewController](https://github.com/QuintGao/GKNavigationBarViewController)
   
 ## 重要
-1、有时修改状态栏会闪动（从黑色变成白色等）或状态栏颜色显示异常（左边黑色右边白色登）
+感谢使用该库，如果在使用过程中遇到问题可查看issue或提交issue，或者进QQ群1047100313
+
+##### 推荐使用
+对于GKNavigationBarViewController有人提出侵入性较高，于是我修改了实现方式，写了[GKNavigationBar](https://github.com/QuintGao/GKNavigationBar)这个库，推荐使用，另外也提供了swift版本[GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift)
+
+##### 状态栏问题
+1、有时修改状态栏会闪动（从黑色变成白色等）或状态栏颜色显示异常（左边黑色右边白色等）
 
     在UIViewController的init方法中修改gk_statusBarStyle即可
-  
-## GKNavigationBar
-
-该库的另一种实现方式[GKNavigationBar](https://github.com/QuintGao/GKNavigationBar)，无侵入性，耦合度低，推荐使用
 
 ## 说明：
 
@@ -51,8 +53,41 @@ iOS自定义导航栏 - 导航栏联动效果
 
 
 ## 使用说明
+1. 配置默认值
+在AppDelegate的didFinishLaunchingWithOptions方法中配置导航栏的默认属性：
+```
+    [GKConfigure setupCustomConfigure:^(GKNavigationBarConfigure *configure) {
+        // 导航栏背景色
+        configure.backgroundColor = [UIColor whiteColor];
+        // 导航栏标题颜色
+        configure.titleColor = [UIColor blackColor];
+        // 导航栏标题字体
+        configure.titleFont = [UIFont systemFontOfSize:18.0f];
+        // 导航栏返回按钮样式
+        configure.backStyle = GKNavigationBarBackStyleBlack;
+        // 导航栏itme左右间距
+        configure.gk_navItemLeftSpace = 12.0f;
+        configure.gk_navItemRightSpace = 12.0f;
+    }];
+```
+2. 将基类控制器修改为GKNavigationBarViewController
+可在每个控制器的viewDidLoad中单独设置导航栏的样式
+```
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    // 设置导航栏样式
+    self.gk_navTitle = @"Demo";
+    self.gk_navTitleColor = [UIColor whiteColor];
+    self.gk_navBackgroundColor = [UIColor redColor];
+    self.gk_navShadowColor = [UIColor blackColor];
+    self.gk_backStyle = GKNavigationBarBackStyleWhite;
+    self.gk_navRightBarButtonItem = self.moreItem;
+}
+```
 
-1. 今日头条的实现
+
+3. 今日头条的实现
 
 UINavigationController作为根控制器，包含一个UITabBarController，UITabBarController中包含以GKNavigationBarViewController为父类的子类
 
@@ -65,11 +100,11 @@ UINavigationController *nav = [UINavigationController rootVC:toutiaoVC translati
 
 ```
 
-2. 网易云音乐的实现
+4. 网易云音乐的实现
 
 UITabBarController作为根控制器，包含带导航栏的以GKNavigationBarViewController为父类的子类
 
-3. 网易新闻的实现
+5. 网易新闻的实现
 
 UITabBarController作为根控制器，包含带导航栏的以GKNavigationBarViewController为父类的子类
 其中导航栏开启左滑push手势，主要代码如下：
@@ -91,7 +126,7 @@ self.gk_pushDelegate = self;
 
 ```
 
-4. 部分属性介绍
+6. 部分属性介绍
 
 UINavigationController
 ```
@@ -156,6 +191,18 @@ pod 'GKNavigationBarViewController'
 * 不能使用系统导航栏的各种属性及方法
 
 ## 时间记录(倒序)
+
+* 2020.10.23 -- 2.6.3 iOS14安全区域适配，内部方法修改
+* 2020.10.19 -- 2.6.2 修改对刘海屏的判断，适配iPhone 12系列手机
+* 2020.10.18 -- 2.6.1 增加自定义push或pop转场的代理
+* 2020.08.21 -- 2.5.8 修复导航栏间距调整无法屏蔽的bug
+* 2020.07.28 -- 2.5.7 增加导航栏间距调整对某些控制器的屏蔽
+* 2020.07.27 -- 2.5.6 修复方法交换可能带来的crash问题
+* 2020.07.22 -- 2.5.5 优化手势处理方法，增加属性可屏蔽某些控制器对手势处理的影响
+* 2020.07.16 -- 2.5.4 增加gk_backImage属性，可自定义返回按钮
+* 2020.06.30 -- 2.5.2 bug修复，屏蔽某些没有导航栏的控制器对导航栏间距调整的影响 
+* 2020.06.22 -- 2.5.1 修复导航栏间距属性修改到UIVIewController中
+* 2020.06.16 -- 2.5.0 修复设置导航栏间距失效的bug
 * 2020.04.07 -- 2.4.7 优化代码，修复已知问题
 * 2020.03.34 -- 2.4.5 修改crash
 * 2020.01.14 -- 2.4.4 修复设置某个导航栏间距后其他导航栏间距不准确问题

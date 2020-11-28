@@ -34,11 +34,11 @@
     // 保证其只执行一次
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        gk_swizzled_method(self, @"viewDidLoad", self);
+        gk_swizzled_method(@"gkNav", self, @"viewDidLoad", self);
     });
 }
 
-- (void)gk_viewDidLoad {
+- (void)gkNav_viewDidLoad {
     // 处理特殊控制器
     if ([self isKindOfClass:[UIImagePickerController class]]) return;
     if ([self isKindOfClass:[UIVideoEditorController class]]) return;
@@ -53,7 +53,7 @@
     // 注册通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotification:) name:GKViewControllerPropertyChangedNotification object:nil];
     
-    [self gk_viewDidLoad];
+    [self gkNav_viewDidLoad];
 }
 
 - (void)dealloc {
@@ -65,17 +65,36 @@
     // 获取通知传递的控制器
     UIViewController *vc = (UIViewController *)notify.object[@"viewController"];
     
+    // 不处理导航控制器和tabbar控制器
+    if ([vc isKindOfClass:[UINavigationController class]]) return;
+    if ([vc isKindOfClass:[UITabBarController class]]) return;
+    if (!vc.navigationController) return;
+    if (vc.navigationController != self) return;
+    
+    __block BOOL exist = NO;
+    [GKConfigure.shiledGuestureVCs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([[obj class] isSubclassOfClass:[UIViewController class]]) {
+            if ([vc isKindOfClass:[obj class]]) {
+                exist = YES;
+                *stop = YES;
+            }
+        }else if ([obj isKindOfClass:[NSString class]]) {
+            if ([NSStringFromClass(vc.class) isEqualToString:obj]) {
+                exist = YES;
+                *stop = YES;
+            }
+        }
+    }];
+    if (exist) return;
+    
     // 禁止手势处理
-    if (self.gk_disabledGestureHandle || vc.navigationController.gk_disabledGestureHandle) {
+    if (self.gk_disabledGestureHandle) {
         self.interactivePopGestureRecognizer.delegate = nil;
         self.interactivePopGestureRecognizer.enabled = NO;
         [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.screenPanGesture];
         [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.panGesture];
         return;
     }
-    
-    // 不处理导航控制器
-    if ([vc isKindOfClass:[UINavigationController class]]) return;
     
     BOOL isRootVC = vc == self.viewControllers.firstObject;
     
@@ -107,7 +126,7 @@
         [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.screenPanGesture];
         
         // 给self.interactivePopGestureRecognizer.view 添加全屏滑动手势
-        if (!isRootVC && ![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.panGesture]) {
+        if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.panGesture]) {
             [self.interactivePopGestureRecognizer.view addGestureRecognizer:self.panGesture];
             self.panGesture.delegate = self.popGestureDelegate;
         }

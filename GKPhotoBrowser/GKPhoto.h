@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 #import "GKWebImageProtocol.h"
 #import "GKPhotoBrowserConfigure.h"
 
@@ -27,8 +28,8 @@
 /** 图片(静态) */
 @property (nonatomic, strong) UIImage       *image;
 
-// imageView对象
-@property (nonatomic, strong) UIImageView   *imageView;
+/** 相册图片资源 */
+@property (nonatomic, strong) PHAsset       *imageAsset;
 
 /** 占位图 */
 @property (nonatomic, strong) UIImage       *placeholderImage;

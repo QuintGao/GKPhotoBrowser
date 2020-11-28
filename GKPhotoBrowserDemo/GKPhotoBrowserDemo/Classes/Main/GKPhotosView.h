@@ -27,6 +27,8 @@
 
 @property (nonatomic, strong) NSArray *images;
 
+@property (nonatomic, strong) NSArray *photoImages;
+
 + (GKPhotosView *)photosViewWithWidth:(CGFloat)width andMargin:(CGFloat)photoMargin;
 
 + (CGSize)sizeWithCount:(NSInteger)count;

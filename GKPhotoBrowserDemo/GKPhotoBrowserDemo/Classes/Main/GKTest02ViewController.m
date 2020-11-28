@@ -153,7 +153,11 @@
                 // photo.image = [SDAnimatedImage imageNamed:obj];
                 
                 // 如果使用YYWebImage，请使用YYImage加载本地图片
-                photo.image = [YYImage imageNamed:obj];;
+                photo.image = [YYImage imageNamed:obj];
+                
+                if (!photo.image) {
+                    photo.image = [UIImage imageNamed:obj];
+                }
             }
             photo.sourceImageView = containerView.subviews[idx];
             [photoArrs addObject:photo];
@@ -181,7 +185,7 @@
 //        browser.failStyle       = GKPhotoBrowserFailStyleOnlyImage;
         browser.failureText     = @"图片加载失败了，555";
         browser.failureImage    = [UIImage imageNamed:@"error"];
-        browser.delegate        = self;
+        browser.delegate        = weakSelf;
         if (kIsiPad) {
             browser.isFollowSystemRotation = YES;
         }

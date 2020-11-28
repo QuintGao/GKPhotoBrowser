@@ -9,12 +9,12 @@
 #import "GKTimeLineViewController.h"
 #import "GKTimeLineViewCell.h"
 #import "GKPhotoBrowser.h"
-#import <TZImagePickerController/TZImagePickerController.h>
 #import <SDWebImage/SDWebImage.h>
 #import <YYWebImage/YYWebImage.h>
 #import <SVProgressHUD/SVProgressHUD.h>
+#import "GKPublishViewController.h"
 
-@interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate, TZImagePickerControllerDelegate>
+@interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -126,6 +126,16 @@
         weakSelf.pageControl.currentPage = index;
         weakSelf.pageControl.hidesForSinglePage = YES;
         
+        CGSize size = [weakSelf.pageControl sizeForNumberOfPages:photos.count];
+        weakSelf.pageControl.frame = CGRectMake(0, 0, size.width, size.height);
+        
+//        if (@available(iOS 14.0, *)) {
+//            weakSelf.pageControl.backgroundStyle = UIPageControlBackgroundStyleMinimal;
+//        }
+//        if (@available(iOS 14.0, *)) {
+//            weakSelf.pageControl.allowsContinuousInteraction = YES;
+//        }
+        
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
         browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
@@ -165,15 +175,6 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     GKTimeLineFrame *f = self.dataFrames[indexPath.row];
     return f.cellHeight;
-}
-
-#pragma mark - TZImagePickerControllerDelegate
-- (void)tz_imagePickerControllerDidCancel:(TZImagePickerController *)picker {
-    
-}
-
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-    NSLog(@"%@", photos);
 }
 
 #pragma mark - GKPhotoBrowserDelegate
@@ -288,17 +289,19 @@
 - (void)delBtnClick:(id)sender {
     [GKCover hideCover];
 
-    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
+//    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.browser.photos];
+//
+//    [arr removeObjectAtIndex:self.browser.currentIndex];
+//
+//    [self.browser resetPhotoBrowserWithPhotos:arr];
+//
+//    self.pageControl.numberOfPages = arr.count;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.browser removePhotoAtIndex:self.currentIndex];
 
-    [arr removeObjectAtIndex:self.browser.currentIndex];
-
-    [self.browser resetPhotoBrowserWithPhotos:arr];
-
-    self.pageControl.numberOfPages = arr.count;
-
-    [self.browser removePhotoAtIndex:self.currentIndex];
-
-    self.pageControl.numberOfPages = self.browser.photos.count;
+        self.pageControl.numberOfPages = self.browser.photos.count;
+    });
 }
 
 - (void)saveBtnClick:(id)sender {
@@ -338,9 +341,8 @@
 }
 
 - (void)tabkePhoto {
-    TZImagePickerController *pickerVC = [[TZImagePickerController alloc] initWithMaxImagesCount:1 delegate:self];
-    pickerVC.modalPresentationStyle = UIModalPresentationFullScreen;
-    [self presentViewController:pickerVC animated:YES completion:nil];
+    GKPublishViewController *publishVC = [GKPublishViewController new];
+    [self.navigationController pushViewController:publishVC animated:YES];
 }
 
 - (void)cancelBtnClick:(id)sender {

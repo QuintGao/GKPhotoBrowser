@@ -18,9 +18,14 @@ static const void* GKPopMaxDistanceKey      = @"GKPopMaxDistanceKey";
 static const void* GKNavBarAlphaKey         = @"GKNavBarAlphaKey";
 static const void* GKStatusBarStyleKey      = @"GKStatusBarStyleKey";
 static const void* GKStatusBarHiddenKey     = @"GKStatusBarHiddenKey";
+static const void* GKBackImageKey           = @"GKBackImageKey";
 static const void* GKBackStyleKey           = @"GKBackStyleKey";
 static const void* GKPushDelegateKey        = @"GKPushDelegateKey";
 static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
+static const void* GKPushTransitionKey      = @"GKPushTransitionKey";
+static const void* GKPopTransitionKey       = @"GKPopTransitionKey";
+static const void* GKNavItemLeftSpaceKey    = @"GKNavItemLeftSpaceKey";
+static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
 
 @implementation UIViewController (GKCategory)
 
@@ -29,8 +34,72 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
     // 保证其只执行一次
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        gk_swizzled_method(self, @"viewDidAppear:" ,self);
+        NSArray <NSString *> *oriSels = @[@"viewDidLoad",
+                                          @"viewWillAppear:",
+                                          @"viewDidAppear:"];
+        
+        [oriSels enumerateObjectsUsingBlock:^(NSString * _Nonnull oriSel, NSUInteger idx, BOOL * _Nonnull stop) {
+            gk_swizzled_method(@"gk", self, oriSel, self);
+        }];
     });
+}
+
+- (void)gk_viewDidLoad {
+    // 初始化导航栏间距
+    self.gk_navItemLeftSpace    = GKNavigationBarItemSpace;
+    self.gk_navItemRightSpace   = GKNavigationBarItemSpace;
+    
+    // 判断是否需要屏蔽导航栏间距调整
+    __block BOOL exist = NO;
+    [GKConfigure.shiledItemSpaceVCs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([[obj class] isSubclassOfClass:[UIViewController class]]) {
+            if ([self isKindOfClass:[obj class]]) {
+                exist = YES;
+                *stop = YES;
+            }
+        }else if ([obj isKindOfClass:[NSString class]]) {
+            if ([NSStringFromClass(self.class) isEqualToString:obj]) {
+                exist = YES;
+                *stop = YES;
+            }
+        }
+    }];
+    
+    [GKConfigure updateConfigure:^(GKNavigationBarConfigure *configure) {
+        configure.gk_disableFixSpace = exist;
+    }];
+    
+    [self gk_viewDidLoad];
+}
+
+- (void)gk_viewWillAppear:(BOOL)animated {
+    if ([self isKindOfClass:[UINavigationController class]]) return;
+    if ([self isKindOfClass:[UITabBarController class]]) return;
+    if ([self isKindOfClass:[UIAlertController class]]) return;
+    if ([self isKindOfClass:[UIImagePickerController class]]) return;
+    if ([self isKindOfClass:[UIVideoEditorController class]]) return;
+    if ([NSStringFromClass(self.class) isEqualToString:@"PUPhotoPickerHostViewController"]) return;
+    if (!self.navigationController) return;
+    
+    // bug fix：#41
+    if (!GKConfigure.gk_disableFixSpace) {
+        // 每次控制器出现的时候重置导航栏间距
+        if (self.gk_navItemLeftSpace == GKNavigationBarItemSpace) {
+            self.gk_navItemLeftSpace = GKConfigure.navItemLeftSpace;
+        }
+        
+        if (self.gk_navItemRightSpace == GKNavigationBarItemSpace) {
+            self.gk_navItemRightSpace = GKConfigure.navItemRightSpace;
+        }
+        
+        // 重置navitem_space
+        [GKConfigure updateConfigure:^(GKNavigationBarConfigure *configure) {
+            configure.gk_navItemLeftSpace   = self.gk_navItemLeftSpace;
+            configure.gk_navItemRightSpace  = self.gk_navItemRightSpace;
+        }];
+    }
+    
+    [self gk_viewWillAppear:animated];
 }
 
 - (void)gk_viewDidAppear:(BOOL)animated {
@@ -121,17 +190,17 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
 - (void)setGk_backStyle:(GKNavigationBarBackStyle)gk_backStyle {
     objc_setAssociatedObject(self, GKBackStyleKey, @(gk_backStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if (self.navigationController.childViewControllers.count <= 1) return;
+    [self setBackItemImage:self.gk_backImage];
+}
+
+- (UIImage *)gk_backImage {
+    return objc_getAssociatedObject(self, GKBackImageKey);
+}
+
+- (void)setGk_backImage:(UIImage *)gk_backImage {
+    objc_setAssociatedObject(self, GKBackImageKey, gk_backImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if (self.gk_backStyle != GKNavigationBarBackStyleNone) {
-        NSString *imageName = self.gk_backStyle == GKNavigationBarBackStyleBlack ? @"btn_back_black" : @"btn_back_white";
-        UIImage *backImage = [UIImage gk_imageNamed:imageName];
-        
-        if ([self isKindOfClass:[GKNavigationBarViewController class]]) {
-            GKNavigationBarViewController *vc = (GKNavigationBarViewController *)self;
-            vc.gk_navLeftBarButtonItem = [UIBarButtonItem itemWithTitle:nil image:backImage target:self action:@selector(backItemClick:)];
-        }
-    }
+    [self setBackItemImage:gk_backImage];
 }
 
 - (id<GKViewControllerPushDelegate>)gk_pushDelegate {
@@ -152,6 +221,50 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
     objc_setAssociatedObject(self, GKPopDelegateKey, gk_popDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     [self postPropertyChangeNotification];
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)gk_pushTransition {
+    return objc_getAssociatedObject(self, GKPushTransitionKey);
+}
+
+- (void)setGk_pushTransition:(id<UIViewControllerAnimatedTransitioning>)gk_pushTransition {
+    objc_setAssociatedObject(self, GKPushTransitionKey, gk_pushTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)gk_popTransition {
+    return objc_getAssociatedObject(self, GKPopTransitionKey);
+}
+
+- (void)setGk_popTransition:(id<UIViewControllerAnimatedTransitioning>)gk_popTransition {
+    objc_setAssociatedObject(self, GKPopTransitionKey, gk_popTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)gk_navItemLeftSpace {
+    return [objc_getAssociatedObject(self, GKNavItemLeftSpaceKey) floatValue];
+}
+
+- (void)setGk_navItemLeftSpace:(CGFloat)gk_navItemLeftSpace {
+    objc_setAssociatedObject(self, GKNavItemLeftSpaceKey, @(gk_navItemLeftSpace), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (gk_navItemLeftSpace == GKNavigationBarItemSpace) return;
+    
+    [GKConfigure updateConfigure:^(GKNavigationBarConfigure * _Nonnull configure) {
+        configure.gk_navItemLeftSpace = gk_navItemLeftSpace;
+    }];
+}
+
+- (CGFloat)gk_navItemRightSpace {
+    return [objc_getAssociatedObject(self, GKNavItemRightSpaceKey) floatValue];
+}
+
+- (void)setGk_navItemRightSpace:(CGFloat)gk_navItemRightSpace {
+    objc_setAssociatedObject(self, GKNavItemRightSpaceKey, @(gk_navItemRightSpace), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (gk_navItemRightSpace == GKNavigationBarItemSpace) return;
+    
+    [GKConfigure updateConfigure:^(GKNavigationBarConfigure *configure) {
+        configure.gk_navItemRightSpace = gk_navItemRightSpace;
+    }];
 }
 
 - (void)setNavBarAlpha:(CGFloat)alpha {
@@ -185,30 +298,47 @@ static const void* GKPopDelegateKey         = @"GKPopDelegateKey";
     navBar.clipsToBounds = alpha == 0.0;
 }
 
-- (UIViewController *)gk_visibleViewControllerIfExist {
+- (void)setBackItemImage:(UIImage *)image {
+    // 根控制器不作处理
+    if (self.navigationController.childViewControllers.count <= 1) return;
     
-    if (self.presentedViewController) {
-        return [self.presentedViewController gk_visibleViewControllerIfExist];
+    // 非GKNavigationBarViewController不作处理
+    if (![self isKindOfClass:[GKNavigationBarViewController class]]) return;
+    
+    if (!image) {
+        if (self.gk_backStyle != GKNavigationBarBackStyleNone) {
+            NSString *imageName = self.gk_backStyle == GKNavigationBarBackStyleBlack ? @"btn_back_black" : @"btn_back_white";
+            image = [UIImage gk_imageNamed:imageName];
+        }
     }
     
-    if ([self isKindOfClass:[UINavigationController class]]) {
-        return [((UINavigationController *)self).topViewController gk_visibleViewControllerIfExist];
-    }
+    // 没有image
+    if (!image) return;
     
-    if ([self isKindOfClass:[UITabBarController class]]) {
-        return [((UITabBarController *)self).selectedViewController gk_visibleViewControllerIfExist];
-    }
-    
-    if ([self isViewLoaded] && self.view.window) {
-        return self;
-    }else {
-        NSLog(@"找不到可见的控制器，viewcontroller.self = %@, self.view.window = %@", self, self.view.window);
-        return nil;
-    }
+    GKNavigationBarViewController *vc = (GKNavigationBarViewController *)self;
+    vc.gk_navLeftBarButtonItem = [UIBarButtonItem itemWithTitle:nil image:image target:self action:@selector(backItemClick:)];
 }
 
 - (void)backItemClick:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (UIViewController *)gk_visibleViewControllerIfExist {
+    if (self.presentedViewController) {
+        return [self.presentedViewController gk_visibleViewControllerIfExist];
+    }
+    if ([self isKindOfClass:[UINavigationController class]]) {
+        return [((UINavigationController *)self).topViewController gk_visibleViewControllerIfExist];
+    }
+    if ([self isKindOfClass:[UITabBarController class]]) {
+        return [((UITabBarController *)self).selectedViewController gk_visibleViewControllerIfExist];
+    }
+    if ([self isViewLoaded] && self.view.window) {
+        return self;
+    }else {
+        NSLog(@"找不到可见的控制器，viewcontroller.self = %@，self.view.window=%@", self, self.view.window);
+        return nil;
+    }
 }
 
 - (void)postPropertyChangeNotification {

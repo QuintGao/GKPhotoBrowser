@@ -17,7 +17,7 @@
 
 static Class imageManagerClass = nil;
 
-@interface GKPhotoBrowser()<UIScrollViewDelegate>
+@interface GKPhotoBrowser()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
 {
     UILabel  *_countLabel;
 }
@@ -102,7 +102,6 @@ static Class imageManagerClass = nil;
         _visiblePhotoViews  = [NSMutableArray new];
         _reusablePhotoViews = [NSMutableSet new];
         
-        
         imageManagerClass = NSClassFromString(@"GKSDWebImageManager");
         if (!imageManagerClass) {
             imageManagerClass = NSClassFromString(@"GKYYWebImageManager");
@@ -165,6 +164,10 @@ static Class imageManagerClass = nil;
         default:
             break;
     }
+}
+
+- (void)didReceiveMemoryWarning {
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -426,7 +429,6 @@ static Class imageManagerClass = nil;
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
         [vc.navigationController pushViewController:self animated:YES];
     }else {
-        self.modalPresentationStyle = UIModalPresentationFullScreen;
         self.modalPresentationCapturesStatusBarAppearance = YES;
         [vc presentViewController:self animated:NO completion:nil];
     }
@@ -438,9 +440,12 @@ static Class imageManagerClass = nil;
     
     if (!self.isFollowSystemRotation) {
         // 状态栏恢复到竖屏
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         if (@available(iOS 13.0, *)) {} else {
             [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
         }
+#pragma clang diagnostic pop
     }
     
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
@@ -489,6 +494,7 @@ static Class imageManagerClass = nil;
     
     [self updateReusableViews];
     [self setupPhotoViews];
+    [self updateLabel];
     
     [self layoutSubviews];
 }
@@ -502,11 +508,15 @@ static Class imageManagerClass = nil;
     // 单击手势
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleTap.numberOfTapsRequired = 1;
+	singleTap.delaysTouchesEnded = NO;
+	singleTap.delegate = self;
     [self.view addGestureRecognizer:singleTap];
     
     // 双击手势
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
+	doubleTap.delaysTouchesEnded = NO;
+	doubleTap.delegate = self;
     [self.view addGestureRecognizer:doubleTap];
     [singleTap requireGestureRecognizerToFail:doubleTap];
     
@@ -551,7 +561,10 @@ static Class imageManagerClass = nil;
     
     if (!self.isFollowSystemRotation) {
         if (@available(iOS 13.0, *)) {} else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+#pragma clang diagnostic pop
         }
     }
     
@@ -559,6 +572,16 @@ static Class imageManagerClass = nil;
     [self delDeviceOrientationObserver];
     
     [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+	if ([touch.view isKindOfClass:UIButton.class]) {
+        return NO;
+    }
+    
+    return YES;
 }
 
 #pragma mark - Gesture Handle
@@ -973,7 +996,10 @@ static Class imageManagerClass = nil;
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
             if (@available(iOS 13.0, *)) {} else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+#pragma clang diagnostic pop
             }
             
             float rotation = currentOrientation == UIDeviceOrientationLandscapeRight ? 1.5 : 0.5;
@@ -1015,7 +1041,10 @@ static Class imageManagerClass = nil;
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
             if (@available(iOS 13.0, *)) {} else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
+#pragma clang diagnostic pop
             }
             
             // 旋转view
