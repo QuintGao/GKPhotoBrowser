@@ -19,11 +19,11 @@ iOS仿微信、今日头条等图片浏览器
 ### iOS14 升级
 对于iOS14的升级，如果出现图片显示不出来，黑屏等情况，需要把SDWebImage 升级到至少5.8.3版本
 
-##### 2.0.0版本升级指南：
-2.0.0之后修改了对gif图片的加载方式，仅支持SDWebImage 5.x 和 YYWebImage 1.0.5  
-1、使用SDWebImage加载图片，请使用pod 'GKPhotoBrowser' 或 'GKPhotoBrowser/SD'    
-2、使用YYWebImage加载图片，请使用pod 'GKPhotoBrowser/YY'   
-3、如果你想自定义图片加载类，如：SDWebImage 5.0以下版本，请使用pod 'GKPhotoBrowser/Core'，然后添加图片加载类并实现GKWebImageProtocol协议
+### 2.x版本升级指南
+2.0.0之后修改了对gif图片的加载方式  
+1、使用SDWebImage(5.x)加载图片，请使用pod 'GKPhotoBrowser' 或 'GKPhotoBrowser/SD'   
+2、使用YYWebImage(1.0.5)加载图片，请使用pod 'GKPhotoBrowser/YY'   
+3、自定义图片加载类，如：SDWebImage 5.0以下版本，请使用pod 'GKPhotoBrowser/Core'，然后添加图片加载类并实现GKWebImageProtocol协议
 
 ##### 关于本地gif图片的加载 
 1、 如果使用SDWebImage，请使用SDAnimatedImage加载本地图片  
