@@ -8,6 +8,10 @@
 
 #import "GKPhotoManager.h"
 
+@implementation GKPhoto
+
+@end
+
 @implementation GKPhotoManager
 
 + (void)loadImageDataWithImageAsset:(PHAsset *)imageAsset completion:(void (^)(NSData * _Nullable))completion {

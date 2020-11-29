@@ -22,7 +22,8 @@ iOS仿微信、今日头条等图片浏览器
 ##### 2.0.0版本升级指南：
 2.0.0之后修改了对gif图片的加载方式，仅支持SDWebImage 5.x 和 YYWebImage 1.0.5  
 1、使用SDWebImage加载图片，请使用pod 'GKPhotoBrowser' 或 'GKPhotoBrowser/SD'    
-2、使用YYWebImage加载图片，请使用pod 'GKPhotoBrowser/YY'  
+2、使用YYWebImage加载图片，请使用pod 'GKPhotoBrowser/YY'   
+3、如果你想自定义图片加载类，如：SDWebImage 5.0以下版本，请使用pod 'GKPhotoBrowser/Core'，然后添加图片加载类并实现GKWebImageProtocol协议
 
 ##### 关于本地gif图片的加载 
 1、 如果使用SDWebImage，请使用SDAnimatedImage加载本地图片  
@@ -100,6 +101,7 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  
 ```
 
+2020.11.29  2.1.3版本，修复闪动问题#100，支持自定义图片加载类#94
 2020.11.17  2.1.2版本 修复不传url只传sourceImageView时不能手势缩放的bug，去掉api弃用警告
 2020.10.22  2.1.1版本 修改刘海屏手机判断方法，适配iPhone 12系列机型
 2020.08.19  2.1.0版本 修复自定义coverView中UIButton点击响应延迟问题
@@ -145,7 +147,7 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
 2018.07.30  1、显示与隐藏动画优化
             2、增加删除图片方法，重置图片数组方法
 2018.06.30  1、去除多余注释
-            2、增加属性isFullWidthForLandSpace 控制横屏显示
+            2、增加属性isFullWidthForLandScape 控制横屏显示
 2018.06.13  支持GIF图片的显示
 2018.05.28  修复本地图片不能双击放大的问题
 2018.05.23  全面适配iPhone X

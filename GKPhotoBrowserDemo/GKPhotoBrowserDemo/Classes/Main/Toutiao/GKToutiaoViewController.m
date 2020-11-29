@@ -215,7 +215,7 @@
     self.moreBtn.left  = frame.size.width - 15 - self.moreBtn.width;
     self.moreBtn.top   = 20 + GK_SAFEAREA_TOP;
 
-    BOOL isLandspace = frame.size.width > frame.size.height;
+    BOOL isLandscape = frame.size.width > frame.size.height;
 
     // 计算高度
     GKToutiaoImage *image = self.selectCell.model.images[index];
@@ -232,7 +232,7 @@
     CGFloat height = CGRectGetMaxY(self.contentLabel.frame) + 10;
     
     // 显示时的最大高度
-    CGFloat maxHeight = isLandspace ? 100.0f : 120.0f;
+    CGFloat maxHeight = isLandscape ? 100.0f : 120.0f;
     
     if (size.height > maxHeight) {
         self.contentView.frame = CGRectMake(0, 15, width, maxHeight);
@@ -244,11 +244,11 @@
     
     height = CGRectGetMaxY(self.contentView.frame) + 10;
     
-    height = isLandspace ? height : height + 40;
+    height = isLandscape ? height : height + 40;
 
     self.bottomView.frame = CGRectMake(0, frame.size.height - height, width, height);
 
-    self.btmImageView.frame = isLandspace ? CGRectZero : CGRectMake(0, height - 40, width, 40);
+    self.btmImageView.frame = isLandscape ? CGRectZero : CGRectMake(0, height - 40, width, 40);
 }
 
 #pragma mark - Action

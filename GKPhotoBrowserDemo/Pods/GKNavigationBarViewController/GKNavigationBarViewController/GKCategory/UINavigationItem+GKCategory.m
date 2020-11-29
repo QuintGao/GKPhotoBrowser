@@ -125,6 +125,7 @@
 }
 
 - (void)gk_layoutSubviews {
+    [self gk_layoutSubviews];
     if (GKConfigure.gk_disableFixSpace) return;
     if (![self isMemberOfClass:NSClassFromString(@"_UINavigationBarContentView")]) return;
     id layout = [self valueForKey:@"_layout"];
@@ -133,15 +134,14 @@
     IMP imp = [layout methodForSelector:selector];
     void (*func)(id, SEL) = (void *)imp;
     func(layout, selector);
-    [self gk_layoutSubviews];
 }
 
 - (void)gk__updateMarginConstraints {
+    [self gk__updateMarginConstraints];
     if (GKConfigure.gk_disableFixSpace) return;
     if (![self isMemberOfClass:NSClassFromString(@"_UINavigationBarContentViewLayout")]) return;
     [self gk_adjustLeadingBarConstraints];
     [self gk_adjustTrailingBarConstraints];
-    [self gk__updateMarginConstraints];
 }
 
 - (void)gk_adjustLeadingBarConstraints {

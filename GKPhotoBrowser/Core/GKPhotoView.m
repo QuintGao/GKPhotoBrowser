@@ -7,7 +7,6 @@
 //
 
 #import "GKPhotoView.h"
-#import "GKPhotoManager.h"
 
 @implementation GKScrollView
 
@@ -58,6 +57,8 @@
 
 - (instancetype)initWithFrame:(CGRect)frame imageProtocol:(nonnull id<GKWebImageProtocol>)imageProtocol {
     if (self = [super initWithFrame:frame]) {
+            NSAssert(imageProtocol != nil, @"请设置图片加载类并实现GKWebImageProtocol类");
+        
         _imageProtocol = imageProtocol;
         
         self.backgroundColor = [UIColor clearColor];
@@ -66,57 +67,6 @@
         [self.scrollView addSubview:self.imageView];
     }
     return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        
-        self.backgroundColor = [UIColor clearColor];
-        
-        [self addSubview:self.scrollView];
-        [self.scrollView addSubview:self.imageView];
-    }
-    return self;
-}
-
-- (GKScrollView *)scrollView {
-    if (!_scrollView) {
-        _scrollView                      = [GKScrollView new];
-        _scrollView.frame                = CGRectMake(0, 0, GKScreenW, GKScreenH);
-        _scrollView.backgroundColor      = [UIColor clearColor];
-        _scrollView.delegate             = self;
-        _scrollView.clipsToBounds        = YES;
-        _scrollView.multipleTouchEnabled = YES; // 多点触摸开启
-        _scrollView.showsVerticalScrollIndicator = NO;
-        _scrollView.showsHorizontalScrollIndicator = NO;
-        if (@available(iOS 11.0, *)) {
-            _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        }
-    }
-    return _scrollView;
-}
-
-- (UIImageView *)imageView {
-    if (!_imageView) {
-        _imageView               = [_imageProtocol.imageViewClass new];
-        _imageView.frame         = CGRectMake(0, 0, GKScreenW, GKScreenH);
-        _imageView.clipsToBounds = YES;
-    }
-    return _imageView;
-}
-
-- (GKLoadingView *)loadingView {
-    if (!_loadingView) {
-        _loadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.loadStyle];
-        _loadingView.failStyle   = self.failStyle;
-        _loadingView.lineWidth   = 3;
-        _loadingView.radius      = 12;
-        _loadingView.bgColor     = [UIColor blackColor];
-        _loadingView.strokeColor = [UIColor whiteColor];
-        _loadingView.failText    = self.failureText;
-        _loadingView.failImage   = self.failureImage;
-    }
-    return _loadingView;
 }
 
 - (void)setupPhoto:(GKPhoto *)photo {
@@ -202,7 +152,11 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         __strong __typeof(wSelf) self = wSelf;
                         photo.finished = YES;
-                        photo.image = [self.imageProtocol imageWithData:data];
+                        if ([self.imageProtocol respondsToSelector:@selector(imageWithData:)]) {
+                            photo.image = [self.imageProtocol imageWithData:data];
+                        }else {
+                            photo.image = [UIImage imageWithData:data];
+                        }
                         self.imageView.image = photo.image;
                         self.scrollView.scrollEnabled = YES;
                         [self.loadingView stopLoading];
@@ -339,10 +293,10 @@
         imageF.size.height = ratio * imageF.size.height;
         
         // 默认情况下，显示出的图片的宽度 = 屏幕的宽度
-        // 如果kIsFullWidthForLandSpace = NO，需要把图片全部显示在屏幕上
+        // 如果kIsFullWidthForLandScape = NO，需要把图片全部显示在屏幕上
         // 此时由于图片的宽度已经等于屏幕的宽度，所以只需判断图片显示的高度>屏幕高度时，将图片的高度缩小到屏幕的高度即可
         
-        if (!self.isFullWidthForLandSpace) {
+        if (!self.isFullWidthForLandScape) {
             // 图片的高度 > 屏幕的高度
             if (imageF.size.height > frame.size.height) {
                 CGFloat scale = imageF.size.width / imageF.size.height;
@@ -387,18 +341,9 @@
         self.loadingView.bounds = self.scrollView.frame;
         self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
     }else {
-        frame.origin        = CGPointZero;
-        CGFloat width       = frame.size.width;
-        CGFloat height      = width;
-        _imageView.bounds   = CGRectMake(0, 0, width, height);
-        _imageView.center   = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
-        // 重置内容大小
-        self.scrollView.contentSize = self.imageView.frame.size;
-        
         self.loadingView.bounds = self.scrollView.frame;
         self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
     }
-    self.scrollView.contentOffset = CGPointZero;
     
     // frame调整完毕，重新设置缩放
     if (self.photo.isZooming) {
@@ -449,6 +394,46 @@
 
 - (void)dealloc {
     [self cancelCurrentImageLoad];
+}
+
+#pragma mark - 懒加载
+- (GKScrollView *)scrollView {
+    if (!_scrollView) {
+        _scrollView                      = [GKScrollView new];
+        _scrollView.frame                = CGRectMake(0, 0, GKScreenW, GKScreenH);
+        _scrollView.backgroundColor      = [UIColor clearColor];
+        _scrollView.delegate             = self;
+        _scrollView.clipsToBounds        = YES;
+        _scrollView.multipleTouchEnabled = YES; // 多点触摸开启
+        _scrollView.showsVerticalScrollIndicator = NO;
+        _scrollView.showsHorizontalScrollIndicator = NO;
+        if (@available(iOS 11.0, *)) {
+            _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+    }
+    return _scrollView;
+}
+
+- (UIImageView *)imageView {
+    if (!_imageView) {
+        _imageView = [_imageProtocol.imageViewClass new];
+        _imageView.clipsToBounds = YES;
+    }
+    return _imageView;
+}
+
+- (GKLoadingView *)loadingView {
+    if (!_loadingView) {
+        _loadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.loadStyle];
+        _loadingView.failStyle   = self.failStyle;
+        _loadingView.lineWidth   = 3;
+        _loadingView.radius      = 12;
+        _loadingView.bgColor     = [UIColor blackColor];
+        _loadingView.strokeColor = [UIColor whiteColor];
+        _loadingView.failText    = self.failureText;
+        _loadingView.failImage   = self.failureImage;
+    }
+    return _loadingView;
 }
 
 @end

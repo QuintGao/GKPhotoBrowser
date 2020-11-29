@@ -8,6 +8,7 @@
 
 #import "UINavigationController+GKCategory.h"
 #import "GKNavigationBarViewController.h"
+#import "GKNavigationInteractiveTransition.h"
 #import <objc/runtime.h>
 
 @implementation UINavigationController (GKCategory)
@@ -21,8 +22,9 @@
  
 - (instancetype)initWithRootVC:(UIViewController *)rootVC translationScale:(BOOL)translationScale {
     if (self = [super init]) {
-        [self pushViewController:rootVC animated:YES];
+        self.gk_openGestureHandle = YES;
         self.gk_translationScale = translationScale;
+        [self pushViewController:rootVC animated:YES];
     }
     return self;
 }
@@ -39,19 +41,21 @@
 }
 
 - (void)gkNav_viewDidLoad {
-    // 处理特殊控制器
-    if ([self isKindOfClass:[UIImagePickerController class]]) return;
-    if ([self isKindOfClass:[UIVideoEditorController class]]) return;
-    
-    // 设置代理和通知
-    // 设置背景色
-    self.view.backgroundColor = [UIColor blackColor];
-    
-    // 设置代理
-    self.delegate = self.navDelegate;
-    
-    // 注册通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotification:) name:GKViewControllerPropertyChangedNotification object:nil];
+    if (self.gk_openGestureHandle) {
+        // 处理特殊控制器
+        if ([self isKindOfClass:[UIImagePickerController class]]) return;
+        if ([self isKindOfClass:[UIVideoEditorController class]]) return;
+        
+        // 设置背景色
+        self.view.backgroundColor = [UIColor blackColor];
+        
+        // 设置代理
+        self.delegate = self.interactiveTransition;
+        self.interactivePopGestureRecognizer.enabled = NO;
+        
+        // 注册控制器属性改变通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotification:) name:GKViewControllerPropertyChangedNotification object:nil];
+    }
     
     [self gkNav_viewDidLoad];
 }
@@ -82,62 +86,25 @@
             if ([NSStringFromClass(vc.class) isEqualToString:obj]) {
                 exist = YES;
                 *stop = YES;
+            }else if ([NSStringFromClass(vc.class) containsString:obj]) {
+                exist = YES;
+                *stop = YES;
             }
         }
     }];
     if (exist) return;
     
-    // 禁止手势处理
-    if (self.gk_disabledGestureHandle) {
-        self.interactivePopGestureRecognizer.delegate = nil;
-        self.interactivePopGestureRecognizer.enabled = NO;
-        [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.screenPanGesture];
-        [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.panGesture];
-        return;
-    }
-    
-    BOOL isRootVC = vc == self.viewControllers.firstObject;
-    
-    // 重新根据属性添加手势方法
     if (vc.gk_interactivePopDisabled) { // 禁止滑动
-        self.interactivePopGestureRecognizer.delegate = nil;
-        self.interactivePopGestureRecognizer.enabled = NO;
-        [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.screenPanGesture];
-        [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.panGesture];
+        [self.view removeGestureRecognizer:self.screenPanGesture];
+        [self.view removeGestureRecognizer:self.panGesture];
     }else if (vc.gk_fullScreenPopDisabled) { // 禁止全屏滑动
-        [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.panGesture];
-        
-        if (self.gk_translationScale) {
-            self.interactivePopGestureRecognizer.delegate = nil;
-            self.interactivePopGestureRecognizer.enabled = NO;
-            
-            if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.screenPanGesture]) {
-                [self.interactivePopGestureRecognizer.view addGestureRecognizer:self.screenPanGesture];
-                self.screenPanGesture.delegate = self.popGestureDelegate;
-            }
-        }else {
-            self.interactivePopGestureRecognizer.delaysTouchesBegan = YES;
-            self.interactivePopGestureRecognizer.delegate = self.popGestureDelegate;
-            self.interactivePopGestureRecognizer.enabled = !isRootVC;
-        }
+        [self.view removeGestureRecognizer:self.panGesture];
+        [self.view addGestureRecognizer:self.screenPanGesture];
+        [self.screenPanGesture addTarget:self.systemTarget action:self.systemAction];
     }else {
-        self.interactivePopGestureRecognizer.delegate = nil;
-        self.interactivePopGestureRecognizer.enabled = NO;
-        [self.interactivePopGestureRecognizer.view removeGestureRecognizer:self.screenPanGesture];
-        
-        // 给self.interactivePopGestureRecognizer.view 添加全屏滑动手势
-        if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.panGesture]) {
-            [self.interactivePopGestureRecognizer.view addGestureRecognizer:self.panGesture];
-            self.panGesture.delegate = self.popGestureDelegate;
-        }
-        
-        // 添加手势处理
-        if (self.gk_translationScale || self.gk_openScrollLeftPush || self.visibleViewController.gk_popDelegate) {
-            [self.panGesture addTarget:self.navDelegate action:@selector(panGestureAction:)];
-        }else {
-            SEL internalAction = NSSelectorFromString(@"handleNavigationTransition:");
-            [self.panGesture addTarget:[self systemTarget] action:internalAction];
-        }
+        [self.view removeGestureRecognizer:self.screenPanGesture];
+        [self.view addGestureRecognizer:self.panGesture];
+        [self.panGesture addTarget:self.systemTarget action:self.systemAction];
     }
 }
 
@@ -150,39 +117,16 @@
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
-- (BOOL)gk_disabledGestureHandle {
+- (BOOL)gk_openGestureHandle {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (GKPopGestureRecognizerDelegate *)popGestureDelegate {
-    GKPopGestureRecognizerDelegate *delegate = objc_getAssociatedObject(self, _cmd);
-    if (!delegate) {
-        delegate = [GKPopGestureRecognizerDelegate new];
-        delegate.navigationController = self;
-        delegate.systemTarget         = [self systemTarget];
-        delegate.customTarget         = self.navDelegate;
-        
-        objc_setAssociatedObject(self, _cmd, delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return delegate;
-}
-
-- (GKNavigationControllerDelegate *)navDelegate {
-    GKNavigationControllerDelegate *delegate = objc_getAssociatedObject(self, _cmd);
-    if (!delegate) {
-        delegate = [GKNavigationControllerDelegate new];
-        delegate.navigationController = self;
-        
-        objc_setAssociatedObject(self, _cmd, delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return delegate;
 }
 
 - (UIScreenEdgePanGestureRecognizer *)screenPanGesture {
     UIScreenEdgePanGestureRecognizer *panGesture = objc_getAssociatedObject(self, _cmd);
     if (!panGesture) {
-        panGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self.navDelegate action:@selector(panGestureAction:)];
+        panGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self.interactiveTransition action:@selector(panGestureAction:)];
         panGesture.edges = UIRectEdgeLeft;
+        panGesture.delegate = self.interactiveTransition;
         
         objc_setAssociatedObject(self, _cmd, panGesture, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
@@ -192,19 +136,37 @@
 - (UIPanGestureRecognizer *)panGesture {
     UIPanGestureRecognizer *panGesture = objc_getAssociatedObject(self, _cmd);
     if (!panGesture) {
-        panGesture = [[UIPanGestureRecognizer alloc] init];
+        panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self.interactiveTransition action:@selector(panGestureAction:)];
         panGesture.maximumNumberOfTouches = 1;
+        panGesture.delegate = self.interactiveTransition;
         
         objc_setAssociatedObject(self, _cmd, panGesture, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return panGesture;
 }
 
+static char kAssociatedObjectKey_interactiveTransition;
+- (GKNavigationInteractiveTransition *)interactiveTransition {
+    GKNavigationInteractiveTransition *transition = objc_getAssociatedObject(self, &kAssociatedObjectKey_interactiveTransition);
+    if (!transition) {
+        transition = [[GKNavigationInteractiveTransition alloc] init];
+        transition.navigationController = self;
+        transition.systemTarget = self.systemTarget;
+        transition.systemAction = self.systemAction;
+        
+        objc_setAssociatedObject(self, &kAssociatedObjectKey_interactiveTransition, transition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return transition;
+}
+
 - (id)systemTarget {
     NSArray *internalTargets = [self.interactivePopGestureRecognizer valueForKey:@"targets"];
     id internalTarget = [internalTargets.firstObject valueForKey:@"target"];
-    
     return internalTarget;
+}
+
+- (SEL)systemAction {
+    return NSSelectorFromString(@"handleNavigationTransition:");
 }
 
 #pragma mark - setter
@@ -216,8 +178,8 @@
     objc_setAssociatedObject(self, @selector(gk_openScrollLeftPush), @(gk_openScrollLeftPush), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)setGk_disabledGestureHandle:(BOOL)gk_disabledGestureHandle {
-    objc_setAssociatedObject(self, @selector(gk_disabledGestureHandle), @(gk_disabledGestureHandle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setGk_openGestureHandle:(BOOL)gk_openGestureHandle {
+    objc_setAssociatedObject(self, @selector(gk_openGestureHandle), @(gk_openGestureHandle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

@@ -129,16 +129,16 @@
         
         [browser setupCoverViews:@[weakSelf.topView, weakSelf.bottomView] layoutBlock:^(GKPhotoBrowser * _Nonnull photoBrowser, CGRect superFrame) {
             
-            CGFloat topH = (KIsiPhoneX && !photoBrowser.isLandspace) ? 84 : 60;
+            CGFloat topH = (KIsiPhoneX && !photoBrowser.isLandscape) ? 84 : 60;
             
-            CGFloat w = (KIsiPhoneX && photoBrowser.isLandspace) ? (superFrame.size.width - 58.0f) : superFrame.size.width;
+            CGFloat w = (KIsiPhoneX && photoBrowser.isLandscape) ? (superFrame.size.width - 58.0f) : superFrame.size.width;
             
-            CGFloat x = (KIsiPhoneX && photoBrowser.isLandspace) ? 30 : 0;
+            CGFloat x = (KIsiPhoneX && photoBrowser.isLandscape) ? 30 : 0;
             
 //            self.topView.frame = CGRectMake(x, 0, w, topH);
             weakSelf.topView.sd_layout.leftSpaceToView(photoBrowser.contentView, x).topEqualToView(photoBrowser.contentView).widthIs(w).heightIs(topH);
             
-            CGFloat btmH = (KIsiPhoneX && !photoBrowser.isLandspace) ? 94 : 60;
+            CGFloat btmH = (KIsiPhoneX && !photoBrowser.isLandscape) ? 94 : 60;
 //            self.bottomView.frame = CGRectMake(x, superFrame.size.height - btmH, w, btmH);
             weakSelf.bottomView.sd_layout.leftSpaceToView(photoBrowser.contentView, x).topSpaceToView(photoBrowser.contentView, superFrame.size.height - btmH).widthIs(w).heightIs(btmH);
         }];
@@ -186,7 +186,7 @@
     }
 }
 
-- (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandspace:(BOOL)isLandspace {
+- (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandscape:(BOOL)isLandscape {
     [GKCover hideCover];
 }
 

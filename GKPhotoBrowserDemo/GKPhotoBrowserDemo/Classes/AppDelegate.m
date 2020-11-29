@@ -36,8 +36,6 @@
     
     [self.window makeKeyAndVisible];
     
-    NSLog(@"%d", KIsiPhoneX);
-    
     return YES;
 }
 

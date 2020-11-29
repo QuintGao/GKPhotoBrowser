@@ -29,10 +29,6 @@ typedef void (^GKWebImageCompletionBlock)(UIImage * _Nullable image, NSURL * _Nu
                     progress:(nullable GKWebImageProgressBlock)progressBlock
                   completion:(nullable GKWebImageCompletionBlock)completionBlock;
 
-/// 根据data加载图片（主要用于显示GIF图片）
-/// @param data 图片数据
-- (UIImage *_Nullable)imageWithData:(nullable NSData *)data;
-
 /// 取消imageView的图片请求
 /// @param imageView imageView
 - (void)cancelImageRequestWithImageView:(nullable UIImageView *)imageView;
@@ -40,5 +36,11 @@ typedef void (^GKWebImageCompletionBlock)(UIImage * _Nullable image, NSURL * _Nu
 /// 根据url从内存中获取图片
 /// @param url url
 - (UIImage *_Nullable)imageFromMemoryForURL:(nullable NSURL *)url;
+
+@optional
+/// 可选实现，主要用于加载相册图片资源PHAsset
+/// 根据data获取image对象
+/// @param data 图片数据
+- (UIImage *_Nullable)imageWithData:(nullable NSData *)data;
 
 @end

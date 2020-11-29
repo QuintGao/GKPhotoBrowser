@@ -29,7 +29,7 @@
 
 @property (nonatomic, assign) NSInteger count;
 
-@property (nonatomic, assign) BOOL isLandspace;
+@property (nonatomic, assign) BOOL isLandscape;
 
 /** 这里用weak是防止GKPhotoBrowser被强引用，导致不能释放 */
 @property (nonatomic, weak) GKPhotoBrowser *browser;
@@ -142,6 +142,7 @@
         browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
         browser.maxZoomScale = 20.0f;
         browser.doubleZoomScale = 2.0f;
+        browser.isAdaptiveSafeArea = YES;
         
         // 当你的APP支持屏幕旋转时此属性必须设置为YES
         if (kIsiPad) { // ipad 默认支持屏幕旋转，这里设置为YES
@@ -151,7 +152,7 @@
         [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
 
             CGFloat pointY = 0;
-            if (photoBrowser.isLandspace) {
+            if (photoBrowser.isLandscape) {
                 pointY = superFrame.size.height - 20;
             }else {
                 pointY = superFrame.size.height - 10 - (KIsiPhoneX ? kSafeBottomSpace : 0);
@@ -195,11 +196,11 @@
     fromView.backgroundColor = [UIColor clearColor];
     self.fromView = fromView;
     
-    self.isLandspace = browser.isLandspace;
+    self.isLandscape = browser.isLandscape;
     
     CGFloat actionSheetH = 0;
     
-    if (self.isLandspace) {
+    if (self.isLandscape) {
         actionSheetH = 150;
         fromView.frame = contentView.bounds;
         [contentView addSubview:fromView];
@@ -278,7 +279,7 @@
     [GKCover layoutSubViews];
 }
 
-- (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandspace:(BOOL)isLandspace {
+- (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandscape:(BOOL)isLandscape {
     [GKCover hideCover];
 }
 

@@ -8,6 +8,7 @@
 
 #import "GKNavigationBarViewController.h"
 #import "GKNavigationBarConfigure.h"
+#import "UINavigationController+GKCategory.h"
 
 @interface GKNavigationBarViewController ()
 

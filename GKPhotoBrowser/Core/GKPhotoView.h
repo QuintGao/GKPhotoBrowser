@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GKPhoto.h"
+#import "GKPhotoManager.h"
 #import "GKWebImageProtocol.h"
 #import "GKLoadingView.h"
 
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void(^loadProgressBlock)(GKPhotoView *photoView, float progress, BOOL isOriginImage);
 
 /** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
-@property (nonatomic, assign) BOOL isFullWidthForLandSpace;
+@property (nonatomic, assign) BOOL isFullWidthForLandScape;
 
 /** 图片最大放大倍数 */
 @property (nonatomic, assign) CGFloat maxZoomScale;

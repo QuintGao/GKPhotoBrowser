@@ -12,10 +12,10 @@
 #define GKScreenW           [UIScreen mainScreen].bounds.size.width
 #define GKScreenH           [UIScreen mainScreen].bounds.size.height
 // 判断iPhone X
-#define KIsiPhoneX          [GKPhotoBrowserConfigure gk_isIPhoneXSeries]
-// 安全区域间距
-#define kSafeTopSpace       (KIsiPhoneX ? 24.0f : 0)   // iPhone X顶部多出的距离（刘海）
-#define kSafeBottomSpace    (KIsiPhoneX ? 34.0f : 0)   // iPhone X底部多出的距离
+#define KIsiPhoneX          [GKPhotoBrowserConfigure gk_isNotchedScreen]
+// 底部安全区域高度
+#define kSafeTopSpace       [GKPhotoBrowserConfigure gk_safeAreaInsets].top
+#define kSafeBottomSpace    [GKPhotoBrowserConfigure gk_safeAreaInsets].bottom
 
 // 默认最大缩放程度
 #define kMaxZoomScale               2.0f
@@ -59,8 +59,14 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 
 @interface GKPhotoBrowserConfigure : NSObject
 
+/// 安全区域
++ (UIEdgeInsets)gk_safeAreaInsets;
+
+/// 状态栏frame
++ (CGRect)gk_statusBarFrame;
+
 /// 判断是否是刘海屏
-+ (BOOL)gk_isIPhoneXSeries;
++ (BOOL)gk_isNotchedScreen;
 
 /// 根据图片名字获取图片
 /// @param name 图片名字

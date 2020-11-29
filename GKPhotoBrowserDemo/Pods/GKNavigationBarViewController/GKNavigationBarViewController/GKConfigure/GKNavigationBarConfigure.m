@@ -102,7 +102,24 @@ static GKNavigationBarConfigure *instance = nil;
 }
 
 - (CGRect)gk_statusBarFrame {
-    return [UIApplication sharedApplication].statusBarFrame;
+    CGRect statusBarFrame = CGRectZero;
+    if (@available(iOS 13.0, *)) {
+        statusBarFrame = [GKConfigure getKeyWindow].windowScene.statusBarManager.statusBarFrame;
+    }
+    
+    if (CGRectEqualToRect(statusBarFrame, CGRectZero)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
+#pragma clang diagnostic pop
+    }
+    
+    if (CGRectEqualToRect(statusBarFrame, CGRectZero)) {
+        CGFloat statusBarH = [GKConfigure gk_isNotchedScreen] ? 44 : 20;
+        statusBarFrame = CGRectMake(0, 0, GK_SCREEN_WIDTH, statusBarH);
+    }
+    
+    return statusBarFrame;
 }
 
 - (BOOL)gk_isNotchedScreen {

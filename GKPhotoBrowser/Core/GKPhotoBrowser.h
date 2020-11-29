@@ -32,7 +32,7 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 - (void)photoBrowser:(GKPhotoBrowser *)browser longPressWithIndex:(NSInteger)index;
 
 // 旋转事件
-- (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandspace:(BOOL)isLandspace;
+- (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandscape:(BOOL)isLandscape;
 
 // 上下滑动消失
 // 开始滑动时
@@ -71,7 +71,7 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /** 当前显示的photoView */
 @property (nonatomic, strong, readonly) GKPhotoView   *curPhotoView;
 /** 是否是横屏 */
-@property (nonatomic, assign, readonly) BOOL          isLandspace;
+@property (nonatomic, assign, readonly) BOOL          isLandscape;
 /** 当前设备的方向 */
 @property (nonatomic, assign, readonly) UIDeviceOrientation currentOrientation;
 /** 显示方式 */
@@ -109,7 +109,7 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign) BOOL isResumePhotoZoom;
 
 /** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
-@property (nonatomic, assign) BOOL isFullWidthForLandSpace;
+@property (nonatomic, assign) BOOL isFullWidthForLandScape;
 
 /** 是否适配安全区域，默认NO，为YES时图片会自动适配iPhone X的安全区域 */
 @property (nonatomic, assign) BOOL isAdaptiveSafeArea;

@@ -11,7 +11,7 @@
 
 #if __has_include(<GKYYWebImageManager.h>)
 #import "GKYYWebImageManager.h"
-#else
+#elif __has_include(<GKSDWebImageManager.h>)
 #import "GKSDWebImageManager.h"
 #endif
 
@@ -27,7 +27,7 @@ static Class imageManagerClass = nil;
 @property (nonatomic, strong, readwrite) NSArray        *photos;
 @property (nonatomic, assign, readwrite) NSInteger      currentIndex;
 @property (nonatomic, strong, readwrite) GKPhotoView    *curPhotoView;
-@property (nonatomic, assign, readwrite) BOOL           isLandspace;
+@property (nonatomic, assign, readwrite) BOOL           isLandscape;
 
 @property (nonatomic, strong) UIScrollView *photoScrollView;
 
@@ -93,7 +93,7 @@ static Class imageManagerClass = nil;
         self.isStatusBarShow         = NO;
         self.isHideSourceView        = YES;
         self.statusBarStyle          = UIStatusBarStyleLightContent;
-        self.isFullWidthForLandSpace = YES;
+        self.isFullWidthForLandScape = YES;
         self.maxZoomScale            = kMaxZoomScale;
         self.doubleZoomScale         = self.maxZoomScale;
         // 20200312
@@ -106,8 +106,9 @@ static Class imageManagerClass = nil;
         if (!imageManagerClass) {
             imageManagerClass = NSClassFromString(@"GKYYWebImageManager");
         }
-        
-        self.imageProtocol = [imageManagerClass new];
+        if (imageManagerClass) {
+            self.imageProtocol = [imageManagerClass new];
+        }
     }
     return self;
 }
@@ -160,7 +161,6 @@ static Class imageManagerClass = nil;
             [self browserZoomShow];
         }
             break;
-            
         default:
             break;
     }
@@ -185,10 +185,10 @@ static Class imageManagerClass = nil;
     
     CGFloat width  = self.view.bounds.size.width;
     CGFloat height = self.view.bounds.size.height;
-    BOOL isLandspace = width > height;
+    BOOL isLandscape = width > height;
     
     if (self.isAdaptiveSafeArea) {
-        if (isLandspace) {
+        if (isLandscape) {
             width -= (kSafeTopSpace + kSafeBottomSpace);
         }else {
             height -= (kSafeTopSpace + kSafeBottomSpace);
@@ -215,14 +215,13 @@ static Class imageManagerClass = nil;
         _countLabel.bounds          = CGRectMake(0, 0, 80, 30);
         [self.contentView addSubview:_countLabel];
         
-        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !isLandspace) ? 50 : 30);
+        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !isLandscape) ? 50 : 30);
         _countLabel.hidden = self.photos.count == 1;
         
         [self updateLabel];
     }
     
     CGRect frame = self.photoScrollView.bounds;
-    
     CGSize contentSize = CGSizeMake(frame.size.width * self.photos.count, frame.size.height);
     self.photoScrollView.contentSize = contentSize;
     
@@ -258,7 +257,6 @@ static Class imageManagerClass = nil;
     
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         [self prefersStatusBarHidden];
-        
         [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
     }
 }
@@ -389,7 +387,7 @@ static Class imageManagerClass = nil;
         !self.layoutBlock ? : self.layoutBlock(self, self.contentView.bounds);
     }else {
         _countLabel.bounds = CGRectMake(0, 0, 80, 30);
-        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !self.isLandspace) ? 50 : 30);
+        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !self.isLandscape) ? 50 : 30);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {
@@ -575,12 +573,10 @@ static Class imageManagerClass = nil;
 }
 
 #pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
 	if ([touch.view isKindOfClass:UIButton.class]) {
         return NO;
     }
-    
     return YES;
 }
 
@@ -592,7 +588,6 @@ static Class imageManagerClass = nil;
     
     // 禁言默认单击事件
     if (self.isSingleTapDisabled) return;
-    
     [self dismiss];
 }
 
@@ -626,7 +621,6 @@ static Class imageManagerClass = nil;
 - (CGRect)frameWithWidth:(CGFloat)width height:(CGFloat)height center:(CGPoint)center {
     CGFloat x = center.x - width * 0.5;
     CGFloat y = center.y - height * 0.5;
-    
     return CGRectMake(x, y, width, height);
 }
 
@@ -638,10 +632,6 @@ static Class imageManagerClass = nil;
             }
         }
             break;
-        case UIGestureRecognizerStateEnded:
-            
-            break;
-            
         default:
             break;
     }
@@ -985,7 +975,7 @@ static Class imageManagerClass = nil;
     
     // 旋转之后是横屏
     if (UIDeviceOrientationIsLandscape(currentOrientation)) {
-        self.isLandspace = YES;
+        self.isLandscape = YES;
         [self deviceOrientationChangedDelegate];
         
         // 横屏移除pan手势
@@ -1030,7 +1020,7 @@ static Class imageManagerClass = nil;
             }
         }];
     }else if (currentOrientation == UIDeviceOrientationPortrait) {
-        self.isLandspace = NO;
+        self.isLandscape = NO;
         [self deviceOrientationChangedDelegate];
         
         // 竖屏时添加pan手势
@@ -1075,7 +1065,7 @@ static Class imageManagerClass = nil;
         }];
     }else {
         self.isRotation     = NO;
-        self.isLandspace    = NO;
+        self.isLandscape    = NO;
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
         [self layoutSubviews];
@@ -1085,8 +1075,8 @@ static Class imageManagerClass = nil;
 }
 
 - (void)deviceOrientationChangedDelegate {
-    if ([self.delegate respondsToSelector:@selector(photoBrowser:onDeciceChangedWithIndex:isLandspace:)]) {
-        [self.delegate photoBrowser:self onDeciceChangedWithIndex:self.currentIndex isLandspace:self.isLandspace];
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:onDeciceChangedWithIndex:isLandscape:)]) {
+        [self.delegate photoBrowser:self onDeciceChangedWithIndex:self.currentIndex isLandscape:self.isLandscape];
     }
 }
 
@@ -1119,7 +1109,7 @@ static Class imageManagerClass = nil;
             photoView.loadStyle       = self.loadStyle;
             photoView.originLoadStyle = self.originLoadStyle;
             photoView.failStyle       = self.failStyle;
-            photoView.isFullWidthForLandSpace = self.isFullWidthForLandSpace;
+            photoView.isFullWidthForLandScape = self.isFullWidthForLandScape;
             photoView.failureText     = self.failureText;
             photoView.failureImage    = self.failureImage;
             photoView.maxZoomScale    = self.maxZoomScale;
@@ -1329,7 +1319,6 @@ static Class imageManagerClass = nil;
     if (self.currentIndex >= self.photos.count) {
         return nil;
     }
-    
     return self.photos[self.currentIndex];
 }
 

@@ -22,7 +22,7 @@
 #import "GKNavigationBarConfigure.h"
 #import "GKNavigationBarViewController.h"
 #import "GKBaseTransitionAnimation.h"
-#import "GKDelegateHandler.h"
+#import "GKNavigationInteractiveTransition.h"
 #import "GKPopTransitionAnimation.h"
 #import "GKPushTransitionAnimation.h"
 

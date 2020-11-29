@@ -27,6 +27,151 @@ static const void* GKPopTransitionKey       = @"GKPopTransitionKey";
 static const void* GKNavItemLeftSpaceKey    = @"GKNavItemLeftSpaceKey";
 static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
 
+@interface UIViewController (GKGesture)<GKViewControllerPushDelegate, GKViewControllerPopDelegate>
+
+@property (nonatomic, assign) BOOL hasPushDelegate;
+
+@property (nonatomic, assign) BOOL hasPopDelegate;
+
+@end
+
+@implementation UIViewController (GKGesture)
+
+// 方法交换
++ (void)load {
+    // 保证其只执行一次
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSArray <NSString *> *oriSels = @[@"viewWillAppear:",
+                                          @"viewDidAppear:",
+                                          @"viewDidDisappear:"];
+        
+        [oriSels enumerateObjectsUsingBlock:^(NSString * _Nonnull oriSel, NSUInteger idx, BOOL * _Nonnull stop) {
+            gk_swizzled_method(@"gkGesture", self, oriSel, self);
+        }];
+    });
+}
+
+- (void)gkGesture_viewWillAppear:(BOOL)animated {
+    if (self.hasPushDelegate) {
+        self.gk_pushDelegate = self;
+        self.hasPushDelegate = NO;
+    }
+    
+    if (self.hasPopDelegate) {
+        self.gk_popDelegate = self;
+        self.hasPopDelegate = NO;
+    }
+    [self gkGesture_viewWillAppear:animated];
+}
+
+- (void)gkGesture_viewDidAppear:(BOOL)animated {
+    [self postPropertyChangeNotification];
+    
+    [self gkGesture_viewDidAppear:animated];
+}
+
+- (void)gkGesture_viewDidDisappear:(BOOL)animated {
+    if (self.gk_pushDelegate == self) {
+        self.hasPushDelegate = YES;
+    }
+    if (self.gk_popDelegate == self) {
+        self.hasPopDelegate = YES;
+    }
+    
+    // 这两个代理系统不会自动回收，所以要做下处理
+    self.gk_pushDelegate = nil;
+    self.gk_popDelegate = nil;
+
+    [self gkGesture_viewDidDisappear:animated];
+}
+
+- (BOOL)gk_interactivePopDisabled {
+    return [objc_getAssociatedObject(self, GKInteractivePopKey) boolValue];
+}
+
+- (void)setGk_interactivePopDisabled:(BOOL)gk_interactivePopDisabled {
+    objc_setAssociatedObject(self, GKInteractivePopKey, @(gk_interactivePopDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self postPropertyChangeNotification];
+}
+
+- (BOOL)gk_fullScreenPopDisabled {
+    return [objc_getAssociatedObject(self, GKFullScreenPopKey) boolValue];
+}
+
+- (void)setGk_fullScreenPopDisabled:(BOOL)gk_fullScreenPopDisabled {
+    objc_setAssociatedObject(self, GKFullScreenPopKey, @(gk_fullScreenPopDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self postPropertyChangeNotification];
+}
+
+- (CGFloat)gk_popMaxAllowedDistanceToLeftEdge {
+    return [objc_getAssociatedObject(self, GKPopMaxDistanceKey) floatValue];
+}
+
+- (void)setGk_popMaxAllowedDistanceToLeftEdge:(CGFloat)gk_popMaxAllowedDistanceToLeftEdge {
+    objc_setAssociatedObject(self, GKPopMaxDistanceKey, @(gk_popMaxAllowedDistanceToLeftEdge), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self postPropertyChangeNotification];
+}
+
+- (id<GKViewControllerPushDelegate>)gk_pushDelegate {
+    return objc_getAssociatedObject(self, GKPushDelegateKey);
+}
+
+- (void)setGk_pushDelegate:(id<GKViewControllerPushDelegate>)gk_pushDelegate {
+    objc_setAssociatedObject(self, GKPushDelegateKey, gk_pushDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (id<GKViewControllerPopDelegate>)gk_popDelegate {
+    return objc_getAssociatedObject(self, GKPopDelegateKey);
+}
+
+- (void)setGk_popDelegate:(id<GKViewControllerPopDelegate>)gk_popDelegate {
+    objc_setAssociatedObject(self, GKPopDelegateKey, gk_popDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)gk_pushTransition {
+    return objc_getAssociatedObject(self, GKPushTransitionKey);
+}
+
+- (void)setGk_pushTransition:(id<UIViewControllerAnimatedTransitioning>)gk_pushTransition {
+    objc_setAssociatedObject(self, GKPushTransitionKey, gk_pushTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)gk_popTransition {
+    return objc_getAssociatedObject(self, GKPopTransitionKey);
+}
+
+- (void)setGk_popTransition:(id<UIViewControllerAnimatedTransitioning>)gk_popTransition {
+    objc_setAssociatedObject(self, GKPopTransitionKey, gk_popTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+static char kAssociatedObjectKey_hasPushDelegate;
+- (BOOL)hasPushDelegate {
+    return [objc_getAssociatedObject(self, &kAssociatedObjectKey_hasPushDelegate) boolValue];
+}
+
+- (void)setHasPushDelegate:(BOOL)hasPushDelegate {
+    objc_setAssociatedObject(self, &kAssociatedObjectKey_hasPushDelegate, @(hasPushDelegate), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+static char kAssociatedObjectKey_hasPopDelegate;
+- (BOOL)hasPopDelegate {
+    return [objc_getAssociatedObject(self, &kAssociatedObjectKey_hasPopDelegate) boolValue];
+}
+
+- (void)setHasPopDelegate:(BOOL)hasPopDelegate {
+    return objc_setAssociatedObject(self, &kAssociatedObjectKey_hasPopDelegate, @(hasPopDelegate), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)postPropertyChangeNotification {
+    [[NSNotificationCenter defaultCenter] postNotificationName:GKViewControllerPropertyChangedNotification object:@{@"viewController": self}];
+}
+
+@end
+
 @implementation UIViewController (GKCategory)
 
 // 方法交换
@@ -59,6 +204,9 @@ static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
             }
         }else if ([obj isKindOfClass:[NSString class]]) {
             if ([NSStringFromClass(self.class) isEqualToString:obj]) {
+                exist = YES;
+                *stop = YES;
+            }else if ([NSStringFromClass(self.class) containsString:obj]) {
                 exist = YES;
                 *stop = YES;
             }
@@ -118,36 +266,6 @@ static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
 }
 
 #pragma mark - Added Property
-- (BOOL)gk_interactivePopDisabled {
-    return [objc_getAssociatedObject(self, GKInteractivePopKey) boolValue];
-}
-
-- (void)setGk_interactivePopDisabled:(BOOL)gk_interactivePopDisabled {
-    objc_setAssociatedObject(self, GKInteractivePopKey, @(gk_interactivePopDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    [self postPropertyChangeNotification];
-}
-
-- (BOOL)gk_fullScreenPopDisabled {
-    return [objc_getAssociatedObject(self, GKFullScreenPopKey) boolValue];
-}
-
-- (void)setGk_fullScreenPopDisabled:(BOOL)gk_fullScreenPopDisabled {
-    objc_setAssociatedObject(self, GKFullScreenPopKey, @(gk_fullScreenPopDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    [self postPropertyChangeNotification];
-}
-
-- (CGFloat)gk_popMaxAllowedDistanceToLeftEdge {
-    return [objc_getAssociatedObject(self, GKPopMaxDistanceKey) floatValue];
-}
-
-- (void)setGk_popMaxAllowedDistanceToLeftEdge:(CGFloat)gk_popMaxAllowedDistanceToLeftEdge {
-    objc_setAssociatedObject(self, GKPopMaxDistanceKey, @(gk_popMaxAllowedDistanceToLeftEdge), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    [self postPropertyChangeNotification];
-}
-
 - (CGFloat)gk_navBarAlpha {
     id obj = objc_getAssociatedObject(self, GKNavBarAlphaKey);
     return obj ? [obj floatValue] : 1.0f;
@@ -201,42 +319,6 @@ static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
     objc_setAssociatedObject(self, GKBackImageKey, gk_backImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     [self setBackItemImage:gk_backImage];
-}
-
-- (id<GKViewControllerPushDelegate>)gk_pushDelegate {
-    return objc_getAssociatedObject(self, GKPushDelegateKey);
-}
-
-- (void)setGk_pushDelegate:(id<GKViewControllerPushDelegate>)gk_pushDelegate {
-    objc_setAssociatedObject(self, GKPushDelegateKey, gk_pushDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    [self postPropertyChangeNotification];
-}
-
-- (id<GKViewControllerPopDelegate>)gk_popDelegate {
-    return objc_getAssociatedObject(self, GKPopDelegateKey);
-}
-
-- (void)setGk_popDelegate:(id<GKViewControllerPopDelegate>)gk_popDelegate {
-    objc_setAssociatedObject(self, GKPopDelegateKey, gk_popDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    [self postPropertyChangeNotification];
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)gk_pushTransition {
-    return objc_getAssociatedObject(self, GKPushTransitionKey);
-}
-
-- (void)setGk_pushTransition:(id<UIViewControllerAnimatedTransitioning>)gk_pushTransition {
-    objc_setAssociatedObject(self, GKPushTransitionKey, gk_pushTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)gk_popTransition {
-    return objc_getAssociatedObject(self, GKPopTransitionKey);
-}
-
-- (void)setGk_popTransition:(id<UIViewControllerAnimatedTransitioning>)gk_popTransition {
-    objc_setAssociatedObject(self, GKPopTransitionKey, gk_popTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (CGFloat)gk_navItemLeftSpace {
@@ -339,10 +421,6 @@ static const void* GKNavItemRightSpaceKey   = @"GKNavItemRightSpaceKey";
         NSLog(@"找不到可见的控制器，viewcontroller.self = %@，self.view.window=%@", self, self.view.window);
         return nil;
     }
-}
-
-- (void)postPropertyChangeNotification {
-    [[NSNotificationCenter defaultCenter] postNotificationName:GKViewControllerPropertyChangedNotification object:@{@"viewController": self}];
 }
 
 @end

@@ -15,13 +15,13 @@ PODS:
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
   - GKCover (2.5.5)
-  - GKNavigationBarViewController (2.6.3)
+  - GKNavigationBarViewController (2.6.4)
   - SDAutoLayout (2.2.1)
-  - SDWebImage (5.9.4):
-    - SDWebImage/Core (= 5.9.4)
-  - SDWebImage/Core (5.9.4)
+  - SDWebImage (5.10.0):
+    - SDWebImage/Core (= 5.10.0)
+  - SDWebImage/Core (5.10.0)
   - SVProgressHUD (2.2.5)
-  - TZImagePickerController (3.5.2)
+  - TZImagePickerController (3.5.4)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
@@ -59,11 +59,11 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
   GKCover: 54663b6ee16ea0b4c0e203a0ffd5a0622223af6e
-  GKNavigationBarViewController: d682ec891050fccfd3e6695ee0f3ee2f75970535
+  GKNavigationBarViewController: 5f74830dde9ec4eabf4f7b6665989533b2b39631
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
-  SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
+  SDWebImage: 9169792e9eec3e45bba2a0c02f74bf8bd922d1ee
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
-  TZImagePickerController: f1e4ed5ca1ddfc7e48d20867ff6a5c1e41a4b579
+  TZImagePickerController: 891421e1fa0d8dfa295388e1f8a8ce2d5152ae88
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
@@ -71,4 +71,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: fd1e7c6c7ebfbe07519069fc97a4da6759549bf5
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.9.3
