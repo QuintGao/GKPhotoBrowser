@@ -150,7 +150,9 @@
                 // photo.image = [SDAnimatedImage imageNamed:obj];
                 
                 // 如果使用YYWebImage，请使用YYImage加载本地图片
-                photo.image = [YYImage imageNamed:obj];
+                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:obj ofType:nil]];
+//                photo.image = [YYImage imageNamed:obj];
+                photo.image = [YYImage imageWithData:data];
                 
                 if (!photo.image) {
                     photo.image = [UIImage imageNamed:obj];
