@@ -19,6 +19,7 @@
 		60415CB22121648F00D1D54B /* GKSDAutoLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60415CB12121648F00D1D54B /* GKSDAutoLayoutViewController.m */; };
 		60415CB72121715000D1D54B /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = 60415CB62121715000D1D54B /* test.txt */; };
 		60415CBA2121750B00D1D54B /* GKBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 60415CB92121750B00D1D54B /* GKBottomView.m */; };
+		606CD60625805EBF00290941 /* YYAnimatedImageView+GKExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 606CD60525805EBF00290941 /* YYAnimatedImageView+GKExtension.m */; };
 		608FC479254142EE003DB82F /* test.html in Resources */ = {isa = PBXBuildFile; fileRef = 608FC478254142EE003DB82F /* test.html */; };
 		60F9901622715A18008150AE /* GKOriginImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F9901522715A18008150AE /* GKOriginImageViewController.m */; };
 		7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7927F0CF20A97F280017FD5B /* GKTestViewController.m */; };
@@ -109,6 +110,8 @@
 		60415CB62121715000D1D54B /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		60415CB82121750B00D1D54B /* GKBottomView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKBottomView.h; sourceTree = "<group>"; };
 		60415CB92121750B00D1D54B /* GKBottomView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKBottomView.m; sourceTree = "<group>"; };
+		606CD60425805EBF00290941 /* YYAnimatedImageView+GKExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "YYAnimatedImageView+GKExtension.h"; sourceTree = "<group>"; };
+		606CD60525805EBF00290941 /* YYAnimatedImageView+GKExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "YYAnimatedImageView+GKExtension.m"; sourceTree = "<group>"; };
 		608FC478254142EE003DB82F /* test.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
 		60F9901422715A18008150AE /* GKOriginImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKOriginImageViewController.h; sourceTree = "<group>"; };
 		60F9901522715A18008150AE /* GKOriginImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKOriginImageViewController.m; sourceTree = "<group>"; };
@@ -385,6 +388,8 @@
 			children = (
 				795FA5F51FF338200057BDB0 /* UIView+GKFrame.h */,
 				795FA5F61FF338200057BDB0 /* UIView+GKFrame.m */,
+				606CD60425805EBF00290941 /* YYAnimatedImageView+GKExtension.h */,
+				606CD60525805EBF00290941 /* YYAnimatedImageView+GKExtension.m */,
 			);
 			path = GKCategory;
 			sourceTree = "<group>";
@@ -674,6 +679,7 @@
 				600EC549230529B800222289 /* GKPanGestureRecognizer.m in Sources */,
 				795FA6221FF338200057BDB0 /* GKTest03ViewController.m in Sources */,
 				795FA61B1FF338200057BDB0 /* GKTimeLineViewCell.m in Sources */,
+				606CD60625805EBF00290941 /* YYAnimatedImageView+GKExtension.m in Sources */,
 				795FA5D81FF334100057BDB0 /* GKSDWebImageManager.m in Sources */,
 				60154B5F20D11D6B0000877A /* GKGIFViewController.m in Sources */,
 				795FA60F1FF338200057BDB0 /* GKPhotosView.m in Sources */,
