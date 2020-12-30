@@ -1,17 +1,17 @@
 //
-//  UIScrollView+GKGestureHandle.m
+//  UIScrollView+GKPhotoBrowser.m
 //  GKPhotoBrowser
 //
 //  Created by QuintGao on 2017/11/10.
 //  Copyright © 2017年 QuintGao. All rights reserved.
 //
 
-#import "UIScrollView+GKGestureHandle.h"
+#import "UIScrollView+GKPhotoBrowser.h"
 #import <objc/runtime.h>
 
 static const void* GKGestureHandleEnabled = @"GKGestureHandleEnabled";
 
-@implementation UIScrollView (GKGestureHandle)
+@implementation UIScrollView (GKPhotoBrowser)
 
 - (void)setGk_gestureHandleEnabled:(BOOL)gk_gestureHandleEnabled {
     objc_setAssociatedObject(self, GKGestureHandleEnabled, @(gk_gestureHandleEnabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);

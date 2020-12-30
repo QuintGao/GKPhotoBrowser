@@ -43,4 +43,7 @@ typedef void (^GKWebImageCompletionBlock)(UIImage * _Nullable image, NSURL * _Nu
 /// @param data 图片数据
 - (UIImage *_Nullable)imageWithData:(nullable NSData *)data;
 
+/// 清理内存
+- (void)clearMemory;
+
 @end
