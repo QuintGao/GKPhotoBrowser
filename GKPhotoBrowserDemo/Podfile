@@ -11,7 +11,7 @@ target 'GKPhotoBrowserDemo' do
   pod 'AFNetworking'
   pod 'SDWebImage'
   pod 'YYWebImage', '~> 1.0.5'
-  pod 'GKNavigationBarViewController'
+  pod 'GKNavigationBar'
   pod 'YYModel'
   pod 'GKCover'
   pod 'SDAutoLayout'

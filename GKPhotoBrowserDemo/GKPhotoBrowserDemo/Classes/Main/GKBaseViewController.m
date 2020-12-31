@@ -36,4 +36,13 @@
     return UIInterfaceOrientationPortrait;
 }
 
+#pragma mark - 状态栏
+- (BOOL)prefersStatusBarHidden {
+    return self.gk_statusBarHidden;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return self.gk_statusBarStyle;
+}
+
 @end

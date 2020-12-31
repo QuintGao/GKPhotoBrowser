@@ -9,7 +9,8 @@
 #ifndef PrefixHeader_pch
 #define PrefixHeader_pch
 
-#import <GKNavigationBarViewController/GKNavigationBarViewController.h>
+//#import <GKNavigationBarViewController/GKNavigationBarViewController.h>
+#import <GKNavigationBar/GKNavigationBar.h>
 #import <YYModel/YYModel.h>
 #import <GKCover/GKCover.h>
 #import <SDWebImage/UIImageView+WebCache.h>

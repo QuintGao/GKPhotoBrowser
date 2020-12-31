@@ -6,8 +6,8 @@
 //  Copyright © 2017年 QuintGao. All rights reserved.
 //
 
-#import <GKNavigationBarViewController/GKNavigationBarViewController.h>
+#import <UIKit/UIKit.h>
 
-@interface GKBaseViewController : GKNavigationBarViewController
+@interface GKBaseViewController : UIViewController
 
 @end

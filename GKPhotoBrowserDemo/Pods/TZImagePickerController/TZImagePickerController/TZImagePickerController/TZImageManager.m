@@ -236,6 +236,10 @@ static dispatch_once_t onceToken;
     if ([self.pickerDelegate respondsToSelector:@selector(isAssetCanSelect:)]) {
         canSelect = [self.pickerDelegate isAssetCanSelect:asset];
     }
+    if ([self.pickerDelegate respondsToSelector:@selector(isAssetCanBeDisplayed:)]){
+        canSelect = [self.pickerDelegate isAssetCanBeDisplayed:asset];
+    }
+    
     if (!canSelect) return nil;
     
     TZAssetModel *model;
@@ -720,7 +724,7 @@ static dispatch_once_t onceToken;
 - (void)requestVideoURLWithAsset:(PHAsset *)asset success:(void (^)(NSURL *videoURL))success failure:(void (^)(NSDictionary* info))failure {
     [[PHImageManager defaultManager] requestAVAssetForVideo:asset options:[self getVideoRequestOptions] resultHandler:^(AVAsset* avasset, AVAudioMix* audioMix, NSDictionary* info){
         // NSLog(@"AVAsset URL: %@",myAsset.URL);
-        if ([asset isKindOfClass:[AVURLAsset class]]) {
+        if ([avasset isKindOfClass:[AVURLAsset class]]) {
             NSURL *url = [(AVURLAsset *)avasset URL];
             if (success) {
                 success(url);
@@ -803,6 +807,15 @@ static dispatch_once_t onceToken;
         return NO;
     }
     return YES;
+}
+
+/// 检查照片能否被选中
+- (BOOL)isAssetCannotBeSelected:(PHAsset *)asset {
+    if ([self.pickerDelegate respondsToSelector:@selector(isAssetCanBeSelected:)]) {
+        BOOL canSelectAsset = [self.pickerDelegate isAssetCanBeSelected:asset];
+        return !canSelectAsset;
+    }
+    return NO;
 }
 
 #pragma mark - Private Method

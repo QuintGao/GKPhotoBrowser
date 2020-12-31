@@ -50,7 +50,8 @@
 
 - (void)setupUI {
     self.gk_navigationItem.title = @"朋友圈";
-    self.gk_navRightBarButtonItem = [UIBarButtonItem itemWithTitle:@"发布" target:self action:@selector(tabkePhoto)];
+//    self.gk_navRightBarButtonItem = [UIBarButtonItem itemWithTitle:@"发布" target:self action:@selector(tabkePhoto)];
+    self.gk_navRightBarButtonItem = [UIBarButtonItem gk_itemWithTitle:@"发布" target:self action:@selector(tabkePhoto)];
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.top        = self.gk_navigationBar.bottom;
