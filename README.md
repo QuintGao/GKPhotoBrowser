@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/QuintGao/GKPhotoBrowser/blob/master/GKPhotoBrowserDemo/GKPhotoBrowserDemo/Assets.xcassets/GKPhotoBrowser_logo.imageset/GKPhotoBrowser_logo.png" title="GKPhotoBrowser logo" float=left>
+  <img src="https://upload-images.jianshu.io/upload_images/1598505-11c693583217f2ae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" title="GKPhotoBrowser logo" float=left>
 </p>
 
 
@@ -87,20 +87,21 @@ GKPhotoBrowser一个可高度自定义的图片浏览器，demo里面实现的�
  
  1、仿微信
  
- ![wechat.gif](https://github.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/wechat.gif)
+ ![wechat.gif](https://upload-images.jianshu.io/upload_images/1598505-5139f58eb648abeb.gif?imageMogr2/auto-orient/strip)
  
  2、今日头条
  
- ![toutiao.gif](https://github.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/toutiao.gif)
+ ![toutiao.gif](https://upload-images.jianshu.io/upload_images/1598505-3273dff97637de1d.gif?imageMogr2/auto-orient/strip)
  
  3、简书
  
- ![jianshu.gif](https://github.com/QuintGao/GKExampleImages/blob/master/GKPhotoBrowser/jianshu.gif)
+ ![jianshu.gif](https://upload-images.jianshu.io/upload_images/1598505-dbc0b13eb87ecd75.gif?imageMogr2/auto-orient/strip)
  
  ## 更新
  
 ```
 
+2020.12.31  2.1.4版本，修复双击缩放问题#110，增加pageControl和保存按钮#107，解决与其他库冲突#108
 2020.11.29  2.1.3版本，修复闪动问题#100，支持自定义图片加载类#94
 2020.11.17  2.1.2版本 修复不传url只传sourceImageView时不能手势缩放的bug，去掉api弃用警告
 2020.10.22  2.1.1版本 修改刘海屏手机判断方法，适配iPhone 12系列机型
