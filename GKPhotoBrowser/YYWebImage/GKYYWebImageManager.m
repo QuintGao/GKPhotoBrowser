@@ -43,4 +43,8 @@
     return [manager.cache getImageForKey:key withType:YYImageCacheTypeAll];
 }
 
+- (void)clearMemory {
+    [[YYImageCache sharedCache].memoryCache removeAllObjects];
+}
+
 @end

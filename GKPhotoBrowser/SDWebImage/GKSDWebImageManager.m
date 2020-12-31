@@ -50,4 +50,8 @@
     return [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:key];
 }
 
+- (void)clearMemory {
+    [[SDImageCache sharedImageCache] clearMemory];
+}
+
 @end

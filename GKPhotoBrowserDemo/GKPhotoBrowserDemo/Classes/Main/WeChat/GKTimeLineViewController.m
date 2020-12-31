@@ -21,8 +21,6 @@
 @property (nonatomic, strong) NSArray *dataSource;
 @property (nonatomic, strong) NSArray *dataFrames;
 
-@property (nonatomic, strong) UIPageControl *pageControl;
-
 @property (nonatomic, weak) UIView *fromView;
 
 @property (nonatomic, weak) UIView *actionSheet;
@@ -122,21 +120,6 @@
             [photos addObject:photo];
         }];
         
-        weakSelf.pageControl = [[UIPageControl alloc] init];
-        weakSelf.pageControl.numberOfPages = photos.count;
-        weakSelf.pageControl.currentPage = index;
-        weakSelf.pageControl.hidesForSinglePage = YES;
-        
-        CGSize size = [weakSelf.pageControl sizeForNumberOfPages:photos.count];
-        weakSelf.pageControl.frame = CGRectMake(0, 0, size.width, size.height);
-        
-//        if (@available(iOS 14.0, *)) {
-//            weakSelf.pageControl.backgroundStyle = UIPageControlBackgroundStyleMinimal;
-//        }
-//        if (@available(iOS 14.0, *)) {
-//            weakSelf.pageControl.allowsContinuousInteraction = YES;
-//        }
-        
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
         browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
@@ -144,33 +127,18 @@
         browser.maxZoomScale = 20.0f;
         browser.doubleZoomScale = 2.0f;
         browser.isAdaptiveSafeArea = YES;
+        browser.hidesCountLabel = YES;
+        browser.pageControl.hidden = NO;
         
         // 当你的APP支持屏幕旋转时此属性必须设置为YES
         if (kIsiPad) { // ipad 默认支持屏幕旋转，这里设置为YES
             browser.isFollowSystemRotation = YES;
         }
         
-        [browser setupCoverViews:@[weakSelf.pageControl] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
-
-            CGFloat pointY = 0;
-            if (photoBrowser.isLandscape) {
-                pointY = superFrame.size.height - 20;
-            }else {
-                pointY = superFrame.size.height - 10 - (KIsiPhoneX ? kSafeBottomSpace : 0);
-            }
-
-            weakSelf.pageControl.center = CGPointMake(superFrame.size.width * 0.5, pointY);
-
-            weakSelf.count ++;
-        }];
-        
         browser.delegate = weakSelf;
-        
         [browser showFromVC:weakSelf];
-        
         weakSelf.browser = browser;
     };
-    
     return cell;
 }
 
@@ -181,7 +149,7 @@
 
 #pragma mark - GKPhotoBrowserDelegate
 - (void)photoBrowser:(GKPhotoBrowser *)browser didChangedIndex:(NSInteger)index {
-    self.pageControl.currentPage = index;
+    
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser longPressWithIndex:(NSInteger)index {
@@ -253,7 +221,6 @@
               notClick:NO
              showBlock:nil
              hideBlock:^{
-                 
                  [self.fromView removeFromSuperview];
                  self.fromView = nil;
              }];
@@ -301,8 +268,6 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [self.browser removePhotoAtIndex:self.currentIndex];
-
-        self.pageControl.numberOfPages = self.browser.photos.count;
     });
 }
 

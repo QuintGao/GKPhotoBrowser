@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIScrollView+GKGestureHandle.h"
+#import "UIScrollView+GKPhotoBrowser.h"
 
 #define GKScreenW           [UIScreen mainScreen].bounds.size.width
 #define GKScreenH           [UIScreen mainScreen].bounds.size.height

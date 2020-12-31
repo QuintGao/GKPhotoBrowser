@@ -18,9 +18,6 @@
 static Class imageManagerClass = nil;
 
 @interface GKPhotoBrowser()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
-{
-    UILabel  *_countLabel;
-}
 
 @property (nonatomic, strong, readwrite) UIView         *contentView;
 
@@ -167,7 +164,11 @@ static Class imageManagerClass = nil;
 }
 
 - (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
     
+    if ([self.imageProtocol respondsToSelector:@selector(clearMemory)]) {
+        [self.imageProtocol clearMemory];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -206,20 +207,10 @@ static Class imageManagerClass = nil;
         [self.coverViews enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [self.contentView addSubview:obj];
         }];
-        [self layoutSubviews];
     }else {
-        _countLabel                 = [UILabel new];
-        _countLabel.textColor       = [UIColor whiteColor];
-        _countLabel.font            = [UIFont systemFontOfSize:18.0];
-        _countLabel.textAlignment   = NSTextAlignmentCenter;
-        _countLabel.bounds          = CGRectMake(0, 0, 80, 30);
-        [self.contentView addSubview:_countLabel];
-        
-        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !isLandscape) ? 50 : 30);
-        _countLabel.hidden = self.photos.count == 1;
-        
-        [self updateLabel];
+        [self setupDefaultCovers];
     }
+    [self layoutSubviews];
     
     CGRect frame = self.photoScrollView.bounds;
     CGSize contentSize = CGSizeMake(frame.size.width * self.photos.count, frame.size.height);
@@ -231,6 +222,21 @@ static Class imageManagerClass = nil;
     if (self.photoScrollView.contentOffset.x == 0) {
         [self scrollViewDidScroll:self.photoScrollView];
     }
+}
+
+- (void)setupDefaultCovers {
+    [self.contentView addSubview:self.countLabel];
+    [self.contentView addSubview:self.pageControl];
+    [self.contentView addSubview:self.saveBtn];
+    
+    if (self.hidesCountLabel) {
+        self.countLabel.hidden = YES;
+    }else {
+        self.countLabel.hidden = self.photos.count == 1;
+    }
+    CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
+    self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
+    [self updateViewIndex];
 }
 
 - (void)addGestureAndObserver {
@@ -350,19 +356,18 @@ static Class imageManagerClass = nil;
     }];
 }
 
-- (void)updateLabel {
-    _countLabel.text = [NSString stringWithFormat:@"%zd/%zd", (long)(self.currentIndex + 1), (long)self.photos.count];
+- (void)updateViewIndex {
+    self.countLabel.text = [NSString stringWithFormat:@"%zd/%zd", (long)(self.currentIndex + 1), (long)self.photos.count];
+    self.pageControl.currentPage = self.currentIndex;
 }
 
 - (void)layoutSubviews {
     CGRect frame = self.contentView.bounds;
-    
     frame.origin.x   -= kPhotoViewPadding;
     frame.size.width += kPhotoViewPadding * 2;
     
     CGFloat photoScrollW = frame.size.width;
     CGFloat photoScrollH = frame.size.height;
-    
     CGFloat pointX = photoScrollW * 0.5 - kPhotoViewPadding;
     
     self.photoScrollView.frame  = frame;
@@ -378,7 +383,6 @@ static Class imageManagerClass = nil;
     
     [_visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
         x = kPhotoViewPadding + photoView.tag * (kPhotoViewPadding * 2 + w);
-        
         photoView.frame = CGRectMake(x, y, w, h);
         [photoView resetFrame];
     }];
@@ -386,8 +390,17 @@ static Class imageManagerClass = nil;
     if (self.coverViews) {
         !self.layoutBlock ? : self.layoutBlock(self, self.contentView.bounds);
     }else {
-        _countLabel.bounds = CGRectMake(0, 0, 80, 30);
-        _countLabel.center = CGPointMake(self.contentView.bounds.size.width * 0.5, (KIsiPhoneX && !self.isLandscape) ? 50 : 30);
+        CGFloat centerX = self.contentView.bounds.size.width * 0.5f;
+        
+        self.countLabel.center = CGPointMake(centerX, (KIsiPhoneX && !self.isLandscape) ? 50 : 30);
+        CGFloat pointY = 0;
+        if (self.isLandscape) {
+            pointY = self.contentView.bounds.size.height - 20;
+        }else {
+            pointY = self.contentView.bounds.size.height - 10 - (self.isAdaptiveSafeArea ? 0 : kSafeBottomSpace);
+        }
+        self.pageControl.center = CGPointMake(centerX, pointY);
+        self.saveBtn.center = CGPointMake(self.contentView.bounds.size.width - 50, pointY);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {
@@ -486,14 +499,12 @@ static Class imageManagerClass = nil;
     self.photos = photos;
     
     [self.visiblePhotoViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
     [self.reusablePhotoViews removeAllObjects];
     [self.visiblePhotoViews removeAllObjects];
     
     [self updateReusableViews];
     [self setupPhotoViews];
-    [self updateLabel];
-    
+    [self updateViewIndex];
     [self layoutSubviews];
 }
 
@@ -568,8 +579,13 @@ static Class imageManagerClass = nil;
     
     // 移除屏幕旋转监听
     [self delDeviceOrientationObserver];
-    
     [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (void)saveBtnClick:(UIButton *)btn {
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:onSaveBtnClick:image:)]) {
+        [self.delegate photoBrowser:self onSaveBtnClick:self.currentIndex image:self.curPhotoView.imageView.image];
+    }
 }
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -604,7 +620,7 @@ static Class imageManagerClass = nil;
         // 默认情况下有滑动手势
         [self addPanGesture:YES];
     }else {
-        CGPoint location = [tap locationInView:self.contentView];
+        CGPoint location = [tap locationInView:photoView.imageView];
         CGFloat wh       = 1.0;
         CGRect zoomRect  = [self frameWithWidth:wh height:wh center:location];
         
@@ -1183,7 +1199,7 @@ static Class imageManagerClass = nil;
             [self addPanGesture:NO];
         }
         
-        [self updateLabel];
+        [self updateViewIndex];
         
         if ([self.delegate respondsToSelector:@selector(photoBrowser:didChangedIndex:)]) {
             [self.delegate photoBrowser:self didChangedIndex:self.currentIndex];
@@ -1324,6 +1340,48 @@ static Class imageManagerClass = nil;
 
 - (GKPhotoView *)currentPhotoView {
     return [self photoViewForIndex:self.currentIndex];
+}
+
+- (UILabel *)countLabel {
+    if (!_countLabel) {
+        UILabel *countLabel = [UILabel new];
+        countLabel.textColor = UIColor.whiteColor;
+        countLabel.font = [UIFont systemFontOfSize:16.0f];
+        countLabel.textAlignment = NSTextAlignmentCenter;
+        countLabel.bounds = CGRectMake(0, 0, 80, 30);
+        _countLabel = countLabel;
+    }
+    return _countLabel;
+}
+
+- (UIPageControl *)pageControl {
+    if (!_pageControl) {
+        UIPageControl *pageControl = [UIPageControl new];
+        pageControl.numberOfPages = self.photos.count;
+        pageControl.currentPage = self.currentIndex;
+        pageControl.hidesForSinglePage = YES;
+        pageControl.hidden = YES;
+        _pageControl = pageControl;
+    }
+    return _pageControl;
+}
+
+- (UIButton *)saveBtn {
+    if (!_saveBtn) {
+        UIButton *saveBtn = [UIButton new];
+        saveBtn.bounds = CGRectMake(0, 0, 50, 30);
+        [saveBtn setTitle:@"保存" forState:UIControlStateNormal];
+        [saveBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        saveBtn.titleLabel.font = [UIFont systemFontOfSize:15.0f];
+        saveBtn.layer.cornerRadius = 5;
+        saveBtn.layer.masksToBounds = YES;
+        saveBtn.layer.borderColor = UIColor.whiteColor.CGColor;
+        saveBtn.layer.borderWidth = 1;
+        saveBtn.hidden = YES;
+        [saveBtn addTarget:self action:@selector(saveBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        _saveBtn = saveBtn;
+    }
+    return _saveBtn;
 }
 
 @end

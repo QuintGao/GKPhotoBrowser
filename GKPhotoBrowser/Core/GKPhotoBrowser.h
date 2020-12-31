@@ -34,6 +34,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // 旋转事件
 - (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandscape:(BOOL)isLandscape;
 
+// 保存按钮点击事件
+- (void)photoBrowser:(GKPhotoBrowser *)browser onSaveBtnClick:(NSInteger)index image:(UIImage *)image;
+
 // 上下滑动消失
 // 开始滑动时
 - (void)photoBrowser:(GKPhotoBrowser *)browser panBeginWithIndex:(NSInteger)index;
@@ -87,37 +90,38 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /** 代理 */
 @property (nonatomic, weak) id<GKPhotoBrowserDelegate> delegate;
 
-/** 是否跟随系统旋转，默认是NO，如果设置为YES，isScreenRotateDisabled属性将失效 */ 
+/// 是否跟随系统旋转，默认是NO，如果设置为YES，isScreenRotateDisabled属性将失效
 @property (nonatomic, assign) BOOL isFollowSystemRotation;
 
-/** 是否禁止屏幕旋转监测 */
+/// 是否禁止屏幕旋转监测
 @property (nonatomic, assign) BOOL isScreenRotateDisabled;
 
-/** 是否禁用默认单击事件 */
+/// 是否禁用默认单击事件
 @property (nonatomic, assign) BOOL isSingleTapDisabled;
 
-/** 是否显示状态栏，默认NO：不显示状态栏 */
+/// 是否显示状态栏，默认NO：不显示状态栏
 @property (nonatomic, assign) BOOL isStatusBarShow;
 
-/** 状态栏样式，默认Light */
+/// 状态栏样式，默认Light
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
 
-/** 滑动消失时是否隐藏原来的视图：默认YES */
+/// 滑动消失时是否隐藏原来的视图：默认YES
 @property (nonatomic, assign) BOOL isHideSourceView;
 
-/** 滑动切换图片时，是否恢复上（下）一张图片的缩放程度，默认是NO */
+/// 滑动切换图片时，是否恢复上（下）一张图片的缩放程度，默认是NO
 @property (nonatomic, assign) BOOL isResumePhotoZoom;
 
-/** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
+/// 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕
 @property (nonatomic, assign) BOOL isFullWidthForLandScape;
 
-/** 是否适配安全区域，默认NO，为YES时图片会自动适配iPhone X的安全区域 */
+/// 是否适配安全区域，默认NO，为YES时图片会自动适配iPhone X的安全区域
 @property (nonatomic, assign) BOOL isAdaptiveSafeArea;
 
-/**
- * 是否启用滑动返回手势处理（当showStyle为GKPhotoBrowserShowStylePush时有效）
- */
+/// 是否启用滑动返回手势处理（当showStyle为GKPhotoBrowserShowStylePush时有效）
 @property (nonatomic, assign) BOOL isPopGestureEnabled;
+
+/// 是否隐藏countLabel，默认NO
+@property (nonatomic, assign) BOOL hidesCountLabel;
 
 /// 图片最大放大倍数
 @property (nonatomic, assign) CGFloat maxZoomScale;
@@ -125,10 +129,19 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 双击放大倍数，默认maxZoomScale，不能超过maxZoomScale
 @property (nonatomic, assign) CGFloat doubleZoomScale;
 
-/** 浏览器背景（默认黑色） */
-@property (nonatomic, strong) UIColor   *bgColor;
+/// 浏览器背景（默认黑色）
+@property (nonatomic, strong) UIColor *bgColor;
 
-// 加载失败时显示的文字或图片
+/// 数量Label，默认显示，若要隐藏需设置hidesCountLabel为YES
+@property (nonatomic, strong) UILabel *countLabel;
+
+/// 页码，默认隐藏
+@property (nonatomic, strong) UIPageControl *pageControl;
+
+/// 保存按钮，默认隐藏
+@property (nonatomic, strong) UIButton *saveBtn;
+
+/// 加载失败时显示的文字或图片
 @property (nonatomic, copy) NSString    *failureText;
 @property (nonatomic, strong) UIImage   *failureImage;
 

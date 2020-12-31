@@ -1,5 +1,5 @@
 //
-//  UIScrollView+GKGestureHandle.h
+//  UIScrollView+GKPhotoBrowser.h
 //  GKPhotoBrowser
 //
 //  Created by QuintGao on 2017/11/10.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIScrollView (GKGestureHandle)
+@interface UIScrollView (GKPhotoBrowser)
 
 /**
  * 是否启用手势处理功能，默认为NO
