@@ -57,13 +57,16 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置数据
 - (void)setupPhoto:(GKPhoto *)photo;
 
+// 设置放大倍数
+- (void)setScrollMaxZoomScale:(CGFloat)scale;
+
 // 加载原图（必须传originUrl）
 - (void)loadOriginImage;
 
 // 缩放
 - (void)zoomToRect:(CGRect)rect animated:(BOOL)animated;
 
-// 跳转布局
+// 调整布局
 - (void)adjustFrame;
 // 重新布局
 - (void)resetFrame;

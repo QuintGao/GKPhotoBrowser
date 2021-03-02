@@ -57,12 +57,10 @@
 
 - (instancetype)initWithFrame:(CGRect)frame imageProtocol:(nonnull id<GKWebImageProtocol>)imageProtocol {
     if (self = [super initWithFrame:frame]) {
-            NSAssert(imageProtocol != nil, @"请设置图片加载类并实现GKWebImageProtocol类");
-        
+        NSAssert(imageProtocol != nil, @"请设置图片加载类并实现GKWebImageProtocol类");
         _imageProtocol = imageProtocol;
         
         self.backgroundColor = [UIColor clearColor];
-        
         [self addSubview:self.scrollView];
         [self.scrollView addSubview:self.imageView];
     }
@@ -74,6 +72,12 @@
     
     // 加载图片
     [self loadImageWithPhoto:photo isOrigin:NO];
+}
+
+- (void)setScrollMaxZoomScale:(CGFloat)scale {
+    if (self.scrollView.maximumZoomScale != scale) {
+        self.scrollView.maximumZoomScale = scale;
+    }
 }
 
 - (void)loadOriginImage {
@@ -98,17 +102,20 @@
         // 每次设置数据时，恢复缩放
         [self.scrollView setZoomScale:1.0 animated:NO];
         
-        // 获取原图的缓存
-        if ([_imageProtocol imageFromMemoryForURL:photo.originUrl]) {
-            photo.originFinished = YES;
-        }
-
-        if ([_imageProtocol imageFromMemoryForURL:photo.url]) {
+        // 优先加载缓存图片
+        UIImage *placeholderImage = nil;
+        UIImage *image = [_imageProtocol imageFromMemoryForURL:photo.url];
+        if (image) {
             photo.finished = YES;
+            placeholderImage = image;
         }
         
-        // 优先加载缓存图片
-        UIImage *placeholderImage = [_imageProtocol imageFromMemoryForURL:photo.url];
+        UIImage *originImage = [_imageProtocol imageFromMemoryForURL:photo.originUrl];
+        if (originImage) {
+            photo.originFinished = YES;
+            placeholderImage = originImage;
+        }
+        
         // 如果没有就加载sourceImageView的image
         if (!placeholderImage) {
             placeholderImage = photo.sourceImageView.image;
@@ -135,7 +142,9 @@
             return;
         }else if (photo.imageAsset) {
             [self addSubview:self.loadingView];
-            [self.loadingView hideFailure];
+            if (!photo.failed) {
+                [self.loadingView hideFailure];
+            }
             [self adjustFrame];
             
             if (!photo.failed && !placeholderImage) {
@@ -172,7 +181,9 @@
         
         // 进度条
         [self addSubview:self.loadingView];
-        [self.loadingView hideFailure];
+        if (!photo.failed) {
+            [self.loadingView hideFailure];
+        }
         
         if (self.imageView.image) {
             [self adjustFrame];
@@ -264,7 +275,6 @@
         }
     }else {
         self.imageView.image = nil;
-        
         [self adjustFrame];
     }
 }
@@ -307,7 +317,6 @@
         
         // 设置图片的frame
         self.imageView.frame = imageF;
-        
         self.scrollView.contentSize = self.imageView.frame.size;
         
         if (imageF.size.height <= self.scrollView.bounds.size.height) {
@@ -329,7 +338,7 @@
         }
         // 初始化
         self.scrollView.minimumZoomScale = 1.0;
-        self.scrollView.maximumZoomScale = self.doubleZoomScale;
+        self.scrollView.maximumZoomScale = self.realZoomScale;
     }else if (!CGRectEqualToRect(self.photo.sourceFrame, CGRectZero)) {
         if (self.photo.sourceFrame.size.width == 0 || self.photo.sourceFrame.size.height == 0) return;
         CGFloat width = frame.size.width;
@@ -381,11 +390,7 @@
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     !self.zoomEnded ? : self.zoomEnded(self, scrollView.zoomScale);
     
-    if (scale == 1) {
-        self.scrollView.maximumZoomScale = self.doubleZoomScale;
-    }else {
-        self.scrollView.maximumZoomScale = self.realZoomScale;
-    }
+    [self setScrollMaxZoomScale:self.realZoomScale];
 }
 
 - (void)cancelCurrentImageLoad {

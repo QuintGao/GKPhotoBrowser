@@ -14,17 +14,17 @@ NSString *const GKPhotoBrowserBundleName = @"GKPhotoBrowser";
 
 + (UIEdgeInsets)gk_safeAreaInsets {
     UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
-    if ([GKPhotoBrowserConfigure gk_isNotchedScreen]) {
-        UIWindow *keyWindow = [GKPhotoBrowserConfigure getKeyWindow];
-        if (keyWindow) {
-            if (@available(iOS 11.0, *)) {
-                safeAreaInsets = keyWindow.safeAreaInsets;
+    if (@available(iOS 11.0, *)) {
+        UIWindow *window = [self getKeyWindow];
+        if (!window) {
+            // keyWindow还没创建时，通过创建临时window获取安全区域
+            window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+            if (window.safeAreaInsets.bottom <= 0) {
+                UIViewController *viewController = [UIViewController new];
+                window.rootViewController = viewController;
             }
-        }else { // 如果获取到的window是空
-            // 对于刘海屏，当window没有创建的时候，可根据状态栏设置安全区域顶部高度
-            // iOS14之后顶部安全区域不再是固定的44，所以修改为以下方式获取
-            safeAreaInsets = UIEdgeInsetsMake([GKPhotoBrowserConfigure gk_statusBarFrame].size.height, 0, 34, 0);
         }
+        safeAreaInsets = window.safeAreaInsets;
     }
     return safeAreaInsets;
 }
@@ -54,24 +54,9 @@ static NSInteger isNotchedScreen = -1;
 + (BOOL)gk_isNotchedScreen {
     if (isNotchedScreen < 0) {
         if (@available(iOS 11.0, *)) {
-            UIWindow *keyWindow = [self getKeyWindow];
-            if (keyWindow) {
-                isNotchedScreen = keyWindow.safeAreaInsets.bottom > 0 ? 1 : 0;
-            }
-        }
-        
-        // 当iOS11以下或获取不到keyWindow时用以下方案
-        if (isNotchedScreen < 0) {
-            CGSize screenSize = UIScreen.mainScreen.bounds.size;
-            BOOL _isNotchedSize = (CGSizeEqualToSize(screenSize, CGSizeMake(375, 812)) ||
-                                   CGSizeEqualToSize(screenSize, CGSizeMake(812, 375)) ||
-                                   CGSizeEqualToSize(screenSize, CGSizeMake(414, 896)) ||
-                                   CGSizeEqualToSize(screenSize, CGSizeMake(896, 414)) ||
-                                   CGSizeEqualToSize(screenSize, CGSizeMake(390, 844)) ||
-                                   CGSizeEqualToSize(screenSize, CGSizeMake(844, 390)) ||
-                                   CGSizeEqualToSize(screenSize, CGSizeMake(428, 926)) ||
-                                   CGSizeEqualToSize(screenSize, CGSizeMake(926, 428)));
-            isNotchedScreen = _isNotchedSize ? 1 : 0;
+            isNotchedScreen = [GKPhotoBrowserConfigure gk_safeAreaInsets].bottom > 0 ? 1 : 0;
+        }else {
+            isNotchedScreen = 0;
         }
     }
     return isNotchedScreen > 0;

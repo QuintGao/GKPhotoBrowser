@@ -610,8 +610,10 @@ static Class imageManagerClass = nil;
 - (void)handleDoubleTap:(UITapGestureRecognizer *)tap {
     GKPhotoView *photoView = [self currentPhotoView];
     GKPhoto *photo = [self currentPhoto];
-    
     if (!photo.finished) return;
+    
+    // 设置双击放大倍数
+    [photoView setScrollMaxZoomScale:self.doubleZoomScale];
     
     if (photoView.scrollView.zoomScale > 1.0) {
         [photoView.scrollView setZoomScale:1.0 animated:YES];
@@ -623,7 +625,6 @@ static Class imageManagerClass = nil;
         CGPoint location = [tap locationInView:photoView.imageView];
         CGFloat wh       = 1.0;
         CGRect zoomRect  = [self frameWithWidth:wh height:wh center:location];
-        
         [photoView zoomToRect:zoomRect animated:YES];
         
         photo.isZooming = YES;
@@ -1133,7 +1134,7 @@ static Class imageManagerClass = nil;
             
             __typeof(self) __weak weakSelf = self;
             photoView.zoomEnded = ^(GKPhotoView * _Nonnull curPhotoView, CGFloat scale) {
-                if (curPhotoView.tag == weakSelf.curPhotoView.tag) {
+                if (curPhotoView.tag == photoView.tag) {
                     if (scale == 1.0f) {
                         [weakSelf addPanGesture:NO];
                     }else {
@@ -1143,7 +1144,7 @@ static Class imageManagerClass = nil;
             };
             
             photoView.loadFailed = ^(GKPhotoView * _Nonnull curPhotoView) {
-                if (curPhotoView.tag == weakSelf.curPhotoView.tag) {
+                if (curPhotoView.tag == photoView.tag) {
                     if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadFailedAtIndex:)]) {
                         [weakSelf.delegate photoBrowser:weakSelf loadFailedAtIndex:weakSelf.currentIndex];
                     }
@@ -1151,7 +1152,7 @@ static Class imageManagerClass = nil;
             };
             
             photoView.loadProgressBlock = ^(GKPhotoView * _Nonnull curPhotoView, float progress, BOOL isOriginImage) {
-                if (curPhotoView.tag == weakSelf.curPhotoView.tag) {
+                if (curPhotoView.tag == photoView.tag) {
                     if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
                         [weakSelf.delegate photoBrowser:weakSelf loadImageAtIndex:weakSelf.currentIndex progress:progress isOriginImage:isOriginImage];
                     }

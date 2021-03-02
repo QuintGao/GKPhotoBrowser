@@ -82,12 +82,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     NSMutableArray *photos = [NSMutableArray new];
     [self.dataSource enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        GKTest01ViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
+        
         GKPhoto *photo = [GKPhoto new];
         photo.url = [NSURL URLWithString:obj];
-       
+        photo.sourceImageView = cell.imgView;
         [photos addObject:photo];
     }];
     

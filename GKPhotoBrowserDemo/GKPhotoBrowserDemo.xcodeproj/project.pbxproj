@@ -514,7 +514,7 @@
 		795FA5831FF333420057BDB0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = QuintGao;
 				TargetAttributes = {
 					795FA58A1FF333420057BDB0 = {
