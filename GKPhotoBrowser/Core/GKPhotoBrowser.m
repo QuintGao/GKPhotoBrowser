@@ -1120,7 +1120,7 @@ static Class imageManagerClass = nil;
     for (NSInteger i = index - 1; i <= index + 1; i++) {
         if (i < 0 || i >= self.photos.count) continue;
         
-        GKPhotoView *photoView = [self photoViewForIndex:i];
+        __weak GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
             photoView                 = [self dequeueReusablePhotoView];
             photoView.loadStyle       = self.loadStyle;
