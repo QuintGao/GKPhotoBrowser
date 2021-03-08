@@ -64,6 +64,7 @@ static char kAssociatedObjectKey_openGestureHandle;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSArray <NSString *> *oriSels = @[@"viewDidLoad",
+                                          @"navigationBar:shouldPopItem:",
                                           @"dealloc"];
         [oriSels enumerateObjectsUsingBlock:^(NSString * _Nonnull oriSel, NSUInteger idx, BOOL * _Nonnull stop) {
             gk_gestureHandle_swizzled_instanceMethod(@"gkNav", self, oriSel, self);
@@ -88,6 +89,34 @@ static char kAssociatedObjectKey_openGestureHandle;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(propertyChangeNotification:) name:GKViewControllerPropertyChangedNotification object:nil];
     }
     [self gkNav_viewDidLoad];
+}
+
+// source：https://github.com/onegray/UIViewController-BackButtonHandler
+- (BOOL)gkNav_navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
+    if ([self.viewControllers count] < [navigationBar.items count]) {
+        return YES;
+    }
+    
+    BOOL shouldPop = [self.topViewController navigationShouldPop];
+    if ([self.topViewController respondsToSelector:@selector(navigationShouldPopOnClick)]) {
+        shouldPop = [self.topViewController navigationShouldPopOnClick];
+    }
+    
+    if(shouldPop) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self popViewControllerAnimated:YES];
+        });
+    } else {
+        // Workaround for iOS7.1. Thanks to @boliva - http://stackoverflow.com/posts/comments/34452906
+        for (UIView *subview in [navigationBar subviews]) {
+            if(0. < subview.alpha && subview.alpha < 1.) {
+                [UIView animateWithDuration:.25 animations:^{
+                    subview.alpha = 1.;
+                }];
+            }
+        }
+    }
+    return NO;
 }
 
 - (void)gkNav_dealloc {

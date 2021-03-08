@@ -20,21 +20,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIViewController (GKNavigationBar)
 
+/// 自定义导航栏
+@property (nonatomic, strong, readonly) GKCustomNavigationBar *gk_navigationBar;
+
+/// 导航栏item
+@property (nonatomic, strong, readonly) UINavigationItem      *gk_navigationItem;
+
+/// 是否创建了gk_navigationBar
+/// 返回YES表明当前控制器使用了自定义的gk_navigationBar，默认为NO
+@property (nonatomic, assign, readonly) BOOL                  gk_NavBarInit;
+
 /// 设置状态栏是否隐藏，默认NO：不隐藏
 @property (nonatomic, assign) BOOL                  gk_statusBarHidden;
 
 /// 设置状态栏类型
 @property (nonatomic, assign) UIStatusBarStyle      gk_statusBarStyle;
-
-/// 自定义导航栏
-@property (nonatomic, strong) GKCustomNavigationBar *gk_navigationBar;
-
-/// 导航栏item
-@property (nonatomic, strong) UINavigationItem      *gk_navigationItem;
-
-/// 是否创建了gk_navigationBar
-/// 返回YES表明当前控制器使用了自定义的gk_navigationBar，默认为NO
-@property (nonatomic, assign) BOOL                  gk_NavBarInit;
 
 #pragma mark - 常用属性快速设置
 /// 设置导航栏透明度
@@ -67,6 +67,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, strong) UIBarButtonItem       *gk_navRightBarButtonItem;
 @property (nullable, nonatomic, strong) NSArray<UIBarButtonItem *> *gk_navRightBarButtonItems;
 
+/// 是否禁止调整当前控制器导航栏间距，默认GKConfigure.gk_disableFixSpace
+@property (nonatomic, assign) BOOL                  gk_disableFixNavItemSpace;
+
+/// 导航栏左右按钮距离屏幕边缘的距离，需在设置左右item之前设置此属性
 @property (nonatomic, assign) CGFloat               gk_navItemLeftSpace;
 @property (nonatomic, assign) CGFloat               gk_navItemRightSpace;
 

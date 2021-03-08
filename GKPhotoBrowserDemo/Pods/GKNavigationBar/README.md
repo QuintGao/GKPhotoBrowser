@@ -97,19 +97,27 @@ self.gk_navBackgroundColor = [UIColor red]
 ```
 
 ### 部分功能说明
-#### 1、返回按钮点击及返回手势拦截
-```
-// 重写下面的方法，拦截返回按钮点击
-- (void)backItemClick:(id)sender {
-    // do something
-    
-    [super backItemClick:sender];
-}
-```
-
+#### 1、返回拦截包括点击返回和手势返回
 ```
 // 重写下面的方法，拦截返回手势
 #pragma mark - GKGesturePopHandlerProtocol
+- (BOOL)navigationShouldPop {
+    // do something
+    
+    return NO;
+}
+```
+也可以单独处理点击返回和手势返回
+```
+// 重写下面的方法，拦截点击返回
+- (BOOL)navigationShouldPopOnClick {
+    // do something
+    
+    return NO;
+}
+```
+```
+// 重写下面的方法，拦截手势返回
 - (BOOL)navigationShouldPopOnGesture {
     // do something
     
@@ -156,6 +164,15 @@ configure.shiledGuestureVCs = @[NSClassFromString(@"TZPhotoPickerController"), @
 
 ## 版本记录
 
+* 1.5.0 - 2021.03.05  
+----1、优化状态栏样式修改及显隐方法，可以不用在基类实现相关方法  
+----2、导航栏添加机制优化，修复某些情况下可能出现两个导航栏的bug  
+----3、增加全局开启UIScrollView手势处理方法
+* 1.4.3 - 2021.02.23 导航栏高度适配优化，导航栏间距调整优化，控制器增加禁止导航栏间距调整属性#62 #67
+* 1.4.2 - 2021.02.20 返回拦截优化，增加同时处理点击返回和手势返回的方法
+* 1.4.1 - 2021.02.07 暗黑模式适配优化，导航栏背景色和分割线颜色支持设置动态颜色
+* 1.4.0 - 2020.12.25 修复边缘滑动返回失效的bug #60
+* 1.3.9 - 2020.12.24 手势处理优化，解决可能出现的卡死问题，push、pop手势灵敏度优化
 * 1.3.7 - 2020.12.05 手势处理优化，增加禁用系统手势处理属性
 * 1.3.6 - 2020.12.02 修复iPhone 12，iPhone 12 Pro机型导航栏间距调整不准确的bug
 * 1.3.4 - 2020.12.01 修复可能出现的卡死情况#53

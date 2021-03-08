@@ -54,7 +54,14 @@ UIKIT_EXTERN NSString *const GKViewControllerPropertyChangedNotification;
 // 返回拦截
 @protocol GKGesturePopHandlerProtocol <NSObject>
 
+/// 包括点击返回和手势返回，默认YES
+- (BOOL)navigationShouldPop;
+
+/// 手势返回拦截
 - (BOOL)navigationShouldPopOnGesture;
+
+/// 点击返回拦截，包括系统返回按钮点击和自定义返回按钮点击
+- (BOOL)navigationShouldPopOnClick;
 
 @end
 

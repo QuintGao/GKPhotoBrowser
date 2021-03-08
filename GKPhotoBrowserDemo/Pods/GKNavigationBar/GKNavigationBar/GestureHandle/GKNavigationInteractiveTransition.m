@@ -61,11 +61,10 @@
                 self.popTransition = [UIPercentDrivenInteractiveTransition new];
                 [self.navigationController popViewControllerAnimated:YES];
             }else if (self.visibleVC.gk_systemGestureHandleDisabled) {
-                BOOL shouldPop = YES;
+                BOOL shouldPop = [self.visibleVC navigationShouldPop];
                 if ([self.visibleVC respondsToSelector:@selector(navigationShouldPopOnGesture)]) {
                     shouldPop = [self.visibleVC navigationShouldPopOnGesture];
                 }
-
                 if (shouldPop) {
                     self.popTransition = [UIPercentDrivenInteractiveTransition new];
                     [self.navigationController popViewControllerAnimated:YES];
@@ -89,24 +88,34 @@
         if (self.isGesturePush) {
             BOOL pushFinished = progress > 0.5;
             if (self.pushTransition) {
-                if (progress > GKGestureConfigure.gk_pushTransitionCriticalValue) {
+                if ([GKGestureConfigure isVelocityInSensitivity:velocity.x] && velocity.x < 0) {
                     pushFinished = YES;
                     [self.pushTransition finishInteractiveTransition];
                 }else {
-                    pushFinished = NO;
-                    [self.pushTransition cancelInteractiveTransition];
+                    if (progress > GKGestureConfigure.gk_pushTransitionCriticalValue) {
+                        pushFinished = YES;
+                        [self.pushTransition finishInteractiveTransition];
+                    }else {
+                        pushFinished = NO;
+                        [self.pushTransition cancelInteractiveTransition];
+                    }
                 }
             }
             [self pushScrollEnded:pushFinished];
         }else {
             BOOL popFinished = progress > 0.5;
             if (self.popTransition) {
-                if (progress > GKGestureConfigure.gk_popTransitionCriticalValue) {
+                if ([GKGestureConfigure isVelocityInSensitivity:velocity.x] && velocity.x > 0) {
                     popFinished = YES;
                     [self.popTransition finishInteractiveTransition];
                 }else {
-                    popFinished = NO;
-                    [self.popTransition cancelInteractiveTransition];
+                    if (progress > GKGestureConfigure.gk_popTransitionCriticalValue) {
+                        popFinished = YES;
+                        [self.popTransition finishInteractiveTransition];
+                    }else {
+                        popFinished = NO;
+                        [self.popTransition cancelInteractiveTransition];
+                    }
                 }
             }
             [self popScrollEnded:popFinished];
@@ -215,23 +224,27 @@
         }
     }else if (transition.x > 0) { // 右滑
         if (!visibleVC.gk_systemGestureHandleDisabled) {
-            BOOL shouldPop = [visibleVC navigationShouldPopOnGesture];
+            BOOL shouldPop = [visibleVC navigationShouldPop];
+            if ([visibleVC respondsToSelector:@selector(navigationShouldPopOnGesture)]) {
+                shouldPop = [visibleVC navigationShouldPopOnGesture];
+            }
             if (!shouldPop) return NO;
         }
         
         // 解决根控制器右滑时出现的卡死情况
-        if (visibleVC.gk_popDelegate) {
-            // 不作处理
-        }else {
-            // 忽略根控制器
-            if (self.navigationController.viewControllers.count <= 1) return NO;
-        }
+        if (self.navigationController.viewControllers.count <= 1) return NO;
         
         // 忽略超出手势区域
         CGPoint beginningLocation = [gestureRecognizer locationInView:gestureRecognizer.view];
         CGFloat maxAllowDistance  = visibleVC.gk_maxPopDistance;
         
-        if (maxAllowDistance > 0 && beginningLocation.x > maxAllowDistance) {
+        if (maxAllowDistance > 0 && beginningLocation.x > maxAllowDistance) return NO;
+    }else {
+        if (visibleVC.gk_fullScreenPopDisabled) {
+            // 修复边缘侧滑返回失效的bug
+            if (self.navigationController.viewControllers.count <= 1) return NO;
+        }else {
+            // 修复全屏返回手势上下滑动时可能导致的卡死情况
             return NO;
         }
     }
