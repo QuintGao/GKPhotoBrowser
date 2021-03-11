@@ -1120,7 +1120,7 @@ static Class imageManagerClass = nil;
     for (NSInteger i = index - 1; i <= index + 1; i++) {
         if (i < 0 || i >= self.photos.count) continue;
         
-        __weak GKPhotoView *photoView = [self photoViewForIndex:i];
+        GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
             photoView                 = [self dequeueReusablePhotoView];
             photoView.loadStyle       = self.loadStyle;
@@ -1133,8 +1133,9 @@ static Class imageManagerClass = nil;
             photoView.doubleZoomScale = self.doubleZoomScale;
             
             __typeof(self) __weak weakSelf = self;
+            __typeof(photoView) __weak weakPhotoView = photoView;
             photoView.zoomEnded = ^(GKPhotoView * _Nonnull curPhotoView, CGFloat scale) {
-                if (curPhotoView.tag == photoView.tag) {
+                if (curPhotoView.tag == weakPhotoView.tag) {
                     if (scale == 1.0f) {
                         [weakSelf addPanGesture:NO];
                     }else {
@@ -1144,7 +1145,7 @@ static Class imageManagerClass = nil;
             };
             
             photoView.loadFailed = ^(GKPhotoView * _Nonnull curPhotoView) {
-                if (curPhotoView.tag == photoView.tag) {
+                if (curPhotoView.tag == weakPhotoView.tag) {
                     if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadFailedAtIndex:)]) {
                         [weakSelf.delegate photoBrowser:weakSelf loadFailedAtIndex:weakSelf.currentIndex];
                     }
@@ -1152,7 +1153,7 @@ static Class imageManagerClass = nil;
             };
             
             photoView.loadProgressBlock = ^(GKPhotoView * _Nonnull curPhotoView, float progress, BOOL isOriginImage) {
-                if (curPhotoView.tag == photoView.tag) {
+                if (curPhotoView.tag == weakPhotoView.tag) {
                     if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
                         [weakSelf.delegate photoBrowser:weakSelf loadImageAtIndex:weakSelf.currentIndex progress:progress isOriginImage:isOriginImage];
                     }
