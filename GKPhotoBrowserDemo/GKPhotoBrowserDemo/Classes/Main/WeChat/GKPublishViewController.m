@@ -18,7 +18,8 @@
 
 @property (nonatomic, strong) GKPhotosView *photoView;
 
-@property (nonatomic, strong) NSArray *assets;
+@property (nonatomic, strong) NSMutableArray *assets;
+@property (nonatomic, strong) NSMutableArray *photos;
 
 @end
 
@@ -34,10 +35,13 @@
     
     [self.view addSubview:self.photoView];
     self.photoView.frame = CGRectMake(0, 150, (kScreenW - 60 - 50 - 20), 0);
+    
+    self.assets = [NSMutableArray new];
+    self.photos = [NSMutableArray new];
 }
 
 - (void)selectPhoto {
-    TZImagePickerController *pickerVC = [[TZImagePickerController alloc] initWithMaxImagesCount:9 delegate:self];
+    TZImagePickerController *pickerVC = [[TZImagePickerController alloc] initWithMaxImagesCount:90 delegate:self];
     pickerVC.allowTakeVideo = NO;
     pickerVC.allowPickingVideo = NO;
     pickerVC.allowPickingGif = YES;
@@ -51,19 +55,19 @@
 }
 
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-    self.assets = assets;
+    [self.assets addObjectsFromArray:assets];
+    [self.photos addObjectsFromArray:photos];
     
-    self.photoView.photoImages = photos;
-    
+    self.photoView.photoImages = self.photos;
     CGFloat height = [GKPhotosView sizeWithCount:photos.count width:(kScreenW - 60 - 50 - 20) andMargin:5].height;
     self.photoView.frame = CGRectMake(0, 150, (kScreenW - 60 - 50 - 20), height);
 }
 
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingGifImage:(UIImage *)animatedImage sourceAssets:(PHAsset *)asset {
-    self.assets = @[asset];
+    [self.assets addObject:asset];
+    [self.photos addObject:animatedImage];
     
-    self.photoView.photoImages = @[animatedImage];
-    
+    self.photoView.photoImages = self.photos;
     CGFloat height = [GKPhotosView sizeWithCount:1 width:(kScreenH - 60 - 50 - 20) andMargin:5].height;
     self.photoView.frame = CGRectMake(0, 150, (KScreenW - 60 - 50 - 20), height);
 }

@@ -51,6 +51,8 @@
 
 @property (nonatomic, assign) CGFloat realZoomScale;
 
+@property (nonatomic, assign) PHImageRequestID requestID;
+
 @end
 
 @implementation GKPhotoView
@@ -130,15 +132,7 @@
         self.scrollView.scrollEnabled = NO;
         
         if (photo.image) {
-            photo.finished = YES;
-            self.imageView.image = photo.image;
-            self.scrollView.scrollEnabled = YES;
-            [self.loadingView stopLoading];
-            [self.loadingView hideFailure];
-            [self.loadingView removeFromSuperview];
-            
-            [self adjustFrame];
-            
+            [self setupImageView:photo.image];
             return;
         }else if (photo.imageAsset) {
             [self addSubview:self.loadingView];
@@ -155,27 +149,41 @@
                 }
             }
             
-            [GKPhotoManager loadImageDataWithImageAsset:photo.imageAsset completion:^(NSData * _Nullable data) {
-                if (data) {
-                    __weak __typeof(self) wSelf = self;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        __strong __typeof(wSelf) self = wSelf;
-                        photo.finished = YES;
-                        if ([self.imageProtocol respondsToSelector:@selector(imageWithData:)]) {
-                            photo.image = [self.imageProtocol imageWithData:data];
-                        }else {
-                            photo.image = [UIImage imageWithData:data];
-                        }
-                        self.imageView.image = photo.image;
-                        self.scrollView.scrollEnabled = YES;
-                        [self.loadingView stopLoading];
-                        [self.loadingView hideFailure];
-                        [self.loadingView removeFromSuperview];
-                        [self adjustFrame];
-                    });
-                }
-            }];
+            __weak __typeof(self) weakSelf = self;
+            if (self.requestID) {
+                [[PHImageManager defaultManager] cancelImageRequest:self.requestID];
+            }
             
+            PHAsset *phAsset = (PHAsset *)photo.imageAsset;
+            if (phAsset.mediaType == PHAssetMediaTypeImage) {
+                // Gif
+                if ([[phAsset valueForKey:@"filename"] hasSuffix:@"GIF"]) {
+                    self.requestID = [GKPhotoManager loadImageDataWithImageAsset:phAsset completion:^(NSData * _Nullable data) {
+                        __strong __typeof(weakSelf) self = weakSelf;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (data) {
+                                UIImage *image = nil;
+                                if ([self.imageProtocol respondsToSelector:@selector(imageWithData:)]) {
+                                    image = [self.imageProtocol imageWithData:data];
+                                }
+                                if (!image) image = [UIImage imageWithData:data];
+                                [self setupImageView:image];
+                                self.requestID = 0;
+                            }
+                        });
+                    }];
+                }else {
+                    self.requestID = [GKPhotoManager loadImageWithAsset:photo.imageAsset photoWidth:GKScreenW * 2 completion:^(UIImage * _Nullable image) {
+                        __strong __typeof(weakSelf) self = weakSelf;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (image) {
+                                [self setupImageView:image];
+                                self.requestID = 0;
+                            }
+                        });
+                    }];
+                }
+            }
             return;
         }
         
@@ -243,7 +251,6 @@
                         }
                     }else {
                         photo.finished = YES;
-                        photo.image = image;
                         if (isOrigin) {
                             photo.originFinished = YES;
                         }
@@ -266,11 +273,9 @@
         }else {
             if (self.imageView.image) {
                 photo.finished = YES;
-                photo.image = self.imageView.image;
                 self.scrollView.scrollEnabled = YES;
                 [self.loadingView stopLoading];
             }
-            
             [self adjustFrame];
         }
     }else {
@@ -286,6 +291,16 @@
     if (self.photo) {
         [self adjustFrame];
     }
+}
+
+- (void)setupImageView:(UIImage *)image {
+    self.photo.finished = YES;
+    self.imageView.image = image;
+    self.scrollView.scrollEnabled = YES;
+    [self.loadingView stopLoading];
+    [self.loadingView hideFailure];
+    [self.loadingView removeFromSuperview];
+    [self adjustFrame];
 }
 
 #pragma mark - 调整frame

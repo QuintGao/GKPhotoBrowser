@@ -59,7 +59,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// 加载相册资源图片
 /// @param imageAsset PHAsset对象
 /// @param completion 完成回调
-+ (void)loadImageDataWithImageAsset:(PHAsset *)imageAsset completion:(nonnull void(^)(NSData *_Nullable data))completion;
++ (PHImageRequestID)loadImageDataWithImageAsset:(PHAsset *)imageAsset completion:(nonnull void(^)(NSData *_Nullable data))completion;
+
+/// 根据宽度加载相册资源图片
+/// @param asset PHAsset对象
+/// @param photoWidth 宽度
+/// @param completion 完成回调
++ (PHImageRequestID)loadImageWithAsset:(PHAsset *)asset photoWidth:(CGFloat)photoWidth completion:(nonnull void(^)(UIImage *_Nullable image))completion;
 
 @end
 
