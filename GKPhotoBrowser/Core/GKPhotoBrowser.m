@@ -50,8 +50,6 @@ static Class imageManagerClass = nil;
 /** 正在滑动缩放隐藏 */
 @property (nonatomic, assign) BOOL isZoomScale;
 
-@property (nonatomic, assign) BOOL isPortraitToUp;
-
 @property (nonatomic, strong) GKPanGestureRecognizer *panGesture;
 
 @property (nonatomic, assign) CGPoint   firstMovePoint;
@@ -190,7 +188,7 @@ static Class imageManagerClass = nil;
     
     if (self.isAdaptiveSafeArea) {
         if (isLandscape) {
-            width -= (kSafeTopSpace + kSafeBottomSpace);
+            width  -= (kSafeTopSpace + kSafeBottomSpace);
         }else {
             height -= (kSafeTopSpace + kSafeBottomSpace);
         }
@@ -544,7 +542,7 @@ static Class imageManagerClass = nil;
         if (isFirst || self.isScreenRotateDisabled) { // 第一次进入或禁止处理屏幕旋转，直接添加手势
             [self.view addGestureRecognizer:self.panGesture];
         }else {
-            if (self.currentOrientation == UIDeviceOrientationPortrait || self.isPortraitToUp) {
+            if (self.currentOrientation == UIDeviceOrientationPortrait) {
                 [self.view addGestureRecognizer:self.panGesture];
             }
         }
@@ -925,6 +923,11 @@ static Class imageManagerClass = nil;
     if (self.isFollowSystemRotation) return;
     // 默认设备方向：竖屏
     self.originalOrientation = UIDeviceOrientationPortrait;
+    self.currentOrientation = [UIDevice currentDevice].orientation;
+    // 未知或者朝上都认为是竖屏
+    if (self.currentOrientation == UIDeviceOrientationUnknown || self.currentOrientation == UIDeviceOrientationFaceUp) {
+        self.currentOrientation = UIDeviceOrientationPortrait;
+    }
     // 20200312 尚未添加observer的情况下才添加，防止多次重复添加
     if(!_isOrientationNotiObserverAdded)
     {
@@ -950,6 +953,19 @@ static Class imageManagerClass = nil;
     if (self.isFollowSystemRotation) return;
     if (self.isScreenRotateDisabled) return;
     
+    // 旋转之后当前的设备方向
+    UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
+    
+    // 未知或者朝上都认为是竖屏
+    if (currentOrientation == UIDeviceOrientationUnknown || currentOrientation == UIDeviceOrientationFaceUp) {
+        currentOrientation = UIDeviceOrientationPortrait;
+    }
+    
+    // 修复bug #117，从后台进入前台会执行此方法 导致缩放变化，所以此处做下处理
+    if (self.currentOrientation == currentOrientation) return;
+    
+    self.currentOrientation = currentOrientation;
+    
     self.isRotation = YES;
     
     // 恢复当前视图的缩放
@@ -958,15 +974,6 @@ static Class imageManagerClass = nil;
     photo.zoomRect  = CGRectZero;
     
     GKPhotoView *photoView = [self currentPhotoView];
-    
-    // 旋转之后当前的设备方向
-    UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
-    
-    if (currentOrientation == UIDeviceOrientationUnknown) {
-        currentOrientation = UIDeviceOrientationPortrait;
-    }
-    
-    self.currentOrientation = currentOrientation;
     
     if (UIDeviceOrientationIsPortrait(self.originalOrientation)) {
         if (UIDeviceOrientationIsLandscape(currentOrientation)) {
@@ -977,14 +984,6 @@ static Class imageManagerClass = nil;
     if (UIDeviceOrientationIsLandscape(self.originalOrientation)) {
         if (UIDeviceOrientationIsPortrait(currentOrientation)) {
             [photoView.scrollView setZoomScale:1.0 animated:YES];
-        }
-    }
-    
-    self.isPortraitToUp = NO;
-    
-    if (UIDeviceOrientationIsPortrait(self.originalOrientation)) {
-        if (currentOrientation == UIDeviceOrientationFaceUp) {
-            self.isPortraitToUp = YES;
         }
     }
     
