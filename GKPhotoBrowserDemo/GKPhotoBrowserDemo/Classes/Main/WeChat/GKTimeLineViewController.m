@@ -274,17 +274,18 @@
 - (void)saveBtnClick:(id)sender {
     [GKCover hideCover];
     
-    GKPhoto *photo = self.browser.photos[self.browser.currentIndex];
+    GKPhotoView *photoView = self.browser.curPhotoView;
     
-    NSData *imageData = nil;
+    NSData *imageData = [photoView.imageView.image sd_imageData];
     
-    if ([photo.image isKindOfClass:[SDAnimatedImage class]]) {
-        imageData = [(SDAnimatedImage *)photo.image animatedImageData];
-    }else if ([photo.image isKindOfClass:[YYImage class]]) {
-        imageData = [(YYImage *)photo.image animatedImageData];
-    }else {
-        imageData = [photo.image sd_imageData];
-    }
+    
+//    if ([photo.image isKindOfClass:[SDAnimatedImage class]]) {
+//        imageData = [(SDAnimatedImage *)photo.image animatedImageData];
+//    }else if ([photo.image isKindOfClass:[YYImage class]]) {
+//        imageData = [(YYImage *)photo.image animatedImageData];
+//    }else {
+//        imageData = [photo.image sd_imageData];
+//    }
     
     if (!imageData) return;
     
