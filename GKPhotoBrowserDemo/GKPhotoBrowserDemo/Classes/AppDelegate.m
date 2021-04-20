@@ -9,8 +9,11 @@
 #import "AppDelegate.h"
 #import "GKMainViewController.h"
 #import "GKPhotoBrowserConfigure.h"
+#import "GKTestVC.h"
 
 @interface AppDelegate ()
+
+@property (nonatomic, assign) BOOL enterBackground;
 
 @end
 
@@ -55,11 +58,21 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+    self.enterBackground = YES;
 }
 
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+//    if (!self.enterBackground) return;
+//    
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        GKTestVC *testVC = [GKTestVC new];
+//        [GKConfigure.visibleViewController.navigationController pushViewController:testVC animated:YES];
+////        testVC.modalPresentationStyle = UIModalPresentationFullScreen;
+////        [GKConfigure.visibleViewController presentViewController:testVC animated:YES completion:nil];
+//    });
 }
 
 

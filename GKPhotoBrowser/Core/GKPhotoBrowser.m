@@ -50,6 +50,9 @@ static Class imageManagerClass = nil;
 /** 正在滑动缩放隐藏 */
 @property (nonatomic, assign) BOOL isZoomScale;
 
+// 是否已经显示
+@property (nonatomic, assign) BOOL isAppeared;
+
 @property (nonatomic, strong) GKPanGestureRecognizer *panGesture;
 
 @property (nonatomic, assign) CGPoint   firstMovePoint;
@@ -127,6 +130,8 @@ static Class imageManagerClass = nil;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if (self.isAppeared) return;
+    self.isAppeared = YES;
     // 手势和监听
     [self addGestureAndObserver];
     
