@@ -41,6 +41,8 @@
     self.titleColor = [UIColor blackColor];
     self.titleFont = [UIFont boldSystemFontOfSize:17.0f];
     
+    self.blackBackImage = [UIImage gk_imageNamed:@"btn_back_black"];
+    self.whiteBackImage = [UIImage gk_imageNamed:@"btn_back_white"];
     self.backStyle = GKNavigationBarBackStyleBlack;
     self.gk_disableFixSpace = NO;
     self.gk_navItemLeftSpace = 0;
@@ -73,6 +75,13 @@
     // 经测试发现iPhone 12和iPhone 12 Pro，默认导航栏间距是16，需要单独处理
     if ([GKNavigationBarConfigure is61InchScreenAndiPhone12]) return 16;
     return DEVICE_WIDTH > 375.0f ? 20 : 16;
+}
+
+- (NSBundle *)gk_libraryBundle {
+    NSBundle *bundle = [NSBundle bundleForClass:self.class];
+    NSURL *bundleURL = [bundle URLForResource:@"GKNavigationBar" withExtension:@"bundle"];
+    if (!bundleURL) return nil;
+    return [NSBundle bundleWithURL:bundleURL];
 }
 
 @end
@@ -349,6 +358,37 @@ static NSInteger is35InchScreen = -1;
     }
 }
 
++ (CGFloat)navBarHeight_nonFullScreen {
+    return 56;
+}
+
+static CGFloat tabBarHeight = -1;
++ (CGFloat)tabBarHeight {
+    if ([self isIPad]) {
+        if ([self isNotchedScreen]) {
+            tabBarHeight = 65;
+        }else {
+            if (GK_SYSTEM_VERSION >= 12.0) {
+                tabBarHeight = 50;
+            }else {
+                tabBarHeight = 49;
+            }
+        }
+    }else {
+        if (GK_IS_LANDSCAPE) {
+            if ([self isRegularScreen]) {
+                tabBarHeight = 49;
+            }else {
+                tabBarHeight = 32;
+            }
+        }else {
+            tabBarHeight = 49;
+        }
+        tabBarHeight += [self safeAreaInsetsForDeviceWithNotch].bottom;
+    }
+    return tabBarHeight;
+}
+
 + (UIEdgeInsets)safeAreaInsets {
     UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
     if (@available(iOS 11.0, *)) {
@@ -415,6 +455,34 @@ static NSInteger is35InchScreen = -1;
         }
     }
     return window;
+}
+
++ (UIEdgeInsets)safeAreaInsetsForDeviceWithNotch {
+    if (![self isNotchedScreen]) {
+        return UIEdgeInsetsZero;
+    }
+    
+    if ([self isIPad]) {
+        return UIEdgeInsetsMake(0, 0, 20, 0);
+    }
+    
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    switch (orientation) {
+        case UIInterfaceOrientationPortrait:
+            return UIEdgeInsetsMake(44, 0, 34, 0);
+            
+        case UIInterfaceOrientationPortraitUpsideDown:
+            return UIEdgeInsetsMake(34, 0, 44, 0);
+            
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+            return UIEdgeInsetsMake(0, 44, 21, 44);
+            
+        case UIInterfaceOrientationUnknown:
+        default:
+            return UIEdgeInsetsMake(44, 0, 34, 0);
+    }
 }
 
 @end

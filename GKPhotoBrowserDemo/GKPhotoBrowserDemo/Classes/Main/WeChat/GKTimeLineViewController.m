@@ -248,7 +248,7 @@
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandscape:(BOOL)isLandscape {
-    [GKCover hideCover];
+    [GKCover hideCoverWithoutAnimation];
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index {

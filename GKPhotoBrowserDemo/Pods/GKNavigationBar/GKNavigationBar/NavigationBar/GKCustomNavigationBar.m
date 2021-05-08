@@ -30,7 +30,7 @@
                 obj.frame = frame;
             }else {
                 CGRect frame = obj.frame;
-                frame.origin.y = self.frame.size.height - GK_NAVBAR_HEIGHT;
+                frame.origin.y = self.frame.size.height - (self.gk_nonFullScreen ? GK_NAVBAR_HEIGHT_NFS : GK_NAVBAR_HEIGHT);
                 obj.frame = frame;
             }
         }];

@@ -522,19 +522,19 @@ static Class imageManagerClass = nil;
     singleTap.numberOfTapsRequired = 1;
 	singleTap.delaysTouchesEnded = NO;
 	singleTap.delegate = self;
-    [self.view addGestureRecognizer:singleTap];
+    [self.photoScrollView addGestureRecognizer:singleTap];
     
     // 双击手势
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
 	doubleTap.delaysTouchesEnded = NO;
 	doubleTap.delegate = self;
-    [self.view addGestureRecognizer:doubleTap];
+    [self.photoScrollView addGestureRecognizer:doubleTap];
     [singleTap requireGestureRecognizerToFail:doubleTap];
     
     // 长按手势
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
-    [self.view addGestureRecognizer:longPress];
+    [self.photoScrollView addGestureRecognizer:longPress];
     
     // 拖拽手势
     [self addPanGesture:YES];
@@ -545,18 +545,18 @@ static Class imageManagerClass = nil;
         [self removePanGesture];
     }else {
         if (isFirst || self.isScreenRotateDisabled) { // 第一次进入或禁止处理屏幕旋转，直接添加手势
-            [self.view addGestureRecognizer:self.panGesture];
+            [self.photoScrollView addGestureRecognizer:self.panGesture];
         }else {
             if (self.currentOrientation == UIDeviceOrientationPortrait) {
-                [self.view addGestureRecognizer:self.panGesture];
+                [self.photoScrollView addGestureRecognizer:self.panGesture];
             }
         }
     }
 }
 
 - (void)removePanGesture {
-    if ([self.view.gestureRecognizers containsObject:self.panGesture]) {
-        [self.view removeGestureRecognizer:self.panGesture];
+    if ([self.photoScrollView.gestureRecognizers containsObject:self.panGesture]) {
+        [self.photoScrollView removeGestureRecognizer:self.panGesture];
     }
 }
 

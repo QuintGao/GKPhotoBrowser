@@ -117,6 +117,8 @@
                         [self.popTransition cancelInteractiveTransition];
                     }
                 }
+            }else if ([GKGestureConfigure isVelocityInSensitivity:velocity.x] && velocity.x > 0) {
+                popFinished = YES;
             }
             [self popScrollEnded:popFinished];
         }
@@ -253,6 +255,17 @@
     if ([[self.navigationController valueForKey:@"_isTransitioning"] boolValue]) return NO;
     
     return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    // 获取当前显示的VC
+    UIViewController *visibleVC = self.navigationController.visibleViewController;
+    
+    if ([visibleVC respondsToSelector:@selector(popGestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)]) {
+        return [visibleVC popGestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
+    }
+    
+    return NO;
 }
 
 @end

@@ -22,6 +22,7 @@ static GKCoverShowStyle _showStyle;       // 显示类型
 static GKCoverAnimStyle _animStyle;       // 动画类型
 static BOOL             _hasCover;        // 遮罩是否已经显示的判断值
 static BOOL             _isHideStatusBar; // 遮罩是否遮盖状态栏
+static CAAnimation      *_animation;      // 中间弹窗动画
 
 // 分离动画类型
 static GKCoverShowAnimStyle _showAnimStyle;
@@ -353,23 +354,33 @@ static UIColor          *_bgColor;         // 背景色
 /**
  *  中间弹窗动画
  */
-+ (void)animationAlert:(UIView*)view{
-    CAKeyframeAnimation* animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-    animation.duration = 0.5;
-    animation.delegate = _cover;
-    
-    NSMutableArray *values = [NSMutableArray array];
-    [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.1, 0.1, 1.0)]];
-    [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(1.2, 1.2, 1.0)]];
-    [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9, 0.9, 1.0)]];
-    [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 1.0)]];
-    animation.values = values;
-    
-    [view.layer addAnimation:animation forKey:nil];
++ (void)animationAlert:(UIView *)view {
+    if (_animation) {
+        if (!_animation.delegate) {
+            _animation.delegate = _cover;
+        }
+        [view.layer addAnimation:_animation forKey:nil];
+    }else {
+        CAKeyframeAnimation* animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+        animation.duration = 0.5;
+        animation.delegate = _cover;
+        
+        NSMutableArray *values = [NSMutableArray array];
+        [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.1, 0.1, 1.0)]];
+        [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(1.2, 1.2, 1.0)]];
+        [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9, 0.9, 1.0)]];
+        [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 1.0)]];
+        animation.values = values;
+        
+        [view.layer addAnimation:animation forKey:nil];
+    }
 }
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
 {
+    if (_animation) {
+        _animation = nil;
+    }
     !_showBlock ? : _showBlock();
 }
 
@@ -507,6 +518,15 @@ static UIColor          *_bgColor;         // 背景色
     }
     
     [self showView];
+}
+
++ (void)showAlertViewFrom:(UIView *)fromView contentView:(UIView *)contentView style:(GKCoverStyle)style animation:(CAAnimation *)animation notClick:(BOOL)notClick {
+    [self showAlertViewFrom:fromView contentView:contentView style:style animation:animation notClick:notClick showBlock:nil hideBlock:nil];
+}
+
++ (void)showAlertViewFrom:(UIView *)fromView contentView:(UIView *)contentView style:(GKCoverStyle)style animation:(CAAnimation *)animation notClick:(BOOL)notClick showBlock:(showBlock)showBlock hideBlock:(hideBlock)hideBlock {
+    _animation = animation;
+    [self coverFrom:fromView contentView:contentView style:style showStyle:GKCoverShowStyleCenter showAnimStyle:GKCoverShowAnimStyleCenter hideAnimStyle:GKCoverHideAnimStyleCenter notClick:notClick showBlock:showBlock hideBlock:hideBlock];
 }
 
 /**
@@ -967,6 +987,14 @@ static UIColor          *_bgColor;         // 背景色
         default:
             break;
     }
+}
+
++ (void)hideCoverWithoutAnimation {
+    if (!_cover) return;
+    if (!_hasCover) return;
+    // 这里为了防止动画未完成导致的不能及时判断cover是否存在，实际上cover再这里并没有销毁
+    _hasCover = NO;
+    [self remove];
 }
 
 #pragma mark - Private Method

@@ -216,6 +216,30 @@ static char kAssociatedObjectKey_backImage;
     return objc_getAssociatedObject(self, &kAssociatedObjectKey_backImage);
 }
 
+static char kAssociatedObjectKey_blackBackImage;
+- (void)setGk_blackBackImage:(UIImage *)gk_blackBackImage {
+    objc_setAssociatedObject(self, &kAssociatedObjectKey_blackBackImage, gk_blackBackImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self setBackItemImage:gk_blackBackImage];
+}
+
+- (UIImage *)gk_blackBackImage {
+    id object = objc_getAssociatedObject(self, &kAssociatedObjectKey_blackBackImage);
+    return object ?: GKConfigure.blackBackImage;
+}
+
+static char kAssociatedObjectKey_whiteBackImage;
+- (void)setGk_whiteBackImage:(UIImage *)gk_whiteBackImage {
+    objc_setAssociatedObject(self, &kAssociatedObjectKey_whiteBackImage, gk_whiteBackImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self setBackItemImage:gk_whiteBackImage];
+}
+
+- (UIImage *)gk_whiteBackImage {
+    id object = objc_getAssociatedObject(self, &kAssociatedObjectKey_whiteBackImage);
+    return object ?: GKConfigure.whiteBackImage;
+}
+
 static char kAssociatedObjectKey_backStyle;
 - (void)setGk_backStyle:(GKNavigationBarBackStyle)gk_backStyle {
     objc_setAssociatedObject(self, &kAssociatedObjectKey_backStyle, @(gk_backStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -511,22 +535,45 @@ static char kAssociatedObjectKey_navItemRightSpace;
     if (self.gk_backStyle == GKNavigationBarBackStyleNone) {
         self.gk_backStyle = GKConfigure.backStyle;
     }
+    
+    self.gk_navTitle = nil;
 }
 
 - (void)setupNavBarFrame {
+    UIViewController *parentVC = self;
+    while (parentVC.parentViewController) {
+        parentVC = parentVC.parentViewController;
+    }
+    
+    CGFloat viewW = parentVC.view.frame.size.width;
+    CGFloat viewH = parentVC.view.frame.size.height;
+    if (viewW == 0 || viewH == 0) return;
+    
+    BOOL isNonFullScreen = self.presentingViewController && viewH < GK_SCREEN_HEIGHT;
+    
     CGFloat navBarH = 0.0f;
     if (GK_IS_iPad) { // iPad
-        navBarH = self.gk_statusBarHidden ? GK_NAVBAR_HEIGHT : GK_STATUSBAR_NAVBAR_HEIGHT;
-    }else if (GK_IS_LANDSCAPE) { // 横屏不显示状态栏
-        navBarH = GK_NAVBAR_HEIGHT;
-    }else {
-        if (GK_NOTCHED_SCREEN) { // 刘海屏手机
-            navBarH = GK_SAFEAREA_TOP + GK_NAVBAR_HEIGHT;
+        if (isNonFullScreen) {
+            navBarH = GK_NAVBAR_HEIGHT_NFS;
+            self.gk_navigationBar.gk_nonFullScreen = YES;
         }else {
             navBarH = self.gk_statusBarHidden ? GK_NAVBAR_HEIGHT : GK_STATUSBAR_NAVBAR_HEIGHT;
         }
+    }else if (GK_IS_LANDSCAPE) { // 横屏不显示状态栏，没有非全屏模式
+        navBarH = GK_NAVBAR_HEIGHT;
+    }else {
+        if (isNonFullScreen) {
+            navBarH = GK_NAVBAR_HEIGHT_NFS;
+            self.gk_navigationBar.gk_nonFullScreen = YES;
+        }else {
+            if (GK_NOTCHED_SCREEN) { // 刘海屏手机
+                navBarH = GK_SAFEAREA_TOP + GK_NAVBAR_HEIGHT;
+            }else {
+                navBarH = self.gk_statusBarHidden ? GK_NAVBAR_HEIGHT : GK_STATUSBAR_NAVBAR_HEIGHT;
+            }
+        }
     }
-    self.gk_navigationBar.frame = CGRectMake(0, 0, GK_SCREEN_WIDTH, navBarH);
+    self.gk_navigationBar.frame = CGRectMake(0, 0, viewW, navBarH);
     [self.gk_navigationBar layoutSubviews];
 }
 
@@ -559,8 +606,7 @@ static char kAssociatedObjectKey_navItemRightSpace;
     
     if (!image) {
         if (self.gk_backStyle != GKNavigationBarBackStyleNone) {
-            NSString *imageName = self.gk_backStyle == GKNavigationBarBackStyleBlack ? @"btn_back_black" : @"btn_back_white";
-            image = [UIImage gk_imageNamed:imageName];
+            image = (self.gk_backStyle == GKNavigationBarBackStyleBlack) ? self.gk_blackBackImage : self.gk_whiteBackImage;
         }
     }
     

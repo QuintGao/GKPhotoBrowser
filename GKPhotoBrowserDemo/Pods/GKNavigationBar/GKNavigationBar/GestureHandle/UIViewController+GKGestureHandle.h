@@ -63,6 +63,10 @@ UIKIT_EXTERN NSString *const GKViewControllerPropertyChangedNotification;
 /// 点击返回拦截，包括系统返回按钮点击和自定义返回按钮点击
 - (BOOL)navigationShouldPopOnClick;
 
+@optional
+/// 返回手势冲突处理，当返回手势与其他手势冲突如：WKWebView中的手势，可实现以下方法返回YES，让返回手势与其他手势共存来解决手势冲突
+- (BOOL)popGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
+
 @end
 
 @interface UIViewController (GKGestureHandle)<GKGesturePopHandlerProtocol>

@@ -180,7 +180,7 @@
                 browser.failStyle = GKPhotoBrowserFailStyleCustom;
             }
         }
-        browser.loadStyle = GKLoadingStyleDeterminate;
+        browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate;
 //        browser.failStyle       = GKPhotoBrowserFailStyleOnlyImage;
         browser.failureText     = @"图片加载失败了，555";
         browser.failureImage    = [UIImage imageNamed:@"error"];
