@@ -61,24 +61,17 @@
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     
     NSString *url = navigationAction.request.URL.absoluteString;
-    
-    if ([url hasPrefix:@"imgurl:"]) {
+    if ([url containsString:@"img-index:"]) {
+        // img-index:3
+        NSInteger index = [[url componentsSeparatedByString:@":"].lastObject integerValue];
         
-        NSString *imgUrl = [url substringFromIndex:7];
-        
-        NSLog(@"%@", imgUrl);
-        
-        NSInteger index = [self.imgUrls indexOfObject:imgUrl];
-        
-        if (index >=0 && index < self.imgUrls.count) {
+        NSLog(@"---%zd", index);
+        if (index >= 0 && index < self.imgUrls.count) {
             [self showImageWithArray:self.imgUrls index:index];
         }
-        
         decisionHandler(WKNavigationActionPolicyCancel);
-        
         return;
     }
-    
     decisionHandler(WKNavigationActionPolicyAllow);
 }
 
@@ -254,15 +247,15 @@
 - (NSString *)getImgClickJSString {
     
     NSMutableString *jsString = [NSMutableString new];
-    
     // 给所有图片加入点击事件
     [jsString appendString:@"<script>"];
     [jsString appendString:@"function addImgClick() {\
      var imgs = document.getElementsByTagName('img');\
      for (var i = 0; i < imgs.length; i++) {\
+     imgs[i].index = i;\
      var img = imgs[i];\
      img.onclick = function() {\
-     window.location.href = 'imgurl:' + this.src;\
+     window.location.href = 'img-index:' + this.index;\
      }\
      }\
      }"];
@@ -270,7 +263,6 @@
     
     return jsString;
 }
-
 
 - (CGSize)sizeWithText:(NSString *)text font:(UIFont *)font maxW:(CGFloat)maxW {
     CGSize size = CGSizeMake(maxW, CGFLOAT_MAX);
