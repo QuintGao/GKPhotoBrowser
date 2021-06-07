@@ -109,6 +109,7 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign) BOOL isHideSourceView;
 
 /// 滑动切换图片时，是否恢复上（下）一张图片的缩放程度，默认是NO
+/// 如果滑动超过一张，则恢复原状
 @property (nonatomic, assign) BOOL isResumePhotoZoom;
 
 /// 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕

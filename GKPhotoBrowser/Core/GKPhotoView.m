@@ -368,9 +368,12 @@
         self.loadingView.bounds = self.scrollView.frame;
         self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
     }
+
     
     // frame调整完毕，重新设置缩放
     if (self.photo.isZooming) {
+        self.scrollView.maximumZoomScale = 1.0f;
+        self.scrollView.zoomScale = 1.0f;
         [self zoomToRect:self.photo.zoomRect animated:NO];
     }
     
@@ -386,12 +389,20 @@
 }
 
 - (void)zoomToRect:(CGRect)rect animated:(BOOL)animated {
-    [self.scrollView zoomToRect:rect animated:YES];
+    [self.scrollView zoomToRect:rect animated:animated];
 }
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.photo.offset = scrollView.contentOffset;
+    // 恢复位置
+    if (self.photo.isZooming && scrollView.zoomScale == 1.0f) {
+        scrollView.contentOffset = self.photo.offset;
+    }
+    
+    // 只在上下滑动时记录位置
+    if (scrollView.zoomScale == 1.0f) {
+        self.photo.offset = scrollView.contentOffset;
+    }
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
@@ -404,7 +415,6 @@
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     !self.zoomEnded ? : self.zoomEnded(self, scrollView.zoomScale);
-    
     [self setScrollMaxZoomScale:self.realZoomScale];
 }
 
