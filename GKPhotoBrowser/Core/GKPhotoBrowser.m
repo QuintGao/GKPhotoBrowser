@@ -237,6 +237,10 @@ static Class imageManagerClass = nil;
     }else {
         self.countLabel.hidden = self.photos.count == 1;
     }
+    self.pageControl.numberOfPages = self.photos.count;
+    if (self.pageControl.hidesForSinglePage) {
+        self.pageControl.hidden = self.photos.count <= 1;
+    }
     CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
     self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
     [self updateViewIndex];
