@@ -129,6 +129,9 @@
         browser.isAdaptiveSafeArea = YES;
         browser.hidesCountLabel = YES;
         browser.pageControl.hidden = NO;
+//        browser.isStatusBarShow = YES;
+//        browser.bgColor = UIColor.whiteColor;
+//        browser.statusBarStyle = UIStatusBarStyleDefault;
         
         // 当你的APP支持屏幕旋转时此属性必须设置为YES
         if (kIsiPad) { // ipad 默认支持屏幕旋转，这里设置为YES

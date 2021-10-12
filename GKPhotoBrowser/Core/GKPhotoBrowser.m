@@ -47,6 +47,9 @@ static Class imageManagerClass = nil;
 /** 状态栏是否显示 */
 @property (nonatomic, assign) BOOL isStatusBarShowing;
 
+/// 原始状态栏
+@property (nonatomic, assign) UIStatusBarStyle originStatusBarStyle;
+
 /** 正在滑动缩放隐藏 */
 @property (nonatomic, assign) BOOL isZoomScale;
 
@@ -88,6 +91,8 @@ static Class imageManagerClass = nil;
         self.currentIndex = currentIndex;
         
         // 初始化
+        self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
+        
         self.isStatusBarShow         = NO;
         self.isHideSourceView        = YES;
         self.statusBarStyle          = UIStatusBarStyleLightContent;
@@ -268,9 +273,34 @@ static Class imageManagerClass = nil;
 - (void)setIsStatusBarShow:(BOOL)isStatusBarShow {
     _isStatusBarShow = isStatusBarShow;
     
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        [self prefersStatusBarHidden];
-        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    BOOL statusBarAppearance = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
+    if (statusBarAppearance) {
+        if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+            [self prefersStatusBarHidden];
+            [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+        }
+    }else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[UIApplication sharedApplication] setStatusBarHidden:!isStatusBarShow];
+#pragma clang diagnostic pop
+    }
+}
+
+- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle {
+    _statusBarStyle = statusBarStyle;
+    
+    BOOL statusBarAppearance = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
+    if (statusBarAppearance) {
+        if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+            [self prefersStatusBarHidden];
+            [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+        }
+    }else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[UIApplication sharedApplication] setStatusBarStyle:statusBarStyle];
+#pragma clang diagnostic pop
     }
 }
 
@@ -586,6 +616,13 @@ static Class imageManagerClass = nil;
     
     // 移除屏幕旋转监听
     [self delDeviceOrientationObserver];
+    BOOL statusBarAppearance = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
+    if (!statusBarAppearance) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[UIApplication sharedApplication] setStatusBarStyle:self.originStatusBarStyle];
+#pragma clang diagnostic pop
+    }
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 

@@ -40,6 +40,14 @@
     
     [self.window makeKeyAndVisible];
     
+    BOOL statusBarAppearance = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
+    if (!statusBarAppearance) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+#pragma clang diagnostic pop
+    }
     return YES;
 }
 
