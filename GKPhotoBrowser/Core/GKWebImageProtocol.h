@@ -20,11 +20,13 @@ typedef void (^GKWebImageCompletionBlock)(UIImage * _Nullable image, NSURL * _Nu
 /// 为imageView设置图片
 /// @param imageView imageView
 /// @param url 图片url
+/// @param auth 图片的权限
 /// @param placeholderImage 缺省图片
 /// @param progressBlock 加载进度
 /// @param completionBlock 完成进度
 - (void)setImageForImageView:(nullable UIImageView *)imageView
                          url:(nullable NSURL *)url
+                   authToken:(nullable NSDictionary *)auth
             placeholderImage:(nullable UIImage *)placeholderImage
                     progress:(nullable GKWebImageProgressBlock)progressBlock
                   completion:(nullable GKWebImageCompletionBlock)completionBlock;
