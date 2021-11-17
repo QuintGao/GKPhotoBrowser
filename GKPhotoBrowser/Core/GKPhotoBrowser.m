@@ -437,7 +437,7 @@ static Class imageManagerClass = nil;
             pointY = self.contentView.bounds.size.height - 10 - (self.isAdaptiveSafeArea ? 0 : kSafeBottomSpace);
         }
         self.pageControl.center = CGPointMake(centerX, pointY);
-        self.saveBtn.center = CGPointMake(self.contentView.bounds.size.width - 50, pointY);
+        self.saveBtn.center = CGPointMake(self.contentView.bounds.size.width - 30, pointY - 10);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {
@@ -1416,14 +1416,8 @@ static Class imageManagerClass = nil;
 - (UIButton *)saveBtn {
     if (!_saveBtn) {
         UIButton *saveBtn = [UIButton new];
-        saveBtn.bounds = CGRectMake(0, 0, 50, 30);
-        [saveBtn setTitle:@"保存" forState:UIControlStateNormal];
-        [saveBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-        saveBtn.titleLabel.font = [UIFont systemFontOfSize:15.0f];
-        saveBtn.layer.cornerRadius = 5;
-        saveBtn.layer.masksToBounds = YES;
-        saveBtn.layer.borderColor = UIColor.whiteColor.CGColor;
-        saveBtn.layer.borderWidth = 1;
+        saveBtn.bounds = CGRectMake(0, 0, 20, 20);
+        [saveBtn setBackgroundImage:GKPhotoBrowserImage(@"icon_download") forState:UIControlStateNormal];
         saveBtn.hidden = YES;
         [saveBtn addTarget:self action:@selector(saveBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         _saveBtn = saveBtn;
