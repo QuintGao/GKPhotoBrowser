@@ -77,6 +77,9 @@ static Class imageManagerClass = nil;
 /// 20200312 用于防止多次addObserver，添加监听UIDeviceOrientationDidChangeNotification通知的flag
 @property(nonatomic, assign) BOOL isOrientationNotiObserverAdded;
 
+/// 状态栏处理
+@property (nonatomic, assign) BOOL statusBarAppearance;
+
 @end
 
 @implementation GKPhotoBrowser
@@ -112,6 +115,12 @@ static Class imageManagerClass = nil;
         if (imageManagerClass) {
             self.imageProtocol = [imageManagerClass new];
         }
+        
+        // 状态栏外观处理
+        NSDictionary *infoDict = [NSBundle mainBundle].infoDictionary;
+        BOOL hasKey = [infoDict.allKeys containsObject:@"UIViewControllerBasedStatusBarAppearance"];
+        BOOL appearance = [[infoDict objectForKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
+        self.statusBarAppearance = (hasKey && appearance) || !hasKey;
     }
     return self;
 }
@@ -273,8 +282,7 @@ static Class imageManagerClass = nil;
 - (void)setIsStatusBarShow:(BOOL)isStatusBarShow {
     _isStatusBarShow = isStatusBarShow;
     
-    BOOL statusBarAppearance = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
-    if (statusBarAppearance) {
+    if (self.statusBarAppearance) {
         if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
             [self prefersStatusBarHidden];
             [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
@@ -290,8 +298,7 @@ static Class imageManagerClass = nil;
 - (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle {
     _statusBarStyle = statusBarStyle;
     
-    BOOL statusBarAppearance = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
-    if (statusBarAppearance) {
+    if (self.statusBarAppearance) {
         if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
             [self prefersStatusBarHidden];
             [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
@@ -616,8 +623,7 @@ static Class imageManagerClass = nil;
     
     // 移除屏幕旋转监听
     [self delDeviceOrientationObserver];
-    BOOL statusBarAppearance = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
-    if (!statusBarAppearance) {
+    if (!self.statusBarAppearance) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         [[UIApplication sharedApplication] setStatusBarStyle:self.originStatusBarStyle];
