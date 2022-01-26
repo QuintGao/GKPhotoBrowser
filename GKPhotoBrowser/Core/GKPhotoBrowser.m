@@ -197,7 +197,9 @@ static Class imageManagerClass = nil;
 }
 
 - (void)setupUI {
-    [self.navigationController setNavigationBarHidden:YES];
+    if (!self.navigationController.navigationBarHidden && !self.navigationController.navigationBar.hidden) {
+        [self.navigationController setNavigationBarHidden:YES];
+    }
     
     self.view.backgroundColor = self.bgColor ? : [UIColor blackColor];
     
