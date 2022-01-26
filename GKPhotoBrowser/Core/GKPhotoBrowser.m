@@ -441,7 +441,7 @@ static Class imageManagerClass = nil;
         if (self.isLandscape) {
             pointY = self.contentView.bounds.size.height - 20;
         }else {
-            pointY = self.contentView.bounds.size.height - 10 - (self.isAdaptiveSafeArea ? 0 : kSafeBottomSpace);
+            pointY = self.contentView.bounds.size.height - 20 - (self.isAdaptiveSafeArea ? 0 : kSafeBottomSpace);
         }
         self.pageControl.center = CGPointMake(centerX, pointY);
         self.saveBtn.center = CGPointMake(self.contentView.bounds.size.width - 50, pointY);

@@ -23,6 +23,8 @@
 #import "TZPhotoPreviewCell.h"
 #import "TZPhotoPreviewController.h"
 #import "TZProgressView.h"
+#import "TZVideoCropController.h"
+#import "TZVideoEditedPreviewController.h"
 #import "TZVideoPlayerController.h"
 #import "UIView+TZLayout.h"
 

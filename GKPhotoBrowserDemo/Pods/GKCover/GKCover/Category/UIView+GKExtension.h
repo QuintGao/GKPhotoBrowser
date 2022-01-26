@@ -2,8 +2,8 @@
 //  UIView+GKExtension.h
 //  GKCoverDemo
 //
-//  Created by 高坤 on 16/8/24.
-//  Copyright © 2016年 高坤. All rights reserved.
+//  Created by QuintGao on 16/8/24.
+//  Copyright © 2016年 QuintGao. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

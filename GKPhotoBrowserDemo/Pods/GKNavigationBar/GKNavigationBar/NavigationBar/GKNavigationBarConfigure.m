@@ -11,13 +11,14 @@
 #import <sys/utsname.h>
 
 /// 设备宽度，跟横竖屏无关
-#define DEVICE_WIDTH MIN([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
+#define GK_DEVICE_WIDTH MIN([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
 
 /// 设备高度，跟横竖屏无关
-#define DEVICE_HEIGHT MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
+#define GK_DEVICE_HEIGHT MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
 
 @interface GKNavigationBarConfigure()
 
+@property (nonatomic, assign) BOOL    disableFixSpace;
 @property (nonatomic, assign) CGFloat navItemLeftSpace;
 @property (nonatomic, assign) CGFloat navItemRightSpace;
 
@@ -44,6 +45,7 @@
     self.blackBackImage = [UIImage gk_imageNamed:@"btn_back_black"];
     self.whiteBackImage = [UIImage gk_imageNamed:@"btn_back_white"];
     self.backStyle = GKNavigationBarBackStyleBlack;
+    self.disableFixSpace = NO;
     self.gk_disableFixSpace = NO;
     self.gk_navItemLeftSpace = 0;
     self.gk_navItemRightSpace = 0;
@@ -59,6 +61,7 @@
     
     !block ? : block(self);
     
+    self.disableFixSpace   = self.gk_disableFixSpace;
     self.navItemLeftSpace  = self.gk_navItemLeftSpace;
     self.navItemRightSpace = self.gk_navItemRightSpace;
 }
@@ -68,13 +71,13 @@
 }
 
 - (UIViewController *)visibleViewController {
-    return [[GKNavigationBarConfigure keyWindow].rootViewController gk_visibleViewControllerIfExist];
-}
+    return [[GKNavigationBarConfigure keyWindow].rootViewController gk_findCurrentViewControllerIsRoot:YES];
+}  
 
 - (CGFloat)gk_fixedSpace {
     // 经测试发现iPhone 12和iPhone 12 Pro，默认导航栏间距是16，需要单独处理
     if ([GKNavigationBarConfigure is61InchScreenAndiPhone12]) return 16;
-    return DEVICE_WIDTH > 375.0f ? 20 : 16;
+    return GK_DEVICE_WIDTH > 375.0f ? 20 : 16;
 }
 
 - (NSBundle *)gk_libraryBundle {
@@ -223,7 +226,7 @@ static NSInteger isNotchedScreen = -1;
 static NSInteger is67InchScreen = -1;
 + (BOOL)is67InchScreen {
     if (is67InchScreen < 0) {
-        is67InchScreen = (DEVICE_WIDTH == self.screenSizeFor67Inch.width && DEVICE_HEIGHT == self.screenSizeFor67Inch.height) ? 1 : 0;
+        is67InchScreen = (GK_DEVICE_WIDTH == self.screenSizeFor67Inch.width && GK_DEVICE_HEIGHT == self.screenSizeFor67Inch.height) ? 1 : 0;
     }
     return is67InchScreen > 0;
 }
@@ -233,7 +236,7 @@ static NSInteger is65InchScreen = -1;
     if (is65InchScreen < 0) {
         // Since iPhone XS Max、iPhone 11 Pro Max and iPhone XR share the same resolution, we have to distinguish them using the model identifiers
         // 由于 iPhone XS Max、iPhone 11 Pro Max 这两款机型和 iPhone XR 的屏幕宽高是一致的，我们通过机器 Identifier 加以区别
-        is65InchScreen = (DEVICE_WIDTH == self.screenSizeFor65Inch.width && DEVICE_HEIGHT == self.screenSizeFor65Inch.height && ([[self deviceModel] isEqualToString:@"iPhone11,4"] || [[self deviceModel] isEqualToString:@"iPhone11,6"] || [[self deviceModel] isEqualToString:@"iPhone12,5"])) ? 1 : 0;
+        is65InchScreen = (GK_DEVICE_WIDTH == self.screenSizeFor65Inch.width && GK_DEVICE_HEIGHT == self.screenSizeFor65Inch.height && ([[self deviceModel] isEqualToString:@"iPhone11,4"] || [[self deviceModel] isEqualToString:@"iPhone11,6"] || [[self deviceModel] isEqualToString:@"iPhone12,5"])) ? 1 : 0;
     }
     return is65InchScreen > 0;
 }
@@ -241,7 +244,7 @@ static NSInteger is65InchScreen = -1;
 static NSInteger is61InchScreenAndiPhone12 = -1;
 + (BOOL)is61InchScreenAndiPhone12 {
     if (is61InchScreenAndiPhone12 < 0) {
-        is61InchScreenAndiPhone12 = (DEVICE_WIDTH == self.screenSizeFor61InchAndiPhone12.width && DEVICE_HEIGHT == self.screenSizeFor61InchAndiPhone12.height && ([[self deviceModel] isEqualToString:@"iPhone13,2"] || [[self deviceModel] isEqualToString:@"iPhone13,3"])) ? 1 : 0;
+        is61InchScreenAndiPhone12 = (GK_DEVICE_WIDTH == self.screenSizeFor61InchAndiPhone12.width && GK_DEVICE_HEIGHT == self.screenSizeFor61InchAndiPhone12.height && ([[self deviceModel] isEqualToString:@"iPhone13,2"] || [[self deviceModel] isEqualToString:@"iPhone13,3"])) ? 1 : 0;
     }
     return is61InchScreenAndiPhone12 > 0;
 }
@@ -249,7 +252,7 @@ static NSInteger is61InchScreenAndiPhone12 = -1;
 static NSInteger is61InchScreen = -1;
 + (BOOL)is61InchScreen {
     if (is61InchScreen < 0) {
-        is61InchScreen = (DEVICE_WIDTH == self.screenSizeFor61Inch.width && DEVICE_HEIGHT == self.screenSizeFor61Inch.height && ([[self deviceModel] isEqualToString:@"iPhone11,8"] || [[self deviceModel] isEqualToString:@"iPhone12,1"])) ? 1 : 0;
+        is61InchScreen = (GK_DEVICE_WIDTH == self.screenSizeFor61Inch.width && GK_DEVICE_HEIGHT == self.screenSizeFor61Inch.height && ([[self deviceModel] isEqualToString:@"iPhone11,8"] || [[self deviceModel] isEqualToString:@"iPhone12,1"])) ? 1 : 0;
     }
     return is61InchScreen > 0;
 }
@@ -259,7 +262,7 @@ static NSInteger is58InchScreen = -1;
     if (is58InchScreen < 0) {
         // Both iPhone XS and iPhone X share the same actual screen sizes, so no need to compare identifiers
         // iPhone XS 和 iPhone X 的物理尺寸是一致的，因此无需比较机器 Identifier
-        is58InchScreen = (DEVICE_WIDTH == self.screenSizeFor58Inch.width && DEVICE_HEIGHT == self.screenSizeFor58Inch.height) ? 1 : 0;
+        is58InchScreen = (GK_DEVICE_WIDTH == self.screenSizeFor58Inch.width && GK_DEVICE_HEIGHT == self.screenSizeFor58Inch.height) ? 1 : 0;
     }
     return is58InchScreen > 0;
 }
@@ -267,7 +270,7 @@ static NSInteger is58InchScreen = -1;
 static NSInteger is55InchScreen = -1;
 + (BOOL)is55InchScreen {
     if (is55InchScreen < 0) {
-        is55InchScreen = (DEVICE_WIDTH == self.screenSizeFor55Inch.width && DEVICE_HEIGHT == self.screenSizeFor55Inch.height) ? 1 : 0;
+        is55InchScreen = (GK_DEVICE_WIDTH == self.screenSizeFor55Inch.width && GK_DEVICE_HEIGHT == self.screenSizeFor55Inch.height) ? 1 : 0;
     }
     return is55InchScreen > 0;
 }
@@ -278,7 +281,7 @@ static NSInteger is54InchScreen = -1;
 + (BOOL)is54InchScreen {
     if (is54InchScreen < 0) {
         // iPhone XS 和 iPhone X 的物理尺寸是一致的，因此无需比较机器 Identifier
-        is54InchScreen = (DEVICE_WIDTH == self.screenSizeFor54Inch.width && DEVICE_HEIGHT == self.screenSizeFor54Inch.height) ? 1 : 0;
+        is54InchScreen = (GK_DEVICE_WIDTH == self.screenSizeFor54Inch.width && GK_DEVICE_HEIGHT == self.screenSizeFor54Inch.height) ? 1 : 0;
     }
     return is54InchScreen > 0;
 }
@@ -286,7 +289,7 @@ static NSInteger is54InchScreen = -1;
 static NSInteger is47InchScreen = -1;
 + (BOOL)is47InchScreen {
     if (is47InchScreen < 0) {
-        is47InchScreen = (DEVICE_WIDTH == self.screenSizeFor47Inch.width && DEVICE_HEIGHT == self.screenSizeFor47Inch.height) ? 1 : 0;
+        is47InchScreen = (GK_DEVICE_WIDTH == self.screenSizeFor47Inch.width && GK_DEVICE_HEIGHT == self.screenSizeFor47Inch.height) ? 1 : 0;
     }
     return is47InchScreen > 0;
 }
@@ -294,7 +297,7 @@ static NSInteger is47InchScreen = -1;
 static NSInteger is40InchScreen = -1;
 + (BOOL)is40InchScreen {
     if (is40InchScreen < 0) {
-        is40InchScreen = (DEVICE_WIDTH == self.screenSizeFor40Inch.width && DEVICE_HEIGHT == self.screenSizeFor40Inch.height) ? 1 : 0;
+        is40InchScreen = (GK_DEVICE_WIDTH == self.screenSizeFor40Inch.width && GK_DEVICE_HEIGHT == self.screenSizeFor40Inch.height) ? 1 : 0;
     }
     return is40InchScreen > 0;
 }
@@ -302,7 +305,7 @@ static NSInteger is40InchScreen = -1;
 static NSInteger is35InchScreen = -1;
 + (BOOL)is35InchScreen {
     if (is35InchScreen < 0) {
-        is35InchScreen = (DEVICE_WIDTH == self.screenSizeFor35Inch.width && DEVICE_HEIGHT == self.screenSizeFor35Inch.height) ? 1 : 0;
+        is35InchScreen = (GK_DEVICE_WIDTH == self.screenSizeFor35Inch.width && GK_DEVICE_HEIGHT == self.screenSizeFor35Inch.height) ? 1 : 0;
     }
     return is35InchScreen > 0;
 }

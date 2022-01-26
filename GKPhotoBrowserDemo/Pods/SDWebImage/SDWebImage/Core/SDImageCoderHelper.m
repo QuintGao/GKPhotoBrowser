@@ -57,12 +57,12 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         durations[i] = frames[i].duration * 1000;
     }
     NSUInteger const gcd = gcdArray(frameCount, durations);
-    __block NSUInteger totalDuration = 0;
+    __block NSTimeInterval totalDuration = 0;
     NSMutableArray<UIImage *> *animatedImages = [NSMutableArray arrayWithCapacity:frameCount];
     [frames enumerateObjectsUsingBlock:^(SDImageFrame * _Nonnull frame, NSUInteger idx, BOOL * _Nonnull stop) {
         UIImage *image = frame.image;
         NSUInteger duration = frame.duration * 1000;
-        totalDuration += duration;
+        totalDuration += frame.duration;
         NSUInteger repeatCount;
         if (gcd) {
             repeatCount = duration / gcd;
@@ -74,7 +74,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         }
     }];
     
-    animatedImage = [UIImage animatedImageWithImages:animatedImages duration:totalDuration / 1000.f];
+    animatedImage = [UIImage animatedImageWithImages:animatedImages duration:totalDuration];
     
 #else
     
@@ -135,7 +135,6 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         avgDuration = 0.1; // if it's a animated image but no duration, set it to default 100ms (this do not have that 10ms limit like GIF or WebP to allow custom coder provide the limit)
     }
     
-    __block NSUInteger index = 0;
     __block NSUInteger repeatCount = 1;
     __block UIImage *previousImage = animatedImages.firstObject;
     [animatedImages enumerateObjectsUsingBlock:^(UIImage * _Nonnull image, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -149,15 +148,12 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
             SDImageFrame *frame = [SDImageFrame frameWithImage:previousImage duration:avgDuration * repeatCount];
             [frames addObject:frame];
             repeatCount = 1;
-            index++;
         }
         previousImage = image;
-        // last one
-        if (idx == frameCount - 1) {
-            SDImageFrame *frame = [SDImageFrame frameWithImage:previousImage duration:avgDuration * repeatCount];
-            [frames addObject:frame];
-        }
     }];
+    // last one
+    SDImageFrame *frame = [SDImageFrame frameWithImage:previousImage duration:avgDuration * repeatCount];
+    [frames addObject:frame];
     
 #else
     
