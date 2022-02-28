@@ -640,7 +640,7 @@ static Class imageManagerClass = nil;
     }
 }
 
-- (void)setupCoverViewsWithAlpha:(CGFloat )alpha {
+- (void)setupCoverViewsWithAlpha:(CGFloat)alpha {
     for (UIView *view in self.coverViews) {
         view.alpha = alpha;
     }
@@ -916,7 +916,7 @@ static Class imageManagerClass = nil;
         self.view.backgroundColor = [UIColor clearColor];
     }completion:^(BOOL finished) {
         [self dismissAnimated:NO];
-        
+
         [self panEndedWillDisappear:YES];
     }];
 }
