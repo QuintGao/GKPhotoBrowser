@@ -640,6 +640,12 @@ static Class imageManagerClass = nil;
     }
 }
 
+- (void)setupCoverViewsWithAlpha:(CGFloat )alpha {
+    for (UIView *view in self.coverViews) {
+        view.alpha = alpha;
+    }
+}
+
 #pragma mark - UIGestureRecognizerDelegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
 	if ([touch.view isKindOfClass:UIButton.class]) {
@@ -756,6 +762,8 @@ static Class imageManagerClass = nil;
             photoView.imageView.frame = CGRectMake(x, y, width, height);
 
             self.view.backgroundColor = self.bgColor ? [self.bgColor colorWithAlphaComponent:percent] : [[UIColor blackColor] colorWithAlphaComponent:percent];
+            
+            [self setupCoverViewsWithAlpha:percent];
         }
             break;
         case UIGestureRecognizerStateEnded:
@@ -790,6 +798,8 @@ static Class imageManagerClass = nil;
             double percent = 1 - fabs(point.y) / self.view.frame.size.height * 0.5;
             
             self.view.backgroundColor = self.bgColor ? [self.bgColor colorWithAlphaComponent:percent] : [[UIColor blackColor] colorWithAlphaComponent:percent];
+            
+            [self setupCoverViewsWithAlpha:percent];
         }
             break;
         case UIGestureRecognizerStateEnded:
@@ -901,6 +911,7 @@ static Class imageManagerClass = nil;
     sourceRect.origin.y += photoView.scrollView.contentOffset.y;
     
     [UIView animateWithDuration:kAnimationDuration animations:^{
+        [self setupCoverViewsWithAlpha:0];
         photoView.imageView.frame = sourceRect;
         self.view.backgroundColor = [UIColor clearColor];
     }completion:^(BOOL finished) {
