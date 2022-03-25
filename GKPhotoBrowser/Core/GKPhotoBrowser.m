@@ -102,6 +102,7 @@ static Class imageManagerClass = nil;
         self.isFullWidthForLandScape = YES;
         self.maxZoomScale            = kMaxZoomScale;
         self.doubleZoomScale         = self.maxZoomScale;
+        self.animDuration            = kAnimationDuration;
         // 20200312
         self.isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared = [UIDevice currentDevice].isGeneratingDeviceOrientationNotifications;
         
@@ -338,7 +339,7 @@ static Class imageManagerClass = nil;
     
     self.view.alpha = 0;
     
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:self.animDuration animations:^{
         self.view.alpha = 1.0;
     }completion:^(BOOL finished) {
         self.isShow = YES;
@@ -391,7 +392,7 @@ static Class imageManagerClass = nil;
     
     photoView.imageView.frame = sourceRect;
     
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:self.animDuration animations:^{
         photoView.imageView.frame = endRect;
         self.view.backgroundColor = self.bgColor ? : [UIColor blackColor];
     }completion:^(BOOL finished) {
@@ -607,7 +608,7 @@ static Class imageManagerClass = nil;
     GKPhoto *photo = [self currentPhoto];
     
     if (animated) {
-        [UIView animateWithDuration:kAnimationDuration animations:^{
+        [UIView animateWithDuration:self.animDuration animations:^{
             photo.sourceImageView.alpha = 1.0;
         }];
     }else {
@@ -839,7 +840,7 @@ static Class imageManagerClass = nil;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     
     if (!self.isFollowSystemRotation && UIDeviceOrientationIsLandscape(orientation)) {
-        [UIView animateWithDuration:kAnimationDuration animations:^{
+        [UIView animateWithDuration:self.animDuration animations:^{
             // 旋转view
             self.contentView.transform = CGAffineTransformIdentity;
             
@@ -871,7 +872,7 @@ static Class imageManagerClass = nil;
     
     if (CGRectEqualToRect(sourceRect, CGRectZero)) {
         if (photo.sourceImageView == nil) {
-            [UIView animateWithDuration:kAnimationDuration animations:^{
+            [UIView animateWithDuration:self.animDuration animations:^{
                 self.view.alpha = 0;
             }completion:^(BOOL finished) {
                 [self dismissAnimated:NO];
@@ -910,7 +911,7 @@ static Class imageManagerClass = nil;
     sourceRect.origin.x -= photoView.scrollView.contentOffset.x;
     sourceRect.origin.y += photoView.scrollView.contentOffset.y;
     
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:self.animDuration animations:^{
         [self setupCoverViewsWithAlpha:0];
         photoView.imageView.frame = sourceRect;
         self.view.backgroundColor = [UIColor clearColor];
@@ -931,7 +932,7 @@ static Class imageManagerClass = nil;
         toTranslationY = self.view.frame.size.height;
     }
     
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:self.animDuration animations:^{
         photoView.imageView.transform = CGAffineTransformMakeTranslation(0, toTranslationY);
         self.view.backgroundColor = [UIColor clearColor];
     }completion:^(BOOL finished) {
@@ -946,7 +947,7 @@ static Class imageManagerClass = nil;
     GKPhoto *photo = self.photos[self.currentIndex];
     photo.sourceImageView.alpha = 1.0;
     
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:self.animDuration animations:^{
         if (self.hideStyle == GKPhotoBrowserHideStyleZoomScale) {
             photoView.imageView.frame = self.startFrame;
         }else {
@@ -1062,7 +1063,7 @@ static Class imageManagerClass = nil;
         // 横屏移除pan手势
         [self removePanGesture];
         
-        NSTimeInterval duration = UIDeviceOrientationIsLandscape(self.originalOrientation) ? 2 * kAnimationDuration : kAnimationDuration;
+        NSTimeInterval duration = UIDeviceOrientationIsLandscape(self.originalOrientation) ? 2 * self.animDuration : self.animDuration;
         
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
@@ -1107,7 +1108,7 @@ static Class imageManagerClass = nil;
         // 竖屏时添加pan手势
         [self addPanGesture:NO];
         
-        NSTimeInterval duration = kAnimationDuration;
+        NSTimeInterval duration = self.animDuration;
         
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏

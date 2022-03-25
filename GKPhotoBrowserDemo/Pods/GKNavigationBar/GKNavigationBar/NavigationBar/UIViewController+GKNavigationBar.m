@@ -44,14 +44,16 @@
 }
 
 - (void)gk_viewDidLoad {
-    // bug fix #76，修改添加了子控制器后调整导航栏间距无效的bug
-    // 当创建了gk_navigationBar或者父控制器是导航控制器的时候才去调整导航栏间距
+    // 设置默认状态
+    self.gk_disableFixNavItemSpace = YES;
+    self.gk_openFixNavItemSpace = NO;
+    
     if ([self shouldHandleNavBar]) {
         // 设置默认导航栏间距
         self.gk_navItemLeftSpace    = GKNavigationBarItemSpace;
         self.gk_navItemRightSpace   = GKNavigationBarItemSpace;
-        self.gk_disableFixNavItemSpace = [self checkFixNavItemSpace];
     }
+    
     // 如果是根控制器，取消返回按钮
     if (self.navigationController && self.navigationController.childViewControllers.count <= 1) {
         if (!self.gk_NavBarInit) return;
@@ -69,6 +71,8 @@
     if (!self.navigationController) return;
     
     if (self.gk_NavBarInit) {
+        self.gk_disableFixNavItemSpace = self.gk_disableFixNavItemSpace;
+        self.gk_openFixNavItemSpace = self.gk_openFixNavItemSpace;
         // 隐藏系统导航栏
         if (!self.navigationController.gk_openSystemNavHandle) {
             [self hiddenSystemNavBar];
@@ -79,12 +83,16 @@
             [self.view bringSubviewToFront:self.gk_navigationBar];
         }
     }else {
+        if (self.navigationController && !self.navigationController.isNavigationBarHidden && ![self isNonFullScreen]) {
+            self.gk_disableFixNavItemSpace = self.gk_disableFixNavItemSpace;
+            self.gk_openFixNavItemSpace = self.gk_openFixNavItemSpace;
+        }
         [self restoreSystemNavBar];
     }
     
     // bug fix #76，修改添加了子控制器后调整导航栏间距无效的bug
     // 当创建了gk_navigationBar或者父控制器是导航控制器的时候才去调整导航栏间距
-    if ([self shouldHandleNavBar] && !self.gk_disableFixNavItemSpace) {
+    if (self.gk_openFixNavItemSpace) {
         // 每次控制器出现的时候重置导航栏间距
         if (self.gk_navItemLeftSpace == GKNavigationBarItemSpace) {
             self.gk_navItemLeftSpace = GKConfigure.navItemLeftSpace;
@@ -113,16 +121,6 @@
         [self restoreSystemNavBar];
     }
     
-    if (self.gk_disableFixNavItemSpace) {
-        [GKConfigure updateConfigure:^(GKNavigationBarConfigure * _Nonnull configure) {
-            configure.gk_disableFixSpace = YES;
-        }];
-    }else {
-        [GKConfigure updateConfigure:^(GKNavigationBarConfigure * _Nonnull configure) {
-            configure.gk_disableFixSpace = configure.disableFixSpace;
-        }];
-    }
-    
     [self gk_viewDidAppear:animated];
 }
 
@@ -144,8 +142,13 @@
 - (void)gk_traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
     if (@available(iOS 13.0, *)) {
         if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
-            // 重新设置返回按钮
-            if (self.gk_backImage) {
+            if ([self isKindOfClass:[UINavigationController class]]) return;
+            if ([self isKindOfClass:[UITabBarController class]]) return;
+            if (!self.gk_NavBarInit) return;
+            
+            // 非根控制器重新设置返回按钮
+            BOOL isRootVC = self == self.navigationController.childViewControllers.firstObject;
+            if (!isRootVC && self.gk_backImage) {
                 [self setBackItemImage:self.gk_backImage];
             }
             
@@ -201,6 +204,8 @@ static char kAssociatedObjectKey_navigationBar;
         objc_setAssociatedObject(self, &kAssociatedObjectKey_navigationBar, navigationBar, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
         self.gk_NavBarInit = YES;
+        self.gk_disableFixNavItemSpace = GKConfigure.disableFixSpace;
+        self.gk_openFixNavItemSpace = YES;
         [self setupNavBarAppearance];
         [self setupNavBarFrame];
     }
@@ -507,16 +512,28 @@ static char kAssociatedObjectKey_disableFixNavItemSpace;
 - (void)setGk_disableFixNavItemSpace:(BOOL)gk_disableFixNavItemSpace {
     objc_setAssociatedObject(self, &kAssociatedObjectKey_disableFixNavItemSpace, @(gk_disableFixNavItemSpace), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if (GKConfigure.gk_disableFixSpace) return;
-    if (gk_disableFixNavItemSpace != GKConfigure.gk_disableFixSpace) {
-        [GKConfigure updateConfigure:^(GKNavigationBarConfigure * _Nonnull configure) {
-            configure.gk_disableFixSpace = gk_disableFixNavItemSpace;
-        }];
-    }
+    if (GKConfigure.gk_disableFixSpace == gk_disableFixNavItemSpace) return;
+    [GKConfigure updateConfigure:^(GKNavigationBarConfigure * _Nonnull configure) {
+        configure.gk_disableFixSpace = gk_disableFixNavItemSpace;
+    }];
 }
 
 - (BOOL)gk_disableFixNavItemSpace {
     return [objc_getAssociatedObject(self, &kAssociatedObjectKey_disableFixNavItemSpace) boolValue];
+}
+
+static char kAssociatedObjectKey_openFixNavItemSpace;
+- (void)setGk_openFixNavItemSpace:(BOOL)gk_openFixNavItemSpace {
+    objc_setAssociatedObject(self, &kAssociatedObjectKey_openFixNavItemSpace, @(gk_openFixNavItemSpace), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (GKConfigure.openSystemFixSpace == gk_openFixNavItemSpace) return;
+    [GKConfigure updateConfigure:^(GKNavigationBarConfigure * _Nonnull configure) {
+        configure.openSystemFixSpace = gk_openFixNavItemSpace;
+    }];
+}
+
+- (BOOL)gk_openFixNavItemSpace {
+    return [objc_getAssociatedObject(self, &kAssociatedObjectKey_openFixNavItemSpace) boolValue];
 }
 
 static char kAssociatedObjectKey_navItemLeftSpace;
@@ -642,7 +659,7 @@ static char kAssociatedObjectKey_navItemRightSpace;
         self.gk_navBackgroundImage = GKConfigure.backgroundImage;
     }
     
-    if (self.gk_darkNavShadowImage == nil) {
+    if (self.gk_darkNavBackgroundImage == nil) {
         self.gk_darkNavBackgroundImage = GKConfigure.darkBackgroundImage;
     }
     
@@ -695,24 +712,28 @@ static char kAssociatedObjectKey_navItemRightSpace;
     self.gk_navTitle = nil;
 }
 
-- (void)setupNavBarFrame {
+- (BOOL)isNonFullScreen {
     BOOL isNonFullScreen = NO;
     CGFloat viewW = GK_SCREEN_WIDTH;
     CGFloat viewH = GK_SCREEN_HEIGHT;
-    // 防止在init方法中创建导航栏会提前触发viewDidLoad方法，所以做下判断
     if (self.isViewLoaded) {
         UIViewController *parentVC = self;
-        // 找到最上层的父类
+        // 找到最上层的父控制器
         while (parentVC.parentViewController) {
             parentVC = parentVC.parentViewController;
         }
         viewW = parentVC.view.frame.size.width;
         viewH = parentVC.view.frame.size.height;
-        if (viewW == 0 || viewH == 0) return;
+        if (viewW == 0 || viewH == 0) return NO;
         
         // 如果是通过present方式弹出且高度小于屏幕高度，则认为是非全屏
         isNonFullScreen = self.presentingViewController && viewH < GK_SCREEN_HEIGHT;
     }
+    return isNonFullScreen;
+}
+
+- (void)setupNavBarFrame {
+    BOOL isNonFullScreen = [self isNonFullScreen];
     
     CGFloat navBarH = 0.0f;
     if (GK_IS_iPad) { // iPad
@@ -736,48 +757,30 @@ static char kAssociatedObjectKey_navItemRightSpace;
             }
         }
     }
-    self.gk_navigationBar.frame = CGRectMake(0, 0, viewW, navBarH);
+    self.gk_navigationBar.frame = CGRectMake(0, 0, GK_SCREEN_WIDTH, navBarH);
     [self.gk_navigationBar layoutSubviews];
-}
-
-- (BOOL)checkFixNavItemSpace {
-    // 判断是否需要屏蔽导航栏间距调整
-    __block BOOL exist = NO;
-    [GKConfigure.shiledItemSpaceVCs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([[obj class] isSubclassOfClass:[UIViewController class]]) {
-            if ([self isKindOfClass:[obj class]]) {
-                exist = YES;
-                *stop = YES;
-            }
-        }else if ([obj isKindOfClass:[NSString class]]) {
-            if ([NSStringFromClass(self.class) isEqualToString:obj]) {
-                exist = YES;
-                *stop = YES;
-            }else if ([NSStringFromClass(self.class) containsString:obj]) {
-                exist = YES;
-                *stop = YES;
-            }
-        }
-    }];
-    return exist;
 }
 
 - (void)hiddenSystemNavBar {
     if (!self.navigationController.isNavigationBarHidden) {
+        self.navigationController.gk_hideNavigationBar = YES;
         [self.navigationController setNavigationBarHidden:YES];
     }
 }
 
 - (void)restoreSystemNavBar {
     if (GKConfigure.gk_restoreSystemNavBar && [self shouldHandleNavBar]) {
-        if (self.navigationController.isNavigationBarHidden) {
+        if (self.navigationController.isNavigationBarHidden && self.navigationController.gk_hideNavigationBar) {
             [self.navigationController setNavigationBarHidden:NO];
         }
     }
 }
 
 - (BOOL)shouldHandleNavBar {
-    return self.gk_NavBarInit || [self.parentViewController isKindOfClass:[UINavigationController class]];
+    if (self.gk_NavBarInit) return YES;
+    if ([self isKindOfClass:UITabBarController.class]) return NO;
+    if ([self.parentViewController isKindOfClass:UINavigationController.class]) return YES;
+    return NO;
 }
 
 - (void)setBackItemImage:(UIImage *)image {

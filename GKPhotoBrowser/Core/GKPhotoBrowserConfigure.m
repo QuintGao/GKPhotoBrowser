@@ -16,10 +16,10 @@
 
 NSString *const GKPhotoBrowserBundleName = @"GKPhotoBrowser";
 
-@interface GKPortraitViewController : UIViewController
+@interface GKPhotoPortraitViewController : UIViewController
 @end
 
-@implementation GKPortraitViewController
+@implementation GKPhotoPortraitViewController
 
 - (BOOL)shouldAutorotate {
     return NO;
@@ -91,7 +91,7 @@ static NSInteger isNotchedScreen = -1;
                 peripheryInsets = window.safeAreaInsets;
                 if (peripheryInsets.bottom <= 0) {
                     // 使用一个强制竖屏的rootViewController，避免一个仅支持竖屏的App在横屏启动时会受到这里创建的window的影响，导致状态栏、safeAreaInsets等错乱
-                    GKPortraitViewController *viewController = [GKPortraitViewController new];
+                    GKPhotoPortraitViewController *viewController = [GKPhotoPortraitViewController new];
                     window.rootViewController = viewController;
                     if (CGRectGetMinY(viewController.view.frame) > 20) {
                         peripheryInsets.bottom = 1;

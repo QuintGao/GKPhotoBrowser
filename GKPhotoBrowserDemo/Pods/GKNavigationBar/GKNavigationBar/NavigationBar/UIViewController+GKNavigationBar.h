@@ -77,8 +77,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, strong) NSArray<UIBarButtonItem *> *gk_navRightBarButtonItems;
 
 /// 是否禁止调整当前控制器导航栏间距，默认GKConfigure.gk_disableFixSpace
-/// 仅当GKConfigure.gk_disableFixSpace为NO时有效
+/// 对带有GKCustomNavigationBar的控制器有效
 @property (nonatomic, assign) BOOL                  gk_disableFixNavItemSpace;
+
+/// 是否开启当前控制器的导航栏item间距调整，默认NO
+/// 对没有GKCustomNavigationBar的控制器有效
+@property (nonatomic, assign) BOOL                  gk_openFixNavItemSpace;
 
 /// 导航栏左右按钮距离屏幕边缘的距离，需在设置左右item之前设置此属性
 @property (nonatomic, assign) CGFloat               gk_navItemLeftSpace;

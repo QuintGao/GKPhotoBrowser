@@ -78,7 +78,7 @@ static CGFloat itemMargin = 5;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    if ([[TZImageManager manager] authorizationStatusAuthorized]) {
+    if ([[TZImageManager manager] authorizationStatusAuthorized] || !SYSTEM_VERSION_GREATER_THAN_15) {
         [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
     }
     self.isFirstAppear = YES;
@@ -526,13 +526,16 @@ static CGFloat itemMargin = 5;
     TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     if (tzImagePickerVc.allowPickingVideo && tzImagePickerVc.maxImagesCount == 1) {
         if ([[TZImageManager manager] isVideo:[assets firstObject]]) {
+            BOOL triggered = NO;
             if ([tzImagePickerVc.pickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingVideo:sourceAssets:)]) {
                 [tzImagePickerVc.pickerDelegate imagePickerController:tzImagePickerVc didFinishPickingVideo:[photos firstObject] sourceAssets:[assets firstObject]];
+                triggered = YES;
             }
             if (tzImagePickerVc.didFinishPickingVideoHandle) {
                 tzImagePickerVc.didFinishPickingVideoHandle([photos firstObject], [assets firstObject]);
+                triggered = YES;
             }
-            return;
+            if (triggered) return;
         }
     }
     
@@ -851,16 +854,15 @@ static CGFloat itemMargin = 5;
 
 - (void)prepareScrollCollectionViewToBottom {
     if (_shouldScrollToBottom && _models.count > 0) {
-        // try fix #1562：https://github.com/banchichen/TZImagePickerController/issues/1562
-        if (@available(iOS 15.0, *)) {
-            [_collectionView performBatchUpdates:^{} completion:^(BOOL finished) {
-                [self scrollCollectionViewToBottom];
-            }];
-        } else {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self scrollCollectionViewToBottom];
-            });
-        }
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self scrollCollectionViewToBottom];
+            // try fix #1562：https://github.com/banchichen/TZImagePickerController/issues/1562
+            if (@available(iOS 15.0, *)) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self scrollCollectionViewToBottom];
+                });
+            }
+        });
     } else {
         _collectionView.hidden = NO;
     }
