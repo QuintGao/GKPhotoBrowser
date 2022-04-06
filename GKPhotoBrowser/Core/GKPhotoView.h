@@ -17,8 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@class GKPhotoView;
-
 @interface GKPhotoView : UIView<UIScrollViewDelegate>
 
 @property (nonatomic, strong, readonly) GKScrollView *scrollView;
