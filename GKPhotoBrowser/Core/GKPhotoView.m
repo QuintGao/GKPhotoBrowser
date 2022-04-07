@@ -217,36 +217,36 @@
             
             __weak __typeof(self) weakSelf = self;
             GKWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
-                __strong __typeof(weakSelf) strongSelf = weakSelf;
+                __strong __typeof(weakSelf) self = weakSelf;
                 if (expectedSize == 0) return;
                 float progress = (float)receivedSize / expectedSize;
                 if (progress <= 0) progress = 0;
                 
                 // 图片加载中，回调进度
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
+                    if (isOrigin && self.originLoadStyle == GKLoadingStyleCustom) {
                         !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, YES);
-                    }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
+                    }else if (!isOrigin && self.loadStyle == GKLoadingStyleCustom) {
                         !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, NO);
-                    }else if (strongSelf.loadStyle == GKLoadingStyleDeterminate || strongSelf.originLoadStyle == GKLoadingStyleDeterminate) {
-                        strongSelf.loadingView.progress = progress;
+                    }else if (self.loadStyle == GKLoadingStyleDeterminate || self.originLoadStyle == GKLoadingStyleDeterminate) {
+                        self.loadingView.progress = progress;
                     }
                 });
             };
             
             GKWebImageCompletionBlock completionBlock = ^(UIImage *image, NSURL *url, BOOL finished, NSError *error) {
-                __strong __typeof(weakSelf) strongSelf = weakSelf;
+                __strong __typeof(weakSelf) self = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (error) {
                         photo.failed = YES;
-                        [strongSelf.loadingView stopLoading];
+                        [self.loadingView stopLoading];
                         
                         if ([photo.url.absoluteString isEqualToString:url.absoluteString]) {
                             if (self.failStyle == GKPhotoBrowserFailStyleCustom) {
-                                !strongSelf.loadFailed ? : strongSelf.loadFailed(self);
+                                !self.loadFailed ? : self.loadFailed(self);
                             }else {
-                                [strongSelf addSubview:strongSelf.loadingView];
-                                [strongSelf.loadingView showFailure];
+                                [self addSubview:self.loadingView];
+                                [self.loadingView showFailure];
                             }
                         }
                     }else {
@@ -256,16 +256,16 @@
                         }
                         
                         // 图片加载完成，回调进度
-                        if (isOrigin && strongSelf.originLoadStyle == GKLoadingStyleCustom) {
+                        if (isOrigin && self.originLoadStyle == GKLoadingStyleCustom) {
                             !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f, YES);
-                        }else if (!isOrigin && strongSelf.loadStyle == GKLoadingStyleCustom) {
+                        }else if (!isOrigin && self.loadStyle == GKLoadingStyleCustom) {
                             !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f, NO);
                         }
                         
-                        strongSelf.scrollView.scrollEnabled = YES;
-                        [strongSelf.loadingView stopLoading];
+                        self.scrollView.scrollEnabled = YES;
+                        [self.loadingView stopLoading];
                     }
-                    [strongSelf adjustFrame];
+                    [self adjustFrame];
                 });
             };
             
@@ -358,8 +358,8 @@
         if (self.photo.sourceFrame.size.width == 0 || self.photo.sourceFrame.size.height == 0) return;
         CGFloat width = frame.size.width;
         CGFloat height = width * self.photo.sourceFrame.size.height / self.photo.sourceFrame.size.width;
-        _imageView.bounds = CGRectMake(0, 0, width, height);
-        _imageView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+        self.imageView.bounds = CGRectMake(0, 0, width, height);
+        self.imageView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
         self.scrollView.contentSize = self.imageView.frame.size;
         
         self.loadingView.bounds = self.scrollView.frame;

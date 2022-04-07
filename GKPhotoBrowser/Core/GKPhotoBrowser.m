@@ -839,7 +839,7 @@ static Class imageManagerClass = nil;
     UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     
-    if (!self.isFollowSystemRotation && UIDeviceOrientationIsLandscape(orientation)) {
+    if (!self.isFollowSystemRotation && self.supportedInterfaceOrientations == UIInterfaceOrientationPortrait && UIDeviceOrientationIsLandscape(orientation)) {
         [UIView animateWithDuration:self.animDuration animations:^{
             // 旋转view
             self.contentView.transform = CGAffineTransformIdentity;
@@ -1428,6 +1428,9 @@ static Class imageManagerClass = nil;
         pageControl.currentPage = self.currentIndex;
         pageControl.hidesForSinglePage = YES;
         pageControl.hidden = YES;
+        if (@available(iOS 14.0, *)) {
+            pageControl.backgroundStyle = UIPageControlBackgroundStyleMinimal;
+        }
         _pageControl = pageControl;
     }
     return _pageControl;
