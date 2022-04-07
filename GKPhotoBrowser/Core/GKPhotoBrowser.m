@@ -47,6 +47,9 @@ static Class imageManagerClass = nil;
 /** 状态栏是否显示 */
 @property (nonatomic, assign) BOOL isStatusBarShowing;
 
+/// 原始状态栏
+@property (nonatomic, assign) UIStatusBarStyle originStatusBarStyle;
+
 /** 正在滑动缩放隐藏 */
 @property (nonatomic, assign) BOOL isZoomScale;
 
@@ -74,6 +77,9 @@ static Class imageManagerClass = nil;
 /// 20200312 用于防止多次addObserver，添加监听UIDeviceOrientationDidChangeNotification通知的flag
 @property(nonatomic, assign) BOOL isOrientationNotiObserverAdded;
 
+/// 状态栏处理
+@property (nonatomic, assign) BOOL statusBarAppearance;
+
 @end
 
 @implementation GKPhotoBrowser
@@ -88,12 +94,15 @@ static Class imageManagerClass = nil;
         self.currentIndex = currentIndex;
         
         // 初始化
+        self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
+        
         self.isStatusBarShow         = NO;
         self.isHideSourceView        = YES;
         self.statusBarStyle          = UIStatusBarStyleLightContent;
         self.isFullWidthForLandScape = YES;
         self.maxZoomScale            = kMaxZoomScale;
         self.doubleZoomScale         = self.maxZoomScale;
+        self.animDuration            = kAnimationDuration;
         // 20200312
         self.isGeneratingDeviceOrientationNotificationsBegunBeforePhotoBrowserAppeared = [UIDevice currentDevice].isGeneratingDeviceOrientationNotifications;
         
@@ -107,6 +116,12 @@ static Class imageManagerClass = nil;
         if (imageManagerClass) {
             self.imageProtocol = [imageManagerClass new];
         }
+        
+        // 状态栏外观处理
+        NSDictionary *infoDict = [NSBundle mainBundle].infoDictionary;
+        BOOL hasKey = [infoDict.allKeys containsObject:@"UIViewControllerBasedStatusBarAppearance"];
+        BOOL appearance = [[infoDict objectForKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
+        self.statusBarAppearance = (hasKey && appearance) || !hasKey;
     }
     return self;
 }
@@ -183,7 +198,9 @@ static Class imageManagerClass = nil;
 }
 
 - (void)setupUI {
-    [self.navigationController setNavigationBarHidden:YES];
+    if (!self.navigationController.navigationBarHidden && !self.navigationController.navigationBar.hidden) {
+        [self.navigationController setNavigationBarHidden:YES];
+    }
     
     self.view.backgroundColor = self.bgColor ? : [UIColor blackColor];
     
@@ -237,6 +254,10 @@ static Class imageManagerClass = nil;
     }else {
         self.countLabel.hidden = self.photos.count == 1;
     }
+    self.pageControl.numberOfPages = self.photos.count;
+    if (self.pageControl.hidesForSinglePage) {
+        self.pageControl.hidden = self.photos.count <= 1;
+    }
     CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
     self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
     [self updateViewIndex];
@@ -264,9 +285,32 @@ static Class imageManagerClass = nil;
 - (void)setIsStatusBarShow:(BOOL)isStatusBarShow {
     _isStatusBarShow = isStatusBarShow;
     
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        [self prefersStatusBarHidden];
-        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    if (self.statusBarAppearance) {
+        if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+            [self prefersStatusBarHidden];
+            [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+        }
+    }else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[UIApplication sharedApplication] setStatusBarHidden:!isStatusBarShow];
+#pragma clang diagnostic pop
+    }
+}
+
+- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle {
+    _statusBarStyle = statusBarStyle;
+    
+    if (self.statusBarAppearance) {
+        if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+            [self prefersStatusBarHidden];
+            [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+        }
+    }else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[UIApplication sharedApplication] setStatusBarStyle:statusBarStyle];
+#pragma clang diagnostic pop
     }
 }
 
@@ -295,7 +339,7 @@ static Class imageManagerClass = nil;
     
     self.view.alpha = 0;
     
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:self.animDuration animations:^{
         self.view.alpha = 1.0;
     }completion:^(BOOL finished) {
         self.isShow = YES;
@@ -348,7 +392,7 @@ static Class imageManagerClass = nil;
     
     photoView.imageView.frame = sourceRect;
     
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:self.animDuration animations:^{
         photoView.imageView.frame = endRect;
         self.view.backgroundColor = self.bgColor ? : [UIColor blackColor];
     }completion:^(BOOL finished) {
@@ -400,7 +444,7 @@ static Class imageManagerClass = nil;
         if (self.isLandscape) {
             pointY = self.contentView.bounds.size.height - 20;
         }else {
-            pointY = self.contentView.bounds.size.height - 10 - (self.isAdaptiveSafeArea ? 0 : kSafeBottomSpace);
+            pointY = self.contentView.bounds.size.height - 20 - (self.isAdaptiveSafeArea ? 0 : kSafeBottomSpace);
         }
         self.pageControl.center = CGPointMake(centerX, pointY);
         self.saveBtn.center = CGPointMake(self.contentView.bounds.size.width - 50, pointY);
@@ -564,7 +608,7 @@ static Class imageManagerClass = nil;
     GKPhoto *photo = [self currentPhoto];
     
     if (animated) {
-        [UIView animateWithDuration:kAnimationDuration animations:^{
+        [UIView animateWithDuration:self.animDuration animations:^{
             photo.sourceImageView.alpha = 1.0;
         }];
     }else {
@@ -582,12 +626,24 @@ static Class imageManagerClass = nil;
     
     // 移除屏幕旋转监听
     [self delDeviceOrientationObserver];
+    if (!self.statusBarAppearance) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[UIApplication sharedApplication] setStatusBarStyle:self.originStatusBarStyle];
+#pragma clang diagnostic pop
+    }
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)saveBtnClick:(UIButton *)btn {
     if ([self.delegate respondsToSelector:@selector(photoBrowser:onSaveBtnClick:image:)]) {
         [self.delegate photoBrowser:self onSaveBtnClick:self.currentIndex image:self.curPhotoView.imageView.image];
+    }
+}
+
+- (void)setupCoverViewsWithAlpha:(CGFloat)alpha {
+    for (UIView *view in self.coverViews) {
+        view.alpha = alpha;
     }
 }
 
@@ -707,6 +763,8 @@ static Class imageManagerClass = nil;
             photoView.imageView.frame = CGRectMake(x, y, width, height);
 
             self.view.backgroundColor = self.bgColor ? [self.bgColor colorWithAlphaComponent:percent] : [[UIColor blackColor] colorWithAlphaComponent:percent];
+            
+            [self setupCoverViewsWithAlpha:percent];
         }
             break;
         case UIGestureRecognizerStateEnded:
@@ -741,6 +799,8 @@ static Class imageManagerClass = nil;
             double percent = 1 - fabs(point.y) / self.view.frame.size.height * 0.5;
             
             self.view.backgroundColor = self.bgColor ? [self.bgColor colorWithAlphaComponent:percent] : [[UIColor blackColor] colorWithAlphaComponent:percent];
+            
+            [self setupCoverViewsWithAlpha:percent];
         }
             break;
         case UIGestureRecognizerStateEnded:
@@ -780,7 +840,7 @@ static Class imageManagerClass = nil;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     
     if (!self.isFollowSystemRotation && UIDeviceOrientationIsLandscape(orientation)) {
-        [UIView animateWithDuration:kAnimationDuration animations:^{
+        [UIView animateWithDuration:self.animDuration animations:^{
             // 旋转view
             self.contentView.transform = CGAffineTransformIdentity;
             
@@ -812,7 +872,7 @@ static Class imageManagerClass = nil;
     
     if (CGRectEqualToRect(sourceRect, CGRectZero)) {
         if (photo.sourceImageView == nil) {
-            [UIView animateWithDuration:kAnimationDuration animations:^{
+            [UIView animateWithDuration:self.animDuration animations:^{
                 self.view.alpha = 0;
             }completion:^(BOOL finished) {
                 [self dismissAnimated:NO];
@@ -851,12 +911,13 @@ static Class imageManagerClass = nil;
     sourceRect.origin.x -= photoView.scrollView.contentOffset.x;
     sourceRect.origin.y += photoView.scrollView.contentOffset.y;
     
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:self.animDuration animations:^{
+        [self setupCoverViewsWithAlpha:0];
         photoView.imageView.frame = sourceRect;
         self.view.backgroundColor = [UIColor clearColor];
     }completion:^(BOOL finished) {
         [self dismissAnimated:NO];
-        
+
         [self panEndedWillDisappear:YES];
     }];
 }
@@ -871,7 +932,7 @@ static Class imageManagerClass = nil;
         toTranslationY = self.view.frame.size.height;
     }
     
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:self.animDuration animations:^{
         photoView.imageView.transform = CGAffineTransformMakeTranslation(0, toTranslationY);
         self.view.backgroundColor = [UIColor clearColor];
     }completion:^(BOOL finished) {
@@ -886,7 +947,7 @@ static Class imageManagerClass = nil;
     GKPhoto *photo = self.photos[self.currentIndex];
     photo.sourceImageView.alpha = 1.0;
     
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:self.animDuration animations:^{
         if (self.hideStyle == GKPhotoBrowserHideStyleZoomScale) {
             photoView.imageView.frame = self.startFrame;
         }else {
@@ -1002,7 +1063,7 @@ static Class imageManagerClass = nil;
         // 横屏移除pan手势
         [self removePanGesture];
         
-        NSTimeInterval duration = UIDeviceOrientationIsLandscape(self.originalOrientation) ? 2 * kAnimationDuration : kAnimationDuration;
+        NSTimeInterval duration = UIDeviceOrientationIsLandscape(self.originalOrientation) ? 2 * self.animDuration : self.animDuration;
         
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
@@ -1047,7 +1108,7 @@ static Class imageManagerClass = nil;
         // 竖屏时添加pan手势
         [self addPanGesture:NO];
         
-        NSTimeInterval duration = kAnimationDuration;
+        NSTimeInterval duration = self.animDuration;
         
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏

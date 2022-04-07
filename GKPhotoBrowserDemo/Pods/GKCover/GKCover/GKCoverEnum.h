@@ -2,8 +2,8 @@
 //  GKCoverEnum.h
 //  GKCoverDemo
 //
-//  Created by 高坤 on 2016/11/2.
-//  Copyright © 2016年 高坤. All rights reserved.
+//  Created by QuintGao on 2016/11/2.
+//  Copyright © 2016年 QuintGao. All rights reserved.
 //
 
 #ifndef GKCoverEnum_h
@@ -43,17 +43,6 @@ typedef NS_ENUM(NSUInteger, GKCoverShowStyle) {
     /** 显示在右侧 */
     GKCoverShowStyleRight    // 显示在右侧
 };
-
-/** 动画类型 */
-typedef NS_ENUM(NSUInteger, GKCoverAnimStyle) {
-    GKCoverAnimStyleTop,      // 从上弹出 (上，中可用)
-    GKCoverAnimStyleCenter,   // 中间弹出 (中可用)
-    GKCoverAnimStyleBottom,   // 底部弹出,底部消失 (中，下可用)
-    GKCoverAnimStyleLeft,     // 左侧弹出,左侧消失
-    GKCoverAnimStyleRight,    // 右侧弹出,右侧消失
-    GKCoverAnimStyleNone      // 无动画
-};
-
 
 #pragma mark - v2.4.0新增
 /** 弹窗显示时的动画类型 */
