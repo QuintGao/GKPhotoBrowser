@@ -124,6 +124,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 是否隐藏countLabel，默认NO
 @property (nonatomic, assign) BOOL hidesCountLabel;
 
+/// 是否隐藏pageControl，默认NO
+@property (nonatomic, assign) BOOL hidesPageControl;
+
 /// 图片最大放大倍数
 @property (nonatomic, assign) CGFloat maxZoomScale;
 
@@ -139,7 +142,7 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 数量Label，默认显示，若要隐藏需设置hidesCountLabel为YES
 @property (nonatomic, strong) UILabel *countLabel;
 
-/// 页码，默认隐藏
+/// 页码，默认显示，若要隐藏需设置hidesPageControl为YES
 @property (nonatomic, strong) UIPageControl *pageControl;
 
 /// 保存按钮，默认隐藏

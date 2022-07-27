@@ -255,9 +255,14 @@ static Class imageManagerClass = nil;
         self.countLabel.hidden = self.photos.count == 1;
     }
     self.pageControl.numberOfPages = self.photos.count;
-    if (self.pageControl.hidesForSinglePage) {
-        self.pageControl.hidden = self.photos.count <= 1;
+    if (self.hidesPageControl) {
+        self.pageControl.hidden = YES;
+    }else {
+        if (self.pageControl.hidesForSinglePage) {
+            self.pageControl.hidden = self.photos.count <= 1;
+        }
     }
+    
     CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
     self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
     [self updateViewIndex];
@@ -1022,9 +1027,12 @@ static Class imageManagerClass = nil;
     // 旋转之后当前的设备方向
     UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
     
-    // 未知或者朝上都认为是竖屏
     if (currentOrientation == UIDeviceOrientationUnknown || currentOrientation == UIDeviceOrientationFaceUp) {
-        currentOrientation = UIDeviceOrientationPortrait;
+        if (self.originalOrientation == UIDeviceOrientationUnknown) {
+            currentOrientation = UIDeviceOrientationPortrait;
+        }else {
+            currentOrientation = self.originalOrientation;
+        }
     }
     
     // 修复bug #117，从后台进入前台会执行此方法 导致缩放变化，所以此处做下处理
