@@ -198,7 +198,7 @@ static Class imageManagerClass = nil;
 }
 
 - (void)setupUI {
-    if (!self.navigationController.navigationBarHidden && !self.navigationController.navigationBar.hidden) {
+    if (!self.navigationController.navigationBarHidden) {
         [self.navigationController setNavigationBarHidden:YES];
     }
     
@@ -278,15 +278,6 @@ static Class imageManagerClass = nil;
 }
 
 #pragma mark - Setter
-- (void)setShowStyle:(GKPhotoBrowserShowStyle)showStyle {
-    _showStyle = showStyle;
-    
-    if (showStyle != GKPhotoBrowserShowStylePush) {
-        self.modalPresentationStyle = UIModalPresentationCustom;
-        self.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
-    }
-}
-
 - (void)setIsStatusBarShow:(BOOL)isStatusBarShow {
     _isStatusBarShow = isStatusBarShow;
     
@@ -492,8 +483,18 @@ static Class imageManagerClass = nil;
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
         [vc.navigationController pushViewController:self animated:YES];
     }else {
-        self.modalPresentationCapturesStatusBarAppearance = YES;
-        [vc presentViewController:self animated:NO completion:nil];
+        if (self.isAddNavigationController) {
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self];
+            nav.modalPresentationCapturesStatusBarAppearance = YES;
+            nav.modalPresentationStyle = UIModalPresentationCustom;
+            nav.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+            [vc presentViewController:nav animated:NO completion:nil];
+        }else {
+            self.modalPresentationCapturesStatusBarAppearance = YES;
+            self.modalPresentationStyle = UIModalPresentationCustom;
+            self.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
+            [vc presentViewController:self animated:NO completion:nil];
+        }
     }
 }
 
@@ -1349,6 +1350,7 @@ static Class imageManagerClass = nil;
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     if (!self.isFollowSystemRotation) return;
     
+    self.isRotation = YES;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
             CGFloat width = self.view.bounds.size.width;
@@ -1367,6 +1369,8 @@ static Class imageManagerClass = nil;
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             [self layoutSubviews];
+        } completion:^(BOOL finished) {
+            self.isRotation = NO;
         }];
     });
 }

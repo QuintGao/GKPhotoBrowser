@@ -152,6 +152,10 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, copy) NSString    *failureText;
 @property (nonatomic, strong) UIImage   *failureImage;
 
+/// 是否添加导航控制器，默认NO，添加后会默认隐藏导航栏
+/// showStyle = GKPhotoBrowserShowStylePush时无效
+@property (nonatomic, assign, getter=isAddNavigationController) BOOL addNavigationController;
+
 // 初始化方法
 
 /**

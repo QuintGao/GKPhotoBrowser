@@ -63,8 +63,8 @@
                         @"class" : @"GKSDAutoLayoutViewController"},
                       @{@"text"  : @"GIF图片",
                         @"class" : @"GKGIFViewController"},
-//                      @{@"text"  : @"测试",
-//                        @"class" : @"GKTestViewController"},
+                      @{@"text"  : @"测试",
+                        @"class" : @"GKTestViewController"},
     ];
     
     [self.mainTable reloadData];

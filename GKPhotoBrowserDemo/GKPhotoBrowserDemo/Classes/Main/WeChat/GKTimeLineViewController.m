@@ -135,11 +135,13 @@
 //        browser.bgColor = UIColor.whiteColor;
 //        browser.statusBarStyle = UIStatusBarStyleDefault;
         
-        // 当你的APP支持屏幕旋转时此属性必须设置为YES
-        if (kIsiPad) { // ipad 默认支持屏幕旋转，这里设置为YES
-            browser.isFollowSystemRotation = YES;
-        }
+//        // 当你的APP支持屏幕旋转时此属性必须设置为YES
+//        if (kIsiPad) { // ipad 默认支持屏幕旋转，这里设置为YES
+//            browser.isFollowSystemRotation = YES;
+//        }
 //        [browser setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
+        
+        browser.isFollowSystemRotation = YES;
         browser.delegate = weakSelf;
         [browser showFromVC:weakSelf];
         weakSelf.browser = browser;
