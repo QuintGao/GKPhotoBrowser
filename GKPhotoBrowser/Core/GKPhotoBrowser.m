@@ -435,7 +435,7 @@ static Class imageManagerClass = nil;
     }else {
         CGFloat centerX = self.contentView.bounds.size.width * 0.5f;
         
-        self.countLabel.center = CGPointMake(centerX, (KIsiPhoneX && !self.isLandscape) ? 50 : 30);
+        self.countLabel.center = CGPointMake(centerX, (KIsiPhoneX && !self.isLandscape) ? (kSafeTopSpace + 10) : 30);
         CGFloat pointY = 0;
         if (self.isLandscape) {
             pointY = self.contentView.bounds.size.height - 20;
@@ -483,18 +483,15 @@ static Class imageManagerClass = nil;
     if (self.showStyle == GKPhotoBrowserShowStylePush) {
         [vc.navigationController pushViewController:self animated:YES];
     }else {
+        UIViewController *presentVC = self;
         if (self.isAddNavigationController) {
-            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self];
-            nav.modalPresentationCapturesStatusBarAppearance = YES;
-            nav.modalPresentationStyle = UIModalPresentationCustom;
-            nav.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-            [vc presentViewController:nav animated:NO completion:nil];
-        }else {
-            self.modalPresentationCapturesStatusBarAppearance = YES;
-            self.modalPresentationStyle = UIModalPresentationCustom;
-            self.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
-            [vc presentViewController:self animated:NO completion:nil];
+            presentVC = [[UINavigationController alloc] initWithRootViewController:self];
         }
+        
+        presentVC.modalPresentationCapturesStatusBarAppearance = YES;
+        presentVC.modalPresentationStyle = UIModalPresentationCustom;
+        presentVC.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        [vc presentViewController:presentVC animated:NO completion:nil];
     }
 }
 
