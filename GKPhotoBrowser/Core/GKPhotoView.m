@@ -265,7 +265,9 @@
                         self.scrollView.scrollEnabled = YES;
                         [self.loadingView stopLoading];
                     }
-                    [self adjustFrame];
+                    if (!isOrigin) {
+                        [self adjustFrame];
+                    }
                 });
             };
             
@@ -310,6 +312,9 @@
     
     if (self.imageView.image) {
         CGSize imageSize = self.imageView.image.size;
+        if (imageSize.width == 0) imageSize.width = self.scrollView.frame.size.width;
+        if (imageSize.height == 0) imageSize.height = self.scrollView.frame.size.height;
+        
         CGRect imageF = (CGRect){{0, 0}, imageSize};
         
         // 图片的宽度 = 屏幕的宽度
@@ -331,7 +336,7 @@
         }
         
         // 设置图片的frame
-        self.imageView.frame = imageF;
+        self.imageView.bounds = imageF;
         self.scrollView.contentSize = self.imageView.frame.size;
         
         if (imageF.size.height <= self.scrollView.bounds.size.height) {
