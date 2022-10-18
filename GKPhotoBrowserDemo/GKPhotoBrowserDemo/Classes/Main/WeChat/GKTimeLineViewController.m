@@ -131,6 +131,7 @@
         browser.hidesCountLabel = YES;
         browser.pageControl.hidden = NO;
         browser.saveBtn.hidden = NO;
+//        browser.isDoubleTapDisabled = YES;
 //        browser.isStatusBarShow = YES;
 //        browser.bgColor = UIColor.whiteColor;
 //        browser.statusBarStyle = UIStatusBarStyleDefault;

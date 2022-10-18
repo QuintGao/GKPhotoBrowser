@@ -99,6 +99,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 是否禁用默认单击事件
 @property (nonatomic, assign) BOOL isSingleTapDisabled;
 
+/// 是否禁用双击事件，默认NO
+@property (nonatomic, assign) BOOL isDoubleTapDisabled;
+
 /// 是否显示状态栏，默认NO：不显示状态栏
 @property (nonatomic, assign) BOOL isStatusBarShow;
 

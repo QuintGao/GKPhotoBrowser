@@ -147,8 +147,6 @@ static Class imageManagerClass = nil;
     
     if (self.isAppeared) return;
     self.isAppeared = YES;
-    // 手势和监听
-    [self addGestureAndObserver];
     
     GKPhoto *photo          = [self currentPhoto];
     GKPhotoView *photoView  = [self currentPhotoView];
@@ -179,6 +177,11 @@ static Class imageManagerClass = nil;
         default:
             break;
     }
+    
+    // 手势和监听
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self addGestureAndObserver];
+    });
 }
 
 - (void)didReceiveMemoryWarning {
@@ -571,13 +574,15 @@ static Class imageManagerClass = nil;
 	singleTap.delegate = self;
     [self.photoScrollView addGestureRecognizer:singleTap];
     
-    // 双击手势
-    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-    doubleTap.numberOfTapsRequired = 2;
-	doubleTap.delaysTouchesEnded = NO;
-	doubleTap.delegate = self;
-    [self.photoScrollView addGestureRecognizer:doubleTap];
-    [singleTap requireGestureRecognizerToFail:doubleTap];
+    if (!self.isDoubleTapDisabled) {
+        // 双击手势
+        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+        doubleTap.numberOfTapsRequired = 2;
+        doubleTap.delaysTouchesEnded = NO;
+        doubleTap.delegate = self;
+        [self.photoScrollView addGestureRecognizer:doubleTap];
+        [singleTap requireGestureRecognizerToFail:doubleTap];
+    }
     
     // 长按手势
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
