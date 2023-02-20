@@ -29,7 +29,13 @@
     return SDAnimatedImageView.class;
 }
 
-- (void)setImageForImageView:(UIImageView *)imageView url:(NSURL *)url placeholderImage:(UIImage *)placeholderImage progress:(GKWebImageProgressBlock)progress completion:(GKWebImageCompletionBlock)completion {
+- (void)setImageForImageView:(UIImageView *)imageView url:(NSURL *)url authToken:(NSDictionary *)token placeholderImage:(UIImage *)placeholderImage progress:(GKWebImageProgressBlock)progress completion:(GKWebImageCompletionBlock)completion {
+    
+    SDWebImageDownloader *manager = [SDWebImageManager sharedManager].imageLoader;
+    for (NSString *key in token) {
+        [manager setValue:[token objectForKey:key] forHTTPHeaderField:key];
+    }
+   
     [imageView sd_setImageWithURL:url placeholderImage:placeholderImage options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
         !progress ? : progress(receivedSize, expectedSize);
     } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {

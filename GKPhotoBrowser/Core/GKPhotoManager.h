@@ -35,6 +35,12 @@ NS_ASSUME_NONNULL_BEGIN
 /** 占位图 */
 @property (nonatomic, strong, nullable) UIImage  *placeholderImage;
 
+/** originUrl 权限header  */
+@property (nonatomic, strong, nullable) NSDictionary  *originAuthToken;
+
+/** url 权限header  */
+@property (nonatomic, strong, nullable) NSDictionary  *authToken;
+
 
 /************************内部使用，无需关心 ********************/
 /** 图片是否加载完成 */

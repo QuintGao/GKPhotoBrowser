@@ -201,10 +201,13 @@
         }
         
         NSURL *url = nil;
+        NSDictionary *authToken = nil;
         if (photo.originFinished) {
             url = photo.originUrl;
+            authToken = photo.originAuthToken;
         }else {
             url = isOrigin ? photo.originUrl : photo.url;
+            authToken = isOrigin ? photo.originAuthToken : photo.authToken;
         }
         
         if (url.absoluteString.length > 0) {
@@ -275,7 +278,7 @@
                 });
             };
             
-            [_imageProtocol setImageForImageView:self.imageView url:url placeholderImage:placeholderImage progress:progressBlock completion:completionBlock];
+            [_imageProtocol setImageForImageView:self.imageView url:url authToken:authToken placeholderImage:placeholderImage progress:progressBlock completion:completionBlock];
         }else {
             if (self.imageView.image) {
                 photo.finished = YES;
