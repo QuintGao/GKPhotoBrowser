@@ -116,6 +116,7 @@
         if (originImage) {
             photo.originFinished = YES;
             placeholderImage = originImage;
+            isOrigin = YES;
         }
         
         // 如果没有就加载sourceImageView的image
@@ -266,6 +267,9 @@
                         [self.loadingView stopLoading];
                     }
                     if (!isOrigin) {
+                        [self adjustFrame];
+                    }
+                    if (self.imageView.image && CGSizeEqualToSize(self.imageView.frame.size, CGSizeZero)) {
                         [self adjustFrame];
                     }
                 });
