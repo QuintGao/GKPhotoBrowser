@@ -35,6 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
 /** 占位图 */
 @property (nonatomic, strong, nullable) UIImage  *placeholderImage;
 
+#pragma mark - 以下属性播放视频时使用
+@property (nonatomic, strong) NSURL              *videoUrl;
+@property (nonatomic, strong, nullable) PHAsset  *videoAsset;
+@property (nonatomic, assign, readonly) BOOL     isVideo;
+ 
 
 /************************内部使用，无需关心 ********************/
 /** 图片是否加载完成 */
@@ -51,6 +56,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 记录每个GKPhotoView的滑动位置 */
 @property (nonatomic, assign) CGPoint            offset;
+
+/** 视频是否准备过 */
+@property (nonatomic, assign) BOOL               isVideoPrepared;
 
 @end
 

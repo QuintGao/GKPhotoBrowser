@@ -11,20 +11,27 @@ Pod::Spec.new do |s|
   
   s.default_subspec = 'SD'
   
-  s.subspec 'Core' do |core|
-    core.source_files = 'GKPhotoBrowser/Core'
-    core.resource = 'GKPhotoBrowser/GKPhotoBrowser.bundle'
+  s.subspec 'Core' do |ss|
+    ss.source_files = 'GKPhotoBrowser/Core'
+    ss.resource = 'GKPhotoBrowser/GKPhotoBrowser.bundle'
+    ss.dependency 'GKSliderView'
   end
   
-  s.subspec 'SD' do |sd|
-    sd.source_files = 'GKPhotoBrowser/SDWebImage'
-    sd.dependency 'GKPhotoBrowser/Core'
-    sd.dependency 'SDWebImage', '~> 5.0'
+  s.subspec 'SD' do |ss|
+    ss.source_files = 'GKPhotoBrowser/SDWebImage'
+    ss.dependency 'GKPhotoBrowser/Core'
+    ss.dependency 'SDWebImage', '~> 5.0'
   end
   
-  s.subspec 'YY' do |yy|
-    yy.source_files = 'GKPhotoBrowser/YYWebImage'
-    yy.dependency 'GKPhotoBrowser/Core'
-    yy.dependency 'YYWebImage'
+  s.subspec 'YY' do |ss|
+    ss.source_files = 'GKPhotoBrowser/YYWebImage'
+    ss.dependency 'GKPhotoBrowser/Core'
+    ss.dependency 'YYWebImage'
   end
+  
+  s.subspec 'AVPlayer' do |ss|
+    ss.source_files = 'GKPhotoBrowser/AVPlayer'
+    ss.dependency 'GKPhotoBrowser/Core'
+  end
+  
 end

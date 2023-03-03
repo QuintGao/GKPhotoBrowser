@@ -10,7 +10,6 @@
 #import <TZImagePickerController/TZImagePickerController.h>
 #import "GKPhotosView.h"
 #import "GKPhotoBrowser.h"
-#import "GKYYWebImageManager.h"
 
 @interface GKPublishViewController ()<TZImagePickerControllerDelegate, GKPhotosViewDelegate>
 

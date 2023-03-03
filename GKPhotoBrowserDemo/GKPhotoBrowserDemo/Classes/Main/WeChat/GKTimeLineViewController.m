@@ -117,6 +117,9 @@
             photo.url = [NSURL URLWithString:obj.url];
             
             photo.sourceImageView = cell.photosView.subviews[idx];
+            if (obj.isVideo) {
+                photo.videoUrl = [NSURL URLWithString:obj.video_url];
+            }
             
             [photos addObject:photo];
         }];
@@ -129,8 +132,10 @@
         browser.doubleZoomScale = 2.0f;
         browser.isAdaptiveSafeArea = YES;
         browser.hidesCountLabel = YES;
-        browser.pageControl.hidden = NO;
-        browser.saveBtn.hidden = NO;
+        browser.hidesPageControl = YES;
+        browser.hidesSavedBtn = YES;
+        browser.isFullWidthForLandScape = NO;
+        browser.isSingleTapDisabled = YES;
 //        browser.isDoubleTapDisabled = YES;
 //        browser.isStatusBarShow = YES;
 //        browser.bgColor = UIColor.whiteColor;
@@ -142,7 +147,7 @@
 //        }
 //        [browser setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
         
-        browser.isFollowSystemRotation = YES;
+//        browser.isFollowSystemRotation = YES;
         browser.delegate = weakSelf;
         [browser showFromVC:weakSelf];
         weakSelf.browser = browser;
@@ -158,6 +163,21 @@
 #pragma mark - GKPhotoBrowserDelegate
 - (void)photoBrowser:(GKPhotoBrowser *)browser didChangedIndex:(NSInteger)index {
     
+}
+
+- (void)photoBrowser:(GKPhotoBrowser *)browser singleTapWithIndex:(NSInteger)index {
+    GKPhoto *photo = browser.curPhoto;
+    if (photo.isVideo) {
+        if (browser.player.isPlaying) {
+            [browser.player pause];
+            browser.curPhotoView.playBtn.hidden = NO;
+        }else {
+            [browser.player play];
+            browser.curPhotoView.playBtn.hidden = YES;
+        }
+    }else {
+        [browser dismiss];
+    }
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser longPressWithIndex:(NSInteger)index {

@@ -10,6 +10,10 @@
 
 @implementation GKPhoto
 
+- (BOOL)isVideo {
+    return self.videoUrl || self.videoAsset;
+}
+
 @end
 
 @implementation GKPhotoManager

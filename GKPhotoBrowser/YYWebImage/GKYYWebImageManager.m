@@ -17,7 +17,7 @@
 @implementation GKYYWebImageManager
 
 - (Class)imageViewClass {
-    return YYAnimatedImageView.class;
+    return [NSClassFromString(@"YYAnimatedImageView") class];
 }
 
 - (void)setImageForImageView:(UIImageView *)imageView url:(NSURL *)url placeholderImage:(UIImage *)placeholderImage progress:(GKWebImageProgressBlock)progressBlock completion:(GKWebImageCompletionBlock)completionBlock {
