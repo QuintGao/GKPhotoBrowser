@@ -75,6 +75,8 @@
         textF.origin.y = imgF.origin.y + imgF.size.height + 10;
         self.failureLabel.frame = textF;
     }
+    
+    [self layoutAnimatedLayer];
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -90,8 +92,7 @@
 }
 
 - (void)layoutAnimatedLayer {
-    CALayer *layer = self.animatedLayer;
-    [self.layer addSublayer:layer];
+    CALayer *layer = [self animatedLayer];
     
     CGFloat viewW   = CGRectGetWidth(self.bounds);
     CGFloat viewH   = CGRectGetHeight(self.bounds);
@@ -107,6 +108,7 @@
     layer.position = CGPointMake(positionX, positionY);
 
     self.backgroundLayer.position = layer.position;
+    self.animatedLayer.position = layer.position;
 }
 
 #pragma mark - 懒加载
@@ -335,6 +337,8 @@
     [self.failureImgView removeFromSuperview];
     self.failureImgView = nil;
     
+    CALayer *layer = self.animatedLayer;
+    [self.layer addSublayer:layer];
     [self layoutAnimatedLayer];
     
     if (self.loadingStyle == GKLoadingStyleIndeterminate) {
