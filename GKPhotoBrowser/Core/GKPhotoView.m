@@ -43,6 +43,8 @@
 
 @property (nonatomic, strong, readwrite) UIImageView    *imageView;
 
+@property (nonatomic, strong, readwrite) UIButton       *playBtn;
+
 @property (nonatomic, strong, readwrite) GKLoadingView  *loadingView;
 
 @property (nonatomic, strong, readwrite) GKPhoto        *photo;
@@ -65,6 +67,7 @@
         self.backgroundColor = [UIColor clearColor];
         [self addSubview:self.scrollView];
         [self.scrollView addSubview:self.imageView];
+        [self addSubview:self.playBtn];
     }
     return self;
 }
@@ -72,7 +75,6 @@
 - (void)setupPhoto:(GKPhoto *)photo {
     _photo = photo;
     
-    // 加载图片
     [self loadImageWithPhoto:photo isOrigin:NO];
 }
 
@@ -89,6 +91,71 @@
     self.photo.failed   = NO;
     
     [self loadImageWithPhoto:self.photo isOrigin:YES];
+}
+
+- (void)showLoading {
+    [self addSubview:self.loadingView];
+    [self.loadingView startLoading];
+}
+
+- (void)hideLoading {
+    [self.loadingView stopLoading];
+}
+
+- (void)showFailure {
+    [self.loadingView showFailure];
+}
+
+- (void)didScrollAppear {
+    if (!self.photo.isVideo) return;
+    
+    // 如果没有设置，则设置播放内容
+    if (!self.player.assetURL || self.player.assetURL != self.photo.videoUrl) {
+        self.player.assetURL = self.photo.videoUrl;
+        [self.player prepareToPlay];
+    }
+    
+    if (self.player.videoView.superview != self.imageView) {
+        [self.imageView addSubview:self.player.videoView];
+        [self updateFrame];
+    }
+    
+    self.playBtn.hidden = YES;
+    
+    [self.player play];
+    
+    NSLog(@"didAppear");
+}
+
+- (void)willScrollDisappear {
+    if (!self.photo.isVideo) return;
+    [self.player pause];
+}
+
+- (void)didScrollDisappear {
+    if (!self.photo.isVideo) return;
+    self.playBtn.hidden = NO;
+}
+
+- (void)didDismissAppear {
+    if (!self.photo.isVideo) return;
+    [self.player play];
+    self.playBtn.hidden = YES;
+}
+
+- (void)willDismissDisappear {
+    if (!self.photo.isVideo) return;
+    [self.player pause];
+}
+
+- (void)didDismissDisappear {
+    if (!self.photo.isVideo) return;
+    [self.player stop];
+}
+
+- (void)updateFrame {
+    if (!self.photo.isVideo) return;
+    [self.player updateFrame:self.imageView.bounds];
 }
 
 #pragma mark - 加载图片
@@ -116,6 +183,7 @@
         if (originImage) {
             photo.originFinished = YES;
             placeholderImage = originImage;
+            isOrigin = YES;
         }
         
         // 如果没有就加载sourceImageView的image
@@ -265,7 +333,12 @@
                         self.scrollView.scrollEnabled = YES;
                         [self.loadingView stopLoading];
                     }
-                    [self adjustFrame];
+                    if (!isOrigin) {
+                        [self adjustFrame];
+                    }
+                    if (self.imageView.image && CGSizeEqualToSize(self.imageView.frame.size, CGSizeZero)) {
+                        [self adjustFrame];
+                    }
                 });
             };
             
@@ -310,6 +383,9 @@
     
     if (self.imageView.image) {
         CGSize imageSize = self.imageView.image.size;
+        if (imageSize.width == 0) imageSize.width = self.scrollView.frame.size.width;
+        if (imageSize.height == 0) imageSize.height = self.scrollView.frame.size.height;
+        
         CGRect imageF = (CGRect){{0, 0}, imageSize};
         
         // 图片的宽度 = 屏幕的宽度
@@ -331,7 +407,7 @@
         }
         
         // 设置图片的frame
-        self.imageView.frame = imageF;
+        self.imageView.bounds = imageF;
         self.scrollView.contentSize = self.imageView.frame.size;
         
         if (imageF.size.height <= self.scrollView.bounds.size.height) {
@@ -368,7 +444,7 @@
         self.loadingView.bounds = self.scrollView.frame;
         self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
     }
-
+    
     
     // frame调整完毕，重新设置缩放
     if (self.photo.isZooming) {
@@ -379,6 +455,9 @@
     
     // 重置offset
     self.scrollView.contentOffset = self.photo.offset;
+    [self updateFrame];
+    [self.playBtn sizeToFit];
+    self.playBtn.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
 }
 
 - (CGPoint)centerOfScrollViewContent:(UIScrollView *)scrollView {
@@ -433,7 +512,7 @@
         _scrollView.frame                = CGRectMake(0, 0, GKScreenW, GKScreenH);
         _scrollView.backgroundColor      = [UIColor clearColor];
         _scrollView.delegate             = self;
-        _scrollView.clipsToBounds        = YES;
+        _scrollView.clipsToBounds        = NO;
         _scrollView.multipleTouchEnabled = YES; // 多点触摸开启
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
@@ -447,9 +526,18 @@
 - (UIImageView *)imageView {
     if (!_imageView) {
         _imageView = [_imageProtocol.imageViewClass new];
-        _imageView.clipsToBounds = YES;
     }
     return _imageView;
+}
+
+- (UIButton *)playBtn {
+    if (!_playBtn) {
+        _playBtn = [[UIButton alloc] init];
+        [_playBtn setImage:GKPhotoBrowserImage(@"gk_video_play") forState:UIControlStateNormal];
+        _playBtn.userInteractionEnabled = NO;
+        _playBtn.hidden = YES;
+    }
+    return _playBtn;
 }
 
 - (GKLoadingView *)loadingView {

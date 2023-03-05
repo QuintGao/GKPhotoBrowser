@@ -300,6 +300,20 @@
     [CATransaction commit];
 }
 
+- (void)setFailText:(NSString *)failText {
+    if (failText) {
+        _failText = failText;
+        self.failureLabel.text = failText;
+    }
+}
+
+- (void)setFailImage:(UIImage *)failImage {
+    if (failImage) {
+        _failImage = failImage;
+        self.failureImgView.image = failImage;
+    }
+}
+
 - (CGSize)sizeThatFits:(CGSize)size {
     CGFloat wh = (self.radius + self.lineWidth * 0.5 + 5 ) * 2;
     return CGSizeMake(wh, wh);

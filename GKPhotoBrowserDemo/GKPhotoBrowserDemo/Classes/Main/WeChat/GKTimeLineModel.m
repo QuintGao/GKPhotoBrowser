@@ -37,6 +37,10 @@
     return self.width / self.height;
 }
 
+- (BOOL)isVideo {
+    return self.video_url.length > 0;
+}
+
 @end
 
 @implementation GKTimeLineFrame

@@ -6,7 +6,7 @@
 //  Copyright © 2020 QuintGao. All rights reserved.
 //
 
-#import <YYImage/YYImage.h>
+#import <YYWebImage/YYWebImage.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

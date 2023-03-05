@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GKPhotoManager.h"
 #import "GKWebImageProtocol.h"
+#import "GKVideoPlayerProtocol.h"
 #import "GKLoadingView.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -25,9 +26,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) UIImageView  *imageView;
 
+@property (nonatomic, strong, readonly) UIButton     *playBtn;
+
 @property (nonatomic, strong, readonly) GKLoadingView *loadingView;
 
 @property (nonatomic, strong, readonly) GKPhoto *photo;
+
+@property (nonatomic, weak) id<GKVideoPlayerProtocol> player;
 
 @property (nonatomic, copy) void(^zoomEnded)(GKPhotoView *photoView, CGFloat scale);
 @property (nonatomic, copy) void(^loadFailed)(GKPhotoView *photoView);
@@ -70,6 +75,24 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)adjustFrame;
 // 重新布局
 - (void)resetFrame;
+
+- (void)showLoading;
+- (void)hideLoading;
+- (void)showFailure;
+
+// 处理视频播放
+
+// 左右滑动
+- (void)didScrollAppear;
+- (void)willScrollDisappear;
+- (void)didScrollDisappear;
+
+// 隐藏滑动
+- (void)didDismissAppear;
+- (void)willDismissDisappear;
+- (void)didDismissDisappear;
+
+- (void)updateFrame;
 
 @end
 

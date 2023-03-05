@@ -15,6 +15,7 @@ static CGFloat   photoH;
 #import "GKPhotosView.h"
 #import "GKTimeLineModel.h"
 #import <SDWebImage/SDWebImage.h>
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 @interface GKPhotosView()
 
@@ -97,6 +98,13 @@ static CGFloat   photoH;
             imgView.image = [SDAnimatedImage imageNamed:image.url];
         }else {
             imgView.image = [UIImage imageNamed:image.url];
+        }
+        if (image.isVideo) {
+            UIImageView *playView = [[UIImageView alloc] init];
+            playView.image = GKPhotoBrowserImage(@"gk_video_play");
+            [imgView addSubview:playView];
+            playView.bounds = CGRectMake(0, 0, 30, 30);
+            playView.center = imgView.center;
         }
     }
 }
@@ -188,6 +196,12 @@ static CGFloat   photoH;
         y = row * (photoH + photoMargin);
         
         obj.frame = CGRectMake(x, y, w, h);
+        
+        if (obj.subviews.count > 0) {
+            [obj.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj1, NSUInteger idx, BOOL * _Nonnull stop) {
+                obj1.center = CGPointMake(w / 2, h / 2);
+            }];
+        }
     }];
 }
 

@@ -14,8 +14,8 @@
 // 判断iPhone X
 #define KIsiPhoneX          [GKPhotoBrowserConfigure gk_isNotchedScreen]
 // 底部安全区域高度
-#define kSafeTopSpace       (KIsiPhoneX ? 24.0f : 0.0f)
-#define kSafeBottomSpace    (KIsiPhoneX ? 34.0f : 0.0f)
+#define kSafeTopSpace       [GKPhotoBrowserConfigure gk_safeAreaInsets].top
+#define kSafeBottomSpace    [GKPhotoBrowserConfigure gk_safeAreaInsets].bottom
 
 // 默认最大缩放程度
 #define kMaxZoomScale               2.0f
