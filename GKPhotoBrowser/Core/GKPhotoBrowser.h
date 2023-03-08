@@ -65,6 +65,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 
 @interface GKPhotoBrowser : UIViewController
 
+/** 底部容器 */
+@property (nonatomic, strong, readonly) UIView        *containerView;
 /** 底部内容试图 */
 @property (nonatomic, strong, readonly) UIView        *contentView;
 /** 滑动容器视图 */
@@ -175,6 +177,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// showStyle = GKPhotoBrowserShowStylePush时无效
 @property (nonatomic, assign, getter=isAddNavigationController) BOOL addNavigationController;
 
+/// 视频暂停时显示的播放图
+@property (nonatomic, strong) UIImage *videoPlayImage;
 /// 视频播放结束后是否重播
 @property (nonatomic, assign) BOOL isVideoReplay;
 

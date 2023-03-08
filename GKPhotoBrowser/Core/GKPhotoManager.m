@@ -8,10 +8,71 @@
 
 #import "GKPhotoManager.h"
 
+@interface GKPhoto()
+
+@property (nonatomic, assign) PHImageRequestID imageRequestID;
+@property (nonatomic, assign) PHImageRequestID videoRequestID;
+
+@end
+
 @implementation GKPhoto
 
 - (BOOL)isVideo {
     return self.videoUrl || self.videoAsset;
+}
+
+- (void)getImage:(void (^)(NSData * _Nonnull, UIImage * _Nonnull))completion {
+    __weak __typeof(self) weakSelf = self;
+    if (self.imageRequestID) {
+        [[PHImageManager defaultManager] cancelImageRequest:self.imageRequestID];
+        self.imageRequestID = 0;
+    }
+    
+    PHAsset *phAsset = self.imageAsset;
+    if (phAsset.mediaType == PHAssetMediaTypeImage) {
+        // Gif
+        if ([[phAsset valueForKey:@"filename"] hasSuffix:@"GIF"]) {
+            self.imageRequestID = [GKPhotoManager loadImageDataWithImageAsset:phAsset completion:^(NSData * _Nullable data) {
+                __strong __typeof(weakSelf) self = weakSelf;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (data) {
+                        !completion ?: completion(data, nil);
+                        self.imageRequestID = 0;
+                    }
+                });
+            }];
+        }else {
+            self.imageRequestID = [GKPhotoManager loadImageWithAsset:phAsset photoWidth:GKScreenW * 2 completion:^(UIImage * _Nullable image) {
+                __strong __typeof(weakSelf) self = weakSelf;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    !completion ?: completion(nil, image);
+                    self.imageRequestID = 0;
+                });
+            }];
+        }
+    }
+}
+
+- (void)getVideo:(void (^)(NSURL * _Nonnull))completion {
+    if (!self.isVideo) completion(nil);
+    if (self.videoAsset) {
+        if (self.videoRequestID) {
+            [[PHImageManager defaultManager] cancelImageRequest:self.videoRequestID];
+            self.videoRequestID = 0;
+        }
+        
+        __weak __typeof(self) weakSelf = self;
+        self.videoRequestID = [GKPhotoManager loadVideoWithAsset:self.videoAsset completion:^(NSURL * _Nonnull url) {
+            __strong __typeof(weakSelf) self = weakSelf;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.videoUrl = url;
+                self.videoRequestID = 0;
+                !completion ?: completion(url);
+            });
+        }];
+    }else {
+        !completion ?: completion(self.videoUrl);
+    }
 }
 
 @end
@@ -69,6 +130,17 @@
                 !completion ? : completion(resultImage);
             }];
         }
+    }];
+    return requestID;
+}
+
++ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(void (^)(NSURL * _Nonnull))completion {
+    PHVideoRequestOptions *option = [[PHVideoRequestOptions alloc] init];
+    option.networkAccessAllowed = YES;
+    option.progressHandler = nil;
+    PHImageRequestID requestID = [[PHImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem *playerItem, NSDictionary *info) {
+        AVURLAsset *urlAsset = (AVURLAsset *)playerItem.asset;
+        !completion ?: completion(urlAsset.URL);
     }];
     return requestID;
 }

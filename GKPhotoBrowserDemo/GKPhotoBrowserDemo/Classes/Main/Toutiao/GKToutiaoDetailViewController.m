@@ -9,7 +9,7 @@
 #import "GKToutiaoDetailViewController.h"
 #import "GKToutiaoModel.h"
 #import <WebKit/WebKit.h>
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 @interface GKToutiaoDetailViewController ()<WKNavigationDelegate, GKPhotoBrowserDelegate>
 

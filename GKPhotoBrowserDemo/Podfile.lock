@@ -15,27 +15,35 @@ PODS:
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
   - GKCover (3.0.1)
+  - GKMessageTool (1.0.5):
+    - MBProgressHUD
   - GKNavigationBar (1.7.2):
     - GKNavigationBar/GestureHandle (= 1.7.2)
     - GKNavigationBar/NavigationBar (= 1.7.2)
   - GKNavigationBar/GestureHandle (1.7.2)
   - GKNavigationBar/NavigationBar (1.7.2)
-  - GKPhotoBrowser/AVPlayer (2.4.6):
+  - GKPhotoBrowser (2.5.0):
+    - GKPhotoBrowser/Default (= 2.5.0)
+  - GKPhotoBrowser/AVPlayer (2.5.0):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (2.4.6):
+  - GKPhotoBrowser/Core (2.5.0):
     - GKSliderView
-  - GKPhotoBrowser/SD (2.4.6):
+  - GKPhotoBrowser/Default (2.5.0):
+    - GKPhotoBrowser/AVPlayer
+    - GKPhotoBrowser/SD
+  - GKPhotoBrowser/SD (2.5.0):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (2.4.6):
+  - GKPhotoBrowser/YY (2.5.0):
     - GKPhotoBrowser/Core
     - YYWebImage
   - GKSliderView (1.0.7)
+  - Masonry (1.1.0)
+  - MBProgressHUD (1.2.0)
   - SDAutoLayout (2.2.1)
   - SDWebImage (5.12.5):
     - SDWebImage/Core (= 5.12.5)
   - SDWebImage/Core (5.12.5)
-  - SVProgressHUD (2.2.5)
   - TZImagePickerController (3.7.6)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
@@ -49,13 +57,14 @@ PODS:
 DEPENDENCIES:
   - AFNetworking
   - GKCover
+  - GKMessageTool
   - GKNavigationBar
-  - GKPhotoBrowser/AVPlayer (from `../`)
-  - GKPhotoBrowser/SD (from `../`)
+  - GKPhotoBrowser (from `../`)
   - GKPhotoBrowser/YY (from `../`)
+  - Masonry
+  - MBProgressHUD
   - SDAutoLayout
   - SDWebImage
-  - SVProgressHUD
   - TZImagePickerController
   - YYModel
   - YYWebImage (~> 1.0.5)
@@ -64,11 +73,13 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - AFNetworking
     - GKCover
+    - GKMessageTool
     - GKNavigationBar
     - GKSliderView
+    - Masonry
+    - MBProgressHUD
     - SDAutoLayout
     - SDWebImage
-    - SVProgressHUD
     - TZImagePickerController
     - YYCache
     - YYImage
@@ -82,18 +93,20 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
+  GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: a2092a5baa0aaf436c17e113c5494652871ff89d
-  GKPhotoBrowser: e6f443eab4e559f637d2df5bd8b2fb5381f97d25
+  GKPhotoBrowser: b2f39e5f1a2da9c9cfde2300bdb013578f27d7a6
   GKSliderView: eccc83474549bf949aad0cfbeb9c868807943b1a
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
   SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
-  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   TZImagePickerController: fb446ac06ae9c217bc849185646a68465bcd0dd4
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
 
-PODFILE CHECKSUM: c7acf6bf32ff02ce25c957d2afa38688d27eb24c
+PODFILE CHECKSUM: a0b26256cb2d3fd43e54cfd0cb2d765bb9c2eb0c
 
 COCOAPODS: 1.11.3

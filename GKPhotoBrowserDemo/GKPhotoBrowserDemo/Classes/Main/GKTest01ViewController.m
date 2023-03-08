@@ -8,7 +8,7 @@
 
 #import "GKTest01ViewController.h"
 #import "GKTest01ViewCell.h"
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 @interface GKTest01ViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -102,7 +102,8 @@
 
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:indexPath.row];
     browser.showStyle = GKPhotoBrowserShowStyleNone;
-    browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate;
+//    browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate;
+    browser.failStyle = GKPhotoBrowserFailStyleOnlyImage;
     if (kIsiPad) {
         browser.isFollowSystemRotation = YES;
     }

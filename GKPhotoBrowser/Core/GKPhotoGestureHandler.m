@@ -57,7 +57,7 @@ int const static kDirectionPanThreshold = 5;
 
 @interface GKPhotoGestureHandler()
 
-@property (nonatomic, assign) CGPoint imageViewCenter;
+@property (nonatomic, assign) CGPoint photoViewCenter;
 
 @end
 
@@ -83,7 +83,6 @@ int const static kDirectionPanThreshold = 5;
     doubleTap.numberOfTapsRequired = 2;
     doubleTap.delaysTouchesEnded = NO;
     doubleTap.delegate = self;
-    [singleTap requireGestureRecognizerToFail:doubleTap];
     self.doubleTapGesture = doubleTap;
     
     // 长按手势
@@ -103,6 +102,7 @@ int const static kDirectionPanThreshold = 5;
     
     // 双击手势
     if (!self.browser.isDoubleTapDisabled) {
+        [self.singleTapGesture requireGestureRecognizerToFail:self.doubleTapGesture];
         [self.browser.photoScrollView addGestureRecognizer:self.doubleTapGesture];
     }
     
@@ -114,16 +114,18 @@ int const static kDirectionPanThreshold = 5;
 }
 
 - (void)addPanGesture:(BOOL)isFirst {
-    if (self.browser.showStyle == GKPhotoBrowserShowStylePush) {
-        [self removePanGesture];
+    if (isFirst || self.browser.isScreenRotateDisabled) { // 第一次进入或禁止处理屏幕旋转，直接添加手势
+        [self addPanGesture];
     }else {
-        if (isFirst || self.browser.isScreenRotateDisabled) { // 第一次进入或禁止处理屏幕旋转，直接添加手势
-            [self.browser.photoScrollView addGestureRecognizer:self.panGesture];
-        }else {
-            if (self.browser.currentOrientation == UIDeviceOrientationPortrait) {
-                [self.browser.photoScrollView addGestureRecognizer:self.panGesture];
-            }
+        if (self.browser.currentOrientation == UIDeviceOrientationPortrait) { // 竖屏
+            [self addPanGesture];
         }
+    }
+}
+
+- (void)addPanGesture {
+    if (![self.browser.photoScrollView.gestureRecognizers containsObject:self.panGesture]) {
+        [self.browser.photoScrollView addGestureRecognizer:self.panGesture];
     }
 }
 
@@ -230,8 +232,8 @@ int const static kDirectionPanThreshold = 5;
             CGPoint translation = [panGesture translationInView:panGesture.view];
             CGFloat imageViewScale = 1 - scale * 0.5;
             if (imageViewScale < 0.4) imageViewScale = 0.4;
-            photoView.imageView.center = CGPointMake(self.imageViewCenter.x + translation.x, self.imageViewCenter.y + translation.y);
-            photoView.imageView.transform = CGAffineTransformMakeScale(imageViewScale, imageViewScale);
+            photoView.center = CGPointMake(self.photoViewCenter.x + translation.x, self.photoViewCenter.y + translation.y);
+            photoView.transform = CGAffineTransformMakeScale(imageViewScale, imageViewScale);
             [self browserChangeAlpha:(1 - scale * scale)];
         }
             break;
@@ -266,7 +268,6 @@ int const static kDirectionPanThreshold = 5;
     if (!photoView) return;
     
     CGPoint point    = [panGesture translationInView:panGesture.view];
-    CGPoint location = [panGesture locationInView:panGesture.view];
     CGPoint velocity = [panGesture velocityInView:panGesture.view];
     
     switch (panGesture.state) {
@@ -276,7 +277,7 @@ int const static kDirectionPanThreshold = 5;
         }
             break;
         case UIGestureRecognizerStateChanged:{
-            photoView.imageView.transform = CGAffineTransformMakeTranslation(0, point.y);
+            photoView.transform = CGAffineTransformMakeTranslation(0, point.y);
             double percent = 1 - fabs(point.y) / panGesture.view.frame.size.height * 0.5;
             [self browserChangeAlpha:percent];
         }
@@ -308,7 +309,7 @@ int const static kDirectionPanThreshold = 5;
     if ([self.delegate respondsToSelector:@selector(browserWillDisappear)]) {
         [self.delegate browserWillDisappear];
     }
-    self.imageViewCenter = photoView.imageView.center;
+    self.photoViewCenter = photoView.center;
     
     self.isStatusBarShowing = self.browser.isStatusBarShow;
     
@@ -329,11 +330,9 @@ int const static kDirectionPanThreshold = 5;
     
     [UIView animateWithDuration:self.browser.animDuration animations:^{
         if (self.browser.hideStyle == GKPhotoBrowserHideStyleZoomScale) {
-            photoView.imageView.center = self.imageViewCenter;
-            photoView.imageView.transform = CGAffineTransformIdentity;
-        }else {
-            photoView.imageView.transform = CGAffineTransformIdentity;
+            photoView.center = self.photoViewCenter;
         }
+        photoView.transform = CGAffineTransformIdentity;
         [self browserChangeAlpha:1];
     }completion:^(BOOL finished) {
         photoView.loadingView.hidden = NO;

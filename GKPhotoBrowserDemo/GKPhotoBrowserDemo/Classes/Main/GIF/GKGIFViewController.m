@@ -8,7 +8,7 @@
 
 #import "GKGIFViewController.h"
 #import <WebKit/WebKit.h>
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 @interface GKGIFViewController ()<WKNavigationDelegate, GKPhotoBrowserDelegate>
 

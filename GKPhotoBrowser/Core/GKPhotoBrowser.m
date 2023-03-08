@@ -24,7 +24,12 @@
 static Class imageManagerClass = nil;
 static Class videoManagerClass = nil;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @interface GKPhotoBrowser()<UIScrollViewDelegate, GKPhotoGestureDelegate, GKPhotoRotationDelegate>
+
+@property (nonatomic, strong) UIView         *containerView;
 
 @property (nonatomic, strong) UIView         *contentView;
 
@@ -119,7 +124,7 @@ static Class videoManagerClass = nil;
                 if (self.isVideoReplay) {
                     [self.player replay];
                 } else {
-                    self.curPhotoView.playBtn.hidden = NO;
+                    [self.curPhotoView showPlayBtn];
                 }
             } break;
             case GKVideoPlayerStatusFailed: {
@@ -144,6 +149,15 @@ static Class videoManagerClass = nil;
 
 - (void)dealloc {
     [self.rotationHandler delDeviceOrientationObserver];
+}
+
+- (void)loadView {
+    if (self.handler.captureImage) {
+        self.view = [[UIImageView alloc] initWithImage:self.handler.captureImage];
+    }else {
+        self.view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    }
+    self.view.userInteractionEnabled = YES;
 }
 
 - (void)viewDidLoad {
@@ -189,9 +203,17 @@ static Class videoManagerClass = nil;
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
+    [self.curPhotoView didDismissDisappear];
+    
     if ([self.delegate respondsToSelector:@selector(photoBrowser:didDisappearAtIndex:)]) {
         [self.delegate photoBrowser:self didDisappearAtIndex:self.currentIndex];
     }
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    self.containerView.frame = self.view.bounds;
 }
 
 - (void)setupUI {
@@ -199,7 +221,9 @@ static Class videoManagerClass = nil;
         [self.navigationController setNavigationBarHidden:YES];
     }
     
-    self.view.backgroundColor = self.bgColor ? : [UIColor blackColor];
+    self.view.backgroundColor = UIColor.clearColor;
+    self.containerView = [[UIView alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:self.containerView];
     
     CGFloat width  = self.view.bounds.size.width;
     CGFloat height = self.view.bounds.size.height;
@@ -273,6 +297,7 @@ static Class videoManagerClass = nil;
     [self.gestureHandler addGestureRecognizer];
     
     if (self.isFollowSystemRotation) return;
+    
     if (!self.isScreenRotateDisabled) {
         [self.rotationHandler addDeviceOrientationObserver];
     }
@@ -288,10 +313,7 @@ static Class videoManagerClass = nil;
             [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
         }
     }else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         [[UIApplication sharedApplication] setStatusBarHidden:!isStatusBarShow];
-#pragma clang diagnostic pop
     }
 }
 
@@ -300,14 +322,11 @@ static Class videoManagerClass = nil;
     
     if (self.handler.statusBarAppearance) {
         if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-            [self prefersStatusBarHidden];
+            [self preferredStatusBarStyle];
             [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
         }
     }else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         [[UIApplication sharedApplication] setStatusBarStyle:statusBarStyle];
-#pragma clang diagnostic pop
     }
 }
 
@@ -372,19 +391,7 @@ static Class videoManagerClass = nil;
 }
 
 - (void)showFromVC:(UIViewController *)vc {
-    if (self.showStyle == GKPhotoBrowserShowStylePush) {
-        [vc.navigationController pushViewController:self animated:YES];
-    }else {
-        UIViewController *presentVC = self;
-        if (self.isAddNavigationController) {
-            presentVC = [[UINavigationController alloc] initWithRootViewController:self];
-        }
-        
-        presentVC.modalPresentationCapturesStatusBarAppearance = YES;
-        presentVC.modalPresentationStyle = UIModalPresentationCustom;
-        presentVC.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        [vc presentViewController:presentVC animated:NO completion:nil];
-    }
+    [self.handler showFromVC:vc];
 }
 
 - (void)dismiss {
@@ -713,6 +720,8 @@ static Class videoManagerClass = nil;
         
         if (@available(iOS 11.0, *)) {
             _photoScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
         }
     }
     return _photoScrollView;
@@ -881,3 +890,5 @@ static Class videoManagerClass = nil;
 }
 
 @end
+
+#pragma clang diagnostic pop

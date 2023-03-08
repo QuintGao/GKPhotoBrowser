@@ -9,7 +9,7 @@
 #import "GKTestViewController.h"
 #import "GKTest02ViewCell.h"
 #import "GKBottomView.h"
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 @interface GKTestViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 

@@ -8,12 +8,12 @@
 
 #import "GKTimeLineViewController.h"
 #import "GKTimeLineViewCell.h"
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
+#import <GKPhotoBrowser/GKYYWebImageManager.h>
 #import <SDWebImage/SDWebImage.h>
 #import <YYWebImage/YYWebImage.h>
-#import <SVProgressHUD/SVProgressHUD.h>
 #import "GKPublishViewController.h"
-#import "GKYYWebImageManager.h"
+#import <GKMessageTool/GKMessageTool.h>
 
 @interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -136,6 +136,7 @@
         browser.hidesSavedBtn = YES;
         browser.isFullWidthForLandScape = NO;
         browser.isSingleTapDisabled = YES;
+        browser.isVideoReplay = YES;
 //        browser.isDoubleTapDisabled = YES;
 //        browser.isStatusBarShow = YES;
 //        browser.bgColor = UIColor.whiteColor;
@@ -327,9 +328,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 NSLog(@"保存照片成功");
-                [SVProgressHUD showSuccessWithStatus:@"图片保存成功"];
+                [GKMessageTool showSuccess:@"图片保存成功"];
             } else if (error) {
-                [SVProgressHUD showErrorWithStatus:@"保存保存失败"];
+                [GKMessageTool showError:@"图片保存失败"];
                 NSLog(@"保存照片出错:%@",error.localizedDescription);
             }
         });

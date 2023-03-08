@@ -9,7 +9,7 @@
 #import "GKPublishViewController.h"
 #import <TZImagePickerController/TZImagePickerController.h>
 #import "GKPhotosView.h"
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 @interface GKPublishViewController ()<TZImagePickerControllerDelegate, GKPhotosViewDelegate>
 
@@ -41,8 +41,8 @@
 
 - (void)selectPhoto {
     TZImagePickerController *pickerVC = [[TZImagePickerController alloc] initWithMaxImagesCount:90 delegate:self];
-    pickerVC.allowTakeVideo = NO;
-    pickerVC.allowPickingVideo = NO;
+    pickerVC.allowTakeVideo = YES;
+    pickerVC.allowPickingVideo = YES;
     pickerVC.allowPickingGif = YES;
     pickerVC.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:pickerVC animated:YES completion:nil];
@@ -71,12 +71,21 @@
     self.photoView.frame = CGRectMake(0, 150, (KScreenW - 60 - 50 - 20), height);
 }
 
+- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAssets:(PHAsset *)asset {
+    [self.assets addObject:asset];
+    [self.photos addObject:coverImage];
+    
+    self.photoView.photoImages = self.photos;
+    CGFloat height = [GKPhotosView sizeWithCount:1 width:(kScreenH - 60 - 50 - 20) andMargin:5].height;
+    self.photoView.frame = CGRectMake(0, 150, (KScreenW - 60 - 50 - 20), height);
+}
+
 #pragma mark - GKPhotosViewDelegate
 - (void)photoTapped:(UIImageView *)imgView {
     NSMutableArray *photos = [NSMutableArray new];
     [self.assets enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         GKPhoto *photo = [GKPhoto new];
-        photo.imageAsset = self.assets[idx];
+        photo.videoAsset = self.assets[idx];
         photo.sourceImageView = self.photoView.subviews[idx];
         [photos addObject:photo];
     }];
@@ -85,6 +94,7 @@
     browser.showStyle = GKPhotoBrowserShowStyleZoom;
     browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
     browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask;
+    browser.isFullWidthForLandScape = NO;
     [browser showFromVC:self];
 }
 

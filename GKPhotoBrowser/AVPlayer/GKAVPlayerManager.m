@@ -63,7 +63,6 @@
 
 - (void)dealloc {
     [self stop];
-    NSLog(@"GKAVPlayerManager dealloc");
 }
 
 #pragma mark - GKVideoPlayerProtocol
@@ -71,21 +70,14 @@
     if (!_assetURL) return;
     [self initPlayer];
     self.status = GKVideoPlayerStatusPrepared;
-    NSLog(@"准备播放");
 }
 
 - (void)play {
-    NSLog(@"播放");
-    if (self.status == GKVideoPlayerStatusEnded) {
-        [self replay];
-    }else {
-        [self.player play];
-        _isPlaying = YES;        
-    }
+    [self.player play];
+    _isPlaying = YES;
 }
 
 - (void)replay {
-    NSLog(@"重播");
     __weak __typeof(self) weakSelf = self;
     [self seekToTime:0 completionHandler:^(BOOL finished) {
         __strong __typeof(weakSelf) self = weakSelf;
@@ -94,9 +86,9 @@
 }
 
 - (void)pause {
-    NSLog(@"暂停");
     if (!self.isPlaying) return;
     [self.player pause];
+    [self.player.currentItem cancelPendingSeeks];
     _isPlaying = NO;
     self.status = GKVideoPlayerStatusPaused;
 }
@@ -158,6 +150,9 @@
     
     // 播放结束
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playToEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.player.currentItem];
+    // 进入后台及前台
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayground) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)removePlayerObserver {
@@ -169,6 +164,8 @@
     [self.player.currentItem removeObserver:self forKeyPath:@"status"];
     [self.player.currentItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.player.currentItem];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
     self.isAddObserver = NO;
 }
 
@@ -178,10 +175,7 @@
         if ([keyPath isEqualToString:@"status"]) {
             switch (self.player.currentItem.status) {
                 case AVPlayerItemStatusReadyToPlay: {
-                    NSLog(@"readtoplay");
-                    if (self.status != GKVideoPlayerStatusEnded) {
-                        self.status = GKVideoPlayerStatusPlaying;
-                    }
+                    self.status = GKVideoPlayerStatusPlaying;
                     _totalTime = CMTimeGetSeconds(self.player.currentItem.duration);
                     if (!self.timeObserver) {
                         __weak __typeof(self) weakSelf = self;
@@ -215,6 +209,7 @@
     }
 }
 
+#pragma mark - Getter
 - (UIView *)videoView {
     if (!_videoView) {
         _videoView = [[GKAVPlayerView alloc] init];
@@ -222,31 +217,9 @@
     return _videoView;
 }
 
+#pragma mark - Setter
 - (void)setStatus:(GKVideoPlayerStatus)status {
     _status = status;
-    switch (status) {
-        case GKVideoPlayerStatusPrepared:
-            NSLog(@"准备播放");
-            break;
-        case GKVideoPlayerStatusBuffering:
-            NSLog(@"缓冲中");
-            break;
-        case GKVideoPlayerStatusPlaying:
-            NSLog(@"播放中");
-            break;
-        case GKVideoPlayerStatusPaused:
-            NSLog(@"播放暂停");
-            break;
-        case GKVideoPlayerStatusEnded:
-            NSLog(@"播放结束");
-            break;
-        case GKVideoPlayerStatusFailed:
-            NSLog(@"播放失败");
-            break;
-            
-        default:
-            break;
-    }
     !self.playerStatusChange ?: self.playerStatusChange(self, status);
 }
 

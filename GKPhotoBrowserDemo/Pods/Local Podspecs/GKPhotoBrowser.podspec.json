@@ -1,6 +1,6 @@
 {
   "name": "GKPhotoBrowser",
-  "version": "2.4.6",
+  "version": "2.5.0",
   "summary": "iOS自定义图片浏览器，支持CocoaPods",
   "homepage": "https://github.com/QuintGao/GKPhotoBrowser",
   "license": "MIT",
@@ -13,10 +13,21 @@
   },
   "source": {
     "git": "https://github.com/QuintGao/GKPhotoBrowser.git",
-    "tag": "2.4.6"
+    "tag": "2.5.0"
   },
-  "default_subspecs": "SD",
+  "default_subspecs": "Default",
   "subspecs": [
+    {
+      "name": "Default",
+      "dependencies": {
+        "GKPhotoBrowser/SD": [
+
+        ],
+        "GKPhotoBrowser/AVPlayer": [
+
+        ]
+      }
+    },
     {
       "name": "Core",
       "source_files": "GKPhotoBrowser/Core",

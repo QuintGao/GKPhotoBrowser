@@ -8,6 +8,9 @@
 #import "GKPhotoBrowserHandler.h"
 #import "GKPhotoBrowser.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @implementation GKPhotoBrowserHandler
 
 - (instancetype)init {
@@ -26,6 +29,24 @@
     BOOL hasKey = [infoDict.allKeys containsObject:@"UIViewControllerBasedStatusBarAppearance"];
     BOOL appearance = [[infoDict objectForKey:@"UIViewControllerBasedStatusBarAppearance"] boolValue];
     self.statusBarAppearance = (hasKey && appearance) || !hasKey;
+}
+
+- (void)showFromVC:(UIViewController *)vc {
+    if (self.browser.showStyle == GKPhotoBrowserShowStylePush) {
+        UIImage *image = [self getCaptureWithView:vc.view.window];
+        self.captureImage = image;
+        [vc.navigationController pushViewController:self.browser animated:YES];
+    }else {
+        UIViewController *presentVC = self.browser;
+        if (self.browser.isAddNavigationController) {
+            presentVC = [[UINavigationController alloc] initWithRootViewController:self.browser];
+        }
+        
+        presentVC.modalPresentationCapturesStatusBarAppearance = YES;
+        presentVC.modalPresentationStyle = UIModalPresentationCustom;
+        presentVC.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        [vc presentViewController:presentVC animated:NO completion:nil];
+    }
 }
 
 #pragma mark - BrowserShow
@@ -48,6 +69,7 @@
 
 - (void)browserNoneShow {
     self.browser.view.alpha = 0;
+    [self browserChangeAlpha:1];
     [UIView animateWithDuration:self.browser.animDuration animations:^{
         self.browser.view.alpha = 1.0;
     }completion:^(BOOL finished) {
@@ -57,7 +79,7 @@
 }
 
 - (void)browserPushShow {
-    self.browser.view.backgroundColor = self.browser.bgColor ? : [UIColor blackColor];
+    self.browser.containerView.backgroundColor = self.browser.bgColor ? : [UIColor blackColor];
     self.isShow = YES;
     [self.browser browserFirstAppear];
 }
@@ -99,7 +121,7 @@
     [UIView animateWithDuration:self.browser.animDuration animations:^{
         photoView.imageView.frame = endRect;
         [photoView updateFrame];
-        self.browser.view.backgroundColor = self.browser.bgColor ? : [UIColor blackColor];
+        [self browserChangeAlpha:1];
     }completion:^(BOOL finished) {
         self.isShow = YES;
         [self.browser browserFirstAppear];
@@ -113,16 +135,14 @@
     
     if (!self.browser.isFollowSystemRotation) {
         // 状态栏恢复到竖屏
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         if (@available(iOS 13.0, *)) {} else {
             [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
         }
-#pragma clang diagnostic pop
     }
     
     if (self.browser.showStyle == GKPhotoBrowserShowStylePush) {
         [self.browser removeRotationObserver];
+        self.browser.photoScrollView.clipsToBounds = YES;
         [self.browser.navigationController popViewControllerAnimated:YES];
     }else {
         // 显示状态栏
@@ -179,6 +199,7 @@
     if (CGRectEqualToRect(sourceRect, CGRectZero)) {
         if (photo.sourceImageView == nil) {
             [UIView animateWithDuration:self.browser.animDuration animations:^{
+                photoView.imageView.alpha = 0;
                 [self browserChangeAlpha:0];
             }completion:^(BOOL finished) {
                 [self dismissAnimated:self.browser.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
@@ -249,7 +270,7 @@
 - (void)dismissAnimated:(BOOL)animated {
     GKPhoto *photo = self.browser.curPhotoView.photo;
     
-    if (animated) {
+    if (animated && self.browser.showStyle != GKPhotoBrowserShowStylePush) {
         [UIView animateWithDuration:self.browser.animDuration animations:^{
             photo.sourceImageView.alpha = 1.0;
         }];
@@ -259,10 +280,7 @@
     
     if (!self.browser.isFollowSystemRotation) {
         if (@available(iOS 13.0, *)) {} else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
-#pragma clang diagnostic pop
         }
     }
     
@@ -270,12 +288,13 @@
     [self.browser removeRotationObserver];
     
     if (!self.statusBarAppearance) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         [[UIApplication sharedApplication] setStatusBarStyle:self.originStatusBarStyle];
-#pragma clang diagnostic pop
     }
-    [self.browser dismissViewControllerAnimated:NO completion:nil];
+    if (self.browser.showStyle == GKPhotoBrowserShowStylePush) {
+        [self.browser.navigationController popViewControllerAnimated:NO];
+    }else {
+        [self.browser dismissViewControllerAnimated:NO completion:nil];
+    }
     
     if ([self.browser.delegate respondsToSelector:@selector(photoBrowser:panEndedWithIndex:willDisappear:)]) {
         [self.browser.delegate photoBrowser:self.browser panEndedWithIndex:self.browser.currentIndex willDisappear:YES];
@@ -283,10 +302,23 @@
 }
 
 - (void)browserChangeAlpha:(CGFloat)alpha {
-    self.browser.view.backgroundColor = self.browser.bgColor ? [self.browser.bgColor colorWithAlphaComponent:alpha] : [[UIColor blackColor] colorWithAlphaComponent:alpha];
+    UIColor *bgColor = self.browser.bgColor ?: UIColor.blackColor;
+    
+    self.browser.containerView.backgroundColor = [bgColor colorWithAlphaComponent:alpha];
     for (UIView *view in self.browser.coverViews) {
         view.alpha = alpha;
     }
 }
 
+- (UIImage *)getCaptureWithView:(UIView *)view {
+    if (!view) return nil;
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, 0);
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 @end
+
+#pragma clang diagnostic pop

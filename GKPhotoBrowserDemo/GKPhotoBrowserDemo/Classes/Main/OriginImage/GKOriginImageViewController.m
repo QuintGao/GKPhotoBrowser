@@ -7,7 +7,7 @@
 //
 
 #import "GKOriginImageViewController.h"
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 @interface GKOriginImageViewController ()<UICollectionViewDataSource, UICollectionViewDelegate, GKPhotoBrowserDelegate>
 

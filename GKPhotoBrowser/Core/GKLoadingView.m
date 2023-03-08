@@ -55,11 +55,13 @@
     // centerButton必须保持在loadingView内部
     CGFloat btnWH = self.radius * 2 - self.lineWidth;
     
-    self.centerButton.bounds = CGRectMake(0, 0, btnWH, btnWH);
-    self.centerButton.center = CGPointMake(CGRectGetWidth(self.bounds) * 0.5, CGRectGetHeight(self.bounds) * 0.5);
-    
-    self.centerButton.layer.cornerRadius  = btnWH * 0.5;
-    self.centerButton.layer.masksToBounds = YES;
+    if (self.centerButton) {
+        self.centerButton.bounds = CGRectMake(0, 0, btnWH, btnWH);
+        self.centerButton.center = CGPointMake(CGRectGetWidth(self.bounds) * 0.5, CGRectGetHeight(self.bounds) * 0.5);
+        
+        self.centerButton.layer.cornerRadius  = btnWH * 0.5;
+        self.centerButton.layer.masksToBounds = YES;
+    }
     
     if (self.failStyle == GKPhotoBrowserFailStyleOnlyText) {
         self.failureLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
@@ -92,7 +94,7 @@
 }
 
 - (void)layoutAnimatedLayer {
-    CALayer *layer = [self animatedLayer];
+    CALayer *layer = self.backgroundLayer;
     
     CGFloat viewW   = CGRectGetWidth(self.bounds);
     CGFloat viewH   = CGRectGetHeight(self.bounds);
@@ -129,9 +131,6 @@
 
 - (CAShapeLayer *)animatedLayer {
     if (!_animatedLayer) {
-        
-        [self.layer addSublayer:self.backgroundLayer];
-        
         CGPoint arcCenter = [self layerCenter];
         
         _animatedLayer               = [CAShapeLayer layer];
@@ -337,8 +336,8 @@
     [self.failureImgView removeFromSuperview];
     self.failureImgView = nil;
     
-    CALayer *layer = self.animatedLayer;
-    [self.layer addSublayer:layer];
+    [self.layer addSublayer:self.backgroundLayer];
+    [self.layer addSublayer:self.animatedLayer];
     [self layoutAnimatedLayer];
     
     if (self.loadingStyle == GKLoadingStyleIndeterminate) {
@@ -449,20 +448,6 @@
     self.backgroundLayer = nil;
     
     [self.layer removeAllAnimations];
-}
-
-- (void)startLoadingWithDuration:(NSTimeInterval)duration completion:(void (^)(GKLoadingView *, BOOL))completion {
-    self.completion = completion;
-    
-    self.progress = 1.0;
-    
-    CABasicAnimation *pathAnimation     = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-    pathAnimation.duration              = duration;
-    pathAnimation.fromValue             = @(0.0);
-    pathAnimation.toValue               = @(1.0);
-    pathAnimation.removedOnCompletion   = YES;
-    pathAnimation.delegate              = self;
-    [self.animatedLayer addAnimation:pathAnimation forKey:nil];
 }
 
 #pragma mark - CAAnimationDelegate

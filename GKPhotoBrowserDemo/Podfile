@@ -15,36 +15,40 @@ target 'GKPhotoBrowserDemo' do
   pod 'YYModel'
   pod 'GKCover'
   pod 'SDAutoLayout'
-  pod 'SVProgressHUD'
+  pod 'MBProgressHUD'
+  pod 'GKMessageTool'
+  pod 'Masonry'
   pod 'TZImagePickerController'
   
-  pod 'GKPhotoBrowser', :subspecs => ['SD', 'YY', 'AVPlayer'], :path => '../'
+  pod 'GKPhotoBrowser', :path => '../'
+  pod 'GKPhotoBrowser/YY', :path => '../'
+#  pod 'GKPhotoBrowser', :subspecs => ['SD', 'YY', 'AVPlayer'], :path => '../'
 
 end
 
 post_install do |installer|
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|
-            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
             config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
         end
     end
     
-#    # 移除MobileCorServices弃用警告
-#    MCSFramework = installer.pods_project.frameworks_group["iOS"]["MobileCoreServices.framework"]
-#    MCSFramework.referrers.each do |ref|
-#        if ref.isa == "PBXBuildFile"
-#            ref.remove_from_project
-#        end
-#    end
-#    MCSFramework.remove_from_project
-#    
-#    # 移除AssetsLibrary弃用警告
-#    ALFramework = installer.pods_project.frameworks_group["iOS"]["AssetsLibrary.framework"]
-#    ALFramework.referrers.each do |ref|
-#        if ref.isa == "PBXBuildFile"
-#            ref.remove_from_project
-#        end
-#    end
-#    ALFramework.remove_from_project
+    # 移除MobileCorServices弃用警告
+    MCSFramework = installer.pods_project.frameworks_group["iOS"]["MobileCoreServices.framework"]
+    MCSFramework.referrers.each do |ref|
+        if ref.isa == "PBXBuildFile"
+            ref.remove_from_project
+        end
+    end
+    MCSFramework.remove_from_project
+    
+    # 移除AssetsLibrary弃用警告
+    ALFramework = installer.pods_project.frameworks_group["iOS"]["AssetsLibrary.framework"]
+    ALFramework.referrers.each do |ref|
+        if ref.isa == "PBXBuildFile"
+            ref.remove_from_project
+        end
+    end
+    ALFramework.remove_from_project
 end

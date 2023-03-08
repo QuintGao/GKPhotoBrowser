@@ -60,11 +60,15 @@ NS_ASSUME_NONNULL_BEGIN
 /** 视频是否准备过 */
 @property (nonatomic, assign) BOOL               isVideoPrepared;
 
+- (void)getImage:(void(^)(NSData *data, UIImage *image))completion;
+
+- (void)getVideo:(void(^)(NSURL *url))completion;
+
 @end
 
 @interface GKPhotoManager : NSObject
 
-/// 加载相册资源图片
+/// 加载相册图片资源
 /// @param imageAsset PHAsset对象
 /// @param completion 完成回调
 + (PHImageRequestID)loadImageDataWithImageAsset:(PHAsset *)imageAsset completion:(nonnull void(^)(NSData *_Nullable data))completion;
@@ -74,6 +78,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param photoWidth 宽度
 /// @param completion 完成回调
 + (PHImageRequestID)loadImageWithAsset:(PHAsset *)asset photoWidth:(CGFloat)photoWidth completion:(nonnull void(^)(UIImage *_Nullable image))completion;
+
+/// 加载相册视频资源
+/// @param asset PHAsset对象
+/// @param completion 完成回调
++ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(nonnull void(^)(NSURL *url))completion;
 
 @end
 

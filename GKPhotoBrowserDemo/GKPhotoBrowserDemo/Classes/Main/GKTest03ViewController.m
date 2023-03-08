@@ -9,7 +9,7 @@
 #import "GKTest03ViewController.h"
 #import "GKTest02ViewCell.h"
 
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 @interface GKTest03ViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -95,6 +95,7 @@
         
         browser.showStyle    = GKPhotoBrowserShowStylePush;
         browser.isFollowSystemRotation = YES;
+        browser.isPopGestureEnabled = YES;
         [browser showFromVC:weakSelf];
     };
     

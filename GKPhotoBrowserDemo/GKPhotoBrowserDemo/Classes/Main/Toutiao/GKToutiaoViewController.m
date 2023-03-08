@@ -8,7 +8,7 @@
 
 #import "GKToutiaoViewController.h"
 #import "GKToutiaoViewCell.h"
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 #import "GKToutiaoDetailViewController.h"
 
 @interface GKToutiaoViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>

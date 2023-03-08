@@ -8,7 +8,7 @@
 
 #import "GKSDAutoLayoutViewController.h"
 #import "GKTimeLineViewCell.h"
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 #import "GKTopView.h"
 #import "GKBottomView.h"
 #import <SDAutoLayout/SDAutoLayout.h>

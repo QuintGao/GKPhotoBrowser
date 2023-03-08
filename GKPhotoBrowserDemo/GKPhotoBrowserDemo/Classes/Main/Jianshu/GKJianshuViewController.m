@@ -8,7 +8,7 @@
 
 #import "GKJianshuViewController.h"
 #import <WebKit/WebKit.h>
-#import "GKPhotoBrowser.h"
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 @interface GKJianshuViewController ()<WKNavigationDelegate>
 
@@ -122,6 +122,7 @@
     if (kIsiPad) {
         browser.isFollowSystemRotation = YES;
     }
+    browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
     [browser showFromVC:self];
 }
 

@@ -44,7 +44,8 @@
 }
 
 - (void)setupData {
-    self.dataList = @[
+    self.dataList = @[@{@"text"  : @"GKPhotoBrowser使用",
+                        @"class" : @"GKDemoViewController"},
                       @{@"text"  : @"TableViewCell单图none",
                         @"class" : @"GKTest01ViewController"},
                       @{@"text"  : @"TableViewCell多图zoom",

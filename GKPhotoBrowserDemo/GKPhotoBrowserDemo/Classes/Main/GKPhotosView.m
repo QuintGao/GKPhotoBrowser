@@ -158,8 +158,6 @@ static CGFloat   photoH;
     [super layoutSubviews];
     
     if (self.subviews.count == 1) {
-        UIImageView *subview = self.subviews.firstObject;
-        
         if (self.images) {
             GKTimeLineImage *image = self.images.firstObject;
             
@@ -171,8 +169,8 @@ static CGFloat   photoH;
                 photoH = image.height;
             }
         }else {
-            photoW = subview.image.size.width;
-            photoH = subview.image.size.height;
+            photoW = self.frame.size.width;
+            photoH = self.frame.size.height;
         }
     }else {
         photoW = (maxWidth - (photosMaxCol - 1) * photoMargin) / photosMaxCol;

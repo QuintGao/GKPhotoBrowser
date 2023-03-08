@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 弱引用的浏览器类
 @property (nonatomic, weak) GKPhotoBrowser *browser;
 
+// 截图
+@property (nonatomic, strong) UIImage *captureImage;
+
 // 状态栏显示模式，根据info.plist文件中是否有UIViewControllerBasedStatusBarAppearance属性判断
 @property (nonatomic, assign) BOOL statusBarAppearance;
 
@@ -30,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 记录browser是否走了viewWillAppear方法
 @property (nonatomic, assign) BOOL isAppeared;
+
+// 显示
+- (void)showFromVC:(UIViewController *)vc;
 
 // 浏览器显示
 - (void)browserShow;

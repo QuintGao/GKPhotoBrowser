@@ -32,6 +32,10 @@
         configure.gk_navItemRightSpace  = 4;
     }];
     
+    [GKGestureConfigure setupCustomConfigure:^(GKGestureHandleConfigure * _Nonnull configure) {
+//        configure.gk_openScrollViewGestureHandle = YES;
+    }];
+    
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     

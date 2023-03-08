@@ -47,6 +47,8 @@
 
 @property (nonatomic, strong, readwrite) GKLoadingView  *loadingView;
 
+@property (nonatomic, strong, readwrite) GKLoadingView  *videoLoadingView;
+
 @property (nonatomic, strong, readwrite) GKPhoto        *photo;
 
 @property (nonatomic, strong) id<GKWebImageProtocol>    imageProtocol;
@@ -67,7 +69,6 @@
         self.backgroundColor = [UIColor clearColor];
         [self addSubview:self.scrollView];
         [self.scrollView addSubview:self.imageView];
-        [self addSubview:self.playBtn];
     }
     return self;
 }
@@ -94,16 +95,28 @@
 }
 
 - (void)showLoading {
-    [self addSubview:self.loadingView];
-    [self.loadingView startLoading];
+    if (!self.photo.isVideo) return;
+    if (self.player.assetURL != self.photo.videoUrl) return;
+    [self addSubview:self.videoLoadingView];
+    [self.videoLoadingView startLoading];
 }
 
 - (void)hideLoading {
-    [self.loadingView stopLoading];
+    if (!self.photo.isVideo) return;
+    if (self.player.assetURL != self.photo.videoUrl) return;
+    [self.videoLoadingView stopLoading];
 }
 
 - (void)showFailure {
-    [self.loadingView showFailure];
+    if (!self.photo.isVideo) return;
+    if (self.player.assetURL != self.photo.videoUrl) return;
+    [self.videoLoadingView showFailure];
+}
+
+- (void)showPlayBtn {
+    if (!self.photo.isVideo) return;
+    if (self.player.assetURL != self.photo.videoUrl) return;
+    self.playBtn.hidden = NO;
 }
 
 - (void)didScrollAppear {
@@ -111,8 +124,15 @@
     
     // 如果没有设置，则设置播放内容
     if (!self.player.assetURL || self.player.assetURL != self.photo.videoUrl) {
-        self.player.assetURL = self.photo.videoUrl;
-        [self.player prepareToPlay];
+        __weak __typeof(self) weakSelf = self;
+        [self.photo getVideo:^(NSURL * _Nonnull url) {
+            __strong __typeof(weakSelf) self = weakSelf;
+            self.player.assetURL = url;
+            [self.player prepareToPlay];
+            [self.player play];
+        }];
+    }else {
+        [self.player play];
     }
     
     if (self.player.videoView.superview != self.imageView) {
@@ -120,11 +140,10 @@
         [self updateFrame];
     }
     
+    if (!self.playBtn.superview) {
+        [self addSubview:self.playBtn];
+    }
     self.playBtn.hidden = YES;
-    
-    [self.player play];
-    
-    NSLog(@"didAppear");
 }
 
 - (void)willScrollDisappear {
@@ -139,13 +158,21 @@
 
 - (void)didDismissAppear {
     if (!self.photo.isVideo) return;
-    [self.player play];
+    if (self.player.status == GKVideoPlayerStatusEnded) {
+        [self.player replay];
+    }else {
+        [self.player play];
+    }
     self.playBtn.hidden = YES;
 }
 
 - (void)willDismissDisappear {
     if (!self.photo.isVideo) return;
-    [self.player pause];
+    if (self.player.status == GKVideoPlayerStatusEnded) {
+        self.playBtn.hidden = YES;
+    }else {
+        [self.player pause];
+    }
 }
 
 - (void)didDismissDisappear {
@@ -167,6 +194,9 @@
         [self.imageView removeFromSuperview];
         self.imageView = nil;
         [self.scrollView addSubview:self.imageView];
+        if (!photo.isVideo) {
+            self.playBtn.hidden = YES;
+        }
         
         // 每次设置数据时，恢复缩放
         [self.scrollView setZoomScale:1.0 animated:NO];
@@ -218,40 +248,21 @@
             }
             
             __weak __typeof(self) weakSelf = self;
-            if (self.requestID) {
-                [[PHImageManager defaultManager] cancelImageRequest:self.requestID];
-            }
-            
-            PHAsset *phAsset = (PHAsset *)photo.imageAsset;
-            if (phAsset.mediaType == PHAssetMediaTypeImage) {
-                // Gif
-                if ([[phAsset valueForKey:@"filename"] hasSuffix:@"GIF"]) {
-                    self.requestID = [GKPhotoManager loadImageDataWithImageAsset:phAsset completion:^(NSData * _Nullable data) {
-                        __strong __typeof(weakSelf) self = weakSelf;
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (data) {
-                                UIImage *image = nil;
-                                if ([self.imageProtocol respondsToSelector:@selector(imageWithData:)]) {
-                                    image = [self.imageProtocol imageWithData:data];
-                                }
-                                if (!image) image = [UIImage imageWithData:data];
-                                [self setupImageView:image];
-                                self.requestID = 0;
-                            }
-                        });
-                    }];
+            [photo getImage:^(NSData * _Nonnull data, UIImage * _Nonnull image) {
+                __strong __typeof(weakSelf) self = weakSelf;
+                UIImage *newImage = nil;
+                if (data) {
+                    if ([self.imageProtocol respondsToSelector:@selector(imageWithData:)]) {
+                        newImage = [self.imageProtocol imageWithData:data];
+                    }
+                    if (!newImage) {
+                        newImage = [UIImage imageWithData:data];
+                    }
                 }else {
-                    self.requestID = [GKPhotoManager loadImageWithAsset:photo.imageAsset photoWidth:GKScreenW * 2 completion:^(UIImage * _Nullable image) {
-                        __strong __typeof(weakSelf) self = weakSelf;
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (image) {
-                                [self setupImageView:image];
-                                self.requestID = 0;
-                            }
-                        });
-                    }];
+                    newImage = image;
                 }
-            }
+                [self setupImageView:image];
+            }];
             return;
         }
         
@@ -286,7 +297,7 @@
             __weak __typeof(self) weakSelf = self;
             GKWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
                 __strong __typeof(weakSelf) self = weakSelf;
-                if (expectedSize == 0) return;
+                if (expectedSize <= 0) return;
                 float progress = (float)receivedSize / expectedSize;
                 if (progress <= 0) progress = 0;
                 
@@ -437,14 +448,11 @@
         self.imageView.bounds = CGRectMake(0, 0, width, height);
         self.imageView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
         self.scrollView.contentSize = self.imageView.frame.size;
-        
-        self.loadingView.bounds = self.scrollView.frame;
-        self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
     }else {
-        self.loadingView.bounds = self.scrollView.frame;
-        self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+        self.imageView.bounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
+        self.imageView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+        self.scrollView.contentSize = self.imageView.frame.size;
     }
-    
     
     // frame调整完毕，重新设置缩放
     if (self.photo.isZooming) {
@@ -455,9 +463,14 @@
     
     // 重置offset
     self.scrollView.contentOffset = self.photo.offset;
-    [self updateFrame];
+    
+    
+    self.loadingView.bounds = self.scrollView.frame;
+    self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+    self.videoLoadingView.frame = self.loadingView.frame;
     [self.playBtn sizeToFit];
     self.playBtn.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    [self updateFrame];
 }
 
 - (CGPoint)centerOfScrollViewContent:(UIScrollView *)scrollView {
@@ -533,9 +546,11 @@
 - (UIButton *)playBtn {
     if (!_playBtn) {
         _playBtn = [[UIButton alloc] init];
-        [_playBtn setImage:GKPhotoBrowserImage(@"gk_video_play") forState:UIControlStateNormal];
+        [_playBtn setImage:self.videoPlayImage ?: GKPhotoBrowserImage(@"gk_video_play") forState:UIControlStateNormal];
         _playBtn.userInteractionEnabled = NO;
         _playBtn.hidden = YES;
+        [_playBtn sizeToFit];
+        _playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
     }
     return _playBtn;
 }
@@ -552,6 +567,20 @@
         _loadingView.failImage   = self.failureImage;
     }
     return _loadingView;
+}
+
+- (GKLoadingView *)videoLoadingView {
+    if (!_videoLoadingView) {
+        _videoLoadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.loadStyle];
+        _videoLoadingView.failStyle = self.failStyle;
+        _videoLoadingView.lineWidth = 3;
+        _videoLoadingView.radius = 12;
+        _videoLoadingView.bgColor = UIColor.blackColor;
+        _videoLoadingView.strokeColor = UIColor.whiteColor;
+        _videoLoadingView.failText = self.failureText;
+        _videoLoadingView.failImage = self.failureImage;
+    }
+    return _videoLoadingView;
 }
 
 @end
