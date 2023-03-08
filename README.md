@@ -115,6 +115,7 @@ photo.image = [YYImage imageNamed:obj];
  ## 效果图
  
  1、demo
+ 
  ![](https://upload-images.jianshu.io/upload_images/1598505-e33c74ef898fd8b0.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/400)
 
  2、仿微信
