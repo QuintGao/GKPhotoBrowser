@@ -84,6 +84,7 @@
     [self seekToTime:0 completionHandler:^(BOOL finished) {
         __strong __typeof(weakSelf) self = weakSelf;
         [self play];
+        self.status = GKVideoPlayerStatusPlaying;
     }];
 }
 
