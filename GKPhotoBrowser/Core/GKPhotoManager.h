@@ -60,9 +60,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** 视频是否准备过 */
 @property (nonatomic, assign) BOOL               isVideoPrepared;
 
-- (void)getImage:(void(^)(NSData *data, UIImage *image))completion;
+- (void)getImage:(nullable void(^)(NSData *_Nullable data, UIImage *_Nullable image))completion;
 
-- (void)getVideo:(void(^)(NSURL *url))completion;
+- (void)getVideo:(nullable void(^)(NSURL *_Nullable url))completion;
 
 @end
 

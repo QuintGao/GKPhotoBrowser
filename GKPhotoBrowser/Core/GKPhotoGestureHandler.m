@@ -55,7 +55,7 @@ int const static kDirectionPanThreshold = 5;
 
 @end
 
-@interface GKPhotoGestureHandler()
+@interface GKPhotoGestureHandler()<UIGestureRecognizerDelegate>
 
 @property (nonatomic, assign) CGPoint photoViewCenter;
 

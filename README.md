@@ -135,6 +135,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.5.1 - 2023.03.15 修复使用videoView出现审核被拒的问题 #165，消除警告
  * 2.5.0 - 2023.03.06 
     - 1、支持视频播放
     - 2、代码拆分、优化

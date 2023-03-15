@@ -30,9 +30,6 @@ typedef NS_ENUM(NSUInteger, GKPanGestureRecognizerDirection) {
 // 浏览器取消消失
 - (void)browserCancelDisappear;
 
-// 浏览器已经消失
-- (void)browserDidDisappear;
-
 @end
 
 @interface GKPhotoGestureHandler : GKPhotoBrowserHandler

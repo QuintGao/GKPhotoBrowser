@@ -30,6 +30,7 @@
 @property (nonatomic, strong) id timeObserver;
 
 @property (nonatomic, assign) NSTimeInterval seekTime;
+@property (nonatomic, copy) void(^completionHandler)(BOOL);
 
 @property (nonatomic, strong) UIButton *playBtn;
 
@@ -39,7 +40,8 @@
 @end
 
 @implementation GKAVPlayerManager
-@synthesize videoView = _videoView;
+
+@synthesize videoPlayView = _videoPlayView;
 @synthesize assetURL = _assetURL;
 @synthesize isPlaying = _isPlaying;
 @synthesize currentTime = _currentTime;
@@ -54,7 +56,7 @@
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:self.assetURL];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
     
-    AVPlayerLayer *playerLayer = (AVPlayerLayer *)self.videoView.layer;
+    AVPlayerLayer *playerLayer = (AVPlayerLayer *)self.videoPlayView.layer;
     playerLayer.player = self.player;
     playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     
@@ -97,10 +99,12 @@
     if (self.player) {
         [self pause];
         self.player = nil;
-        [self.videoView removeFromSuperview];
-        self.videoView = nil;
+        [self.videoPlayView removeFromSuperview];
+        self.videoPlayView = nil;
         [self removePlayerObserver];
         self.currentTime = 0;
+        self.seekTime = 0;
+        self.completionHandler = nil;
         _totalTime = 0;
         _isPlaying = NO;
     }
@@ -114,11 +118,12 @@
         [self.player seekToTime:seekTime completionHandler:completionHandler];
     }else {
         self.seekTime = time;
+        self.completionHandler = completionHandler;
     }
 }
 
 - (void)updateFrame:(CGRect)frame {
-    self.videoView.frame = frame;
+    self.videoPlayView.frame = frame;
 }
 
 #pragma mark - Notification
@@ -188,7 +193,7 @@
                         }];
                     }
                     if (self.seekTime) {
-                        [self seekToTime:self.seekTime completionHandler:nil];
+                        [self seekToTime:self.seekTime completionHandler:self.completionHandler];
                         self.seekTime = 0;
                     }
                 } break;
@@ -210,11 +215,11 @@
 }
 
 #pragma mark - Getter
-- (UIView *)videoView {
-    if (!_videoView) {
-        _videoView = [[GKAVPlayerView alloc] init];
+- (UIView *)videoPlayView {
+    if (!_videoPlayView) {
+        _videoPlayView = [[GKAVPlayerView alloc] init];
     }
-    return _videoView;
+    return _videoPlayView;
 }
 
 #pragma mark - Setter

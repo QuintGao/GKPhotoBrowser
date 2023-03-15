@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
 
 @protocol GKVideoPlayerProtocol <NSObject>
 
-@property (nonatomic, strong) UIView *videoView;
+@property (nonatomic, strong, nullable) UIView *videoPlayView;
 
 @property (nonatomic, strong) NSURL *assetURL;
 
@@ -40,9 +40,6 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
 
 // 准备视频资源
 - (void)prepareToPlay;
-
-// 播放
-- (void)playVideoFrom:(UIView *)fromView;
 
 // 播放
 - (void)play;

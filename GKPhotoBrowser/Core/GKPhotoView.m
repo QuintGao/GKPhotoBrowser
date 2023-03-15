@@ -135,8 +135,8 @@
         [self.player play];
     }
     
-    if (self.player.videoView.superview != self.imageView) {
-        [self.imageView addSubview:self.player.videoView];
+    if (self.player.videoPlayView.superview != self.imageView) {
+        [self.imageView addSubview:self.player.videoPlayView];
         [self updateFrame];
     }
     

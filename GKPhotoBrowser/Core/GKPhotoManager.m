@@ -21,7 +21,7 @@
     return self.videoUrl || self.videoAsset;
 }
 
-- (void)getImage:(void (^)(NSData * _Nonnull, UIImage * _Nonnull))completion {
+- (void)getImage:(void (^)(NSData * _Nullable, UIImage * _Nullable))completion {
     __weak __typeof(self) weakSelf = self;
     if (self.imageRequestID) {
         [[PHImageManager defaultManager] cancelImageRequest:self.imageRequestID];
@@ -53,7 +53,7 @@
     }
 }
 
-- (void)getVideo:(void (^)(NSURL * _Nonnull))completion {
+- (void)getVideo:(void (^)(NSURL * _Nullable))completion {
     if (!self.isVideo) completion(nil);
     if (self.videoAsset) {
         if (self.videoRequestID) {
