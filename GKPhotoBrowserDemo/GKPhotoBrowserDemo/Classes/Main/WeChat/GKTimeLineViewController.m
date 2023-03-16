@@ -14,6 +14,7 @@
 #import <YYWebImage/YYWebImage.h>
 #import "GKPublishViewController.h"
 #import <GKMessageTool/GKMessageTool.h>
+#import "GKZFPlayerManager.h"
 
 @interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -136,6 +137,8 @@
         browser.hidesSavedBtn = YES;
         browser.isFullWidthForLandScape = NO;
         browser.isSingleTapDisabled = YES;
+        // 自定义视频播放
+        [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];
         browser.isVideoReplay = YES;
 //        browser.isDoubleTapDisabled = YES;
 //        browser.isStatusBarShow = YES;
@@ -297,6 +300,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [self.browser removePhotoAtIndex:self.currentIndex];
+//        [self.browser selectedPhotoWithIndex:2 animated:NO];
     });
 }
 

@@ -127,6 +127,7 @@
         __weak __typeof(self) weakSelf = self;
         [self.photo getVideo:^(NSURL * _Nonnull url) {
             __strong __typeof(weakSelf) self = weakSelf;
+            self.player.coverImage = self.imageView.image;
             self.player.assetURL = url;
             [self.player prepareToPlay];
             [self.player play];

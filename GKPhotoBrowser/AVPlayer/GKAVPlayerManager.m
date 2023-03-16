@@ -208,6 +208,7 @@
             if (self.status == GKVideoPlayerStatusEnded) return;
             if (self.player.currentItem.playbackLikelyToKeepUp) {
                 self.status = GKVideoPlayerStatusPlaying;
+                if (self.isPlaying) [self.player play];
             }else {
                 self.status = GKVideoPlayerStatusBuffering;
             }

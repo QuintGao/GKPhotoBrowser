@@ -400,13 +400,23 @@ static Class videoManagerClass = nil;
 
 - (void)selectedPhotoWithIndex:(NSInteger)index animated:(BOOL)animated{
     if (index < 0 || index >= self.photos.count) return;
+    if (self.currentIndex == index) return;
     
+    [self.curPhotoView willScrollDisappear];
+    self.handler.isAnimated = animated;
     CGPoint offset = CGPointMake(self.photoScrollView.frame.size.width * index, 0);
     [self.photoScrollView setContentOffset:offset animated:animated];
+    if (!animated) {
+        [self updateCurrentPhotoView];
+    }
 }
 
 - (void)removePhotoAtIndex:(NSInteger)index {
     if (index < 0 || index >= self.photos.count) return;
+    
+    if (self.currentIndex == index) {
+        [self.curPhotoView didDismissDisappear];
+    }
     
     NSMutableArray *photos = [NSMutableArray arrayWithArray:self.photos];
     [photos removeObjectAtIndex:index];
@@ -430,6 +440,7 @@ static Class videoManagerClass = nil;
     [self setupPhotoViews];
     [self updateViewIndex];
     [self layoutSubviews];
+    [self updateCurrentPhotoView];
 }
 
 - (void)loadCurrentPhotoImage {
@@ -599,6 +610,31 @@ static Class videoManagerClass = nil;
     return nil;
 }
 
+- (void)updateCurrentPhotoView {
+    [self photoViewDidSelected];
+    
+    [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (photoView != self.curPhotoView) {
+            [photoView didScrollDisappear];
+        }
+    }];
+    
+    if (self.isResumePhotoZoom) {
+        [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
+            GKPhoto *photo = self.photos[idx];
+            photo.isZooming = NO;
+            
+            [photoView.scrollView setZoomScale:1.0 animated:NO];
+        }];
+    }
+    
+    if ([self currentPhotoView].scrollView.zoomScale > 1.0) {
+        [self.gestureHandler removePanGesture];
+    }else {
+        [self.gestureHandler addPanGesture:NO];
+    }
+}
+
 #pragma mark - 代理
 #pragma mark - GKPhotoGestureDelegate
 - (void)browserWillDisappear {
@@ -660,27 +696,7 @@ static Class videoManagerClass = nil;
 
 // scrollView结束滚动时调用
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [self photoViewDidSelected];
-    [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (photoView != self.curPhotoView) {
-            [photoView didScrollDisappear];
-        }
-    }];
-    
-    if (self.isResumePhotoZoom) {
-        [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
-            GKPhoto *photo = self.photos[idx];
-            photo.isZooming = NO;
-            
-            [photoView.scrollView setZoomScale:1.0 animated:NO];
-        }];
-    }
-    
-    if ([self currentPhotoView].scrollView.zoomScale > 1.0) {
-        [self.gestureHandler removePanGesture];
-    }else {
-        [self.gestureHandler addPanGesture:NO];
-    }
+    [self updateCurrentPhotoView];
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndDecelerating:)]) {
         [self.delegate photoBrowser:self scrollViewDidEndDecelerating:scrollView];
@@ -690,6 +706,13 @@ static Class videoManagerClass = nil;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndDragging:willDecelerate:)]) {
         [self.delegate photoBrowser:self scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    if (self.handler.isAnimated) {
+        self.handler.isAnimated = NO;
+        [self updateCurrentPhotoView];
     }
 }
 

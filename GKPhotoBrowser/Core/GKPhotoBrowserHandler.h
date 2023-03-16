@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 记录browser是否走了viewWillAppear方法
 @property (nonatomic, assign) BOOL isAppeared;
 
+// 调用selectedPhoto方法是否需要动画
+@property (nonatomic, assign) BOOL isAnimated;
+
 // 显示
 - (void)showFromVC:(UIViewController *)vc;
 

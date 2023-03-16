@@ -22,19 +22,19 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.7.2)
   - GKNavigationBar/GestureHandle (1.7.2)
   - GKNavigationBar/NavigationBar (1.7.2)
-  - GKPhotoBrowser (2.5.0):
-    - GKPhotoBrowser/Default (= 2.5.0)
-  - GKPhotoBrowser/AVPlayer (2.5.0):
+  - GKPhotoBrowser (2.5.1):
+    - GKPhotoBrowser/Default (= 2.5.1)
+  - GKPhotoBrowser/AVPlayer (2.5.1):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (2.5.0):
+  - GKPhotoBrowser/Core (2.5.1):
     - GKSliderView
-  - GKPhotoBrowser/Default (2.5.0):
+  - GKPhotoBrowser/Default (2.5.1):
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/SD (2.5.0):
+  - GKPhotoBrowser/SD (2.5.1):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (2.5.0):
+  - GKPhotoBrowser/YY (2.5.1):
     - GKPhotoBrowser/Core
     - YYWebImage
   - GKSliderView (1.0.7)
@@ -53,6 +53,9 @@ PODS:
   - YYWebImage (1.0.5):
     - YYCache
     - YYImage
+  - ZFPlayer/AVPlayer (4.1.4):
+    - ZFPlayer/Core
+  - ZFPlayer/Core (4.1.4)
 
 DEPENDENCIES:
   - AFNetworking
@@ -68,6 +71,7 @@ DEPENDENCIES:
   - TZImagePickerController
   - YYModel
   - YYWebImage (~> 1.0.5)
+  - ZFPlayer/AVPlayer
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -85,6 +89,7 @@ SPEC REPOS:
     - YYImage
     - YYModel
     - YYWebImage
+    - ZFPlayer
 
 EXTERNAL SOURCES:
   GKPhotoBrowser:
@@ -95,7 +100,7 @@ SPEC CHECKSUMS:
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: a2092a5baa0aaf436c17e113c5494652871ff89d
-  GKPhotoBrowser: b2f39e5f1a2da9c9cfde2300bdb013578f27d7a6
+  GKPhotoBrowser: b7880ed89267bd735ac162cbdd92d8e5f170c675
   GKSliderView: eccc83474549bf949aad0cfbeb9c868807943b1a
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
@@ -106,7 +111,8 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
+  ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
 
-PODFILE CHECKSUM: a0b26256cb2d3fd43e54cfd0cb2d765bb9c2eb0c
+PODFILE CHECKSUM: 1d927e8cfcc095f4c068e9cfcf99967c2422d0c8
 
 COCOAPODS: 1.11.3

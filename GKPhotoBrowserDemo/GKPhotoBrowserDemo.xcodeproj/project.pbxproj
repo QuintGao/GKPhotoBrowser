@@ -46,6 +46,7 @@
 		795FA6281FF34F230057BDB0 /* GKPhotoBrowser.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */; };
 		795FA6291FF34F230057BDB0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6271FF34F220057BDB0 /* README.md */; };
 		79B33755249111E100590023 /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = 79B33754249111E100590023 /* test.gif */; };
+		79C4206A29C2AD5D00A0AB84 /* GKZFPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C4206929C2AD5D00A0AB84 /* GKZFPlayerManager.m */; };
 		90EEF67CE4A0A3BDF6976160 /* Pods_GKPhotoBrowserDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -153,6 +154,8 @@
 		795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GKPhotoBrowser.podspec; path = ../../GKPhotoBrowser.podspec; sourceTree = "<group>"; };
 		795FA6271FF34F220057BDB0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		79B33754249111E100590023 /* test.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test.gif; sourceTree = "<group>"; };
+		79C4206829C2AD5D00A0AB84 /* GKZFPlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKZFPlayerManager.h; sourceTree = "<group>"; };
+		79C4206929C2AD5D00A0AB84 /* GKZFPlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKZFPlayerManager.m; sourceTree = "<group>"; };
 		E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GKPhotoBrowserDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE7DA052FCA02BBA178A7C45 /* Pods-GKPhotoBrowserDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GKPhotoBrowserDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -296,6 +299,7 @@
 				60154B5C20D11D540000877A /* GIF */,
 				60415CAE2121643E00D1D54B /* SDAutoLayout */,
 				7927F0CD20A97F0C0017FD5B /* Test */,
+				79C4206729C2AD4C00A0AB84 /* ZFPlayer */,
 				795FA5F71FF338200057BDB0 /* GKPhotosView.h */,
 				795FA5E01FF3381F0057BDB0 /* GKPhotosView.m */,
 				795FA5E51FF338200057BDB0 /* GKTest01ViewCell.h */,
@@ -357,6 +361,15 @@
 				795FA6011FF338200057BDB0 /* timeline.txt */,
 			);
 			path = WeChat;
+			sourceTree = "<group>";
+		};
+		79C4206729C2AD4C00A0AB84 /* ZFPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				79C4206829C2AD5D00A0AB84 /* GKZFPlayerManager.h */,
+				79C4206929C2AD5D00A0AB84 /* GKZFPlayerManager.m */,
+			);
+			path = ZFPlayer;
 			sourceTree = "<group>";
 		};
 		AC164CC01C3860407343047D /* Frameworks */ = {
@@ -614,6 +627,7 @@
 				795FA6101FF338200057BDB0 /* GKJianshuViewController.m in Sources */,
 				795FA6231FF338200057BDB0 /* GKTest02ViewController.m in Sources */,
 				795FA61D1FF338200057BDB0 /* GKTimeLineViewController.m in Sources */,
+				79C4206A29C2AD5D00A0AB84 /* GKZFPlayerManager.m in Sources */,
 				60CAD8F7262E66D9003A36D7 /* GKTestVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

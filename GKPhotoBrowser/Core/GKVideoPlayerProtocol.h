@@ -23,6 +23,8 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
 
 @property (nonatomic, strong, nullable) UIView *videoPlayView;
 
+@property (nonatomic, weak) UIImage *coverImage;
+
 @property (nonatomic, strong) NSURL *assetURL;
 
 @property (nonatomic, readonly) BOOL isPlaying;

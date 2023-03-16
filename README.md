@@ -135,6 +135,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.5.2 - 2023.03.16 修复调用selectedPhoto和removePhoto方法后视频播放未停止的问题，视频播放优化
  * 2.5.1 - 2023.03.15 修复使用videoView出现审核被拒的问题 #165，消除警告
  * 2.5.0 - 2023.03.06 
     - 1、支持视频播放

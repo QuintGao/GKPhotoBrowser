@@ -24,6 +24,8 @@ target 'GKPhotoBrowserDemo' do
   pod 'GKPhotoBrowser/YY', :path => '../'
 #  pod 'GKPhotoBrowser', :subspecs => ['SD', 'YY', 'AVPlayer'], :path => '../'
 
+  pod 'ZFPlayer/AVPlayer'
+
 end
 
 post_install do |installer|

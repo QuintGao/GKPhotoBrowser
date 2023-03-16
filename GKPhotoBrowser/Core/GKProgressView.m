@@ -61,8 +61,11 @@
     if (self.isSeeking) return;
     self.totalTime = totalTime;
     CGFloat progress = 0;
-    if (totalTime == 0) progress = 0;
-    progress = currentTime / totalTime;
+    if (totalTime == 0) {
+        progress = 0;
+    }else {
+        progress = currentTime / totalTime;
+    }
     if (progress <= 0) progress = 0;
     if (progress >= 1) progress = 1;
     self.sliderView.value = progress;
