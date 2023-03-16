@@ -138,7 +138,7 @@
         browser.isFullWidthForLandScape = NO;
         browser.isSingleTapDisabled = YES;
         // 自定义视频播放
-        [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];
+//        [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];
         browser.isVideoReplay = YES;
 //        browser.isDoubleTapDisabled = YES;
 //        browser.isStatusBarShow = YES;

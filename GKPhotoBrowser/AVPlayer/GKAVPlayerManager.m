@@ -42,6 +42,7 @@
 @implementation GKAVPlayerManager
 
 @synthesize videoPlayView = _videoPlayView;
+@synthesize coverImage = _coverImage;
 @synthesize assetURL = _assetURL;
 @synthesize isPlaying = _isPlaying;
 @synthesize currentTime = _currentTime;
