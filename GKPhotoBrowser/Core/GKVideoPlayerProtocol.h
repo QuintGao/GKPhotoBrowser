@@ -39,27 +39,26 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
 
 @property (nonatomic, copy) void(^playerPlayTimeChange)(id<GKVideoPlayerProtocol> mgr, NSTimeInterval currentTime, NSTimeInterval totalTime);
 
-
 // 准备视频资源
-- (void)prepareToPlay;
+- (void)gk_prepareToPlay;
 
 // 播放
-- (void)play;
+- (void)gk_play;
 
 // 重播
-- (void)replay;
+- (void)gk_replay;
 
 // 暂停
-- (void)pause;
+- (void)gk_pause;
 
 // 停止
-- (void)stop;
+- (void)gk_stop;
 
 // seek
-- (void)seekToTime:(NSTimeInterval)time completionHandler:(nonnull void (^)(BOOL finished))completionHandler;
+- (void)gk_seekToTime:(NSTimeInterval)time completionHandler:(nonnull void (^)(BOOL finished))completionHandler;
 
 // 更新布局
-- (void)updateFrame:(CGRect)frame;
+- (void)gk_updateFrame:(CGRect)frame;
 
 @end
 

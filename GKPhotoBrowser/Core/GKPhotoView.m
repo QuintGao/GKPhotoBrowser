@@ -129,11 +129,11 @@
             __strong __typeof(weakSelf) self = weakSelf;
             self.player.coverImage = self.imageView.image;
             self.player.assetURL = url;
-            [self.player prepareToPlay];
-            [self.player play];
+            [self.player gk_prepareToPlay];
+            [self.player gk_play];
         }];
     }else {
-        [self.player play];
+        [self.player gk_play];
     }
     
     if (self.player.videoPlayView.superview != self.imageView) {
@@ -149,7 +149,7 @@
 
 - (void)willScrollDisappear {
     if (!self.photo.isVideo) return;
-    [self.player pause];
+    [self.player gk_pause];
 }
 
 - (void)didScrollDisappear {
@@ -160,9 +160,9 @@
 - (void)didDismissAppear {
     if (!self.photo.isVideo) return;
     if (self.player.status == GKVideoPlayerStatusEnded) {
-        [self.player replay];
+        [self.player gk_replay];
     }else {
-        [self.player play];
+        [self.player gk_play];
     }
     self.playBtn.hidden = YES;
 }
@@ -172,18 +172,18 @@
     if (self.player.status == GKVideoPlayerStatusEnded) {
         self.playBtn.hidden = YES;
     }else {
-        [self.player pause];
+        [self.player gk_pause];
     }
 }
 
 - (void)didDismissDisappear {
     if (!self.photo.isVideo) return;
-    [self.player stop];
+    [self.player gk_stop];
 }
 
 - (void)updateFrame {
     if (!self.photo.isVideo) return;
-    [self.player updateFrame:self.imageView.bounds];
+    [self.player gk_updateFrame:self.imageView.bounds];
 }
 
 #pragma mark - 加载图片

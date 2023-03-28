@@ -27,7 +27,7 @@
 		0A586FDDF7203AA061A9ED42492CDCD4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5825CD6AB2A1967CE15C9A5DCA7B6D7 /* Foundation.framework */; };
 		0B6668D70A0222B009AB7EC841F10D34 /* SDImageIOAnimatedCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = E336E9FC2B781FE767E3B39EC220D3CC /* SDImageIOAnimatedCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0C74A192AFEBF365E10C5491E1C27090 /* SDImageCachesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7ED0F32A13EC875167C95D76DD560 /* SDImageCachesManager.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		0CDDE64567CDBB379AFD294C2825903A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D184EF2973B7AAC0EB98C8A97DAEDF1D /* MobileCoreServices.framework */; };
+		0CDDE64567CDBB379AFD294C2825903A /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		0DB8981707284757FD3C35E2CA568BD9 /* UIBarButtonItem+GKNavigationBar.h in Headers */ = {isa = PBXBuildFile; fileRef = F29660B64036E1BC1B49F1FADDFFEC12 /* UIBarButtonItem+GKNavigationBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0E2C6CFD8D743F20FAA9BAF2B2BCD0B1 /* TZImageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B6F74C50F14A5DFCA1E6E0A6F085F310 /* TZImageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0E8CCAE597756C61B2D7B60EEF4A29E4 /* MASUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CA63C7257FF8D2968171A54AC632FAF6 /* MASUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -132,7 +132,7 @@
 		4783B1DF3D35A8BEE4C843827491E4A2 /* TZVideoEditedPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F187179B5EE81E570FE49B086A6DD21 /* TZVideoEditedPreviewController.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		47FA43B2AE2B7EAF81ECA1FBF78E330E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5825CD6AB2A1967CE15C9A5DCA7B6D7 /* Foundation.framework */; };
 		487CC2D8E5D12E6829475562D81C352D /* GKNavigationInteractiveTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 36F87C2AC8D37AF647BD4DCF9D768D81 /* GKNavigationInteractiveTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		489C6C79212CD85C56B2B5C5F13A5C08 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD64603A13D6F58E1B3D3CABE3BB01ED /* AssetsLibrary.framework */; };
+		489C6C79212CD85C56B2B5C5F13A5C08 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		48B4847FEAF3C210697719026992422C /* UIImage+MultiFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = A8C40003D3CDF136889BF1EC42A5692E /* UIImage+MultiFormat.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4986EAA8E64AF50870959F7D30A49B42 /* SDImageGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D5F1EB59548173C6DB2C35A24CDF5B5 /* SDImageGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4A24E2950C7C1F0B8881AFC1C2FCD0A5 /* SDWebImageError.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FF18967E16A4458839381F16DE20B92 /* SDWebImageError.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
@@ -646,7 +646,7 @@
 		008C8913E38B64BE68D811FDB59C9266 /* GKVideoPlayerProtocol.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GKVideoPlayerProtocol.h; path = GKPhotoBrowser/Core/GKVideoPlayerProtocol.h; sourceTree = "<group>"; };
 		014D269ABE43FB4031542D89DDD93208 /* ZFPlayerGestureControl.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFPlayerGestureControl.m; path = ZFPlayer/Classes/Core/ZFPlayerGestureControl.m; sourceTree = "<group>"; };
 		0306A7C6282DC106490887BE445BC104 /* UIImage+Metadata.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Metadata.m"; path = "SDWebImage/Core/UIImage+Metadata.m"; sourceTree = "<group>"; };
-		030DFDB7BD32E5EDE81D544176CD5AAC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		030DFDB7BD32E5EDE81D544176CD5AAC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0329DEA51308C7A3B4AB2F518DDD46FF /* TZGifPhotoPreviewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TZGifPhotoPreviewController.m; path = TZImagePickerController/TZImagePickerController/TZGifPhotoPreviewController.m; sourceTree = "<group>"; };
 		034B7E2157BF582916D5C6E4FB8F4B17 /* MKAnnotationView+YYWebImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "MKAnnotationView+YYWebImage.m"; path = "YYWebImage/Categories/MKAnnotationView+YYWebImage.m"; sourceTree = "<group>"; };
 		037DF0E6733864D427D93A15E838A164 /* YYSpriteSheetImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYSpriteSheetImage.m; path = YYImage/YYSpriteSheetImage.m; sourceTree = "<group>"; };
@@ -997,7 +997,7 @@
 		9CE8E45D832BF6588FA3EEE0C96DC8A6 /* UIImage+YYWebImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+YYWebImage.h"; path = "YYWebImage/Categories/UIImage+YYWebImage.h"; sourceTree = "<group>"; };
 		9D10860875B5AEC03A33A466BA42A97E /* NSBundle+TZImagePicker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSBundle+TZImagePicker.h"; path = "TZImagePickerController/TZImagePickerController/NSBundle+TZImagePicker.h"; sourceTree = "<group>"; };
 		9D856DA5A7E3284A590BA93698ECC1A5 /* TZImagePickerController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TZImagePickerController.debug.xcconfig; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9EC59C1AEBD1D3327FE4578FF4884B4E /* TZImageCropManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TZImageCropManager.m; path = TZImagePickerController/TZImagePickerController/TZImageCropManager.m; sourceTree = "<group>"; };
 		9EEAB90501F5F7C5BCE4EC88282B9DB9 /* SDWebImageDownloaderRequestModifier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloaderRequestModifier.m; path = SDWebImage/Core/SDWebImageDownloaderRequestModifier.m; sourceTree = "<group>"; };
 		9F4159501448A5F390FC4735E89A11E4 /* ZFPersentInteractiveTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFPersentInteractiveTransition.m; path = ZFPlayer/Classes/Core/ZFPersentInteractiveTransition.m; sourceTree = "<group>"; };
@@ -1012,7 +1012,7 @@
 		A525B68AF751135A5411D9958FA3332E /* YYWebImageOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYWebImageOperation.h; path = YYWebImage/YYWebImageOperation.h; sourceTree = "<group>"; };
 		A5DF29FA3C25CC69199A63F6D69B18B7 /* UIBarButtonItem+GKNavigationBar.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIBarButtonItem+GKNavigationBar.m"; path = "GKNavigationBar/NavigationBar/UIBarButtonItem+GKNavigationBar.m"; sourceTree = "<group>"; };
 		A5FE399F11F6DACF01A283B2956518B7 /* MBProgressHUD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MBProgressHUD.release.xcconfig; sourceTree = "<group>"; };
-		A6997CC9910D34AD53BD5601747BCA01 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		A6997CC9910D34AD53BD5601747BCA01 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		A898F1C4EF65521F9989C5250134190E /* YYAnimatedImageView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYAnimatedImageView.h; path = YYImage/YYAnimatedImageView.h; sourceTree = "<group>"; };
 		A8C40003D3CDF136889BF1EC42A5692E /* UIImage+MultiFormat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+MultiFormat.h"; path = "SDWebImage/Core/UIImage+MultiFormat.h"; sourceTree = "<group>"; };
 		A97A5EA8C2015B3A8404E535D5CBB841 /* ZFPersentInteractiveTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPersentInteractiveTransition.h; path = ZFPlayer/Classes/Core/ZFPersentInteractiveTransition.h; sourceTree = "<group>"; };
@@ -1107,7 +1107,7 @@
 		CEB28E0C89043A3A1810083DDC7B693C /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "View+MASShorthandAdditions.h"; path = "Masonry/View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		CED6162BCFA5B81C0D6EEF67CE5CDE6B /* ZFOrientationObserver.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFOrientationObserver.m; path = ZFPlayer/Classes/Core/ZFOrientationObserver.m; sourceTree = "<group>"; };
 		CF4133D537EA6FD096D87904161F0ED6 /* AFNetworking-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AFNetworking-dummy.m"; sourceTree = "<group>"; };
-		CFA05FD5E49B8962FBB09EADDC89EA23 /* GKPhotoBrowser.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = GKPhotoBrowser.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		CFA05FD5E49B8962FBB09EADDC89EA23 /* GKPhotoBrowser.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = GKPhotoBrowser.podspec; sourceTree = "<group>"; tabWidth = 2; };
 		D08FACF7E0ADCF7ABC5A9F0897DAADF6 /* GKMessageTool.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = GKMessageTool.modulemap; sourceTree = "<group>"; };
 		D0962D1949975814B3CD71DD7560F0F7 /* YYImage-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "YYImage-Info.plist"; sourceTree = "<group>"; };
 		D23CCF449950546C9303622C5CC0A086 /* Pods-GKPhotoBrowserDemo.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-GKPhotoBrowserDemo.modulemap"; sourceTree = "<group>"; };
@@ -1329,11 +1329,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F422BD4695640B5AB9535A67FE23727 /* Accelerate.framework in Frameworks */,
-				489C6C79212CD85C56B2B5C5F13A5C08 /* AssetsLibrary.framework in Frameworks */,
+				489C6C79212CD85C56B2B5C5F13A5C08 /* (null) in Frameworks */,
 				A5D44B76DBF0E0A558A2F8939F8571B8 /* CoreFoundation.framework in Frameworks */,
 				2BA38869BBEF8CBF9DF0EDB9CFB086ED /* Foundation.framework in Frameworks */,
 				6D0B84797B820014D1B4EDABDCAC14F9 /* ImageIO.framework in Frameworks */,
-				0CDDE64567CDBB379AFD294C2825903A /* MobileCoreServices.framework in Frameworks */,
+				0CDDE64567CDBB379AFD294C2825903A /* (null) in Frameworks */,
 				63D47259D56196DE8F7E2C57F63A3508 /* QuartzCore.framework in Frameworks */,
 				6E4B140FD77A21E80D5A3FA989DD4BA7 /* UIKit.framework in Frameworks */,
 			);
@@ -1408,7 +1408,6 @@
 				7EC9ABD2864E9CB016BA8A81B544CB23 /* MBProgressHUD.m */,
 				F53A873810627344F6671C1591C198F8 /* Support Files */,
 			);
-			name = MBProgressHUD;
 			path = MBProgressHUD;
 			sourceTree = "<group>";
 		};
@@ -1418,7 +1417,6 @@
 				B63FFB1E7CBAB6C383EA0A6928EA6D3D /* Core */,
 				C3CD665F366EA3747A664FD85E43055E /* Support Files */,
 			);
-			name = SDWebImage;
 			path = SDWebImage;
 			sourceTree = "<group>";
 		};
@@ -1430,7 +1428,6 @@
 				31499BC1B99D562A07BBE757B57716FA /* NavigationBar */,
 				8A2332CC046834AB575D6D89722AE30E /* Support Files */,
 			);
-			name = GKNavigationBar;
 			path = GKNavigationBar;
 			sourceTree = "<group>";
 		};
@@ -1488,7 +1485,6 @@
 				6A7D3D71B47972415A1149DAA439B22D /* Core */,
 				C1AFD083B917EF1D8DCFDE4A3FF03D4C /* Support Files */,
 			);
-			name = ZFPlayer;
 			path = ZFPlayer;
 			sourceTree = "<group>";
 		};
@@ -1548,7 +1544,6 @@
 				EBC0E2DABA975FB55F67DFEC8F3B02CA /* YYModel.h */,
 				0546856E2385D69143F1E91A79F03418 /* Support Files */,
 			);
-			name = YYModel;
 			path = YYModel;
 			sourceTree = "<group>";
 		};
@@ -1582,7 +1577,6 @@
 				74930DEE05934F4D8B80C3F6A8FCF562 /* ViewController+MASAdditions.m */,
 				18E44155C77CC444D49E808A6C199B7C /* Support Files */,
 			);
-			name = Masonry;
 			path = Masonry;
 			sourceTree = "<group>";
 		};
@@ -1599,7 +1593,6 @@
 				23ABFAFDC2AA0EE9C52909CE3E762FFD /* YYMemoryCache.m */,
 				843CD556D50F02AD100F768DAE725F3F /* Support Files */,
 			);
-			name = YYCache;
 			path = YYCache;
 			sourceTree = "<group>";
 		};
@@ -1652,7 +1645,6 @@
 				B06F0ACB4B85924AE06D03C849CD48C1 /* Resources */,
 				31FBD7A288559B753BB447E138FE3036 /* Support Files */,
 			);
-			name = TZImagePickerController;
 			path = TZImagePickerController;
 			sourceTree = "<group>";
 		};
@@ -1743,7 +1735,6 @@
 				463648093A91FBA29C65B535075A7561 /* Support Files */,
 				EF0E526CDAD7672473B737643085B275 /* UIKit */,
 			);
-			name = AFNetworking;
 			path = AFNetworking;
 			sourceTree = "<group>";
 		};
@@ -1812,7 +1803,6 @@
 				9CB7B038C2488E34721C5D901983BACE /* GKSliderView.m */,
 				42E36A0E977F6BEC52E7488751E60935 /* Support Files */,
 			);
-			name = GKSliderView;
 			path = GKSliderView;
 			sourceTree = "<group>";
 		};
@@ -1905,7 +1895,6 @@
 				4BC2857C54669E2D4A91CE00518EE2D4 /* YYWebImageOperation.m */,
 				C780874DF1EE8E727CDFCC4252DD58DC /* Support Files */,
 			);
-			name = YYWebImage;
 			path = YYWebImage;
 			sourceTree = "<group>";
 		};
@@ -1957,7 +1946,6 @@
 				8E12469D0B80E6B3F64A05EBB58C82D9 /* UIView+SDAutoLayout.m */,
 				F64F93A5F9FB29221330BE23EB33E40C /* Support Files */,
 			);
-			name = SDAutoLayout;
 			path = SDAutoLayout;
 			sourceTree = "<group>";
 		};
@@ -2146,7 +2134,6 @@
 				FACBB710F9CA659D9B52B246ACAD1E7D /* UIView+GKExtension.m */,
 				F4EC292A3234C62368444929B033E04A /* Support Files */,
 			);
-			name = GKCover;
 			path = GKCover;
 			sourceTree = "<group>";
 		};
@@ -2315,7 +2302,6 @@
 				CEC5E7D7711F591D3ED87288FF7D82D4 /* Resources */,
 				95FC0AB8C27544D834FB68C77AA21A41 /* Support Files */,
 			);
-			name = GKMessageTool;
 			path = GKMessageTool;
 			sourceTree = "<group>";
 		};
@@ -2325,7 +2311,6 @@
 				028526B68E94195CADFC8AD92A6ABCDF /* Core */,
 				BC4DACBD9397173DFD3E6104DDDE44B1 /* Support Files */,
 			);
-			name = YYImage;
 			path = YYImage;
 			sourceTree = "<group>";
 		};
@@ -4711,8 +4696,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};

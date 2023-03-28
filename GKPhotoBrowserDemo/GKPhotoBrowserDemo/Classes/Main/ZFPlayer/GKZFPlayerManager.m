@@ -91,28 +91,28 @@
 }
 
 - (void)dealloc {
-    [self stop];
+    [self gk_stop];
 }
 
 #pragma mark - GKVideoPlayerProtocol
-- (void)prepareToPlay {
+- (void)gk_prepareToPlay {
     if (!_assetURL) return;
     [self initPlayer];
     self.status = GKVideoPlayerStatusPrepared;
 }
 
-- (void)play {
+- (void)gk_play {
     id<ZFPlayerMediaPlayback> manager = self.player.currentPlayerManager;
     [manager play];
     _isPlaying = YES;
 }
 
-- (void)replay {
+- (void)gk_replay {
     id<ZFPlayerMediaPlayback> manager = self.player.currentPlayerManager;
     [manager replay];
 }
 
-- (void)pause {
+- (void)gk_pause {
     if (!self.isPlaying) return;
     id<ZFPlayerMediaPlayback> manager = self.player.currentPlayerManager;
     [manager pause];
@@ -120,7 +120,7 @@
     self.status = GKVideoPlayerStatusPaused;
 }
 
-- (void)stop {
+- (void)gk_stop {
     if (self.player) {
         [self.player stop];
         self.player = nil;
@@ -132,11 +132,11 @@
     }
 }
 
-- (void)seekToTime:(NSTimeInterval)time completionHandler:(void (^)(BOOL))completionHandler {
+- (void)gk_seekToTime:(NSTimeInterval)time completionHandler:(void (^)(BOOL))completionHandler {
     [self.player seekToTime:time completionHandler:completionHandler];
 }
 
-- (void)updateFrame:(CGRect)frame {
+- (void)gk_updateFrame:(CGRect)frame {
     self.videoPlayView.frame = frame;
 }
 

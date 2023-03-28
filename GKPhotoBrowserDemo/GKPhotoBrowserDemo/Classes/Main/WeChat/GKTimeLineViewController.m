@@ -173,10 +173,10 @@
     GKPhoto *photo = browser.curPhoto;
     if (photo.isVideo) {
         if (browser.player.isPlaying) {
-            [browser.player pause];
+            [browser.player gk_pause];
             browser.curPhotoView.playBtn.hidden = NO;
         }else {
-            [browser.player play];
+            [browser.player gk_play];
             browser.curPhotoView.playBtn.hidden = YES;
         }
     }else {

@@ -84,7 +84,7 @@
     [self performSelector:@selector(showSmallSlider) withObject:nil afterDelay:3.0f];
     
     __weak __typeof(self) weakSelf = self;
-    [self.player seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
+    [self.player gk_seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
         __strong __typeof(weakSelf) self = weakSelf;
         self.isSeeking = NO;
     }];

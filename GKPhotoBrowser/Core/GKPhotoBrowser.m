@@ -122,7 +122,7 @@ static Class videoManagerClass = nil;
             } break;
             case GKVideoPlayerStatusEnded: {
                 if (self.isVideoReplay) {
-                    [self.player replay];
+                    [self.player gk_replay];
                 } else {
                     [self.curPhotoView showPlayBtn];
                 }

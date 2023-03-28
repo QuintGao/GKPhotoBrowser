@@ -52,7 +52,7 @@
 @synthesize playerPlayTimeChange = _playerPlayTimeChange;
 
 - (void)initPlayer {
-    if (self.player) [self stop];
+    if (self.player) [self gk_stop];
     
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:self.assetURL];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
@@ -65,31 +65,31 @@
 }
 
 - (void)dealloc {
-    [self stop];
+    [self gk_stop];
 }
 
 #pragma mark - GKVideoPlayerProtocol
-- (void)prepareToPlay {
+- (void)gk_prepareToPlay {
     if (!_assetURL) return;
     [self initPlayer];
     self.status = GKVideoPlayerStatusPrepared;
 }
 
-- (void)play {
+- (void)gk_play {
     [self.player play];
     _isPlaying = YES;
 }
 
-- (void)replay {
+- (void)gk_replay {
     __weak __typeof(self) weakSelf = self;
-    [self seekToTime:0 completionHandler:^(BOOL finished) {
+    [self gk_seekToTime:0 completionHandler:^(BOOL finished) {
         __strong __typeof(weakSelf) self = weakSelf;
-        [self play];
+        [self gk_play];
         self.status = GKVideoPlayerStatusPlaying;
     }];
 }
 
-- (void)pause {
+- (void)gk_pause {
     if (!self.isPlaying) return;
     [self.player pause];
     [self.player.currentItem cancelPendingSeeks];
@@ -97,9 +97,9 @@
     self.status = GKVideoPlayerStatusPaused;
 }
 
-- (void)stop {
+- (void)gk_stop {
     if (self.player) {
-        [self pause];
+        [self gk_pause];
         self.player = nil;
         [self.videoPlayView removeFromSuperview];
         self.videoPlayView = nil;
@@ -112,7 +112,7 @@
     }
 }
 
-- (void)seekToTime:(NSTimeInterval)time completionHandler:(void (^)(BOOL))completionHandler {
+- (void)gk_seekToTime:(NSTimeInterval)time completionHandler:(void (^)(BOOL))completionHandler {
     if (self.totalTime > 0) {
         [self.player.currentItem cancelPendingSeeks];
         int32_t timeScale = self.player.currentItem.asset.duration.timescale;
@@ -124,7 +124,7 @@
     }
 }
 
-- (void)updateFrame:(CGRect)frame {
+- (void)gk_updateFrame:(CGRect)frame {
     self.videoPlayView.frame = frame;
 }
 
@@ -132,13 +132,13 @@
 - (void)appDidEnterBackground {
     if (!self.player) return;
     self.isPlay = self.isPlaying;
-    [self pause];
+    [self gk_pause];
 }
 
 - (void)appDidEnterPlayground {
     if (!self.player) return;
     if (self.isPlay) {
-        [self play];
+        [self gk_play];
     }
 }
 
@@ -195,7 +195,7 @@
                         }];
                     }
                     if (self.seekTime) {
-                        [self seekToTime:self.seekTime completionHandler:self.completionHandler];
+                        [self gk_seekToTime:self.seekTime completionHandler:self.completionHandler];
                         self.seekTime = 0;
                     }
                 } break;
