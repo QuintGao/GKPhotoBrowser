@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 调用selectedPhoto方法是否需要动画
 @property (nonatomic, assign) BOOL isAnimated;
 
+@property (nonatomic, assign) BOOL isRecover;
+
 // 显示
 - (void)showFromVC:(UIViewController *)vc;
 

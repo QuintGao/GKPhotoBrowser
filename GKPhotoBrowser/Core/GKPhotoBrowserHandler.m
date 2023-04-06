@@ -35,6 +35,7 @@
     if (self.browser.showStyle == GKPhotoBrowserShowStylePush) {
         UIImage *image = [self getCaptureWithView:vc.view.window];
         self.captureImage = image;
+        self.browser.hidesBottomBarWhenPushed = YES;
         [vc.navigationController pushViewController:self.browser animated:YES];
     }else {
         UIViewController *presentVC = self.browser;
@@ -114,10 +115,14 @@
             sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toView:photoView];
         }
     }
+    if (self.browser.isAdaptiveSafeArea) {
+        sourceRect.origin.y -= (kSafeTopSpace + kSafeBottomSpace) * 0.5;
+    }
     
     photoView.imageView.frame = sourceRect;
+    photoView.imageView.clipsToBounds = YES;
     [photoView updateFrame];
-    
+    [self browserChangeAlpha:0];
     [UIView animateWithDuration:self.browser.animDuration animations:^{
         photoView.imageView.frame = endRect;
         [photoView updateFrame];
@@ -125,6 +130,7 @@
     }completion:^(BOOL finished) {
         self.isShow = YES;
         [self.browser browserFirstAppear];
+        photoView.imageView.clipsToBounds = NO;
     }];
 }
 
@@ -161,15 +167,12 @@
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     
     if (!self.browser.isFollowSystemRotation && self.browser.supportedInterfaceOrientations == UIInterfaceOrientationMaskPortrait && UIDeviceOrientationIsLandscape(orientation)) {
+        self.isRecover = YES;
         [UIView animateWithDuration:self.browser.animDuration animations:^{
             // 旋转view
             self.browser.contentView.transform = CGAffineTransformIdentity;
             
             CGFloat height = MAX(screenBounds.size.width, screenBounds.size.height);
-            
-            if (self.browser.isAdaptiveSafeArea) {
-                height -= (kSafeTopSpace + kSafeBottomSpace);
-            }
             // 设置frame
             self.browser.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
             self.browser.contentView.center = self.browser.view.center;
@@ -178,6 +181,7 @@
             [self.browser.view layoutIfNeeded];
             [self.browser layoutSubviews];
         }completion:^(BOOL finished) {
+            self.isRecover = NO;
             [self browserZoomDismiss];
         }];
     }else {
@@ -223,6 +227,10 @@
         }
     }
     
+    if (self.browser.isAdaptiveSafeArea) {
+        sourceRect.origin.y -= (kSafeTopSpace + kSafeBottomSpace) * 0.5;
+    }
+    
     if (photoView.scrollView.zoomScale > 1.0f) {
         [photoView.scrollView setZoomScale:1.0f animated:NO];
     }
@@ -243,7 +251,7 @@
         [photoView updateFrame];
         [self browserChangeAlpha:0];
     }completion:^(BOOL finished) {
-        [self dismissAnimated:self.browser.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
+        [self dismissAnimated:NO];
     }];
 }
 
@@ -311,8 +319,7 @@
 }
 
 - (UIImage *)getCaptureWithView:(UIView *)view {
-    if (!view) return nil;
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, 0);
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, UIScreen.mainScreen.scale);
     [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

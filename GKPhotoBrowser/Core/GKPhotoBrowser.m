@@ -110,7 +110,7 @@ static Class videoManagerClass = nil;
     self.progressView.player = protocol;
     
     __weak __typeof(self) weakSelf = self;
-    self.player.playerStatusChange = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, GKVideoPlayerStatus status) {
+    self.player.playerStatusChange = ^(id<GKVideoPlayerProtocol> _Nonnull mgr, GKVideoPlayerStatus status) {
         __strong __typeof(weakSelf) self = weakSelf;
         switch (status) {
             case GKVideoPlayerStatusPrepared:
@@ -118,6 +118,7 @@ static Class videoManagerClass = nil;
                 [self.curPhotoView showLoading];
             } break;
             case GKVideoPlayerStatusPlaying: {
+                self.curPhotoView.imageView.image = nil;
                 [self.curPhotoView hideLoading];
             } break;
             case GKVideoPlayerStatusEnded: {
@@ -225,19 +226,7 @@ static Class videoManagerClass = nil;
     self.containerView = [[UIView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:self.containerView];
     
-    CGFloat width  = self.view.bounds.size.width;
-    CGFloat height = self.view.bounds.size.height;
-    BOOL isLandscape = width > height;
-    
-    if (self.isAdaptiveSafeArea) {
-        if (isLandscape) {
-            width  -= (kSafeTopSpace + kSafeBottomSpace);
-        }else {
-            height -= (kSafeTopSpace + kSafeBottomSpace);
-        }
-    }
-    
-    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
+    self.contentView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.contentView.center = self.view.center;
     self.contentView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.contentView];
@@ -519,6 +508,7 @@ static Class videoManagerClass = nil;
             photoView.originLoadStyle = self.originLoadStyle;
             photoView.failStyle       = self.failStyle;
             photoView.isFullWidthForLandScape = self.isFullWidthForLandScape;
+            photoView.isAdaptiveSafeArea = self.isAdaptiveSafeArea;
             photoView.failureText     = self.failureText;
             photoView.failureImage    = self.failureImage;
             photoView.maxZoomScale    = self.maxZoomScale;
@@ -684,6 +674,7 @@ static Class videoManagerClass = nil;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (self.rotationHandler.isRotation) return;
+    if (self.handler.isRecover) return;
     
     [self updateReusableViews];
     

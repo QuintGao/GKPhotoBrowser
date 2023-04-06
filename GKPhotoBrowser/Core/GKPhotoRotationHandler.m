@@ -31,11 +31,8 @@
     if (self.browser.isFollowSystemRotation) return;
     // 默认设备方向：竖屏
     self.originalOrientation = UIDeviceOrientationPortrait;
-    self.currentOrientation = [UIDevice currentDevice].orientation;
-    // 未知或者朝上都认为是竖屏
-    if (self.currentOrientation == UIDeviceOrientationUnknown || self.currentOrientation == UIDeviceOrientationFaceUp) {
-        self.currentOrientation = UIDeviceOrientationPortrait;
-    }
+    self.currentOrientation = UIDeviceOrientationPortrait;
+    
     if (!self.isOrientationNotificationAdded) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
         self.isOrientationNotificationAdded = YES;
@@ -134,9 +131,6 @@
             self.browser.contentView.transform = CGAffineTransformMakeRotation(M_PI * rotation);
             
             CGFloat width = MAX(screenBounds.size.width, screenBounds.size.height);
-            if (self.browser.isAdaptiveSafeArea) {
-                width -= (kSafeTopSpace + kSafeBottomSpace);
-            }
             // 设置frame
             self.browser.contentView.bounds = CGRectMake(0, 0, width, MIN(screenBounds.size.width, screenBounds.size.height));
             self.browser.contentView.center = self.browser.view.center;
@@ -177,9 +171,6 @@
             self.browser.contentView.transform = currentOrientation == UIDeviceOrientationPortrait ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
             
             CGFloat height = MAX(screenBounds.size.width, screenBounds.size.height);
-            if (self.browser.isAdaptiveSafeArea) {
-                height -= (kSafeTopSpace + kSafeBottomSpace);
-            }
             // 设置frame
             self.browser.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
             self.browser.contentView.center = self.browser.view.center;
@@ -216,13 +207,6 @@
         [UIView animateWithDuration:0.3 animations:^{
             CGFloat width = self.browser.view.bounds.size.width;
             CGFloat height = self.browser.view.bounds.size.height;
-            if (self.browser.isAdaptiveSafeArea) {
-                if (width > height) {
-                    width -= (kSafeTopSpace + kSafeBottomSpace);
-                }else {
-                    height -= (kSafeTopSpace + kSafeBottomSpace);
-                }
-            }
             
             self.browser.contentView.bounds = CGRectMake(0, 0, width, height);
             self.browser.contentView.center = self.browser.view.center;

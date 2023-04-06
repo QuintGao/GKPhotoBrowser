@@ -137,6 +137,7 @@
         browser.hidesSavedBtn = YES;
         browser.isFullWidthForLandScape = NO;
         browser.isSingleTapDisabled = YES;
+//        browser.animDuration = 2;
         // 自定义视频播放
 //        [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];
         browser.isVideoReplay = YES;
@@ -170,18 +171,19 @@
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser singleTapWithIndex:(NSInteger)index {
-    GKPhoto *photo = browser.curPhoto;
-    if (photo.isVideo) {
-        if (browser.player.isPlaying) {
-            [browser.player gk_pause];
-            browser.curPhotoView.playBtn.hidden = NO;
-        }else {
-            [browser.player gk_play];
-            browser.curPhotoView.playBtn.hidden = YES;
-        }
-    }else {
-        [browser dismiss];
-    }
+//    GKPhoto *photo = browser.curPhoto;
+//    if (photo.isVideo) {
+//        if (browser.player.isPlaying) {
+//            [browser.player gk_pause];
+//            browser.curPhotoView.playBtn.hidden = NO;
+//        }else {
+//            [browser.player gk_play];
+//            browser.curPhotoView.playBtn.hidden = YES;
+//        }
+//    }else {
+//        [browser dismiss];
+//    }
+    [browser dismiss];
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser longPressWithIndex:(NSInteger)index {

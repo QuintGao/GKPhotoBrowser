@@ -17,6 +17,9 @@
 /** 进度的高度 */
 #define kProgressH    3.0
 
+#define kLineLoadingDuration 0.75
+#define kLineLoadingColor    [UIColor whiteColor]
+
 @interface GKSliderButton()
 
 @property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
@@ -33,7 +36,6 @@
         self.indicatorView.frame     = CGRectMake(0, 0, 20, 20);
         self.indicatorView.transform = CGAffineTransformMakeScale(0.6, 0.6);
         self.indicatorView.hidden = YES;
-        
         [self addSubview:self.indicatorView];
     }
     return self;
@@ -42,7 +44,7 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.indicatorView.center = CGPointMake(self.gk_width / 2, self.gk_height/ 2);
+    self.indicatorView.center = CGPointMake(self.gk_width * 0.5, self.gk_height * 0.5);
     self.indicatorView.transform = CGAffineTransformMakeScale(0.6, 0.6);
 }
 
@@ -56,17 +58,83 @@
     [self.indicatorView stopAnimating];
 }
 
+- (CGRect)enlargedRect {
+    return CGRectMake(self.bounds.origin.x - self.enlargeEdge.left,
+                      self.bounds.origin.y - self.enlargeEdge.top,
+                      self.bounds.size.width + self.enlargeEdge.left + self.enlargeEdge.right,
+                      self.bounds.size.height + self.enlargeEdge.top + self.enlargeEdge.bottom);
+}
+
 // 重写此方法将按钮的点击范围扩大
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    CGRect bounds = self.bounds;
-    
-    // 扩大点击区域
-    if (self.enlargeClickRange) {
-        bounds = CGRectInset(bounds, -20, -20);
+    CGRect rect = [self enlargedRect];
+    if (CGRectEqualToRect(rect, self.bounds)) {
+        return [super pointInside:point withEvent:event];
     }
+    return CGRectContainsPoint(rect, point);
+}
+
+@end
+
+@implementation GKLineLoadingView
+
++ (void)showLoadingInView:(UIView *)view lineHeight:(CGFloat)lineHeight {
+    GKLineLoadingView *loadingView = [[GKLineLoadingView alloc] initWithFrame:view.frame lineHeight:lineHeight];
+    [view addSubview:loadingView];
+    [loadingView startLoading];
+}
+
++ (void)hideLoadingInView:(UIView *)view {
+    NSEnumerator *subviewsEnum = view.subviews.reverseObjectEnumerator;
+    for (UIView *subview in subviewsEnum) {
+        if ([subview isKindOfClass:GKLineLoadingView.class]) {
+            GKLineLoadingView *loadingView = (GKLineLoadingView *)subview;
+            [loadingView stopLoading];
+            [loadingView removeFromSuperview];
+        }
+    }
+}
+
+- (instancetype)initWithFrame:(CGRect)frame lineHeight:(CGFloat)lineHeight {
+    if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = kLineLoadingColor;
+        self.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+        self.bounds = CGRectMake(0, 0, 1.0f, lineHeight);
+    }
+    return self;
+}
+
+- (void)startLoading {
+    [self stopLoading];
     
-    // 若点击的点在新的bounds里面。就返回yes
-    return CGRectContainsPoint(bounds, point);
+    self.hidden = NO;
+    // 创建动画组
+    CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+    animationGroup.duration = kLineLoadingDuration;
+    animationGroup.beginTime = CACurrentMediaTime();
+    animationGroup.repeatCount = MAXFLOAT;
+    animationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    
+    // x轴缩放动画（transform.scale是以view的中心的为中心开始缩放的）
+    CABasicAnimation *scaleAnimation = [CABasicAnimation animation];
+    scaleAnimation.keyPath = @"transform.scale.x";
+    scaleAnimation.fromValue = @(1.0f);
+    scaleAnimation.toValue = @(1.0f * self.superview.frame.size.width);
+    
+    // 透明度渐变动画
+    CABasicAnimation *alphaAnimation = [CABasicAnimation animation];
+    alphaAnimation.keyPath = @"opacity";
+    alphaAnimation.fromValue = @(1.0f);
+    alphaAnimation.toValue = @(0.5f);
+    
+    animationGroup.animations = @[scaleAnimation, alphaAnimation];
+    // 添加动画
+    [self.layer addAnimation:animationGroup forKey:@"lineLoading"];
+}
+
+- (void)stopLoading {
+    [self.layer removeAnimationForKey:@"lineLoading"];
+    self.hidden = YES;
 }
 
 @end
@@ -91,7 +159,11 @@
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 
+@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+
 @property (nonatomic, assign) CGPoint touchPoint;
+
+@property (nonatomic, assign) BOOL isDragging;
 
 @end
 
@@ -152,11 +224,15 @@
     if ([self.previewDelegate respondsToSelector:@selector(sliderViewPreviewMargin:)]) {
         margin = [self.previewDelegate sliderViewPreviewMargin:self];
     }
+    
     CGPoint point = [self convertPoint:self.sliderBtn.center toView:self.superview];
+    if (!self.isPreviewChangePosition) {
+        point.x = self.superview.frame.size.width * 0.5;
+    }
     
     if (self.preview) {
         self.preview.gk_centerX = point.x;
-        self.preview.gk_centerY = point.y - self.sliderBtn.gk_height * 0.5 - self.preview.gk_height * 0.5 - margin;
+        self.preview.gk_centerY = point.y - self.preview.gk_height - margin;
     }
 }
 
@@ -164,6 +240,12 @@
  添加子视图
  */
 - (void)addSubViews {
+    self.isSliderAllowTapped      = YES;
+    self.isSliderBlockAllowTapped = YES;
+    self.isPreviewChangePosition  = YES;
+    self.sliderBlockEnlargeEdge   = UIEdgeInsetsMake(10, 10, 10, 10);
+    self.sliderBtn.enlargeEdge = self.sliderBlockEnlargeEdge;
+    
     self.backgroundColor = [UIColor clearColor];
     
     [self addSubview:self.bgProgressView];
@@ -176,9 +258,6 @@
     self.bufferProgressView.frame = self.bgProgressView.frame;
     self.sliderProgressView.frame = self.bgProgressView.frame;
     self.sliderBtn.frame          = CGRectMake(0, 0, kSliderBtnWH, kSliderBtnWH);
-    
-    self.isSliderAllowTapped      = YES;
-    self.isSliderBlockAllowTapped = YES;
 }
 
 #pragma mark - Setter
@@ -286,6 +365,25 @@
     [self.sliderBtn hideActivityAnim];
 }
 
+- (void)showLineLoading {
+    self.bgProgressView.hidden = YES;
+    self.bufferProgressView.hidden = YES;
+    self.sliderProgressView.hidden = YES;
+    self.sliderBtn.hidden = YES;
+    
+    CGFloat lineHeight = self.lineHeight > 0 ? self.lineHeight : self.bgProgressView.gk_height;
+    
+    [GKLineLoadingView showLoadingInView:self lineHeight:lineHeight];
+}
+
+- (void)hideLineLoading {
+    self.bgProgressView.hidden = NO;
+    self.bufferProgressView.hidden = NO;
+    self.sliderProgressView.hidden = NO;
+    self.sliderBtn.hidden = NO;
+    [GKLineLoadingView hideLoadingInView:self];
+}
+
 - (void)setIsSliderAllowTapped:(BOOL)isSliderAllowTapped {
     _isSliderAllowTapped = isSliderAllowTapped;
     
@@ -294,6 +392,22 @@
     }else {
         if ([self.gestureRecognizers containsObject:self.tapGesture]) {
             [self removeGestureRecognizer:self.tapGesture];
+        }
+    }
+}
+
+- (void)setIsSliderAllowDragged:(BOOL)isSliderAllowDragged {
+    _isSliderAllowDragged = isSliderAllowDragged;
+    
+    if (isSliderAllowDragged) {
+        self.sliderBtn.userInteractionEnabled = NO;
+        [self addGestureRecognizer:self.panGesture];
+    }else {
+        if (self.isSliderBlockAllowTapped) {
+            self.sliderBtn.userInteractionEnabled = YES;
+        }
+        if ([self.gestureRecognizers containsObject:self.panGesture]) {
+            [self removeGestureRecognizer:self.panGesture];
         }
     }
 }
@@ -315,7 +429,17 @@
 - (void)setIsSliderBlockAllowTapped:(BOOL)isSliderBlockAllowTapped {
     _isSliderBlockAllowTapped = isSliderBlockAllowTapped;
     
-    self.sliderBtn.userInteractionEnabled = isSliderBlockAllowTapped;
+    if (self.isSliderAllowDragged) {
+        self.sliderBtn.userInteractionEnabled = NO;
+    }else {
+        self.sliderBtn.userInteractionEnabled = isSliderBlockAllowTapped;
+    }
+}
+
+- (void)setSliderBlockEnlargeEdge:(UIEdgeInsets)sliderBlockEnlargeEdge {
+    _sliderBlockEnlargeEdge = sliderBlockEnlargeEdge;
+    
+    self.sliderBtn.enlargeEdge = sliderBlockEnlargeEdge;
 }
 
 - (void)setupBufferRoundCorner {
@@ -366,33 +490,11 @@
 #pragma mark - User Action
 - (void)sliderBtnTouchBegin:(UIButton *)btn event:(UIEvent *)event {
     self.touchPoint = [event.allTouches.anyObject locationInView:self];
-    if (self.preview) {
-        self.preview.hidden = NO;
-    }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if ([self.delegate respondsToSelector:@selector(sliderTouchBegan:)]) {
-        [self.delegate sliderTouchBegan:self.value];
-    }
-#pragma clang diagnostic pop
-    if ([self.delegate respondsToSelector:@selector(sliderView:touchBegan:)]) {
-        [self.delegate sliderView:self touchBegan:self.value];
-    }
+    [self sliderTouchBegin:btn];
 }
 
 - (void)sliderBtnTouchEnded:(UIButton *)btn {
-    if (self.preview) {
-        self.preview.hidden = YES;
-    }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if ([self.delegate respondsToSelector:@selector(sliderTouchEnded:)]) {
-        [self.delegate sliderTouchEnded:self.value];
-    }
-#pragma clang diagnostic pop
-    if ([self.delegate respondsToSelector:@selector(sliderView:touchEnded:)]) {
-        [self.delegate sliderView:self touchEnded:self.value];
-    }
+    [self sliderTouchEnded:btn];
 }
 
 - (void)sliderBtnDragMoving:(UIButton *)btn event:(UIEvent *)event {
@@ -401,29 +503,10 @@
     // 修复真机测试时按下就触发移动方法，导致的bug
     if (CGPointEqualToPoint(self.touchPoint, point)) return;
     
-    // 获取进度值 由于btn是从 0-(self.width - btn.width)
-    float value = (point.x - self.ignoreMargin - btn.gk_width * 0.5) / (self.gk_width - 2 * self.ignoreMargin - btn.gk_width);
-    
-    // value的值需在0-1之间
-    value = value >= 1.0 ? 1.0 : value <= 0.0 ? 0.0 : value;
-    
-    [self setValue:value];
-    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if ([self.delegate respondsToSelector:@selector(sliderValueChanged:)]) {
-        [self.delegate sliderValueChanged:value];
-    }
-#pragma clang diagnostic pop
-    if ([self.delegate respondsToSelector:@selector(sliderView:valueChanged:)]) {
-        [self.delegate sliderView:self valueChanged:value];
-    }
-    if ([self.previewDelegate respondsToSelector:@selector(sliderView:preview:valueChanged:)]) {
-        [self.previewDelegate sliderView:self preview:self.preview valueChanged:value];
-    }
+    [self sliderTouchMoving:btn point:point];
 }
 
-- (void)tapped:(UITapGestureRecognizer *)tap {
+- (void)handleTap:(UITapGestureRecognizer *)tap {
     CGPoint point = [tap locationInView:self];
     if (CGRectContainsPoint(self.sliderBtn.frame, point)) return;
     
@@ -433,19 +516,74 @@
     
     [self setValue:value];
     
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if ([self.delegate respondsToSelector:@selector(sliderTapped:)]) {
-        [self.delegate sliderTapped:value];
-    }
-#pragma clang diagnostic pop
     if ([self.delegate respondsToSelector:@selector(sliderView:tapped:)]) {
         [self.delegate sliderView:self tapped:value];
     }
 }
 
+- (void)handlePan:(UIPanGestureRecognizer *)pan {
+    switch (pan.state) {
+        case UIGestureRecognizerStateBegan:
+            [self sliderTouchBegin:self.sliderBtn];
+            break;
+        case UIGestureRecognizerStateChanged:
+            [self sliderTouchMoving:self.sliderBtn point:[pan locationInView:pan.view]];
+            break;
+        case UIGestureRecognizerStateEnded:
+            [self sliderTouchEnded:self.sliderBtn];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)sliderTouchBegin:(UIButton *)btn {
+    self.isDragging = YES;
+    
+    if ([self.delegate respondsToSelector:@selector(sliderView:touchBegan:)]) {
+        [self.delegate sliderView:self touchBegan:self.value];
+    }
+    
+    if (self.preview) {
+        self.preview.hidden = NO;
+    }
+}
+
+- (void)sliderTouchMoving:(UIButton *)btn point:(CGPoint)touchPoint {
+    // 点击的位置
+    CGPoint point = touchPoint;
+    
+    // 获取进度值 由于btn是从 0-(self.width - btn.width)
+    float value = (point.x - self.ignoreMargin - btn.gk_width * 0.5) / (self.gk_width - 2 * self.ignoreMargin - btn.gk_width);
+    
+    // value的值需在0-1之间
+    value = value >= 1.0 ? 1.0 : value <= 0.0 ? 0.0 : value;
+    
+    [self setValue:value];
+    
+    if ([self.delegate respondsToSelector:@selector(sliderView:valueChanged:)]) {
+        [self.delegate sliderView:self valueChanged:value];
+    }
+    
+    if ([self.previewDelegate respondsToSelector:@selector(sliderView:preview:valueChanged:)]) {
+        [self.previewDelegate sliderView:self preview:self.preview valueChanged:value];
+    }
+}
+
+- (void)sliderTouchEnded:(UIButton *)btn {
+    self.isDragging = NO;
+    
+    if ([self.delegate respondsToSelector:@selector(sliderView:touchEnded:)]) {
+        [self.delegate sliderView:self touchEnded:self.value];
+    }
+    
+    if (self.preview) {
+        self.preview.hidden = YES;
+    }
+}
+
 #pragma mark - 懒加载
-- (UIView *)bgProgressView {
+- (UIImageView *)bgProgressView {
     if (!_bgProgressView) {
         _bgProgressView = [UIImageView new];
         _bgProgressView.backgroundColor = [UIColor grayColor];
@@ -455,7 +593,7 @@
     return _bgProgressView;
 }
 
-- (UIView *)bufferProgressView {
+- (UIImageView *)bufferProgressView {
     if (!_bufferProgressView) {
         _bufferProgressView = [UIImageView new];
         _bufferProgressView.backgroundColor = [UIColor whiteColor];
@@ -465,7 +603,7 @@
     return _bufferProgressView;
 }
 
-- (UIView *)sliderProgressView {
+- (UIImageView *)sliderProgressView {
     if (!_sliderProgressView) {
         _sliderProgressView = [UIImageView new];
         _sliderProgressView.backgroundColor = [UIColor redColor];
@@ -484,16 +622,22 @@
         [_sliderBtn addTarget:self action:@selector(sliderBtnTouchEnded:) forControlEvents:UIControlEventTouchUpOutside];
         [_sliderBtn addTarget:self action:@selector(sliderBtnDragMoving:event:) forControlEvents:UIControlEventTouchDragInside];
         [_sliderBtn addTarget:self action:@selector(sliderBtnDragMoving:event:) forControlEvents:UIControlEventTouchDragOutside];
-        _sliderBtn.enlargeClickRange = YES;
     }
     return _sliderBtn;
 }
 
 - (UITapGestureRecognizer *)tapGesture {
     if (!_tapGesture) {
-        _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
+        _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     }
     return _tapGesture;
+}
+
+- (UIPanGestureRecognizer *)panGesture {
+    if (!_panGesture) {
+        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    }
+    return _panGesture;
 }
 
 @end

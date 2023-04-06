@@ -99,8 +99,6 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign) GKPhotoBrowserFailStyle failStyle;
 /** 代理 */
 @property (nonatomic, weak) id<GKPhotoBrowserDelegate> delegate;
-/// 图片显示模式，优先级最高
-@property (nonatomic, assign) UIViewContentMode *photoContentMode;
 
 /// 是否跟随系统旋转，默认是NO，如果设置为YES，isScreenRotateDisabled属性将失效
 @property (nonatomic, assign) BOOL isFollowSystemRotation;

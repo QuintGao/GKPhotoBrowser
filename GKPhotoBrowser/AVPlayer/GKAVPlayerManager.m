@@ -59,7 +59,7 @@
     
     AVPlayerLayer *playerLayer = (AVPlayerLayer *)self.videoPlayView.layer;
     playerLayer.player = self.player;
-    playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
     
     [self addPlayerObserver];
 }

@@ -183,6 +183,7 @@
 
 - (void)updateFrame {
     if (!self.photo.isVideo) return;
+    if (self.player.assetURL != self.photo.videoUrl) return;
     [self.player gk_updateFrame:self.imageView.bounds];
 }
 
@@ -370,8 +371,21 @@
 }
 
 - (void)resetFrame {
-    self.scrollView.frame  = self.bounds;
+    CGFloat width  = self.bounds.size.width;
+    CGFloat height = self.bounds.size.height;
+    BOOL isLandscape = width > height;
+    
+    if (self.isAdaptiveSafeArea) {
+        if (isLandscape) {
+            width  -= (kSafeTopSpace + kSafeBottomSpace);
+        }else {
+            height -= (kSafeTopSpace + kSafeBottomSpace);
+        }
+    }
+    self.scrollView.bounds = CGRectMake(0, 0, width, height);
+    self.scrollView.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
     self.loadingView.frame = self.bounds;
+    self.videoLoadingView.frame = self.bounds;
     
     if (self.photo) {
         [self adjustFrame];
@@ -428,6 +442,13 @@
             self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, imageF.size.height * 0.5);
         }
         
+        // 视频处理，保证视频可以完全显示
+        if (self.photo.isVideo) {
+            self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+            self.imageView.frame = self.scrollView.bounds;
+            self.scrollView.contentSize = self.imageView.frame.size;
+        }
+        
         // 根据图片大小找到最大缩放等级，保证最大缩放时候，不会有黑边
         // 找到最大的缩放比例
         CGFloat scaleH = frame.size.height / imageF.size.height;
@@ -466,11 +487,10 @@
     self.scrollView.contentOffset = self.photo.offset;
     
     
-    self.loadingView.bounds = self.scrollView.frame;
-    self.loadingView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
-    self.videoLoadingView.frame = self.loadingView.frame;
+    self.loadingView.frame = self.bounds;
+    self.videoLoadingView.frame = self.bounds;
     [self.playBtn sizeToFit];
-    self.playBtn.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
     [self updateFrame];
 }
 

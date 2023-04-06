@@ -41,6 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
 @property (nonatomic, assign) BOOL isFullWidthForLandScape;
 
+/// 是否适配安全区域，默认NO，为YES时图片会自动适配iPhone X的安全区域
+@property (nonatomic, assign) BOOL isAdaptiveSafeArea;
+
 /** 图片最大放大倍数 */
 @property (nonatomic, assign) CGFloat maxZoomScale;
 

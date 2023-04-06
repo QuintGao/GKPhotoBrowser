@@ -135,6 +135,10 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.5.4 - 2023.04.06 
+    - 1、视频播放优化，修复bug #168
+    - 2、安全区域适配优化，修复横屏时切换问题
+    - 3、横屏显示及隐藏动画优化
  * 2.5.3 - 2023.03.28 部分方法增加前缀，修复审核警告问题 #165 #166
  * 2.5.2 - 2023.03.16 修复调用selectedPhoto和removePhoto方法后视频播放未停止的问题，视频播放优化
  * 2.5.1 - 2023.03.15 修复使用videoView出现审核被拒的问题 #165，消除警告
