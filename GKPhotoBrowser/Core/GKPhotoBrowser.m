@@ -373,6 +373,10 @@ static Class videoManagerClass = nil;
     return self.statusBarStyle;
 }
 
+- (BOOL)prefersHomeIndicatorAutoHidden {
+    return YES;
+}
+
 #pragma mark - Public Methods
 - (void)setupCoverViews:(NSArray *)coverViews layoutBlock:(layoutBlock)layoutBlock {
     self.coverViews  = coverViews;

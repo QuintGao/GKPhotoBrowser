@@ -133,7 +133,7 @@
         browser.doubleZoomScale = 2.0f;
         browser.isAdaptiveSafeArea = YES;
         browser.hidesCountLabel = YES;
-        browser.hidesPageControl = YES;
+//        browser.hidesPageControl = YES;
         browser.hidesSavedBtn = YES;
         browser.isFullWidthForLandScape = NO;
         browser.isSingleTapDisabled = YES;
