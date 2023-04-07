@@ -28,7 +28,13 @@ inline CGFloat SDImageScaleFactorForKey(NSString * _Nullable key) {
 #elif SD_UIKIT
     if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
 #elif SD_MAC
-    if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
+    NSScreen *mainScreen = nil;
+    if (@available(macOS 10.12, *)) {
+        mainScreen = [NSScreen mainScreen];
+    } else {
+        mainScreen = [NSScreen screens].firstObject;
+    }
+    if ([mainScreen respondsToSelector:@selector(backingScaleFactor)])
 #endif
     {
         // a@2x.png -> 8
@@ -79,9 +85,10 @@ inline UIImage * _Nullable SDScaledImageForScaleFactor(CGFloat scale, UIImage * 
         UIImage *animatedImage;
 #if SD_UIKIT || SD_WATCH
         // `UIAnimatedImage` images share the same size and scale.
-        NSMutableArray<UIImage *> *scaledImages = [NSMutableArray array];
+        NSArray<UIImage *> *images = image.images;
+        NSMutableArray<UIImage *> *scaledImages = [NSMutableArray arrayWithCapacity:images.count];
         
-        for (UIImage *tempImage in image.images) {
+        for (UIImage *tempImage in images) {
             UIImage *tempScaledImage = [[UIImage alloc] initWithCGImage:tempImage.CGImage scale:scale orientation:tempImage.imageOrientation];
             [scaledImages addObject:tempScaledImage];
         }
@@ -120,13 +127,17 @@ inline UIImage * _Nullable SDScaledImageForScaleFactor(CGFloat scale, UIImage * 
 
 SDWebImageContextOption const SDWebImageContextSetImageOperationKey = @"setImageOperationKey";
 SDWebImageContextOption const SDWebImageContextCustomManager = @"customManager";
+SDWebImageContextOption const SDWebImageContextCallbackQueue = @"callbackQueue";
 SDWebImageContextOption const SDWebImageContextImageCache = @"imageCache";
 SDWebImageContextOption const SDWebImageContextImageLoader = @"imageLoader";
 SDWebImageContextOption const SDWebImageContextImageCoder = @"imageCoder";
 SDWebImageContextOption const SDWebImageContextImageTransformer = @"imageTransformer";
+SDWebImageContextOption const SDWebImageContextImageDecodeOptions = @"imageDecodeOptions";
 SDWebImageContextOption const SDWebImageContextImageScaleFactor = @"imageScaleFactor";
 SDWebImageContextOption const SDWebImageContextImagePreserveAspectRatio = @"imagePreserveAspectRatio";
 SDWebImageContextOption const SDWebImageContextImageThumbnailPixelSize = @"imageThumbnailPixelSize";
+SDWebImageContextOption const SDWebImageContextImageTypeIdentifierHint = @"imageTypeIdentifierHint";
+SDWebImageContextOption const SDWebImageContextImageEncodeOptions = @"imageEncodeOptions";
 SDWebImageContextOption const SDWebImageContextQueryCacheType = @"queryCacheType";
 SDWebImageContextOption const SDWebImageContextStoreCacheType = @"storeCacheType";
 SDWebImageContextOption const SDWebImageContextOriginalQueryCacheType = @"originalQueryCacheType";

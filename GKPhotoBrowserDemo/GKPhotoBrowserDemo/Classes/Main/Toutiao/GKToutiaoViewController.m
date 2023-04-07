@@ -208,14 +208,13 @@
 }
 
 - (void)resetCoverFrame:(CGRect)frame index:(NSInteger)index{
+    BOOL isLandscape = frame.size.width > frame.size.height;
     
     self.closeBtn.left = 15;
-    self.closeBtn.top  = 20 + GK_SAFEAREA_TOP;
+    self.closeBtn.top  = 20 + (!isLandscape ? GK_SAFEAREA_TOP : 0);
 
     self.moreBtn.left  = frame.size.width - 15 - self.moreBtn.width;
-    self.moreBtn.top   = 20 + GK_SAFEAREA_TOP;
-
-    BOOL isLandscape = frame.size.width > frame.size.height;
+    self.moreBtn.top   = 20 + (!isLandscape ? GK_SAFEAREA_TOP : 0);
 
     // 计算高度
     GKToutiaoImage *image = self.selectCell.model.images[index];

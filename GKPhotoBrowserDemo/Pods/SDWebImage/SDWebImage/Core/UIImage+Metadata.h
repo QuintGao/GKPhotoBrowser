@@ -8,6 +8,7 @@
 
 #import "SDWebImageCompat.h"
 #import "NSData+ImageContentType.h"
+#import "SDImageCoder.h"
 
 /**
  UIImage category for image metadata, including animation, loop count, format, incremental, etc.
@@ -64,5 +65,25 @@
  A bool value indicating whether the image is during incremental decoding and may not contains full pixels.
  */
 @property (nonatomic, assign) BOOL sd_isIncremental;
+
+/**
+ A bool value indicating that the image is transformed from original image, so the image data may not always match original download one.
+ */
+@property (nonatomic, assign) BOOL sd_isTransformed;
+
+/**
+ A bool value indicating that the image is using thumbnail decode with smaller size, so the image data may not always match original download one.
+ @note This just check `sd_decodeOptions[.decodeThumbnailPixelSize] > CGSize.zero`
+ */
+@property (nonatomic, assign, readonly) BOOL sd_isThumbnail;
+
+/**
+ A dictionary value contains the decode options when decoded from SDWebImage loading system (say, `SDImageCacheDecodeImageData/SDImageLoaderDecode[Progressive]ImageData`)
+ It may not always available and only image decoding related options will be saved. (including [.decodeScaleFactor, .decodeThumbnailPixelSize, .decodePreserveAspectRatio, .decodeFirstFrameOnly])
+ @note This is used to identify and check the image is from thumbnail decoding, and the callback's data **will be nil** (because this time the data saved to disk does not match the image return to you. If you need full size data, query the cache with full size url key)
+ @warning You should not store object inside which keep strong reference to image itself, which will cause retain cycle.
+ @warning This API exist only because of current SDWebImageDownloader bad design which does not callback the context we call it. There will be refactor in future (API break), use with caution.
+ */
+@property (nonatomic, copy) SDImageCoderOptions *sd_decodeOptions;
 
 @end

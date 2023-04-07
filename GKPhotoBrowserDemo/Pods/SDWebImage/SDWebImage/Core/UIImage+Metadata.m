@@ -166,10 +166,8 @@
         return imageFormat;
     }
     // Check CGImage's UTType, may return nil for non-Image/IO based image
-    if (@available(iOS 9.0, tvOS 9.0, macOS 10.11, watchOS 2.0, *)) {
-        CFStringRef uttype = CGImageGetUTType(self.CGImage);
-        imageFormat = [NSData sd_imageFormatFromUTType:uttype];
-    }
+    CFStringRef uttype = CGImageGetUTType(self.CGImage);
+    imageFormat = [NSData sd_imageFormatFromUTType:uttype];
     return imageFormat;
 }
 
@@ -184,6 +182,40 @@
 - (BOOL)sd_isIncremental {
     NSNumber *value = objc_getAssociatedObject(self, @selector(sd_isIncremental));
     return value.boolValue;
+}
+
+- (void)setSd_isTransformed:(BOOL)sd_isTransformed {
+    objc_setAssociatedObject(self, @selector(sd_isTransformed), @(sd_isTransformed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)sd_isTransformed {
+    NSNumber *value = objc_getAssociatedObject(self, @selector(sd_isTransformed));
+    return value.boolValue;
+}
+
+- (void)setSd_decodeOptions:(SDImageCoderOptions *)sd_decodeOptions {
+    objc_setAssociatedObject(self, @selector(sd_decodeOptions), sd_decodeOptions, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+-(BOOL)sd_isThumbnail {
+    CGSize thumbnailSize = CGSizeZero;
+    NSValue *thumbnailSizeValue = self.sd_decodeOptions[SDImageCoderDecodeThumbnailPixelSize];
+    if (thumbnailSizeValue != nil) {
+    #if SD_MAC
+        thumbnailSize = thumbnailSizeValue.sizeValue;
+    #else
+        thumbnailSize = thumbnailSizeValue.CGSizeValue;
+    #endif
+    }
+    return thumbnailSize.width > 0 && thumbnailSize.height > 0;
+}
+
+- (SDImageCoderOptions *)sd_decodeOptions {
+    SDImageCoderOptions *value = objc_getAssociatedObject(self, @selector(sd_decodeOptions));
+    if ([value isKindOfClass:NSDictionary.class]) {
+        return value;
+    }
+    return nil;
 }
 
 @end
