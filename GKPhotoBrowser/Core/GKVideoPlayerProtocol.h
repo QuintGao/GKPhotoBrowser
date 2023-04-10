@@ -39,6 +39,8 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
 
 @property (nonatomic, copy) void(^playerPlayTimeChange)(id<GKVideoPlayerProtocol> mgr, NSTimeInterval currentTime, NSTimeInterval totalTime);
 
+@property (nonatomic, copy) void(^playerGetVideoSize)(id<GKVideoPlayerProtocol> mgr, CGSize size);
+
 // 准备视频资源
 - (void)gk_prepareToPlay;
 

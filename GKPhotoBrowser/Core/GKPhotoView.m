@@ -97,6 +97,7 @@
 - (void)showLoading {
     if (!self.photo.isVideo) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
+    self.videoLoadingView.frame = self.bounds;
     [self addSubview:self.videoLoadingView];
     [self.videoLoadingView startLoading];
 }
@@ -129,8 +130,10 @@
             __strong __typeof(weakSelf) self = weakSelf;
             self.player.coverImage = self.imageView.image;
             self.player.assetURL = url;
-            [self.player gk_prepareToPlay];
-            [self.player gk_play];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.player gk_prepareToPlay];
+                [self.player gk_play];
+            });
         }];
     }else {
         [self.player gk_play];
@@ -404,11 +407,18 @@
 
 #pragma mark - 调整frame
 - (void)adjustFrame {
+    if (!self.photo) return;
     CGRect frame = self.scrollView.frame;
     if (frame.size.width == 0 || frame.size.height == 0) return;
     
     if (self.imageView.image) {
         CGSize imageSize = self.imageView.image.size;
+        // 视频处理，保证视频可以完全显示
+        if (self.photo.isVideo && !CGSizeEqualToSize(self.photo.videoSize, CGSizeZero)) {
+            imageSize = self.photo.videoSize;
+            self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        }
+        
         if (imageSize.width == 0) imageSize.width = self.scrollView.frame.size.width;
         if (imageSize.height == 0) imageSize.height = self.scrollView.frame.size.height;
         
@@ -423,7 +433,7 @@
         // 如果kIsFullWidthForLandScape = NO，需要把图片全部显示在屏幕上
         // 此时由于图片的宽度已经等于屏幕的宽度，所以只需判断图片显示的高度>屏幕高度时，将图片的高度缩小到屏幕的高度即可
         
-        if (!self.isFullWidthForLandScape) {
+        if (!self.isFullWidthForLandScape || self.photo.isVideo) {
             // 图片的高度 > 屏幕的高度
             if (imageF.size.height > frame.size.height) {
                 CGFloat scale = imageF.size.width / imageF.size.height;
@@ -440,13 +450,6 @@
             self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, self.scrollView.bounds.size.height * 0.5);
         }else {
             self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, imageF.size.height * 0.5);
-        }
-        
-        // 视频处理，保证视频可以完全显示
-        if (self.photo.isVideo) {
-            self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-            self.imageView.frame = self.scrollView.bounds;
-            self.scrollView.contentSize = self.imageView.frame.size;
         }
         
         // 根据图片大小找到最大缩放等级，保证最大缩放时候，不会有黑边
@@ -478,14 +481,13 @@
     
     // frame调整完毕，重新设置缩放
     if (self.photo.isZooming) {
-        self.scrollView.maximumZoomScale = 1.0f;
-        self.scrollView.zoomScale = 1.0f;
+        [self.scrollView setZoomScale:1.0f animated:NO];
+        [self setScrollMaxZoomScale:self.photo.zoomScale];
         [self zoomToRect:self.photo.zoomRect animated:NO];
+        self.scrollView.contentOffset = self.photo.zoomOffset;
+    }else {
+        self.scrollView.contentOffset = self.photo.offset;
     }
-    
-    // 重置offset
-    self.scrollView.contentOffset = self.photo.offset;
-    
     
     self.loadingView.frame = self.bounds;
     self.videoLoadingView.frame = self.bounds;
@@ -507,12 +509,10 @@
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    // 恢复位置
-    if (self.photo.isZooming && scrollView.zoomScale == 1.0f) {
-        scrollView.contentOffset = self.photo.offset;
+    if (self.photo.isZooming && scrollView.zoomScale != 1.0f && (scrollView.isDragging || scrollView.isDecelerating)) {
+        self.photo.zoomOffset = scrollView.contentOffset;
     }
     
-    // 只在上下滑动时记录位置
     if (scrollView.zoomScale == 1.0f) {
         self.photo.offset = scrollView.contentOffset;
     }

@@ -175,6 +175,7 @@ int const static kDirectionPanThreshold = 5;
         CGRect zoomRect  = [self frameWithWidth:wh height:wh center:location];
         [photoView zoomToRect:zoomRect animated:YES];
         
+        photo.zoomScale = self.browser.doubleZoomScale;
         photo.isZooming = YES;
         photo.zoomRect  = zoomRect;
         
@@ -245,6 +246,9 @@ int const static kDirectionPanThreshold = 5;
             if (scale < 0.2) {
                 [self browserCancelDismiss];
             }else {
+                if ([self.delegate respondsToSelector:@selector(browserDidDisappear)]) {
+                    [self.delegate browserDidDisappear];
+                }
                 [self browserZoomDismiss];
             }
         }
@@ -285,6 +289,9 @@ int const static kDirectionPanThreshold = 5;
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled: {
             if (fabs(point.y) > 200 || fabs(velocity.y) > 500) {
+                if ([self.delegate respondsToSelector:@selector(browserDidDisappear)]) {
+                    [self.delegate browserDidDisappear];
+                }
                 [self browserSlideDismiss:point];
             }else {
                 [self browserCancelDismiss];
@@ -300,6 +307,7 @@ int const static kDirectionPanThreshold = 5;
 - (void)handlePanBegin {
     GKPhotoView *photoView = self.browser.curPhotoView;
     if (!photoView) return;
+    photoView.imageView.clipsToBounds = YES;
     
     GKPhoto *photo = photoView.photo;
     if (self.browser.isHideSourceView) {
@@ -336,6 +344,7 @@ int const static kDirectionPanThreshold = 5;
         [self browserChangeAlpha:1];
     }completion:^(BOOL finished) {
         photoView.loadingView.hidden = NO;
+        photoView.imageView.clipsToBounds = NO;
         if ([self.delegate respondsToSelector:@selector(browserCancelDisappear)]) {
             [self.delegate browserCancelDisappear];
         }

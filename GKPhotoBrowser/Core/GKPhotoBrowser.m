@@ -29,8 +29,6 @@ static Class videoManagerClass = nil;
 
 @interface GKPhotoBrowser()<UIScrollViewDelegate, GKPhotoGestureDelegate, GKPhotoRotationDelegate>
 
-@property (nonatomic, strong) UIView         *containerView;
-
 @property (nonatomic, strong) UIView         *contentView;
 
 @property (nonatomic, strong) UIScrollView   *photoScrollView;
@@ -112,24 +110,33 @@ static Class videoManagerClass = nil;
     __weak __typeof(self) weakSelf = self;
     self.player.playerStatusChange = ^(id<GKVideoPlayerProtocol> _Nonnull mgr, GKVideoPlayerStatus status) {
         __strong __typeof(weakSelf) self = weakSelf;
+        if (!self.curPhotoView.photo.isVideo) return;
+        if (![self.curPhoto.videoUrl isEqual:mgr.assetURL]) return;
         switch (status) {
             case GKVideoPlayerStatusPrepared:
             case GKVideoPlayerStatusBuffering: {
-                [self.curPhotoView showLoading];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.curPhotoView showLoading];
+                });
             } break;
             case GKVideoPlayerStatusPlaying: {
-                self.curPhotoView.imageView.image = nil;
-                [self.curPhotoView hideLoading];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.curPhotoView hideLoading];
+                });
             } break;
             case GKVideoPlayerStatusEnded: {
-                if (self.isVideoReplay) {
-                    [self.player gk_replay];
-                } else {
-                    [self.curPhotoView showPlayBtn];
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (self.isVideoReplay) {
+                        [self.player gk_replay];
+                    } else {
+                        [self.curPhotoView showPlayBtn];
+                    }
+                });
             } break;
             case GKVideoPlayerStatusFailed: {
-                [self.curPhotoView showFailure];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.curPhotoView showFailure];
+                });
             } break;
                 
             default:
@@ -139,7 +146,24 @@ static Class videoManagerClass = nil;
     
     self.player.playerPlayTimeChange = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, NSTimeInterval currentTime, NSTimeInterval totalTime) {
         __strong __typeof(weakSelf) self = weakSelf;
-        [self.progressView updateCurrentTime:currentTime totalTime:totalTime];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.progressView updateCurrentTime:currentTime totalTime:totalTime];
+        });
+    };
+    
+    self.player.playerGetVideoSize = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, CGSize size) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        [self.photos enumerateObjectsUsingBlock:^(GKPhoto *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.videoUrl isEqual:mgr.assetURL]) {
+                obj.videoSize = size;
+                *stop = YES;
+            }
+        }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.curPhoto.videoUrl isEqual:mgr.assetURL]) {
+                [self.curPhotoView adjustFrame];
+            }
+        });
     };
 }
 
@@ -211,20 +235,10 @@ static Class videoManagerClass = nil;
     }
 }
 
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    
-    self.containerView.frame = self.view.bounds;
-}
-
 - (void)setupUI {
     if (!self.navigationController.navigationBarHidden) {
         [self.navigationController setNavigationBarHidden:YES];
     }
-    
-    self.view.backgroundColor = UIColor.clearColor;
-    self.containerView = [[UIView alloc] initWithFrame:self.view.bounds];
-    [self.view addSubview:self.containerView];
     
     self.contentView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.contentView.center = self.view.center;
@@ -233,13 +247,7 @@ static Class videoManagerClass = nil;
     
     [self.contentView addSubview:self.photoScrollView];
     
-    if (self.coverViews) {
-        [self.coverViews enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self.contentView addSubview:obj];
-        }];
-    }else {
-        [self setupDefaultCovers];
-    }
+    [self setupCoverViews];
     [self layoutSubviews];
     
     CGRect frame = self.photoScrollView.bounds;
@@ -252,34 +260,6 @@ static Class videoManagerClass = nil;
     if (self.photoScrollView.contentOffset.x == 0) {
         [self scrollViewDidScroll:self.photoScrollView];
     }
-}
-
-- (void)setupDefaultCovers {
-    [self.contentView addSubview:self.countLabel];
-    [self.contentView addSubview:self.pageControl];
-    [self.contentView addSubview:self.saveBtn];
-    [self.contentView addSubview:self.progressView];
-    
-    if (self.hidesCountLabel) {
-        self.countLabel.hidden = YES;
-    }else {
-        self.countLabel.hidden = self.photos.count == 1;
-    }
-    self.pageControl.numberOfPages = self.photos.count;
-    if (self.hidesPageControl) {
-        self.pageControl.hidden = YES;
-    }else {
-        if (self.pageControl.hidesForSinglePage) {
-            self.pageControl.hidden = self.photos.count <= 1;
-        }
-    }
-    if (self.hidesVideoSlider) {
-        self.progressView.hidden = YES;
-    }
-    
-    CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
-    self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
-    [self updateViewIndex];
 }
 
 - (void)addGestureAndObserver {
@@ -441,6 +421,52 @@ static Class videoManagerClass = nil;
 }
 
 #pragma mark - Private Methods
+- (void)setupCoverViews {
+    if (self.coverViews) {
+        [self.coverViews enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.contentView addSubview:obj];
+        }];
+    }else {
+        [self.contentView addSubview:self.countLabel];
+        [self.contentView addSubview:self.pageControl];
+        [self.contentView addSubview:self.saveBtn];
+        [self.contentView addSubview:self.progressView];
+        
+        self.pageControl.numberOfPages = self.photos.count;
+        CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
+        self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
+        [self updateViewIndex];
+    }
+}
+
+- (void)updateCoverViews {
+    if (self.coverViews) return;
+    GKPhoto *photo = [self currentPhoto];
+    if (photo.isVideo) {
+        self.progressView.hidden = self.hidesVideoSlider;
+        self.countLabel.hidden = YES;
+        self.pageControl.hidden = YES;
+        self.saveBtn.hidden = YES;
+    }else {
+        self.progressView.hidden = YES;
+        
+        if (self.hidesCountLabel) {
+            self.countLabel.hidden = YES;
+        }else {
+            self.countLabel.hidden = self.photos.count <= 1;
+        }
+        
+        if (self.hidesPageControl) {
+            self.pageControl.hidden = YES;
+        }else {
+            if (self.pageControl.hidesForSinglePage) {
+                self.pageControl.hidden = self.photos.count <= 1;
+            }
+        }
+        self.saveBtn.hidden = self.hidesSavedBtn;
+    }
+}
+
 - (void)saveBtnClick:(UIButton *)btn {
     if ([self.delegate respondsToSelector:@selector(photoBrowser:onSaveBtnClick:image:)]) {
         [self.delegate photoBrowser:self onSaveBtnClick:self.currentIndex image:self.curPhotoView.imageView.image];
@@ -451,18 +477,7 @@ static Class videoManagerClass = nil;
     self.curPhotoView = [self currentPhotoView];
     [self.curPhotoView didScrollAppear];
     
-    GKPhoto *photo = [self currentPhoto];
-    if (photo.isVideo) {
-        self.progressView.hidden = self.hidesVideoSlider;
-        self.countLabel.hidden = YES;
-        self.pageControl.hidden = YES;
-        self.saveBtn.hidden = YES;
-    }else {
-        self.progressView.hidden = YES;
-        self.countLabel.hidden = self.hidesCountLabel;
-        self.pageControl.hidden = self.hidesPageControl;
-        self.saveBtn.hidden = self.hidesSavedBtn;
-    }
+    [self updateCoverViews];
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:didSelectAtIndex:)]) {
         [self.delegate photoBrowser:self didSelectAtIndex:self.currentIndex];
@@ -640,9 +655,12 @@ static Class videoManagerClass = nil;
 
 - (void)browserCancelDisappear {
     [self.curPhotoView didDismissAppear];
-    
-    if (self.curPhoto.isVideo && !self.hidesVideoSlider) {
-        self.progressView.hidden = NO;
+    [self updateCoverViews];
+}
+
+- (void)browserDidDisappear {
+    if (self.curPhoto.isVideo) {
+        self.progressView.hidden = YES;
     }
 }
 
@@ -789,6 +807,7 @@ static Class videoManagerClass = nil;
         countLabel.font = [UIFont systemFontOfSize:16.0f];
         countLabel.textAlignment = NSTextAlignmentCenter;
         countLabel.bounds = CGRectMake(0, 0, 80, 30);
+        countLabel.hidden = YES;
         _countLabel = countLabel;
     }
     return _countLabel;
@@ -869,22 +888,26 @@ static Class videoManagerClass = nil;
     if (self.coverViews) {
         !self.layoutBlock ? : self.layoutBlock(self, self.contentView.bounds);
     }else {
-        CGFloat centerX = self.contentView.bounds.size.width * 0.5f;
-        
-        self.countLabel.center = CGPointMake(centerX, (KIsiPhoneX && !self.rotationHandler.isLandscape) ? (kSafeTopSpace + 10) : 30);
-        CGFloat pointY = 0;
-        if (self.rotationHandler.isLandscape) {
-            pointY = self.contentView.bounds.size.height - 20;
-        }else {
-            pointY = self.contentView.bounds.size.height - 20 - (self.isAdaptiveSafeArea ? 0 : kSafeBottomSpace);
-        }
-        self.pageControl.center = CGPointMake(centerX, pointY);
-        self.saveBtn.center = CGPointMake(self.contentView.bounds.size.width - 50, pointY);
-        
         CGFloat width = self.contentView.bounds.size.width;
         CGFloat height = self.contentView.bounds.size.height;
         
-        self.progressView.frame = CGRectMake(30, height - 30 - (self.isAdaptiveSafeArea ? 0 : kSafeBottomSpace), width - 60, 20);
+        CGFloat centerX = width * 0.5f;
+        
+        self.countLabel.center = CGPointMake(centerX, (KIsiPhoneX && !self.rotationHandler.isLandscape) ? (kSafeTopSpace + 10) : 30);
+        self.progressView.bounds = CGRectMake(0, 0, width - 60, 20);
+        
+        CGFloat centerY = 0;
+        if (self.rotationHandler.isLandscape) {
+            centerY = height - 20;
+        }else {
+            centerY = height - 20 - (self.isAdaptiveSafeArea ? kSafeBottomSpace : 0);
+        }
+        self.pageControl.center = CGPointMake(centerX, centerY);
+        self.saveBtn.center = CGPointMake(width - 60, centerY);
+        self.progressView.center = CGPointMake(centerX, centerY);
+        
+        
+//        self.progressView.frame = CGRectMake(30, height - 30 - (self.isAdaptiveSafeArea ? kSafeBottomSpace : 0), width - 60, 20);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {

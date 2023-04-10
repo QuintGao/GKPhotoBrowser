@@ -80,7 +80,7 @@
 }
 
 - (void)browserPushShow {
-    self.browser.containerView.backgroundColor = self.browser.bgColor ? : [UIColor blackColor];
+    self.browser.view.backgroundColor = self.browser.bgColor ? : [UIColor blackColor];
     self.isShow = YES;
     [self.browser browserFirstAppear];
 }
@@ -128,8 +128,8 @@
         [photoView updateFrame];
         [self browserChangeAlpha:1];
     }completion:^(BOOL finished) {
-        self.isShow = YES;
         [self.browser browserFirstAppear];
+        self.isShow = YES;
         photoView.imageView.clipsToBounds = NO;
     }];
 }
@@ -247,6 +247,7 @@
     sourceRect.origin.y += photoView.scrollView.contentOffset.y;
     
     [UIView animateWithDuration:self.browser.animDuration animations:^{
+        photoView.player.videoPlayView.alpha = 0;
         photoView.imageView.frame = sourceRect;
         [photoView updateFrame];
         [self browserChangeAlpha:0];
@@ -312,7 +313,7 @@
 - (void)browserChangeAlpha:(CGFloat)alpha {
     UIColor *bgColor = self.browser.bgColor ?: UIColor.blackColor;
     
-    self.browser.containerView.backgroundColor = [bgColor colorWithAlphaComponent:alpha];
+    self.browser.view.backgroundColor = [bgColor colorWithAlphaComponent:alpha];
     for (UIView *view in self.browser.coverViews) {
         view.alpha = alpha;
     }

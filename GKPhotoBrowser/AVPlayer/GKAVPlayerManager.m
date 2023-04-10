@@ -50,11 +50,19 @@
 @synthesize status = _status;
 @synthesize playerStatusChange = _playerStatusChange;
 @synthesize playerPlayTimeChange = _playerPlayTimeChange;
+@synthesize playerGetVideoSize = _playerGetVideoSize;
 
 - (void)initPlayer {
     if (self.player) [self gk_stop];
     
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:self.assetURL];
+    AVURLAsset *asset = [AVURLAsset assetWithURL:self.assetURL];
+    for (AVAssetTrack *track in asset.tracks) {
+        if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
+            !self.playerGetVideoSize ?: self.playerGetVideoSize(self, track.naturalSize);
+        }
+    }
+    
+    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
     
     AVPlayerLayer *playerLayer = (AVPlayerLayer *)self.videoPlayView.layer;
@@ -71,8 +79,8 @@
 #pragma mark - GKVideoPlayerProtocol
 - (void)gk_prepareToPlay {
     if (!_assetURL) return;
-    [self initPlayer];
     self.status = GKVideoPlayerStatusPrepared;
+    [self initPlayer];
 }
 
 - (void)gk_play {

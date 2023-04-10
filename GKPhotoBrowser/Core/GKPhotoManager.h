@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - 以下属性播放视频时使用
 @property (nonatomic, strong) NSURL              *videoUrl;
 @property (nonatomic, strong, nullable) PHAsset  *videoAsset;
+@property (nonatomic, assign) CGSize             videoSize;
 @property (nonatomic, assign, readonly) BOOL     isVideo;
  
 
@@ -53,6 +54,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 记录photoView缩放时的rect */
 @property (nonatomic, assign) CGRect             zoomRect;
+
+@property (nonatomic, assign) CGFloat            zoomScale;
+
+@property (nonatomic, assign) CGPoint            zoomOffset;
 
 /** 记录每个GKPhotoView的滑动位置 */
 @property (nonatomic, assign) CGPoint            offset;
