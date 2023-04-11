@@ -231,6 +231,11 @@ static Class videoManagerClass = nil;
         [self.navigationController setNavigationBarHidden:YES];
     }
     
+    if (self.showStyle == GKPhotoBrowserShowStylePush) {
+        _containerView = [[UIView alloc] initWithFrame:self.view.bounds];
+        [self.view addSubview:_containerView];
+    }
+    
     self.contentView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.contentView.center = self.view.center;
     self.contentView.backgroundColor = [UIColor clearColor];

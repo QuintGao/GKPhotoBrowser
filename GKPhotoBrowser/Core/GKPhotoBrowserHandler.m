@@ -80,7 +80,8 @@
 }
 
 - (void)browserPushShow {
-    self.browser.view.backgroundColor = self.browser.bgColor ? : [UIColor blackColor];
+    UIView *view = self.browser.containerView ?: self.browser.view;
+    view.backgroundColor = self.browser.bgColor ? : [UIColor blackColor];
     self.isShow = YES;
     [self.browser browserFirstAppear];
 }
@@ -313,9 +314,10 @@
 - (void)browserChangeAlpha:(CGFloat)alpha {
     UIColor *bgColor = self.browser.bgColor ?: UIColor.blackColor;
     
-    self.browser.view.backgroundColor = [bgColor colorWithAlphaComponent:alpha];
-    for (UIView *view in self.browser.coverViews) {
-        view.alpha = alpha;
+    UIView *view = self.browser.containerView ?: self.browser.view;
+    view.backgroundColor = [bgColor colorWithAlphaComponent:alpha];
+    for (UIView *subview in self.browser.coverViews) {
+        subview.alpha = alpha;
     }
 }
 

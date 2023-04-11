@@ -64,6 +64,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @end
 
 @interface GKPhotoBrowser : UIViewController
+/** 底部容器 */
+@property (nonatomic, strong, readonly) UIView        *containerView;
 /** 底部内容试图 */
 @property (nonatomic, strong, readonly) UIView        *contentView;
 /** 滑动容器视图 */
