@@ -83,9 +83,13 @@
 #pragma mark - GKPhotosViewDelegate
 - (void)photoTapped:(UIImageView *)imgView {
     NSMutableArray *photos = [NSMutableArray new];
-    [self.assets enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.assets enumerateObjectsUsingBlock:^(PHAsset *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         GKPhoto *photo = [GKPhoto new];
-        photo.videoAsset = self.assets[idx];
+        if (obj.mediaType == PHAssetMediaTypeVideo) {
+            photo.videoAsset = obj;
+        }else {
+            photo.imageAsset = obj;
+        }
         photo.sourceImageView = self.photoView.subviews[idx];
         [photos addObject:photo];
     }];
@@ -95,6 +99,7 @@
     browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
     browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask;
     browser.isFullWidthForLandScape = NO;
+    browser.isAdaptiveSafeArea = YES;
     [browser showFromVC:self];
 }
 

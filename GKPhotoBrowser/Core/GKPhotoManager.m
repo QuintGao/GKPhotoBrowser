@@ -22,6 +22,10 @@
 }
 
 - (void)getImage:(void (^)(NSData * _Nullable, UIImage * _Nullable))completion {
+    if (!self.imageAsset) {
+        completion(nil, nil);
+        return;
+    }
     __weak __typeof(self) weakSelf = self;
     if (self.imageRequestID) {
         [[PHImageManager defaultManager] cancelImageRequest:self.imageRequestID];
@@ -54,15 +58,18 @@
 }
 
 - (void)getVideo:(void (^)(NSURL * _Nullable))completion {
-    if (!self.isVideo) completion(nil);
-    if (self.videoAsset) {
-        if (self.videoRequestID) {
-            [[PHImageManager defaultManager] cancelImageRequest:self.videoRequestID];
-            self.videoRequestID = 0;
-        }
-        
-        __weak __typeof(self) weakSelf = self;
-        self.videoRequestID = [GKPhotoManager loadVideoWithAsset:self.videoAsset completion:^(NSURL * _Nonnull url) {
+    if (!self.isVideo) {
+        completion(nil);
+        return;
+    }
+    __weak __typeof(self) weakSelf = self;
+    if (self.videoRequestID) {
+        [[PHImageManager defaultManager] cancelImageRequest:self.videoRequestID];
+        self.videoRequestID = 0;
+    }
+    PHAsset *asset = self.videoAsset;
+    if (asset && asset.mediaType == PHAssetMediaTypeVideo) {
+        self.videoRequestID = [GKPhotoManager loadVideoWithAsset:asset completion:^(NSURL * _Nonnull url) {
             __strong __typeof(weakSelf) self = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.videoUrl = url;
