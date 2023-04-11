@@ -155,6 +155,8 @@
     [self.player.currentItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
     // 缓冲状态
     [self.player.currentItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
+    // 视频尺寸
+    [self.player.currentItem addObserver:self forKeyPath:@"presentationSize" options:NSKeyValueObservingOptionNew context:nil];
     
     // 播放结束
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playToEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.player.currentItem];
@@ -171,6 +173,7 @@
     }
     [self.player.currentItem removeObserver:self forKeyPath:@"status"];
     [self.player.currentItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
+    [self.player.currentItem removeObserver:self forKeyPath:@"presentationSize"];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.player.currentItem];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -183,13 +186,6 @@
         if ([keyPath isEqualToString:@"status"]) {
             switch (self.player.currentItem.status) {
                 case AVPlayerItemStatusReadyToPlay: {
-                    // 获取视频尺寸
-                    for (AVPlayerItemTrack *track in self.player.currentItem.tracks) {
-                        if ([track.assetTrack.mediaType isEqualToString:AVMediaTypeVideo]) {
-                            !self.playerGetVideoSize ?: self.playerGetVideoSize(self, track.assetTrack.naturalSize);
-                        }
-                    }
-                    
                     self.status = GKVideoPlayerStatusPlaying;
                     _totalTime = CMTimeGetSeconds(self.player.currentItem.duration);
                     if (!self.timeObserver) {
@@ -220,6 +216,9 @@
             }else {
                 self.status = GKVideoPlayerStatusBuffering;
             }
+        }else if ([keyPath isEqualToString:@"presentationSize"]) {
+            CGSize size = self.player.currentItem.presentationSize;
+            !self.playerGetVideoSize ?: self.playerGetVideoSize(self, size);
         }
     }
 }

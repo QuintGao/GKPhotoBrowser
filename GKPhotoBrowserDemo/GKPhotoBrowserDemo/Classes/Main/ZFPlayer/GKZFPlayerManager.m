@@ -27,6 +27,7 @@
 @synthesize status = _status;
 @synthesize playerStatusChange = _playerStatusChange;
 @synthesize playerPlayTimeChange = _playerPlayTimeChange;
+@synthesize playerGetVideoSize = _playerGetVideoSize;
 
 - (void)initPlayer {
     ZFAVPlayerManager *manager = [[ZFAVPlayerManager alloc] init];
@@ -80,6 +81,12 @@
             default:
                 break;
         }
+    };
+    
+    // 视频尺寸
+    player.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        !self.playerGetVideoSize ?: self.playerGetVideoSize(self, size);
     };
     
     // 播放进度回调

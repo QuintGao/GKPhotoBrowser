@@ -139,16 +139,17 @@
             self.player.assetURL = url;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.player gk_prepareToPlay];
+                
+                if (self.player.videoPlayView.superview != self.imageView) {
+                    [self.imageView addSubview:self.player.videoPlayView];
+                    [self updateFrame];
+                }
+                
                 [self.player gk_play];
             });
         }];
     }else {
         [self.player gk_play];
-    }
-    
-    if (self.player.videoPlayView.superview != self.imageView) {
-        [self.imageView addSubview:self.player.videoPlayView];
-        [self updateFrame];
     }
     
     if (!self.playBtn.superview) {
