@@ -80,6 +80,8 @@ static Class videoManagerClass = nil;
         self.doubleZoomScale         = self.maxZoomScale;
         self.animDuration            = kAnimationDuration;
         self.hidesSavedBtn           = YES;
+        self.showPlayImage           = YES;
+        self.isVideoReplay           = YES;
         
         _visiblePhotoViews  = [NSMutableArray new];
         _reusablePhotoViews = [NSMutableSet new];
@@ -528,6 +530,8 @@ static Class videoManagerClass = nil;
             photoView.failureImage    = self.failureImage;
             photoView.maxZoomScale    = self.maxZoomScale;
             photoView.doubleZoomScale = self.doubleZoomScale;
+            photoView.showPlayImage   = self.showPlayImage;
+            photoView.videoPlayImage  = self.videoPlayImage;
             
             __typeof(self) __weak weakSelf = self;
             __typeof(photoView) __weak weakPhotoView = photoView;

@@ -60,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString    *failureText;
 @property (nonatomic, strong) UIImage   *failureImage;
 
+@property (nonatomic, assign) BOOL      showPlayImage;
 @property (nonatomic, strong) UIImage   *videoPlayImage;
 
 - (instancetype)initWithFrame:(CGRect)frame imageProtocol:(id<GKWebImageProtocol>)imageProtocol;

@@ -174,9 +174,13 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// showStyle = GKPhotoBrowserShowStylePush时无效
 @property (nonatomic, assign, getter=isAddNavigationController) BOOL addNavigationController;
 
-/// 视频暂停时显示的播放图
+/// 视频暂停或停止时是否显示播放图标，默认YES
+@property (nonatomic, assign) BOOL showPlayImage;
+
+/// 视频暂停或停止时显示的播放图
 @property (nonatomic, strong) UIImage *videoPlayImage;
-/// 视频播放结束后是否重播
+
+/// 视频播放结束后是否自动重播，默认YES
 @property (nonatomic, assign) BOOL isVideoReplay;
 
 // 初始化方法

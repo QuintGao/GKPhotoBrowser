@@ -141,7 +141,9 @@
 //        browser.animDuration = 2;
         // 自定义视频播放
 //        [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];
+        browser.showPlayImage = NO;
         browser.isVideoReplay = YES;
+        browser.videoPlayImage = [UIImage imageNamed:@"ic_play3"];
 //        browser.isDoubleTapDisabled = YES;
 //        browser.isStatusBarShow = YES;
 //        browser.bgColor = UIColor.whiteColor;

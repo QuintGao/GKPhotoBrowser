@@ -121,6 +121,7 @@
     if (!self.photo.isVideo) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
+    if (!self.showPlayImage) return;
     self.playBtn.hidden = NO;
 }
 
@@ -139,12 +140,7 @@
             self.player.assetURL = url;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.player gk_prepareToPlay];
-                
-                if (self.player.videoPlayView.superview != self.imageView) {
-                    [self.imageView addSubview:self.player.videoPlayView];
-                    [self updateFrame];
-                }
-                
+                [self updateFrame];
                 [self.player gk_play];
             });
         }];
@@ -152,6 +148,7 @@
         [self.player gk_play];
     }
     
+    if (!self.showPlayImage) return;
     if (!self.playBtn.superview) {
         [self addSubview:self.playBtn];
     }
@@ -166,6 +163,8 @@
 
 - (void)didScrollDisappear {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
+    if (!self.showPlayImage) return;
     self.playBtn.hidden = NO;
 }
 
@@ -177,6 +176,7 @@
     }else {
         [self.player gk_play];
     }
+    if (!self.showPlayImage) return;
     self.playBtn.hidden = YES;
 }
 
@@ -184,6 +184,7 @@
     if (!self.photo.isVideo) return;
     if (!self.player) return;
     if (self.player.status == GKVideoPlayerStatusEnded) {
+        if (!self.showPlayImage) return;
         self.playBtn.hidden = YES;
     }else {
         [self.player gk_pause];
@@ -200,6 +201,9 @@
     if (!self.photo.isVideo) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
+    if (self.player.videoPlayView.superview != self.imageView) {
+        [self.imageView addSubview:self.player.videoPlayView];
+    }
     [self.player gk_updateFrame:self.imageView.bounds];
 }
 
@@ -212,7 +216,7 @@
         [self.imageView removeFromSuperview];
         self.imageView = nil;
         [self.scrollView addSubview:self.imageView];
-        if (!photo.isVideo) {
+        if (!photo.isVideo && self.showPlayImage) {
             self.playBtn.hidden = YES;
         }
         
@@ -504,8 +508,10 @@
     
     self.loadingView.frame = self.bounds;
     self.videoLoadingView.frame = self.bounds;
-    [self.playBtn sizeToFit];
-    self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    if (self.showPlayImage) {
+        [self.playBtn sizeToFit];
+        self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }
     [self updateFrame];
 }
 

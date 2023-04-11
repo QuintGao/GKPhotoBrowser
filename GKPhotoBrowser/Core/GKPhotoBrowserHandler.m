@@ -232,21 +232,18 @@
         sourceRect.origin.y -= (kSafeTopSpace + kSafeBottomSpace) * 0.5;
     }
     
-    if (photoView.scrollView.zoomScale > 1.0f) {
-        [photoView.scrollView setZoomScale:1.0f animated:NO];
-    }
+    // 修复放大时缩放的bug
+    sourceRect.origin.x += photoView.scrollView.contentOffset.x;
+    sourceRect.origin.y += photoView.scrollView.contentOffset.y;
     
-    if (photo.sourceImageView) {
+    if (photo.sourceImageView.image) {
         photoView.imageView.image = photo.sourceImageView.image;
     }
     
     // Fix bug：解决长图点击隐藏时可能出现的闪动bug
     UIViewContentMode mode = photo.sourceImageView ? photo.sourceImageView.contentMode : UIViewContentModeScaleAspectFill;
-    
     photoView.imageView.contentMode = mode;
-    sourceRect.origin.x -= photoView.scrollView.contentOffset.x;
-    sourceRect.origin.y += photoView.scrollView.contentOffset.y;
-    
+
     [UIView animateWithDuration:self.browser.animDuration animations:^{
         photoView.player.videoPlayView.alpha = 0;
         photoView.imageView.frame = sourceRect;
