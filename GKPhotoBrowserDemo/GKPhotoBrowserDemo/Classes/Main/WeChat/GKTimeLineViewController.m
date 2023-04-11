@@ -111,6 +111,7 @@
     
     __weak __typeof(self) weakSelf = self;
     cell.photosImgClickBlock = ^(GKTimeLineViewCell *cell, NSInteger index) {
+        __strong __typeof(weakSelf) self = weakSelf;
         NSMutableArray *photos = [NSMutableArray new];
         [cell.timeLineFrame.model.images enumerateObjectsUsingBlock:^(GKTimeLineImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
@@ -153,9 +154,9 @@
 //        [browser setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
         
 //        browser.isFollowSystemRotation = YES;
-        browser.delegate = weakSelf;
-        [browser showFromVC:weakSelf];
-        weakSelf.browser = browser;
+        browser.delegate = self;
+        [browser showFromVC:self];
+        self.browser = browser;
     };
     return cell;
 }
@@ -246,6 +247,7 @@
     line2View.backgroundColor = [UIColor grayColor];
     [actionSheet addSubview:line2View];
 
+    __weak __typeof(self) weakSelf = self;
     [GKCover coverFrom:fromView
            contentView:actionSheet
                  style:GKCoverStyleTranslucent
@@ -255,6 +257,7 @@
               notClick:NO
              showBlock:nil
              hideBlock:^{
+                 __strong __typeof(weakSelf) self = weakSelf;
                  [self.fromView removeFromSuperview];
                  self.fromView = nil;
              }];

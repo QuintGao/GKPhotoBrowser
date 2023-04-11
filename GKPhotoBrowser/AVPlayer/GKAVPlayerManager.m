@@ -55,14 +55,7 @@
 - (void)initPlayer {
     if (self.player) [self gk_stop];
     
-    AVURLAsset *asset = [AVURLAsset assetWithURL:self.assetURL];
-    for (AVAssetTrack *track in asset.tracks) {
-        if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
-            !self.playerGetVideoSize ?: self.playerGetVideoSize(self, track.naturalSize);
-        }
-    }
-    
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
+    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:self.assetURL];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
     
     AVPlayerLayer *playerLayer = (AVPlayerLayer *)self.videoPlayView.layer;
@@ -108,10 +101,10 @@
 - (void)gk_stop {
     if (self.player) {
         [self gk_pause];
+        [self removePlayerObserver];
         self.player = nil;
         [self.videoPlayView removeFromSuperview];
         self.videoPlayView = nil;
-        [self removePlayerObserver];
         self.currentTime = 0;
         self.seekTime = 0;
         self.completionHandler = nil;
@@ -190,14 +183,20 @@
         if ([keyPath isEqualToString:@"status"]) {
             switch (self.player.currentItem.status) {
                 case AVPlayerItemStatusReadyToPlay: {
+                    // 获取视频尺寸
+                    for (AVPlayerItemTrack *track in self.player.currentItem.tracks) {
+                        if ([track.assetTrack.mediaType isEqualToString:AVMediaTypeVideo]) {
+                            !self.playerGetVideoSize ?: self.playerGetVideoSize(self, track.assetTrack.naturalSize);
+                        }
+                    }
+                    
                     self.status = GKVideoPlayerStatusPlaying;
                     _totalTime = CMTimeGetSeconds(self.player.currentItem.duration);
                     if (!self.timeObserver) {
                         __weak __typeof(self) weakSelf = self;
                         self.timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
                             __strong __typeof(weakSelf) self = weakSelf;
-                            if (!self) return;
-                            if (!self.player) return;
+                            if (!self || !self.player) return;
                             // 获取当前播放时间
                             self.currentTime = CMTimeGetSeconds(time);
                         }];

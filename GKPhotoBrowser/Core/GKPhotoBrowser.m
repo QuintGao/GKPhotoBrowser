@@ -110,33 +110,26 @@ static Class videoManagerClass = nil;
     __weak __typeof(self) weakSelf = self;
     self.player.playerStatusChange = ^(id<GKVideoPlayerProtocol> _Nonnull mgr, GKVideoPlayerStatus status) {
         __strong __typeof(weakSelf) self = weakSelf;
+        if (!self || !self.player) return;
         if (!self.curPhotoView.photo.isVideo) return;
         if (![self.curPhoto.videoUrl isEqual:mgr.assetURL]) return;
         switch (status) {
             case GKVideoPlayerStatusPrepared:
             case GKVideoPlayerStatusBuffering: {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.curPhotoView showLoading];
-                });
+                [self.curPhotoView showLoading];
             } break;
             case GKVideoPlayerStatusPlaying: {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.curPhotoView hideLoading];
-                });
+                [self.curPhotoView hideLoading];
             } break;
             case GKVideoPlayerStatusEnded: {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (self.isVideoReplay) {
-                        [self.player gk_replay];
-                    } else {
-                        [self.curPhotoView showPlayBtn];
-                    }
-                });
+                if (self.isVideoReplay) {
+                    [self.player gk_replay];
+                } else {
+                    [self.curPhotoView showPlayBtn];
+                }
             } break;
             case GKVideoPlayerStatusFailed: {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.curPhotoView showFailure];
-                });
+                [self.curPhotoView showFailure];
             } break;
                 
             default:
@@ -146,24 +139,22 @@ static Class videoManagerClass = nil;
     
     self.player.playerPlayTimeChange = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, NSTimeInterval currentTime, NSTimeInterval totalTime) {
         __strong __typeof(weakSelf) self = weakSelf;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.progressView updateCurrentTime:currentTime totalTime:totalTime];
-        });
+        if (!self || !self.player) return;
+        [self.progressView updateCurrentTime:currentTime totalTime:totalTime];
     };
     
     self.player.playerGetVideoSize = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, CGSize size) {
         __strong __typeof(weakSelf) self = weakSelf;
+        if (!self || !self.player) return;
         [self.photos enumerateObjectsUsingBlock:^(GKPhoto *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj.videoUrl isEqual:mgr.assetURL]) {
                 obj.videoSize = size;
                 *stop = YES;
             }
         }];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.curPhoto.videoUrl isEqual:mgr.assetURL]) {
-                [self.curPhotoView adjustFrame];
-            }
-        });
+        if ([self.curPhoto.videoUrl isEqual:mgr.assetURL]) {
+            [self.curPhotoView adjustFrame];
+        }
     };
 }
 

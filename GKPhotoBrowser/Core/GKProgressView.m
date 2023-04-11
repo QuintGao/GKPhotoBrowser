@@ -83,6 +83,7 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showSmallSlider) object:nil];
     [self performSelector:@selector(showSmallSlider) withObject:nil afterDelay:3.0f];
     
+    if (!self.player) return;
     __weak __typeof(self) weakSelf = self;
     [self.player gk_seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
         __strong __typeof(weakSelf) self = weakSelf;

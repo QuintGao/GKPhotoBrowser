@@ -96,6 +96,7 @@
 
 - (void)showLoading {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
     self.videoLoadingView.frame = self.bounds;
     [self addSubview:self.videoLoadingView];
@@ -104,30 +105,36 @@
 
 - (void)hideLoading {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
     [self.videoLoadingView stopLoading];
 }
 
 - (void)showFailure {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
     [self.videoLoadingView showFailure];
 }
 
 - (void)showPlayBtn {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
     self.playBtn.hidden = NO;
 }
 
 - (void)didScrollAppear {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
     
     // 如果没有设置，则设置播放内容
     if (!self.player.assetURL || self.player.assetURL != self.photo.videoUrl) {
         __weak __typeof(self) weakSelf = self;
         [self.photo getVideo:^(NSURL * _Nonnull url) {
             __strong __typeof(weakSelf) self = weakSelf;
+            if (!self) return;
+            if (!self.player) return;
             self.player.coverImage = self.imageView.image;
             self.player.assetURL = url;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -152,6 +159,7 @@
 
 - (void)willScrollDisappear {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
     [self.player gk_pause];
 }
 
@@ -162,6 +170,7 @@
 
 - (void)didDismissAppear {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
     if (self.player.status == GKVideoPlayerStatusEnded) {
         [self.player gk_replay];
     }else {
@@ -172,6 +181,7 @@
 
 - (void)willDismissDisappear {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
     if (self.player.status == GKVideoPlayerStatusEnded) {
         self.playBtn.hidden = YES;
     }else {
@@ -181,11 +191,13 @@
 
 - (void)didDismissDisappear {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
     [self.player gk_stop];
 }
 
 - (void)updateFrame {
     if (!self.photo.isVideo) return;
+    if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
     [self.player gk_updateFrame:self.imageView.bounds];
 }
@@ -407,7 +419,6 @@
 
 #pragma mark - 调整frame
 - (void)adjustFrame {
-    if (!self.photo) return;
     CGRect frame = self.scrollView.frame;
     if (frame.size.width == 0 || frame.size.height == 0) return;
     
@@ -485,6 +496,7 @@
         [self setScrollMaxZoomScale:self.photo.zoomScale];
         [self zoomToRect:self.photo.zoomRect animated:NO];
         self.scrollView.contentOffset = self.photo.zoomOffset;
+        [self setScrollMaxZoomScale:self.realZoomScale];
     }else {
         self.scrollView.contentOffset = self.photo.offset;
     }
