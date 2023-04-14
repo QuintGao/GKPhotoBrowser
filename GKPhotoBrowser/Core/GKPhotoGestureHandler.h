@@ -37,7 +37,7 @@ typedef NS_ENUM(NSUInteger, GKPanGestureRecognizerDirection) {
 
 @interface GKPhotoGestureHandler : GKPhotoBrowserHandler
 
-@property (nonatomic, assign) id<GKPhotoGestureDelegate> delegate;
+@property (nonatomic, weak) id<GKPhotoGestureDelegate> delegate;
 
 @property (nonatomic, strong) UITapGestureRecognizer *singleTapGesture;
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTapGesture;
