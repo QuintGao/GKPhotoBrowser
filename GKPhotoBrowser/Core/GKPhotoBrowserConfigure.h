@@ -14,8 +14,8 @@
 // 判断iPhone X
 #define KIsiPhoneX          [GKPhotoBrowserConfigure gk_isNotchedScreen]
 // 底部安全区域高度
-#define kSafeTopSpace       [GKPhotoBrowserConfigure gk_safeAreaInsets].top
-#define kSafeBottomSpace    [GKPhotoBrowserConfigure gk_safeAreaInsets].bottom
+#define kSafeTopSpace       [GKPhotoBrowserConfigure gk_safeAreaTop]
+#define kSafeBottomSpace    [GKPhotoBrowserConfigure gk_safeAreaBottom]
 
 // 默认最大缩放程度
 #define kMaxZoomScale               2.0f
@@ -61,6 +61,9 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 
 /// 安全区域
 + (UIEdgeInsets)gk_safeAreaInsets;
+
++ (CGFloat)gk_safeAreaTop;
++ (CGFloat)gk_safeAreaBottom;
 
 /// 状态栏frame
 + (CGRect)gk_statusBarFrame;

@@ -151,6 +151,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 双击放大倍数，默认maxZoomScale，不能超过maxZoomScale
 @property (nonatomic, assign) CGFloat doubleZoomScale;
 
+/// 图片间距，默认10
+@property (nonatomic, assign) CGFloat photoViewPadding;
+
 /// 动画时间，默认0.3
 @property (nonatomic, assign) NSTimeInterval animDuration;
 

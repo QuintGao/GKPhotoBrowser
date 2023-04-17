@@ -79,6 +79,7 @@ static Class videoManagerClass = nil;
         self.maxZoomScale            = kMaxZoomScale;
         self.doubleZoomScale         = self.maxZoomScale;
         self.animDuration            = kAnimationDuration;
+        self.photoViewPadding        = kPhotoViewPadding;
         self.hidesSavedBtn           = YES;
         self.showPlayImage           = YES;
         self.isVideoReplay           = YES;
@@ -538,8 +539,10 @@ static Class videoManagerClass = nil;
             photoView.zoomEnded = ^(GKPhotoView * _Nonnull curPhotoView, CGFloat scale) {
                 if (curPhotoView.tag == weakPhotoView.tag) {
                     if (scale == 1.0f) {
+                        weakPhotoView.scrollView.clipsToBounds = YES;
                         [weakSelf.gestureHandler addPanGesture:NO];
                     }else {
+                        weakPhotoView.scrollView.clipsToBounds = YES;
                         [weakSelf.gestureHandler removePanGesture];
                     }
                 }
@@ -566,9 +569,9 @@ static Class videoManagerClass = nil;
             CGFloat photoScrollW    = frame.size.width;
             CGFloat photoScrollH    = frame.size.height;
             // 调整当前显示的photoView的frame
-            CGFloat w = photoScrollW - kPhotoViewPadding * 2;
+            CGFloat w = photoScrollW - self.photoViewPadding * 2;
             CGFloat h = photoScrollH;
-            CGFloat x = kPhotoViewPadding + i * (kPhotoViewPadding * 2 + w);
+            CGFloat x = self.photoViewPadding + i * (self.photoViewPadding * 2 + w);
             CGFloat y = 0;
             
             photoView.frame = CGRectMake(x, y, w, h);
@@ -737,8 +740,8 @@ static Class videoManagerClass = nil;
 - (UIScrollView *)photoScrollView {
     if (!_photoScrollView) {
         CGRect frame = self.view.bounds;
-        frame.origin.x   -= kPhotoViewPadding;
-        frame.size.width += (2 * kPhotoViewPadding);
+        frame.origin.x   -= self.photoViewPadding;
+        frame.size.width += (2 * self.photoViewPadding);
         _photoScrollView = [[UIScrollView alloc] initWithFrame:frame];
         _photoScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _photoScrollView.pagingEnabled  = YES;
@@ -861,12 +864,12 @@ static Class videoManagerClass = nil;
 // 更新布局
 - (void)layoutSubviews {
     CGRect frame = self.contentView.bounds;
-    frame.origin.x   -= kPhotoViewPadding;
-    frame.size.width += kPhotoViewPadding * 2;
+    frame.origin.x   -= self.photoViewPadding;
+    frame.size.width += self.photoViewPadding * 2;
     
     CGFloat photoScrollW = frame.size.width;
     CGFloat photoScrollH = frame.size.height;
-    CGFloat pointX = photoScrollW * 0.5 - kPhotoViewPadding;
+    CGFloat pointX = photoScrollW * 0.5 - self.photoViewPadding;
     
     self.photoScrollView.frame  = frame;
     self.photoScrollView.center = CGPointMake(pointX, photoScrollH * 0.5);
@@ -874,13 +877,13 @@ static Class videoManagerClass = nil;
     self.photoScrollView.contentSize = CGSizeMake(photoScrollW * self.photos.count, 0);
     
     // 调整所有显示的photoView的frame
-    CGFloat w = photoScrollW - kPhotoViewPadding * 2;
+    CGFloat w = photoScrollW - self.photoViewPadding * 2;
     CGFloat h = photoScrollH;
     __block CGFloat x = 0;
     CGFloat y = 0;
     
     [_visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
-        x = kPhotoViewPadding + photoView.tag * (kPhotoViewPadding * 2 + w);
+        x = self.photoViewPadding + photoView.tag * (self.photoViewPadding * 2 + w);
         photoView.frame = CGRectMake(x, y, w, h);
         [photoView resetFrame];
     }];
@@ -905,9 +908,6 @@ static Class videoManagerClass = nil;
         self.pageControl.center = CGPointMake(centerX, centerY);
         self.saveBtn.center = CGPointMake(width - 60, centerY);
         self.progressView.center = CGPointMake(centerX, centerY);
-        
-        
-//        self.progressView.frame = CGRectMake(30, height - 30 - (self.isAdaptiveSafeArea ? kSafeBottomSpace : 0), width - 60, 20);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {

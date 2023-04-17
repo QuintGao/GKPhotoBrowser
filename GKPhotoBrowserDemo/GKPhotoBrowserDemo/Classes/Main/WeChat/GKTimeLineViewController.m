@@ -138,6 +138,7 @@
         browser.hidesSavedBtn = YES;
         browser.isFullWidthForLandScape = NO;
         browser.isSingleTapDisabled = YES;
+//        browser.photoViewPadding = 0;
 //        browser.animDuration = 2;
         // 自定义视频播放
 //        [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];

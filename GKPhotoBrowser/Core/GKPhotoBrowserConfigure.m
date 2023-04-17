@@ -50,6 +50,20 @@ NSString *const GKPhotoBrowserBundleName = @"GKPhotoBrowser";
     return safeAreaInsets;
 }
 
++ (CGFloat)gk_safeAreaTop {
+    if ([self gk_isNotchedScreen]) {
+        return [self gk_safeAreaInsets].top;
+    }
+    return 0;
+}
+
++ (CGFloat)gk_safeAreaBottom {
+    if ([self gk_isNotchedScreen]) {
+        return [self gk_safeAreaInsets].bottom;
+    }
+    return 0;
+}
+
 + (CGRect)gk_statusBarFrame {
     CGRect statusBarFrame = CGRectZero;
     if (@available(iOS 13.0, *)) {

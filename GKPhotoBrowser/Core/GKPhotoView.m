@@ -55,8 +55,6 @@
 
 @property (nonatomic, assign) CGFloat realZoomScale;
 
-@property (nonatomic, assign) PHImageRequestID requestID;
-
 @end
 
 @implementation GKPhotoView
