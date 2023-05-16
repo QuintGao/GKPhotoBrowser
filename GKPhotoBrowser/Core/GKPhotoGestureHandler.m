@@ -261,7 +261,7 @@ int const static kDirectionPanThreshold = 5;
 - (CGFloat)panGestureScale:(UIPanGestureRecognizer *)panGesture {
     CGFloat scale = 0;
     CGPoint translation = [panGesture translationInView:panGesture.view];
-    scale = translation.y / ((panGesture.view.frame.size.height - 50) / 2);
+    scale = fabs(translation.y) / ((panGesture.view.frame.size.height - 50) / 2);
     if (scale > 1.0f) scale = 1.0f;
     if (scale < 0.0f) scale = 0.0f;
     return scale;

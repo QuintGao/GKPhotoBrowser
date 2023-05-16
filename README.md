@@ -111,6 +111,9 @@ photo.image = [YYImage imageNamed:obj];
 ```
 [browser setupVideoPlayerProtocol:[CustomPlayerManager class]];
 ```
+
+### 6、滑动返回时显示黑屏（不出现背景渐变）
+查看其他代码中是否有分类修改了UIViewController的modalPresentationStyle，GKPhotoBrowser的默认modalPresentationStyle是UIModalPresentationCustom，如果有修改则需要屏蔽对GKPhotoBrowser的修改
  
  ## 效果图
  
@@ -135,6 +138,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.5.8 - 2023.05.16 修复手势向上滑动时不缩放问题
  * 2.5.7 - 2023.04.17
     - 1、修复崩溃bug #170
     - 2、新增属性可修改图片间距
