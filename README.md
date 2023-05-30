@@ -138,6 +138,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.5.9 - 2023.05.30 视频播放优化，新增微信聊天demo #173
  * 2.5.8 - 2023.05.16 修复手势向上滑动时不缩放问题
  * 2.5.7 - 2023.04.17
     - 1、修复崩溃bug #170
