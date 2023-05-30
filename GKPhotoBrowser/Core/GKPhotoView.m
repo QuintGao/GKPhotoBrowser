@@ -71,6 +71,15 @@
     return self;
 }
 
+- (void)prepareForReuse {
+    [self.loadingView stopLoading];
+    [self.loadingView removeFromSuperview];
+    [self.playBtn removeFromSuperview];
+    [self.videoLoadingView stopLoading];
+    [self.videoLoadingView removeFromSuperview];
+    [self cancelCurrentImageLoad];
+}
+
 - (void)setupPhoto:(GKPhoto *)photo {
     _photo = photo;
     
@@ -94,6 +103,7 @@
 
 - (void)showLoading {
     if (!self.photo.isVideo) return;
+    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
     self.videoLoadingView.frame = self.bounds;
@@ -103,6 +113,7 @@
 
 - (void)hideLoading {
     if (!self.photo.isVideo) return;
+    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
     [self.videoLoadingView stopLoading];
@@ -110,6 +121,7 @@
 
 - (void)showFailure {
     if (!self.photo.isVideo) return;
+    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
     [self.videoLoadingView showFailure];
@@ -117,6 +129,7 @@
 
 - (void)showPlayBtn {
     if (!self.photo.isVideo) return;
+    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
     if (!self.showPlayImage) return;
@@ -125,6 +138,15 @@
 
 - (void)didScrollAppear {
     if (!self.photo.isVideo) return;
+    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) {
+        if (!self.playBtn.superview) {
+            [self addSubview:self.playBtn];
+            [self.playBtn sizeToFit];
+            self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+        }
+        self.playBtn.hidden = NO;
+        return;
+    }
     if (!self.player) return;
     
     // 如果没有设置，则设置播放内容
@@ -155,12 +177,26 @@
 
 - (void)willScrollDisappear {
     if (!self.photo.isVideo) return;
+    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) {
+        if (self.player.isPlaying) {
+            [self.player gk_pause];
+        }
+        return;
+    }
     if (!self.player) return;
     [self.player gk_pause];
 }
 
 - (void)didScrollDisappear {
     if (!self.photo.isVideo) return;
+    if (!self.photo.isAutoPlay) {
+        if (self.photo.isVideoClicked) {
+            self.photo.isVideoClicked = NO;
+        }
+        [self.player gk_stop];
+        self.playBtn.hidden = NO;
+        return;
+    }
     if (!self.player) return;
     if (!self.showPlayImage) return;
     self.playBtn.hidden = NO;
@@ -181,6 +217,7 @@
 - (void)willDismissDisappear {
     if (!self.photo.isVideo) return;
     if (!self.player) return;
+    if (!self.isVideoPausedWhenDragged) return;
     if (self.player.status == GKVideoPlayerStatusEnded) {
         if (!self.showPlayImage) return;
         self.playBtn.hidden = YES;
@@ -197,12 +234,27 @@
 
 - (void)updateFrame {
     if (!self.photo.isVideo) return;
+    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
     if (self.player.videoPlayView.superview != self.imageView) {
         [self.imageView addSubview:self.player.videoPlayView];
     }
     [self.player gk_updateFrame:self.imageView.bounds];
+}
+
+- (void)playAction {
+    if (!self.photo.isVideo) return;
+    self.photo.isVideoClicked = YES;
+    [self didScrollAppear];
+}
+
+- (void)pauseAction {
+    if (!self.photo.isVideo) return;
+    if (!self.player) return;
+    self.photo.isVideoClicked = NO;
+    self.playBtn.hidden = NO;
+    [self.player gk_pause];
 }
 
 #pragma mark - 加载图片
@@ -216,6 +268,9 @@
         [self.scrollView addSubview:self.imageView];
         if (!photo.isVideo && self.showPlayImage) {
             self.playBtn.hidden = YES;
+        }else if (photo.isVideo && !photo.isAutoPlay && !photo.isVideoClicked) {
+            [self addSubview:self.playBtn];
+            self.playBtn.hidden = NO;
         }
         
         // 每次设置数据时，恢复缩放
@@ -585,7 +640,7 @@
     if (!_playBtn) {
         _playBtn = [[UIButton alloc] init];
         [_playBtn setImage:self.videoPlayImage ?: GKPhotoBrowserImage(@"gk_video_play") forState:UIControlStateNormal];
-        _playBtn.userInteractionEnabled = NO;
+        [_playBtn addTarget:self action:@selector(playAction) forControlEvents:UIControlEventTouchUpInside];
         _playBtn.hidden = YES;
         [_playBtn sizeToFit];
         _playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);

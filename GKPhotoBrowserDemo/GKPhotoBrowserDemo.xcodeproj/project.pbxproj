@@ -19,6 +19,10 @@
 		60CAD8F7262E66D9003A36D7 /* GKTestVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 60CAD8F6262E66D9003A36D7 /* GKTestVC.m */; };
 		60F9901622715A18008150AE /* GKOriginImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F9901522715A18008150AE /* GKOriginImageViewController.m */; };
 		7907911D29B6E40A000D70A5 /* GKDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7907911C29B6E40A000D70A5 /* GKDemoViewController.m */; };
+		7925A4E92A1F36D300972F47 /* GKChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7925A4E82A1F36D300972F47 /* GKChatViewController.m */; };
+		7925A4EC2A1F37E200972F47 /* GKChatViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7925A4EB2A1F37E200972F47 /* GKChatViewCell.m */; };
+		7925A4EE2A1F3A1400972F47 /* chat.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7925A4ED2A1F3A1400972F47 /* chat.txt */; };
+		7925A4F12A20507400972F47 /* GKVideoProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7925A4F02A20507400972F47 /* GKVideoProgressView.m */; };
 		7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7927F0CF20A97F280017FD5B /* GKTestViewController.m */; };
 		795FA5981FF333420057BDB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5971FF333420057BDB0 /* Assets.xcassets */; };
 		795FA59B1FF333420057BDB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5991FF333420057BDB0 /* LaunchScreen.storyboard */; };
@@ -103,6 +107,13 @@
 		60F9901522715A18008150AE /* GKOriginImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKOriginImageViewController.m; sourceTree = "<group>"; };
 		7907911B29B6E40A000D70A5 /* GKDemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKDemoViewController.h; sourceTree = "<group>"; };
 		7907911C29B6E40A000D70A5 /* GKDemoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKDemoViewController.m; sourceTree = "<group>"; };
+		7925A4E72A1F36D300972F47 /* GKChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKChatViewController.h; sourceTree = "<group>"; };
+		7925A4E82A1F36D300972F47 /* GKChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKChatViewController.m; sourceTree = "<group>"; };
+		7925A4EA2A1F37E200972F47 /* GKChatViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKChatViewCell.h; sourceTree = "<group>"; };
+		7925A4EB2A1F37E200972F47 /* GKChatViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKChatViewCell.m; sourceTree = "<group>"; };
+		7925A4ED2A1F3A1400972F47 /* chat.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = chat.txt; sourceTree = "<group>"; };
+		7925A4EF2A20507400972F47 /* GKVideoProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKVideoProgressView.h; sourceTree = "<group>"; };
+		7925A4F02A20507400972F47 /* GKVideoProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKVideoProgressView.m; sourceTree = "<group>"; };
 		7927F0CE20A97F280017FD5B /* GKTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKTestViewController.h; sourceTree = "<group>"; };
 		7927F0CF20A97F280017FD5B /* GKTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKTestViewController.m; sourceTree = "<group>"; };
 		795FA58B1FF333420057BDB0 /* GKPhotoBrowserDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GKPhotoBrowserDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -354,11 +365,18 @@
 				795FA5FD1FF338200057BDB0 /* GKTimeLineViewController.m */,
 				60318BAD2498ACAD00ABC67B /* GKPublishViewController.h */,
 				60318BAE2498ACAD00ABC67B /* GKPublishViewController.m */,
+				7925A4E72A1F36D300972F47 /* GKChatViewController.h */,
+				7925A4E82A1F36D300972F47 /* GKChatViewController.m */,
 				795FA5FC1FF338200057BDB0 /* GKTimeLineModel.h */,
 				795FA5FF1FF338200057BDB0 /* GKTimeLineModel.m */,
 				795FA6001FF338200057BDB0 /* GKTimeLineViewCell.h */,
 				795FA5FA1FF338200057BDB0 /* GKTimeLineViewCell.m */,
+				7925A4EA2A1F37E200972F47 /* GKChatViewCell.h */,
+				7925A4EB2A1F37E200972F47 /* GKChatViewCell.m */,
+				7925A4EF2A20507400972F47 /* GKVideoProgressView.h */,
+				7925A4F02A20507400972F47 /* GKVideoProgressView.m */,
 				795FA6011FF338200057BDB0 /* timeline.txt */,
+				7925A4ED2A1F3A1400972F47 /* chat.txt */,
 			);
 			path = WeChat;
 			sourceTree = "<group>";
@@ -507,6 +525,7 @@
 				795FA6201FF338200057BDB0 /* timeline.txt in Resources */,
 				795FA6291FF34F230057BDB0 /* README.md in Resources */,
 				60415CB72121715000D1D54B /* test.txt in Resources */,
+				7925A4EE2A1F3A1400972F47 /* chat.txt in Resources */,
 				795FA5981FF333420057BDB0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -614,6 +633,7 @@
 				60F9901622715A18008150AE /* GKOriginImageViewController.m in Sources */,
 				795FA6111FF338200057BDB0 /* GKBaseViewController.m in Sources */,
 				795FA6211FF338200057BDB0 /* GKTest01ViewCell.m in Sources */,
+				7925A4E92A1F36D300972F47 /* GKChatViewController.m in Sources */,
 				795FA61F1FF338200057BDB0 /* GKTimeLineModel.m in Sources */,
 				60415CB22121648F00D1D54B /* GKSDAutoLayoutViewController.m in Sources */,
 				795FA59E1FF333420057BDB0 /* main.m in Sources */,
@@ -622,10 +642,12 @@
 				795FA61B1FF338200057BDB0 /* GKTimeLineViewCell.m in Sources */,
 				606CD60625805EBF00290941 /* YYAnimatedImageView+GKExtension.m in Sources */,
 				60154B5F20D11D6B0000877A /* GKGIFViewController.m in Sources */,
+				7925A4EC2A1F37E200972F47 /* GKChatViewCell.m in Sources */,
 				795FA60F1FF338200057BDB0 /* GKPhotosView.m in Sources */,
 				795FA60E1FF338200057BDB0 /* GKMainViewController.m in Sources */,
 				795FA6101FF338200057BDB0 /* GKJianshuViewController.m in Sources */,
 				795FA6231FF338200057BDB0 /* GKTest02ViewController.m in Sources */,
+				7925A4F12A20507400972F47 /* GKVideoProgressView.m in Sources */,
 				795FA61D1FF338200057BDB0 /* GKTimeLineViewController.m in Sources */,
 				79C4206A29C2AD5D00A0AB84 /* GKZFPlayerManager.m in Sources */,
 				60CAD8F7262E66D9003A36D7 /* GKTestVC.m in Sources */,

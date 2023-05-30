@@ -29,9 +29,9 @@
         configure.gk_navItemRightSpace  = 4;
     }];
     
-    [GKGestureConfigure setupCustomConfigure:^(GKGestureHandleConfigure * _Nonnull configure) {
-        configure.gk_openScrollViewGestureHandle = YES;
-    }];
+//    [GKGestureConfigure setupCustomConfigure:^(GKGestureHandleConfigure * _Nonnull configure) {
+//        configure.gk_openScrollViewGestureHandle = YES;
+//    }];
     
     // init window
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

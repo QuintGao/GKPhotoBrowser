@@ -17,6 +17,13 @@
 
 @implementation GKPhoto
 
+- (instancetype)init {
+    if (self = [super init]) {
+        self.autoPlay = YES;
+    }
+    return self;
+}
+
 - (BOOL)isVideo {
     return self.videoUrl || self.videoAsset;
 }

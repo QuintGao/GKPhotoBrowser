@@ -83,6 +83,7 @@ static Class videoManagerClass = nil;
         self.hidesSavedBtn           = YES;
         self.showPlayImage           = YES;
         self.isVideoReplay           = YES;
+        self.isVideoPausedWhenDragged = YES;
         
         _visiblePhotoViews  = [NSMutableArray new];
         _reusablePhotoViews = [NSMutableSet new];
@@ -138,12 +139,37 @@ static Class videoManagerClass = nil;
             default:
                 break;
         }
+        
+        __block GKPhotoView *photoView = nil;
+        
+        [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.photo.videoUrl isEqual:mgr.assetURL]) {
+                photoView = obj;
+                *stop = YES;
+            }
+        }];
+        if (photoView && [self.delegate respondsToSelector:@selector(photoBrowser:videoStateChangeWithPhotoView:status:)]) {
+            [self.delegate photoBrowser:self videoStateChangeWithPhotoView:photoView status:status];
+        }
     };
     
     self.player.playerPlayTimeChange = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, NSTimeInterval currentTime, NSTimeInterval totalTime) {
         __strong __typeof(weakSelf) self = weakSelf;
         if (!self || !self.player) return;
         [self.progressView updateCurrentTime:currentTime totalTime:totalTime];
+        
+        __block GKPhotoView *photoView = nil;
+        
+        [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.photo.videoUrl isEqual:mgr.assetURL]) {
+                photoView = obj;
+                *stop = YES;
+            }
+        }];
+        
+        if (photoView && [self.delegate respondsToSelector:@selector(photoBrowser:videoTimeChangeWithPhotoView:currentTime:totalTime:)]) {
+            [self.delegate photoBrowser:self videoTimeChangeWithPhotoView:photoView currentTime:currentTime totalTime:totalTime];
+        }
     };
     
     self.player.playerGetVideoSize = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, CGSize size) {
@@ -491,7 +517,7 @@ static Class videoManagerClass = nil;
     }else {
         photoView = [[GKPhotoView alloc] initWithFrame:self.photoScrollView.bounds imageProtocol:_imageProtocol];
     }
-    photoView.tag =  -1;
+    photoView.tag = -1;
     return photoView;
 }
 
@@ -500,6 +526,7 @@ static Class videoManagerClass = nil;
     NSMutableArray *viewsForRemove = [NSMutableArray new];
     [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
         if ((photoView.frame.origin.x + photoView.frame.size.width < self.photoScrollView.contentOffset.x - self.photoScrollView.frame.size.width) || (photoView.frame.origin.x > self.photoScrollView.contentOffset.x + 2 * self.photoScrollView.frame.size.width)) {
+            [photoView prepareForReuse];
             [photoView removeFromSuperview];
             GKPhoto *photo = nil;
             
@@ -533,6 +560,7 @@ static Class videoManagerClass = nil;
             photoView.doubleZoomScale = self.doubleZoomScale;
             photoView.showPlayImage   = self.showPlayImage;
             photoView.videoPlayImage  = self.videoPlayImage;
+            photoView.isVideoPausedWhenDragged = self.isVideoPausedWhenDragged;
             
             __typeof(self) __weak weakSelf = self;
             __typeof(photoView) __weak weakPhotoView = photoView;
@@ -584,6 +612,9 @@ static Class videoManagerClass = nil;
         
         if (photoView.photo == nil && self.handler.isShow) {
             [photoView setupPhoto:self.photos[i]];
+        }
+        if ([self.delegate respondsToSelector:@selector(photoBrowser:reuseAtIndex:photoView:)]) {
+            [self.delegate photoBrowser:self reuseAtIndex:i photoView:photoView];
         }
     }
     
@@ -695,6 +726,9 @@ static Class videoManagerClass = nil;
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.curPhotoView willScrollDisappear];
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewWillBeginDragging:)]) {
+        [self.delegate photoBrowser:self scrollViewWillBeginDragging:scrollView];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -720,6 +754,9 @@ static Class videoManagerClass = nil;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (!decelerate) {
+        [self updateCurrentPhotoView];
+    }
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndDragging:willDecelerate:)]) {
         [self.delegate photoBrowser:self scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
@@ -729,6 +766,9 @@ static Class videoManagerClass = nil;
     if (self.handler.isAnimated) {
         self.handler.isAnimated = NO;
         [self updateCurrentPhotoView];
+    }
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidEndScrollingAnimation:)]) {
+        [self.delegate photoBrowser:self scrollViewDidEndScrollingAnimation:scrollView];
     }
 }
 

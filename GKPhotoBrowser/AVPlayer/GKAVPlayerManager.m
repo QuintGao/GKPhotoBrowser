@@ -79,6 +79,9 @@
 - (void)gk_play {
     [self.player play];
     _isPlaying = YES;
+    if (self.status != GKVideoPlayerStatusPrepared) {
+        self.status = GKVideoPlayerStatusPlaying;
+    }
 }
 
 - (void)gk_replay {
@@ -102,10 +105,11 @@
     if (self.player) {
         [self gk_pause];
         [self removePlayerObserver];
+        self.currentTime = 0;
         self.player = nil;
+        self.assetURL = nil;
         [self.videoPlayView removeFromSuperview];
         self.videoPlayView = nil;
-        self.currentTime = 0;
         self.seekTime = 0;
         self.completionHandler = nil;
         _totalTime = 0;
@@ -209,7 +213,7 @@
                     break;
             }
         }else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
-            if (self.status == GKVideoPlayerStatusEnded) return;
+            if (self.status == GKVideoPlayerStatusPaused || self.status == GKVideoPlayerStatusEnded) return;
             if (self.player.currentItem.playbackLikelyToKeepUp) {
                 self.status = GKVideoPlayerStatusPlaying;
                 if (self.isPlaying) [self.player play];

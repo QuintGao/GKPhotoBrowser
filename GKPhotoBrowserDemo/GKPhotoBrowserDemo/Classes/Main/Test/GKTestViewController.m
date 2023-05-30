@@ -10,6 +10,8 @@
 #import "GKTest02ViewCell.h"
 #import "GKBottomView.h"
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
+#import "GKVideoProgressView.h"
+#import <Masonry/Masonry.h>
 
 @interface GKTestViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -23,6 +25,11 @@
 
 @property (nonatomic, weak) GKPhotoBrowser *browser;
 
+@property (nonatomic, weak) GKVideoProgressView *progressView;
+
+@property (nonatomic, assign) NSTimeInterval currentTime;
+@property (nonatomic, assign) NSTimeInterval totalTime;
+
 @end
 
 @implementation GKTestViewController
@@ -33,13 +40,36 @@
     self.gk_navigationItem.title = @"test02";
     self.view.backgroundColor = [UIColor whiteColor];
     
+    GKVideoProgressView *progressView = [[GKVideoProgressView alloc] init];
+    progressView.backgroundColor = UIColor.redColor;
+    [self.view addSubview:progressView];
+    
+//    [progressView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.equalTo(self.view);
+//        make.top.equalTo(self.gk_navigationBar.mas_bottom).offset(50);
+//        make.height.mas_equalTo(80);
+//    }];
+    progressView.frame = CGRectMake(0, 200, self.view.bounds.size.width, 80);
+    self.progressView = progressView;
+    
+    self.totalTime = 10;
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timeCount) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     
 //    GKBottomView *btmView = [GKBottomView new];
 //    btmView.frame = CGRectMake(0, 100, self.view.frame.size.width, 100);
 //    [self.view addSubview:btmView];
-    [self setupView];
+//    [self setupView];
+//
+//    [self setupData];
+}
 
-    [self setupData];
+- (void)timeCount {
+    self.currentTime ++;
+    if (self.currentTime > self.totalTime) {
+        self.currentTime = 0;
+    }
+    [self.progressView updateCurrentTime:self.currentTime totalTime:self.totalTime];
 }
 
 - (void)setupView {

@@ -34,6 +34,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // 旋转事件
 - (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandscape:(BOOL)isLandscape;
 
+// photoView复用回调
+- (void)photoBrowser:(GKPhotoBrowser *)browser reuseAtIndex:(NSInteger)index photoView:(GKPhotoView *)photoView;
+
 // 保存按钮点击事件
 - (void)photoBrowser:(GKPhotoBrowser *)browser onSaveBtnClick:(NSInteger)index image:(UIImage *)image;
 
@@ -56,10 +59,18 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // browser加载失败自定义弹窗
 - (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index;
 
+// 视频播放状态回调
+- (void)photoBrowser:(GKPhotoBrowser *)browser videoStateChangeWithPhotoView:(GKPhotoView *)photoView status:(GKVideoPlayerStatus)status;
+
+// 视频播放进度回调
+- (void)photoBrowser:(GKPhotoBrowser *)browser videoTimeChangeWithPhotoView:(GKPhotoView *)photoView currentTime:(NSTimeInterval)currentTime totalTime:(NSTimeInterval)totalTime;
+
 // browser UIScrollViewDelegate
+- (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewWillBeginDragging:(UIScrollView *)scrollView;
 - (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidScroll:(UIScrollView *)scrollView;
 - (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
 - (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
+- (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView;
 
 @end
 
@@ -185,6 +196,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 
 /// 视频播放结束后是否自动重播，默认YES
 @property (nonatomic, assign) BOOL isVideoReplay;
+
+/// 拖拽时是否暂停播放，默认YES
+@property (nonatomic, assign) BOOL isVideoPausedWhenDragged;
 
 // 初始化方法
 

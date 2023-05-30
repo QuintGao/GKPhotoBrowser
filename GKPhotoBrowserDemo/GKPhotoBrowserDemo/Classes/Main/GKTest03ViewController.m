@@ -9,7 +9,7 @@
 #import "GKTest03ViewController.h"
 #import "GKTest02ViewCell.h"
 #import <YYWebImage/YYWebImage.h>
-
+#import <SDWebImage/SDAnimatedImage.h>
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 @interface GKTest03ViewController ()<UITableViewDataSource, UITableViewDelegate>
@@ -58,7 +58,8 @@
 
 - (void)setupData {
     self.dataSource = @[
-        @[@"001", @"002", @"003", @"test.gif"],
+        @[@"test.gif"],
+        @[@"001", @"002", @"003"],
         @[@"http://ww2.sinaimg.cn/large/85d77acdgw1f4hzsolyscg20cy07xkjp.jpg",
           @"http://ww2.sinaimg.cn/large/85ccde71gw1f9ksx38wjrg20dw05ah0v.jpg",
           @"http://ww1.sinaimg.cn/large/85cccab3gw1etdecj1njlg20dw06lnpd.jpg",
@@ -96,7 +97,7 @@
                 
                 // 如果使用YYWebImage，请使用YYImage加载本地图片
                 NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:obj ofType:nil]];
-//                photo.image = [YYImage imageNamed:obj];
+                photo.image = [SDAnimatedImage imageNamed:obj];
                 photo.image = [YYImage imageWithData:data];
                 
                 if (!photo.image) {
@@ -112,6 +113,7 @@
         browser.showStyle    = GKPhotoBrowserShowStylePush;
         browser.isFollowSystemRotation = YES;
         browser.isPopGestureEnabled = YES;
+        browser.hidesPageControl = true;
         [browser showFromVC:weakSelf];
     };
     

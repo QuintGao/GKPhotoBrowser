@@ -115,7 +115,7 @@
         NSMutableArray *photos = [NSMutableArray new];
         [cell.timeLineFrame.model.images enumerateObjectsUsingBlock:^(GKTimeLineImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            GKPhoto *photo = [GKPhoto new];
+            GKPhoto *photo = [[GKPhoto alloc] init];
             photo.url = [NSURL URLWithString:obj.url];
             
             photo.sourceImageView = cell.photosView.subviews[idx];

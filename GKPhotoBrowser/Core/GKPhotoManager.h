@@ -40,7 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) PHAsset  *videoAsset;
 @property (nonatomic, assign) CGSize             videoSize;
 @property (nonatomic, assign, readonly) BOOL     isVideo;
- 
+// 是否自动播放视频，默认YES
+@property (nonatomic, assign, getter=isAutoPlay) BOOL autoPlay;
+
 
 /************************内部使用，无需关心 ********************/
 /** 图片是否加载完成 */
@@ -64,6 +66,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 视频是否准备过 */
 @property (nonatomic, assign) BOOL               isVideoPrepared;
+
+/** 视频手动点击播放 */
+@property (nonatomic, assign) BOOL               isVideoClicked;
 
 - (void)getImage:(nullable void(^)(NSData *_Nullable data, UIImage *_Nullable image))completion;
 

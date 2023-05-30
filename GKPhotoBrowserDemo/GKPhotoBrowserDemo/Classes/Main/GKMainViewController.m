@@ -23,7 +23,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.gk_navigationItem.title = @"Main";
+    self.gk_navigationItem.title = @"GKPhotoBrowser";
     
     [self setupView];
     
@@ -54,6 +54,8 @@
                         @"class" : @"GKTest03ViewController"},
                       @{@"text"  : @"微信朋友圈",
                         @"class" : @"GKTimeLineViewController"},
+                      @{@"text"  : @"微信聊天",
+                        @"class" : @"GKChatViewController"},
                       @{@"text"  : @"今日头条",
                         @"class" : @"GKToutiaoViewController"},
                       @{@"text"  : @"简书",

@@ -62,8 +62,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL      showPlayImage;
 @property (nonatomic, strong) UIImage   *videoPlayImage;
+/// 拖拽开始时是否暂停播放，默认YES
+@property (nonatomic, assign) BOOL isVideoPausedWhenDragged;
 
 - (instancetype)initWithFrame:(CGRect)frame imageProtocol:(id<GKWebImageProtocol>)imageProtocol;
+
+// 准备复用
+- (void)prepareForReuse;
 
 // 设置数据
 - (void)setupPhoto:(GKPhoto *)photo;
@@ -83,6 +88,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resetFrame;
 
 #pragma mark - **********处理视频播放**********
+- (void)playAction;
+- (void)pauseAction;
+
 // 加载
 - (void)showLoading;
 - (void)hideLoading;
