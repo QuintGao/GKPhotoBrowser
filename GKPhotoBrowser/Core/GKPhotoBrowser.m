@@ -801,7 +801,7 @@ static Class progressClass = nil;
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    [self.rotationHandler handleSystemRotation];
+    [self.rotationHandler handleSystemRotationToSize:size];
 }
 
 #pragma mark - 懒加载

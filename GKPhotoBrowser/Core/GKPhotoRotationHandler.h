@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)delDeviceOrientationObserver;
 - (void)deviceOrientationDidChange;
 
-- (void)handleSystemRotation;
+- (void)handleSystemRotationToSize:(CGSize)size;
 
 @end
 

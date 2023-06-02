@@ -199,14 +199,15 @@
     }
 }
 
-- (void)handleSystemRotation {
+- (void)handleSystemRotationToSize:(CGSize)size {
     if (!self.browser.isFollowSystemRotation) return;
     
     self.isRotation = YES;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
-            CGFloat width = self.browser.view.bounds.size.width;
-            CGFloat height = self.browser.view.bounds.size.height;
+            CGFloat width = size.width;
+            CGFloat height = size.height;
+            self.browser.view.frame = CGRectMake(0, 0, size.width, size.height);
             
             self.browser.contentView.bounds = CGRectMake(0, 0, width, height);
             self.browser.contentView.center = self.browser.view.center;
