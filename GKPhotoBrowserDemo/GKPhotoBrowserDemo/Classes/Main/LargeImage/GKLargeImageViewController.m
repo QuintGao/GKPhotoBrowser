@@ -80,6 +80,10 @@
     
     // 结束显示时自动清理内存
     browser.isClearMemoryWhenDisappear = YES;
+    
+    // 重用时清理内存
+    browser.isClearMemoryWhenViewReuse = YES;
+    
     [browser showFromVC:self];
 }
 

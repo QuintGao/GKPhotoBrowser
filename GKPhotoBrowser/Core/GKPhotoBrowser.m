@@ -205,6 +205,7 @@ static Class progressClass = nil;
     protocol.browser = self;
     self.progress = protocol;
     self.progressView = protocol.progressView;
+    self.progressView.hidden = YES;
 }
 
 - (instancetype)init {
@@ -589,6 +590,7 @@ static Class progressClass = nil;
             photoView.showPlayImage   = self.showPlayImage;
             photoView.videoPlayImage  = self.videoPlayImage;
             photoView.isVideoPausedWhenDragged = self.isVideoPausedWhenDragged;
+            photoView.isClearMemoryWhenViewReuse = self.isClearMemoryWhenViewReuse;
             
             __typeof(self) __weak weakSelf = self;
             __typeof(photoView) __weak weakPhotoView = photoView;

@@ -81,7 +81,7 @@
     [self.videoLoadingView stopLoading];
     [self.videoLoadingView removeFromSuperview];
     [self cancelCurrentImageLoad];
-    if ([self.imageProtocol respondsToSelector:@selector(clearMemoryForURL:)]) {
+    if (self.isClearMemoryWhenViewReuse && [self.imageProtocol respondsToSelector:@selector(clearMemoryForURL:)]) {
         [self.imageProtocol clearMemoryForURL:self.photo.url];
     }
     [self.imageView removeFromSuperview];

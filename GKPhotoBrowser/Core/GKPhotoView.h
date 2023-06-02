@@ -65,6 +65,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 拖拽开始时是否暂停播放，默认YES
 @property (nonatomic, assign) BOOL isVideoPausedWhenDragged;
 
+/// 视图重用时是否清除对应url的换成，默认NO
+/// 如果设置为YES，则视图放入重用池时回调用GKWebImageProtocol协议的clearMemoryForURL:方法
+@property (nonatomic, assign) BOOL isClearMemoryWhenViewReuse;
+
 - (instancetype)initWithFrame:(CGRect)frame imageProtocol:(id<GKWebImageProtocol>)imageProtocol;
 
 // 准备复用
