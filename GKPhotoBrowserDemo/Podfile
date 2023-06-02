@@ -19,10 +19,14 @@ target 'GKPhotoBrowserDemo' do
   pod 'GKMessageTool'
   pod 'Masonry'
   pod 'TZImagePickerController'
+  pod 'GKSliderView'
   
   pod 'GKPhotoBrowser', :path => '../'
   pod 'GKPhotoBrowser/YY', :path => '../'
 #  pod 'GKPhotoBrowser', :subspecs => ['SD', 'YY', 'AVPlayer'], :path => '../'
+#  pod 'GKPhotoBrowser/SD', :path => '../'
+#  pod 'GKPhotoBrowser/AVPlayer', :path => '../'
+#  pod 'GKPhotoBrowser/Progress', :path => '../'
 
   pod 'ZFPlayer/AVPlayer'
 

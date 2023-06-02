@@ -66,6 +66,8 @@
                         @"class" : @"GKSDAutoLayoutViewController"},
                       @{@"text"  : @"GIF图片",
                         @"class" : @"GKGIFViewController"},
+                      @{@"text"  : @"自定义图片加载-超大图显示",
+                        @"class" : @"GKLargeImageViewController"},
                       @{@"text"  : @"测试",
                         @"class" : @"GKTestViewController"},
     ];

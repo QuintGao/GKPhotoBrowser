@@ -25,6 +25,8 @@
 
 @implementation GKSDWebImageManager
 
+@synthesize browser;
+
 - (Class)imageViewClass {
     return SDAnimatedImageView.class;
 }
@@ -48,6 +50,11 @@
 - (UIImage *)imageFromMemoryForURL:(NSURL *)url {
     NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:url];
     return [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:key];
+}
+
+- (void)clearMemoryForURL:(NSURL *)url {
+    NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:url];
+    [[SDImageCache sharedImageCache].memoryCache removeObjectForKey:key];
 }
 
 - (void)clearMemory {

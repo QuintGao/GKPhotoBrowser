@@ -41,6 +41,7 @@
 
 @implementation GKAVPlayerManager
 
+@synthesize browser = _browser;
 @synthesize videoPlayView = _videoPlayView;
 @synthesize coverImage = _coverImage;
 @synthesize assetURL = _assetURL;

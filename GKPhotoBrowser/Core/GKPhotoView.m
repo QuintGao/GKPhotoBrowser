@@ -55,6 +55,8 @@
 
 @property (nonatomic, assign) CGFloat realZoomScale;
 
+@property (nonatomic, assign) CGSize imageSize;
+
 @end
 
 @implementation GKPhotoView
@@ -72,12 +74,18 @@
 }
 
 - (void)prepareForReuse {
+    self.imageSize = CGSizeZero;
     [self.loadingView stopLoading];
     [self.loadingView removeFromSuperview];
     [self.playBtn removeFromSuperview];
     [self.videoLoadingView stopLoading];
     [self.videoLoadingView removeFromSuperview];
     [self cancelCurrentImageLoad];
+    if ([self.imageProtocol respondsToSelector:@selector(clearMemoryForURL:)]) {
+        [self.imageProtocol clearMemoryForURL:self.photo.url];
+    }
+    [self.imageView removeFromSuperview];
+    self.imageView = nil;
 }
 
 - (void)setupPhoto:(GKPhoto *)photo {
@@ -404,6 +412,7 @@
                             }
                         }
                     }else {
+                        self.imageSize = image.size;
                         photo.finished = YES;
                         if (isOrigin) {
                             photo.originFinished = YES;
@@ -423,6 +432,9 @@
                         [self adjustFrame];
                     }
                     if (self.imageView.image && CGSizeEqualToSize(self.imageView.frame.size, CGSizeZero)) {
+                        [self adjustFrame];
+                    }
+                    if (!self.imageView.image && !CGSizeEqualToSize(self.imageSize, CGSizeZero)) {
                         [self adjustFrame];
                     }
                 });
@@ -480,8 +492,11 @@
     CGRect frame = self.scrollView.frame;
     if (frame.size.width == 0 || frame.size.height == 0) return;
     
-    if (self.imageView.image) {
+    if (self.imageView.image || !CGSizeEqualToSize(self.imageSize, CGSizeZero)) {
         CGSize imageSize = self.imageView.image.size;
+        if (CGSizeEqualToSize(imageSize, CGSizeZero)) {
+            imageSize = self.imageSize;
+        }
         // 视频处理，保证视频可以完全显示
         if (self.photo.isVideo && !CGSizeEqualToSize(self.photo.videoSize, CGSizeZero)) {
             imageSize = self.photo.videoSize;
@@ -632,6 +647,7 @@
 - (UIImageView *)imageView {
     if (!_imageView) {
         _imageView = [_imageProtocol.imageViewClass new];
+        _imageView.frame = self.scrollView.bounds;
     }
     return _imageView;
 }

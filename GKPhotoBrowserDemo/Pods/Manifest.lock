@@ -22,19 +22,23 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.8.4)
   - GKNavigationBar/GestureHandle (1.8.4)
   - GKNavigationBar/NavigationBar (1.8.4)
-  - GKPhotoBrowser (2.5.4):
-    - GKPhotoBrowser/Default (= 2.5.4)
-  - GKPhotoBrowser/AVPlayer (2.5.4):
+  - GKPhotoBrowser (2.6.0):
+    - GKPhotoBrowser/Default (= 2.6.0)
+  - GKPhotoBrowser/AVPlayer (2.6.0):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (2.5.4):
     - GKSliderView
-  - GKPhotoBrowser/Default (2.5.4):
+  - GKPhotoBrowser/Core (2.6.0)
+  - GKPhotoBrowser/Default (2.6.0):
     - GKPhotoBrowser/AVPlayer
+    - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/SD (2.5.4):
+  - GKPhotoBrowser/Progress (2.6.0):
+    - GKPhotoBrowser/Core
+    - GKSliderView
+  - GKPhotoBrowser/SD (2.6.0):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (2.5.4):
+  - GKPhotoBrowser/YY (2.6.0):
     - GKPhotoBrowser/Core
     - YYWebImage
   - GKSliderView (1.1.0)
@@ -68,6 +72,7 @@ DEPENDENCIES:
   - GKNavigationBar
   - GKPhotoBrowser (from `../`)
   - GKPhotoBrowser/YY (from `../`)
+  - GKSliderView
   - Masonry
   - MBProgressHUD
   - SDAutoLayout
@@ -104,7 +109,7 @@ SPEC CHECKSUMS:
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 329602e567ffaf87cd22fa7f1cff59fbbeca5701
-  GKPhotoBrowser: 4ef12188e25caa27dabfec4da1d05a20ffe9bf9c
+  GKPhotoBrowser: af17e9f772335be7c3827d41f429ef31115c7920
   GKSliderView: b5fc3b68bbfdb05ee403303377921d6564de61a9
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
@@ -117,6 +122,6 @@ SPEC CHECKSUMS:
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
 
-PODFILE CHECKSUM: 1d927e8cfcc095f4c068e9cfcf99967c2422d0c8
+PODFILE CHECKSUM: 6ad6dd838b78ba75a3e9a33c1d1b9a2a7e057601
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.12.1

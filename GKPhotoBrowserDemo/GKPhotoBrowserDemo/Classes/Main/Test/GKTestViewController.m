@@ -40,28 +40,28 @@
     self.gk_navigationItem.title = @"test02";
     self.view.backgroundColor = [UIColor whiteColor];
     
-    GKVideoProgressView *progressView = [[GKVideoProgressView alloc] init];
-    progressView.backgroundColor = UIColor.redColor;
-    [self.view addSubview:progressView];
-    
-//    [progressView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.equalTo(self.view);
-//        make.top.equalTo(self.gk_navigationBar.mas_bottom).offset(50);
-//        make.height.mas_equalTo(80);
-//    }];
-    progressView.frame = CGRectMake(0, 200, self.view.bounds.size.width, 80);
-    self.progressView = progressView;
-    
-    self.totalTime = 10;
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timeCount) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-    
-//    GKBottomView *btmView = [GKBottomView new];
-//    btmView.frame = CGRectMake(0, 100, self.view.frame.size.width, 100);
-//    [self.view addSubview:btmView];
-//    [self setupView];
+//    GKVideoProgressView *progressView = [[GKVideoProgressView alloc] init];
+//    progressView.backgroundColor = UIColor.redColor;
+//    [self.view addSubview:progressView];
 //
-//    [self setupData];
+////    [progressView mas_makeConstraints:^(MASConstraintMaker *make) {
+////        make.left.right.equalTo(self.view);
+////        make.top.equalTo(self.gk_navigationBar.mas_bottom).offset(50);
+////        make.height.mas_equalTo(80);
+////    }];
+//    progressView.frame = CGRectMake(0, 200, self.view.bounds.size.width, 80);
+//    self.progressView = progressView;
+    
+//    self.totalTime = 10;
+//    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timeCount) userInfo:nil repeats:YES];
+//    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+    
+    GKBottomView *btmView = [GKBottomView new];
+    btmView.frame = CGRectMake(0, 100, self.view.frame.size.width, 100);
+    [self.view addSubview:btmView];
+    [self setupView];
+
+    [self setupData];
 }
 
 - (void)timeCount {

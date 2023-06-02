@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GKPhotoView.h"
+#import "GKProgressViewProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -200,6 +201,14 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 拖拽时是否暂停播放，默认YES
 @property (nonatomic, assign) BOOL isVideoPausedWhenDragged;
 
+/// 浏览器消失时是否清除缓存，默认NO
+/// 如果设置为YES，则结束显示时会调用GKWebImageProtocol协议的clearMemory方法
+@property (nonatomic, assign) BOOL isClearMemoryWhenDisappear;
+
+/// 视图重用时是否清除对应url的换成，默认NO
+/// 如果设置为YES，则视图放入重用池时回调用GKWebImageProtocol协议的clearMemoryForURL:方法
+@property (nonatomic, assign) BOOL isClearMemoryWhenViewReuse;
+
 // 初始化方法
 
 /**
@@ -220,6 +229,10 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 视频播放处理类，需要视频播放时必须添加
 /// @param protocol 需实现GKVideoPlayerProtocol协议
 - (void)setupVideoPlayerProtocol:(id<GKVideoPlayerProtocol>)protocol;
+
+/// 自定义视频播放进度条
+/// @param protocol 需实现GKProgressViewProtocol协议
+- (void)setupVideoProgressProtocol:(id<GKProgressViewProtocol>)protocol;
 
 /**
  为浏览器添加自定义遮罩视图

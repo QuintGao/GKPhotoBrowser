@@ -12,7 +12,11 @@ typedef void (^GKWebImageProgressBlock)(NSInteger receivedSize, NSInteger expect
 
 typedef void (^GKWebImageCompletionBlock)(UIImage * _Nullable image, NSURL * _Nullable url, BOOL finished, NSError * _Nullable error);
 
+@class GKPhotoBrowser;
+
 @protocol GKWebImageProtocol<NSObject>
+
+@property (nonatomic, weak) GKPhotoBrowser *browser;
 
 /// 设置imageView类
 - (Class _Nonnull)imageViewClass;
@@ -42,6 +46,10 @@ typedef void (^GKWebImageCompletionBlock)(UIImage * _Nullable image, NSURL * _Nu
 /// 根据data获取image对象
 /// @param data 图片数据
 - (UIImage *_Nullable)imageWithData:(nullable NSData *)data;
+
+/// 根据url清除内存，当photoView放入重用池时会调用此方法，可解决多个大图切换时内存暴涨问题
+/// @param url 图片url
+- (void)clearMemoryForURL:(nullable NSURL *)url;
 
 /// 清理内存
 - (void)clearMemory;

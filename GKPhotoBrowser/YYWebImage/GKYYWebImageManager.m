@@ -16,6 +16,8 @@
 
 @implementation GKYYWebImageManager
 
+@synthesize browser;
+
 - (Class)imageViewClass {
     return [NSClassFromString(@"YYAnimatedImageView") class];
 }
@@ -38,9 +40,13 @@
 }
 
 - (UIImage *)imageFromMemoryForURL:(NSURL *)url {
-    YYWebImageManager *manager = [YYWebImageManager sharedManager];
-    NSString *key = [manager cacheKeyForURL:url];
-    return [manager.cache getImageForKey:key withType:YYImageCacheTypeAll];
+    NSString *key = [[YYWebImageManager sharedManager] cacheKeyForURL:url];
+    return [[YYImageCache sharedCache] getImageForKey:key];
+}
+
+- (void)clearMemoryForURL:(NSURL *)url {
+    NSString *key = [[YYWebImageManager sharedManager] cacheKeyForURL:url];
+    [[YYImageCache sharedCache].memoryCache removeObjectForKey:key];
 }
 
 - (void)clearMemory {

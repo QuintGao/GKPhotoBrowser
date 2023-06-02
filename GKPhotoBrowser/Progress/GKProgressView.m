@@ -7,6 +7,7 @@
 
 #import "GKProgressView.h"
 #import <GKSliderView/GKSliderView.h>
+#import "GKPhotoBrowser.h"
 
 @interface GKProgressView()<GKSliderViewDelegate>
 
@@ -23,6 +24,13 @@
 @end
 
 @implementation GKProgressView
+
+@synthesize browser = _browser;
+@synthesize progressView = _progressView;
+
+- (UIView *)progressView {
+    return self;
+}
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -56,7 +64,11 @@
     self.sliderView.frame = CGRectMake(x, y, w, h);
 }
 
-#pragma mark - Public
+#pragma mark - GKProgressViewProtocol
+- (void)updatePlayStatus:(GKVideoPlayerStatus)status {
+    
+}
+
 - (void)updateCurrentTime:(NSTimeInterval)currentTime totalTime:(NSTimeInterval)totalTime {
     if (self.isSeeking) return;
     self.totalTime = totalTime;
@@ -73,6 +85,10 @@
     self.totalLabel.text = [self convertTimeSecond:totalTime];
 }
 
+- (void)updateLayoutWithFrame:(CGRect)frame {
+    
+}
+
 #pragma mark - GKSliderViewDelegate
 - (void)sliderView:(GKSliderView *)sliderView touchBegan:(float)value {
     [self showLargeSlider];
@@ -83,9 +99,9 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showSmallSlider) object:nil];
     [self performSelector:@selector(showSmallSlider) withObject:nil afterDelay:3.0f];
     
-    if (!self.player) return;
+    if (!self.browser.player) return;
     __weak __typeof(self) weakSelf = self;
-    [self.player gk_seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
+    [self.browser.player gk_seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
         __strong __typeof(weakSelf) self = weakSelf;
         self.isSeeking = NO;
     }];

@@ -18,11 +18,13 @@
 #if __has_include(<GKAVPlayerManager.h>)
 #import "GKAVPlayerManager.h"
 #endif
-
+#if __has_include(<GKProgressView.h>)
 #import "GKProgressView.h"
+#endif
 
 static Class imageManagerClass = nil;
 static Class videoManagerClass = nil;
+static Class progressClass = nil;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -33,7 +35,7 @@ static Class videoManagerClass = nil;
 
 @property (nonatomic, strong) UIScrollView   *photoScrollView;
 
-@property (nonatomic, strong) GKProgressView *progressView;
+@property (nonatomic, weak) UIView           *progressView;
 
 @property (nonatomic, strong) NSArray        *photos;
 @property (nonatomic, assign) NSInteger      currentIndex;
@@ -59,6 +61,9 @@ static Class videoManagerClass = nil;
 
 // 播放器处理
 @property (nonatomic, strong) id<GKVideoPlayerProtocol> player;
+
+// 进度条
+@property (nonatomic, strong) id<GKProgressViewProtocol> progress;
 
 @end
 
@@ -98,18 +103,24 @@ static Class videoManagerClass = nil;
         videoManagerClass = NSClassFromString(@"GKAVPlayerManager");
         if (videoManagerClass) {
             [self setupVideoPlayerProtocol:[videoManagerClass new]];
+            Class progressClass = NSClassFromString(@"GKProgressView");
+        }
+        progressClass = NSClassFromString(@"GKProgressView");
+        if (progressClass) {
+            [self setupVideoProgressProtocol:[progressClass new]];
         }
     }
     return self;
 }
 
 - (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol {
+    protocol.browser = self;
     self.imageProtocol = protocol;
 }
 
 - (void)setupVideoPlayerProtocol:(id<GKVideoPlayerProtocol>)protocol {
+    protocol.browser = self;
     self.player = protocol;
-    self.progressView.player = protocol;
     
     __weak __typeof(self) weakSelf = self;
     self.player.playerStatusChange = ^(id<GKVideoPlayerProtocol> _Nonnull mgr, GKVideoPlayerStatus status) {
@@ -156,7 +167,10 @@ static Class videoManagerClass = nil;
     self.player.playerPlayTimeChange = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, NSTimeInterval currentTime, NSTimeInterval totalTime) {
         __strong __typeof(weakSelf) self = weakSelf;
         if (!self || !self.player) return;
-        [self.progressView updateCurrentTime:currentTime totalTime:totalTime];
+        
+        if ([self.progress respondsToSelector:@selector(updateCurrentTime:totalTime:)]) {
+            [self.progress updateCurrentTime:currentTime totalTime:totalTime];
+        }
         
         __block GKPhotoView *photoView = nil;
         
@@ -185,6 +199,12 @@ static Class videoManagerClass = nil;
             [self.curPhotoView adjustFrame];
         }
     };
+}
+
+- (void)setupVideoProgressProtocol:(id<GKProgressViewProtocol>)protocol {
+    protocol.browser = self;
+    self.progress = protocol;
+    self.progressView = protocol.progressView;
 }
 
 - (instancetype)init {
@@ -252,6 +272,12 @@ static Class videoManagerClass = nil;
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:didDisappearAtIndex:)]) {
         [self.delegate photoBrowser:self didDisappearAtIndex:self.currentIndex];
+    }
+    
+    if (self.isClearMemoryWhenDisappear) {
+        if ([self.imageProtocol respondsToSelector:@selector(clearMemory)]) {
+            [self.imageProtocol clearMemory];
+        }
     }
 }
 
@@ -455,7 +481,9 @@ static Class videoManagerClass = nil;
         [self.contentView addSubview:self.countLabel];
         [self.contentView addSubview:self.pageControl];
         [self.contentView addSubview:self.saveBtn];
-        [self.contentView addSubview:self.progressView];
+        if (self.player && self.progress) {
+            [self.contentView addSubview:self.progressView];            
+        }
         
         self.pageControl.numberOfPages = self.photos.count;
         CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
@@ -889,14 +917,6 @@ static Class videoManagerClass = nil;
     return _saveBtn;
 }
 
-- (GKProgressView *)progressView {
-    if (!_progressView) {
-        _progressView = [[GKProgressView alloc] init];
-        _progressView.hidden = YES;
-    }
-    return _progressView;
-}
-
 @end
 
 @implementation GKPhotoBrowser (Private)
@@ -948,6 +968,9 @@ static Class videoManagerClass = nil;
         self.pageControl.center = CGPointMake(centerX, centerY);
         self.saveBtn.center = CGPointMake(width - 60, centerY);
         self.progressView.center = CGPointMake(centerX, centerY);
+        if ([self.progress respondsToSelector:@selector(updateLayoutWithFrame:)]) {
+            [self.progress updateLayoutWithFrame:self.contentView.bounds];
+        }
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {

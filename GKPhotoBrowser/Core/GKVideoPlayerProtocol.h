@@ -19,13 +19,17 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
     GKVideoPlayerStatusFailed      // 播放失败
 };
 
+@class GKPhotoBrowser;
+
 @protocol GKVideoPlayerProtocol <NSObject>
+
+@property (nonatomic, weak) GKPhotoBrowser *browser;
 
 @property (nonatomic, strong, nullable) UIView *videoPlayView;
 
 @property (nonatomic, weak) UIImage *coverImage;
 
-@property (nonatomic, strong) NSURL *assetURL;
+@property (nonatomic, strong, nullable) NSURL *assetURL;
 
 @property (nonatomic, readonly) BOOL isPlaying;
 

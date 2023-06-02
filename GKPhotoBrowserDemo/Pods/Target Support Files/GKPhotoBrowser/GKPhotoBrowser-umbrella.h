@@ -19,10 +19,11 @@
 #import "GKPhotoManager.h"
 #import "GKPhotoRotationHandler.h"
 #import "GKPhotoView.h"
-#import "GKProgressView.h"
+#import "GKProgressViewProtocol.h"
 #import "GKVideoPlayerProtocol.h"
 #import "GKWebImageProtocol.h"
 #import "UIScrollView+GKPhotoBrowser.h"
+#import "GKProgressView.h"
 #import "GKSDWebImageManager.h"
 #import "GKYYWebImageManager.h"
 
