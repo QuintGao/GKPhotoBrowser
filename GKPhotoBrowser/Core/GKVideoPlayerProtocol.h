@@ -23,7 +23,7 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
 
 @protocol GKVideoPlayerProtocol <NSObject>
 
-@property (nonatomic, weak) GKPhotoBrowser *browser;
+@property (nonatomic, weak, nullable) GKPhotoBrowser *browser;
 
 @property (nonatomic, strong, nullable) UIView *videoPlayView;
 

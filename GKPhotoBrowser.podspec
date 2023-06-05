@@ -45,5 +45,5 @@ Pod::Spec.new do |s|
     ss.dependency 'GKPhotoBrowser/Core'
     ss.dependency 'GKSliderView'
   end
-  
+
 end

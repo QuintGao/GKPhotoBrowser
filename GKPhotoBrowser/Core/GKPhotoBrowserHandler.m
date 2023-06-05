@@ -202,25 +202,25 @@
     CGRect sourceRect = photo.sourceFrame;
     
     if (CGRectEqualToRect(sourceRect, CGRectZero)) {
-        if (photo.sourceImageView == nil) {
-            [UIView animateWithDuration:self.browser.animDuration animations:^{
-                photoView.imageView.alpha = 0;
-                [self browserChangeAlpha:0];
-            }completion:^(BOOL finished) {
-                [self dismissAnimated:self.browser.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
-            }];
-            return;
-        }
-        
-        if (self.browser.isHideSourceView) {
-            photo.sourceImageView.alpha = 0;
-        }
-        
-        float systemVersion = [UIDevice currentDevice].systemVersion.floatValue;
-        if (systemVersion >= 8.0 && systemVersion < 9.0) {
-            sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toCoordinateSpace:photoView];
+        if (photo.sourceImageView) {
+            float systemVersion = [UIDevice currentDevice].systemVersion.floatValue;
+            if (systemVersion >= 8.0 && systemVersion < 9.0) {
+                sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toCoordinateSpace:photoView];
+            }else {
+                sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toView:photoView];
+            }
+            
+            if (!CGRectIntersectsRect(sourceRect, UIScreen.mainScreen.bounds)) {
+                [self browserDismissNone];
+                return;
+            }else {
+                if (self.browser.isHideSourceView) {
+                    photo.sourceImageView.alpha = 0;
+                }
+            }
         }else {
-            sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toView:photoView];
+            [self browserDismissNone];
+            return;
         }
     }else {
         if (self.browser.isHideSourceView && photo.sourceImageView) {
@@ -268,6 +268,18 @@
     
     [UIView animateWithDuration:self.browser.animDuration animations:^{
         photoView.imageView.transform = CGAffineTransformMakeTranslation(0, toTranslationY);
+        [self browserChangeAlpha:0];
+    }completion:^(BOOL finished) {
+        [self dismissAnimated:self.browser.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
+    }];
+}
+
+- (void)browserDismissNone {
+    GKPhotoView *photoView = self.browser.curPhotoView;
+    if (!photoView) return;
+    
+    [UIView animateWithDuration:self.browser.animDuration animations:^{
+        photoView.imageView.alpha = 0;
         [self browserChangeAlpha:0];
     }completion:^(BOOL finished) {
         [self dismissAnimated:self.browser.hideStyle == GKPhotoBrowserHideStyleZoomSlide];

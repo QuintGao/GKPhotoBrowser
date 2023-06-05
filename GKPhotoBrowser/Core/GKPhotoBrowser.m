@@ -103,7 +103,6 @@ static Class progressClass = nil;
         videoManagerClass = NSClassFromString(@"GKAVPlayerManager");
         if (videoManagerClass) {
             [self setupVideoPlayerProtocol:[videoManagerClass new]];
-            Class progressClass = NSClassFromString(@"GKProgressView");
         }
         progressClass = NSClassFromString(@"GKProgressView");
         if (progressClass) {

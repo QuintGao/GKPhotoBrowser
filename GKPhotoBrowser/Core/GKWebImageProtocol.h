@@ -16,7 +16,7 @@ typedef void (^GKWebImageCompletionBlock)(UIImage * _Nullable image, NSURL * _Nu
 
 @protocol GKWebImageProtocol<NSObject>
 
-@property (nonatomic, weak) GKPhotoBrowser *browser;
+@property (nonatomic, weak, nullable) GKPhotoBrowser *browser;
 
 /// 设置imageView类
 - (Class _Nonnull)imageViewClass;

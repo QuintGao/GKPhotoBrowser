@@ -32,6 +32,7 @@ GKPhotoBrowser是一个可高度自定义的图片、视频浏览器，支持多
 - 支持自定义遮罩视图（支持SDAutoLayout，不支持Masonry）
 - 支持屏幕旋转
 - 支持gif图片加载
+- 支持自定义图片加载、视频播放、进度显示等功能
 
 ## 安装
 默认安装，支持图片（SDWebImage加载）和视频（AVPlayer播放）
@@ -53,6 +54,11 @@ pod 'GKPhotoBrowser/YY'
 AVPlayer播放视频
 ```objc
 pod 'GKPhotoBrowser/AVPlayer'
+```
+
+视频播放进度条
+```objc
+pod 'GKPhotoBrowser/Progress'
 ```
 ## 使用
 1、创建包含GKPhoto的数据源数组
@@ -138,6 +144,11 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.6.0 - 2023.06.05
+    - 1、优化自定义图片加载时的逻辑
+    - 2、新增内存清理相关属性，可在适当的时候清理内存
+    - 3、增加视频进度视图协议，可自定义视频进度view
+    - 4、新增大图加载demo，通过CATiledLayer显示
  * 2.5.9 - 2023.05.30 视频播放优化，新增微信聊天demo #173
  * 2.5.8 - 2023.05.16 修复手势向上滑动时不缩放问题
  * 2.5.7 - 2023.04.17

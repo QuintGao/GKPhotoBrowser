@@ -18,6 +18,7 @@
 
 @implementation GKZFPlayerManager
 
+@synthesize browser;
 @synthesize videoPlayView = _videoPlayView;
 @synthesize coverImage = _coverImage;
 @synthesize assetURL = _assetURL;

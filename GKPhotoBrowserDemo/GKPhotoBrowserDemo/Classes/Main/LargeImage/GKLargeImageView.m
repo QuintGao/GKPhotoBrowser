@@ -55,7 +55,7 @@
     
     imageScale = self.frame.size.width / imageRect.size.width;
     CATiledLayer *tiledLayer = (CATiledLayer *)self.layer;
-    NSInteger tileSizeScale = sqrt(36) / 2;
+    NSInteger tileSizeScale = sqrt(self.tiledCount) / 2;
     CGSize tileSize = self.bounds.size;
     tileSize.width /= tileSizeScale;
     tileSize.height /= tileSizeScale;
