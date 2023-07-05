@@ -473,27 +473,26 @@ static Class progressClass = nil;
 
 #pragma mark - Private Methods
 - (void)setupCoverViews {
+    [self.contentView addSubview:self.countLabel];
+    [self.contentView addSubview:self.pageControl];
+    [self.contentView addSubview:self.saveBtn];
+    if (self.player && self.progress) {
+        [self.contentView addSubview:self.progressView];
+    }
+    
+    self.pageControl.numberOfPages = self.photos.count;
+    CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
+    self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
+    [self updateViewIndex];
+    
     if (self.coverViews) {
         [self.coverViews enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [self.contentView addSubview:obj];
         }];
-    }else {
-        [self.contentView addSubview:self.countLabel];
-        [self.contentView addSubview:self.pageControl];
-        [self.contentView addSubview:self.saveBtn];
-        if (self.player && self.progress) {
-            [self.contentView addSubview:self.progressView];            
-        }
-        
-        self.pageControl.numberOfPages = self.photos.count;
-        CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
-        self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
-        [self updateViewIndex];
     }
 }
 
 - (void)updateCoverViews {
-    if (self.coverViews) return;
     GKPhoto *photo = [self currentPhoto];
     if (photo.isVideo) {
         self.progressView.hidden = self.hidesVideoSlider;
@@ -949,29 +948,29 @@ static Class progressClass = nil;
         [photoView resetFrame];
     }];
     
-    if (self.coverViews) {
-        !self.layoutBlock ? : self.layoutBlock(self, self.contentView.bounds);
+    CGFloat width = self.contentView.bounds.size.width;
+    CGFloat height = self.contentView.bounds.size.height;
+    
+    CGFloat centerX = width * 0.5f;
+    
+    self.countLabel.center = CGPointMake(centerX, (KIsiPhoneX && !self.rotationHandler.isLandscape) ? (kSafeTopSpace + 10) : 30);
+    self.progressView.bounds = CGRectMake(0, 0, width - 60, 20);
+    
+    CGFloat centerY = 0;
+    if (self.rotationHandler.isLandscape) {
+        centerY = height - 20;
     }else {
-        CGFloat width = self.contentView.bounds.size.width;
-        CGFloat height = self.contentView.bounds.size.height;
-        
-        CGFloat centerX = width * 0.5f;
-        
-        self.countLabel.center = CGPointMake(centerX, (KIsiPhoneX && !self.rotationHandler.isLandscape) ? (kSafeTopSpace + 10) : 30);
-        self.progressView.bounds = CGRectMake(0, 0, width - 60, 20);
-        
-        CGFloat centerY = 0;
-        if (self.rotationHandler.isLandscape) {
-            centerY = height - 20;
-        }else {
-            centerY = height - 20 - (self.isAdaptiveSafeArea ? kSafeBottomSpace : 0);
-        }
-        self.pageControl.center = CGPointMake(centerX, centerY);
-        self.saveBtn.center = CGPointMake(width - 60, centerY);
-        self.progressView.center = CGPointMake(centerX, centerY);
-        if ([self.progress respondsToSelector:@selector(updateLayoutWithFrame:)]) {
-            [self.progress updateLayoutWithFrame:self.contentView.bounds];
-        }
+        centerY = height - 20 - (self.isAdaptiveSafeArea ? kSafeBottomSpace : 0);
+    }
+    self.pageControl.center = CGPointMake(centerX, centerY);
+    self.saveBtn.center = CGPointMake(width - 60, centerY);
+    self.progressView.center = CGPointMake(centerX, centerY);
+    if ([self.progress respondsToSelector:@selector(updateLayoutWithFrame:)]) {
+        [self.progress updateLayoutWithFrame:self.contentView.bounds];
+    }
+    
+    if (self.layoutBlock) {
+        self.layoutBlock(self, self.contentView.bounds);
     }
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {

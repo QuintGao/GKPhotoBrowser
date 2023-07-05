@@ -125,7 +125,7 @@
         //        browser.currentIndex = index;
         browser.showStyle    = GKPhotoBrowserShowStyleZoom;
         browser.hideStyle    = GKPhotoBrowserHideStyleZoomScale;
-        browser.isFollowSystemRotation = YES;
+//        browser.isFollowSystemRotation = YES;
         browser.addNavigationController = YES;
         
         UIButton *btn = [[UIButton alloc] init];
@@ -170,6 +170,13 @@
 #pragma mark - GKPhotoBrowserDelegate
 - (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index {
     
+}
+
+- (void)photoBrowser:(GKPhotoBrowser *)browser willLayoutSubViews:(NSInteger)index {
+    CGFloat width = browser.contentView.bounds.size.width;
+    CGFloat height = browser.contentView.bounds.size.height;
+    
+    browser.pageControl.center = CGPointMake(width * 0.5, height - kSafeBottomSpace - 10);
 }
 
 #pragma mark - 懒加载

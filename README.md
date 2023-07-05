@@ -144,6 +144,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.6.1 - 2023.07.05 自定义coverView时不隐藏pageControl
  * 2.6.0 - 2023.06.05
     - 1、优化自定义图片加载时的逻辑
     - 2、新增内存清理相关属性，可在适当的时候清理内存
