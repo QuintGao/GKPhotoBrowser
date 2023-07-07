@@ -171,7 +171,7 @@
 		795FA6081FF338200057BDB0 /* GKTest02ViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest02ViewCell.h; sourceTree = "<group>"; };
 		795FA6091FF338200057BDB0 /* GKTest01ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKTest01ViewController.h; sourceTree = "<group>"; };
 		795FA6251FF3383E0057BDB0 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GKPhotoBrowser.podspec; path = ../../GKPhotoBrowser.podspec; sourceTree = "<group>"; };
+		795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GKPhotoBrowser.podspec; path = ../../GKPhotoBrowser.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		795FA6271FF34F220057BDB0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		79B33754249111E100590023 /* test.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test.gif; sourceTree = "<group>"; };
 		79C4206829C2AD5D00A0AB84 /* GKZFPlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKZFPlayerManager.h; sourceTree = "<group>"; };
