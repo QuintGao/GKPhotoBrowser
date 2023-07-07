@@ -20,4 +20,6 @@ static NSString *const kTimeLineViewCellID = @"kTimeLineViewCellID";
 
 @property (nonatomic, copy) void(^photosImgClickBlock)(GKTimeLineViewCell *viewCell, NSInteger index);
 
+- (void)updateFrame;
+
 @end

@@ -38,7 +38,7 @@
         self.contentLabel.numberOfLines = 0;
         [self.contentView addSubview:self.contentLabel];
         
-        CGFloat photoW = kScreenW - 60 - 50 - 20;
+        CGFloat photoW = self.bounds.size.width - 60 - 50 - 20;
         self.photosView = [GKPhotosView photosViewWithWidth:photoW andMargin:5];
         self.photosView.delegate = self;
         [self.contentView addSubview:self.photosView];
@@ -50,24 +50,41 @@
     return self;
 }
 
+//- (void)layoutSubviews {
+//    [super layoutSubviews];
+//    
+//    if (self.bounds.size.width != self.timeLineFrame.width) {
+//        self.timeLineFrame.width = self.bounds.size.width;
+//        [self.timeLineFrame updateFrameWithWidth:self.bounds.size.width];
+//        [self.photosView updateWidth:(self.bounds.size.width - 60 - 50 - 20)];
+//        [self updateFrame];
+//    }
+//}
+
 - (void)setTimeLineFrame:(GKTimeLineFrame *)timeLineFrame {
     _timeLineFrame = timeLineFrame;
     
-    GKTimeLineModel *model = timeLineFrame.model;
+    [self updateFrame];
+}
+
+- (void)updateFrame {
     
-    self.iconView.frame = timeLineFrame.iconF;
+    GKTimeLineModel *model = _timeLineFrame.model;
+    
+    self.iconView.frame = _timeLineFrame.iconF;
     [self.iconView sd_setImageWithURL:[NSURL URLWithString:model.icon.url]];
     
-    self.nameLabel.frame    = timeLineFrame.nameF;
+    self.nameLabel.frame    = _timeLineFrame.nameF;
     self.nameLabel.text     = model.name;
     
-    self.contentLabel.frame = timeLineFrame.contentF;
+    self.contentLabel.frame = _timeLineFrame.contentF;
     self.contentLabel.text  = model.content;
     
-    self.photosView.frame   = timeLineFrame.photosF;
+    [self.photosView updateWidth:(_timeLineFrame.width - 60 - 50 - 20)];
+    self.photosView.frame   = _timeLineFrame.photosF;
     self.photosView.images  = model.images;
     
-    self.lineView.frame = timeLineFrame.lineF;
+    self.lineView.frame = _timeLineFrame.lineF;
 }
 
 #pragma mark - GKPhotosViewDelegate

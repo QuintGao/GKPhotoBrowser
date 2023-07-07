@@ -9,8 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "UIScrollView+GKPhotoBrowser.h"
 
-#define GKScreenW           [UIScreen mainScreen].bounds.size.width
-#define GKScreenH           [UIScreen mainScreen].bounds.size.height
 // 判断iPhone X
 #define KIsiPhoneX          [GKPhotoBrowserConfigure gk_isNotchedScreen]
 // 底部安全区域高度
@@ -68,8 +66,14 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 /// 状态栏frame
 + (CGRect)gk_statusBarFrame;
 
+/// 是否是Mac
++ (BOOL)isMac;
+
 /// 判断是否是刘海屏
 + (BOOL)gk_isNotchedScreen;
+
+/// 获取当前 window
++ (UIWindow *)getKeyWindow;
 
 /// 根据图片名字获取图片
 /// @param name 图片名字

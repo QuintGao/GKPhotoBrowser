@@ -630,7 +630,6 @@
 - (GKScrollView *)scrollView {
     if (!_scrollView) {
         _scrollView                      = [GKScrollView new];
-        _scrollView.frame                = CGRectMake(0, 0, GKScreenW, GKScreenH);
         _scrollView.backgroundColor      = [UIColor clearColor];
         _scrollView.delegate             = self;
         _scrollView.clipsToBounds        = NO;

@@ -163,6 +163,7 @@ int const static kDirectionPanThreshold = 5;
     // 设置双击放大倍数
     [photoView setScrollMaxZoomScale:self.browser.doubleZoomScale];
     
+    photoView.scrollView.clipsToBounds = NO;
     if (photoView.scrollView.zoomScale > 1.0) {
         [photoView.scrollView setZoomScale:1.0 animated:YES];
         photo.isZooming = NO;

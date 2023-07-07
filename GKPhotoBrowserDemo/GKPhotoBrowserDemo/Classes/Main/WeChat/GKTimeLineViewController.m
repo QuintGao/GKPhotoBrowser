@@ -36,6 +36,8 @@
 
 @property (nonatomic, assign) NSInteger     currentIndex;
 
+@property (nonatomic, assign) CGFloat viewWidth;
+
 @end
 
 @implementation GKTimeLineViewController
@@ -52,6 +54,7 @@
     self.gk_navigationItem.title = @"朋友圈";
 //    self.gk_navRightBarButtonItem = [UIBarButtonItem itemWithTitle:@"发布" target:self action:@selector(tabkePhoto)];
     self.gk_navRightBarButtonItem = [UIBarButtonItem gk_itemWithTitle:@"发布" target:self action:@selector(tabkePhoto)];
+    self.viewWidth = self.view.bounds.size.width;
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.top        = self.gk_navigationBar.bottom;
@@ -80,6 +83,7 @@
     
     for (GKTimeLineModel *model in models) {
         GKTimeLineFrame *f = [GKTimeLineFrame new];
+        f.width = self.view.frame.size.width;
         f.model = model;
         
         [dataFrames addObject:f];
@@ -94,9 +98,20 @@
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    self.tableView.frame = self.view.bounds;
-    self.tableView.top        = self.gk_navigationBar.bottom;
-    self.tableView.height     = self.view.height - self.gk_navigationBar.height;
+    [self.dataFrames enumerateObjectsUsingBlock:^(GKTimeLineFrame *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.width = self.view.frame.size.width;
+        [obj updateFrameWithWidth:obj.width];
+    }];
+    self.tableView.frame   = self.view.bounds;
+    self.tableView.top     = self.gk_navigationBar.bottom;
+    self.tableView.height  = self.view.height - self.gk_navigationBar.height;
+    
+    if (self.view.bounds.size.width != self.viewWidth) {
+        self.viewWidth = self.view.bounds.size.width;
+        [self.tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof GKTimeLineViewCell * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [obj updateFrame];
+        }];
+    }
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
@@ -139,7 +154,7 @@
         browser.isFullWidthForLandScape = NO;
         browser.isSingleTapDisabled = YES;
 //        browser.photoViewPadding = 0;
-//        browser.animDuration = 2;
+//        browser.animDuration = 10;
         // 自定义视频播放
 //        [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];
         browser.showPlayImage = NO;

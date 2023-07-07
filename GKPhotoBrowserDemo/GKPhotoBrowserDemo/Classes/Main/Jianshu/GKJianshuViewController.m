@@ -43,7 +43,7 @@
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    self.webView.frame = CGRectMake(0, self.gk_navigationBar.bottom, KScreenW, KScreenH - self.gk_navigationBar.height);
+    self.webView.frame = CGRectMake(0, self.gk_navigationBar.bottom, self.view.bounds.size.width, self.view.bounds.size.height - self.gk_navigationBar.height);
 }
 
 #pragma mark - WKNavigationDelegate

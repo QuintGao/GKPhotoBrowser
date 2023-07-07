@@ -38,11 +38,20 @@ static CGFloat   photoH;
     return self;
 }
 
+- (void)updateWidth:(CGFloat)width {
+    maxWidth = width;
+    photoW = (width - (photosMaxCol - 1) * photoMargin) / photosMaxCol;
+    photoH = photoW;
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+}
+
 - (void)setPhotos:(NSArray *)photos {
     _photos = photos;
     
     // 防止出现重用
-    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+//    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    if (self.subviews.count > 0) return;
     
     for (NSInteger i = 0; i < photos.count; i++) {
         UIImageView *imgView = [NSClassFromString(@"SDAnimatedImageView") new];
@@ -74,7 +83,8 @@ static CGFloat   photoH;
     _images = images;
     
     // 防止出现重用
-    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+//    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    if (self.subviews.count > 0) return;
     
     for (NSInteger i = 0; i < images.count; i++) {
         UIImageView *imgView = [NSClassFromString(@"SDAnimatedImageView") new];
@@ -235,16 +245,16 @@ static CGFloat   photoH;
     CGFloat photosW = 0;
     CGFloat photosH = 0;
     
-    if (count == 1) {
-        photosW = 100;
-        photosH = 200;
-    }else {
+//    if (count == 1) {
+//        photosW = 100;
+//        photosH = 200;
+//    }else {
         NSInteger cols = count == 4 ? 2 : photosMaxCol;
         NSInteger rows = (count + cols - 1) / cols;
         
         photosW = photoW * cols + (cols - 1) * margin;
         photosH = photoH * rows + (rows - 1) * margin;
-    }
+//    }
     
     return CGSizeMake(photosW, photosH);
 }

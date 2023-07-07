@@ -53,7 +53,8 @@
                 });
             }];
         }else {
-            self.imageRequestID = [GKPhotoManager loadImageWithAsset:phAsset photoWidth:GKScreenW * 2 completion:^(UIImage * _Nullable image) {
+            CGFloat width = [GKPhotoBrowserConfigure getKeyWindow].bounds.size.width;
+            self.imageRequestID = [GKPhotoManager loadImageWithAsset:phAsset photoWidth:width * 2 completion:^(UIImage * _Nullable image) {
                 __strong __typeof(weakSelf) self = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     !completion ?: completion(nil, image);

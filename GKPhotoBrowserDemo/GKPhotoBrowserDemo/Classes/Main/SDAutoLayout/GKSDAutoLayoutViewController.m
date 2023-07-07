@@ -28,6 +28,8 @@
 
 @property (nonatomic, strong) GKBottomView    *bottomView;
 
+@property (nonatomic, assign) CGFloat viewWidth;
+
 @end
 
 @implementation GKSDAutoLayoutViewController
@@ -51,6 +53,7 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[GKTimeLineViewCell class] forCellReuseIdentifier:kTimeLineViewCellID];
     [self.view addSubview:self.tableView];
+    self.viewWidth = self.view.bounds.size.width;
 }
 
 - (void)viewWillLayoutSubviews {
@@ -59,6 +62,13 @@
     self.tableView.frame = self.view.bounds;
     self.tableView.top = self.gk_navigationBar.bottom;
     self.tableView.height = self.view.height - self.gk_navigationBar.height;
+    
+    if (self.view.bounds.size.width != self.viewWidth) {
+        self.viewWidth = self.view.bounds.size.width;
+        [self.tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof GKTimeLineViewCell * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [obj updateFrame];
+        }];
+    }
 }
 
 - (void)setupData {
@@ -78,6 +88,7 @@
     
     for (GKTimeLineModel *model in models) {
         GKTimeLineFrame *f = [GKTimeLineFrame new];
+        f.width = self.view.bounds.size.width;
         f.model = model;
         
         [dataFrames addObject:f];

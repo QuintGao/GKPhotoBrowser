@@ -153,7 +153,7 @@
     
     NSArray *images = self.dataSource[indexPath.row];
     
-    return [GKTest02ViewCell cellHeightWithCount:images.count];
+    return [GKTest02ViewCell cellHeightWithWidth:self.view.bounds.size.width count:images.count];
 }
 
 - (void)pangesture:(UIPanGestureRecognizer *)pan {

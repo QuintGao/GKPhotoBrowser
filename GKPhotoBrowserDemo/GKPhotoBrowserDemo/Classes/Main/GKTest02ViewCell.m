@@ -38,7 +38,7 @@
     [super layoutSubviews];
     
     CGSize size = [GKPhotosView sizeWithCount:self.photos.count];
-    
+    [self.photosView updateWidth:self.bounds.size.width - 20];
     self.photosView.frame = CGRectMake(10, 10, size.width, size.height);
 }
 
@@ -53,9 +53,9 @@
     !self.imgClickBlock ? : self.imgClickBlock(self.photosView, self.photos, imgView.tag);
 }
 
-+ (CGFloat)cellHeightWithCount:(NSInteger)count {
++ (CGFloat)cellHeightWithWidth:(CGFloat)width count:(NSInteger)count {
 //    return [GKPhotosView sizeWithCount:count].height + 20;
-    return [GKPhotosView sizeWithCount:count width:kScreenW - 20 andMargin:10].height + 20;
+    return [GKPhotosView sizeWithCount:count width:width - 20 andMargin:10].height + 20;
 }
 
 @end

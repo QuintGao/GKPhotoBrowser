@@ -31,6 +31,8 @@
 
 + (GKPhotosView *)photosViewWithWidth:(CGFloat)width andMargin:(CGFloat)photoMargin;
 
+- (void)updateWidth:(CGFloat)width;
+
 + (CGSize)sizeWithCount:(NSInteger)count;
 
 + (CGSize)sizeWithCount:(NSInteger)count width:(CGFloat)width andMargin:(CGFloat)photoMargin;

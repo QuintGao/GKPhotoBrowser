@@ -97,11 +97,14 @@
         if (CGRectEqualToRect(photo.sourceFrame, CGRectZero)) {
             endRect = photoView.imageView.frame;
         }else {
-            CGFloat w = GKScreenW;
+            CGFloat viewW = self.browser.view.bounds.size.width;
+            CGFloat viewH = self.browser.view.bounds.size.height;
+            
+            CGFloat w = viewW;
             // bug fixed：#43 CALayer position contains NaN: [nan nan]
-            CGFloat h = (photo.sourceFrame.size.width == 0) ? GKScreenH : (w * photo.sourceFrame.size.height / photo.sourceFrame.size.width);
+            CGFloat h = (photo.sourceFrame.size.width == 0) ? viewH : (w * photo.sourceFrame.size.height / photo.sourceFrame.size.width);
             CGFloat x = 0;
-            CGFloat y = (GKScreenH - h) / 2;
+            CGFloat y = (viewH - h) / 2;
             endRect = CGRectMake(x, y, w, h);
         }
     }

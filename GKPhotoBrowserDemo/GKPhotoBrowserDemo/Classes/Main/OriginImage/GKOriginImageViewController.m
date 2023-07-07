@@ -8,6 +8,7 @@
 
 #import "GKOriginImageViewController.h"
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
+#import <Masonry/Masonry.h>
 
 @interface GKOriginImageViewController ()<UICollectionViewDataSource, UICollectionViewDelegate, GKPhotoBrowserDelegate>
 
@@ -30,7 +31,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.gk_navTitle = @"加载原图";
     
-    self.collectionView.frame = CGRectMake(0, GK_STATUSBAR_NAVBAR_HEIGHT, GK_SCREEN_WIDTH, GK_SCREEN_HEIGHT - GK_STATUSBAR_NAVBAR_HEIGHT);
+    self.collectionView.frame = self.view.bounds;
     [self.view addSubview:self.collectionView];
     
     NSMutableArray *thumbnailImageUrls = [NSMutableArray array];
@@ -61,7 +62,10 @@
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    self.collectionView.frame = CGRectMake(0, self.gk_navigationBar.bottom, KScreenW, KScreenH - self.gk_navigationBar.height);
+    self.collectionView.frame = CGRectMake(0, self.gk_navigationBar.bottom, self.view.bounds.size.width, self.view.bounds.size.height - self.gk_navigationBar.height);
+    
+    CGFloat itemWH = (self.view.bounds.size.width - 40) / 3 - 0.01;
+    ((UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout).itemSize = CGSizeMake(itemWH, itemWH);
 }
 
 #pragma mark - <UICollectionViewDataSource, UICollectionViewDelegate>
@@ -73,10 +77,13 @@
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     
     UIImageView *imgView = [UIImageView new];
-    imgView.frame = cell.bounds;
+//    imgView.frame = cell.bounds;
     imgView.tag = [cell hash] + indexPath.item;
     [imgView sd_setImageWithURL:[NSURL URLWithString:self.thumbImgs[indexPath.item]]];
     [cell addSubview:imgView];
+    [imgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(cell);
+    }];
     
     return cell;
 }
@@ -169,7 +176,7 @@
 #pragma mark - 懒加载
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
-        CGFloat itemWH = (KScreenW - 40) / 3 - 0.01;
+        CGFloat itemWH = (self.view.bounds.size.width - 40) / 3 - 0.01;
         
         UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
         layout.itemSize = CGSizeMake(itemWH, itemWH);

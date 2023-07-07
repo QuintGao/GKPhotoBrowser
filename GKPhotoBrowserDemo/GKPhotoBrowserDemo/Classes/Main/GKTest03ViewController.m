@@ -123,7 +123,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSArray *arr = self.dataSource[indexPath.row];
     
-    return [GKTest02ViewCell cellHeightWithCount:arr.count];
+    return [GKTest02ViewCell cellHeightWithWidth:self.view.bounds.size.width count:arr.count];
 }
 
 @end

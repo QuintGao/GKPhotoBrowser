@@ -462,7 +462,7 @@ static CGFloat tabBarHeight = -1;
     
     if (CGRectEqualToRect(statusBarFrame, CGRectZero)) {
         CGFloat statusBarH = [self isNotchedScreen] ? 44 : 20;
-        statusBarFrame = CGRectMake(0, 0, GK_SCREEN_WIDTH, statusBarH);
+        statusBarFrame = CGRectMake(0, 0, [self keyWindow].bounds.size.width, statusBarH);
     }
     
     return statusBarFrame;
@@ -495,6 +495,11 @@ static CGFloat tabBarHeight = -1;
             }
         }
     }
+    
+    if (!window) {
+        window = [UIApplication sharedApplication].delegate.window;
+    }
+    
     return window;
 }
 

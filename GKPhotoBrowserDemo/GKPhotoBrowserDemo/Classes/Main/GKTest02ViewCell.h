@@ -14,6 +14,6 @@
 
 @property (nonatomic, copy) void(^imgClickBlock)(UIView *containerView, NSArray *photos, NSInteger index);
 
-+ (CGFloat)cellHeightWithCount:(NSInteger)count;
++ (CGFloat)cellHeightWithWidth:(CGFloat)width count:(NSInteger)count;
 
 @end

@@ -53,6 +53,9 @@
 
 @property (nonatomic, assign) CGRect lineF;
 
+@property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) CGFloat cellHeight;
+
+- (void)updateFrameWithWidth:(CGFloat)width;
 
 @end

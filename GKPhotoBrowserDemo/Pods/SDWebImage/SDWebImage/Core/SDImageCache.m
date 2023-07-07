@@ -262,7 +262,7 @@ static NSString * _defaultDiskCacheDirectory;
             SDImageFormat format = image.sd_imageFormat;
             if (format == SDImageFormatUndefined) {
                 // If image is animated, use GIF (APNG may be better, but has bugs before macOS 10.14)
-                if (image.sd_isAnimated) {
+                if (image.sd_imageFrameCount > 1) {
                     format = SDImageFormatGIF;
                 } else {
                     // If we do not have any data to detect image format, check whether it contains alpha channel to use PNG or JPEG format
@@ -461,7 +461,7 @@ static NSString * _defaultDiskCacheDirectory;
     if (image) {
         if (options & SDImageCacheDecodeFirstFrameOnly) {
             // Ensure static image
-            if (image.sd_isAnimated) {
+            if (image.sd_imageFrameCount > 1) {
 #if SD_MAC
                 image = [[NSImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:kCGImagePropertyOrientationUp];
 #else
@@ -593,7 +593,7 @@ static NSString * _defaultDiskCacheDirectory;
     if (image) {
         if (options & SDImageCacheDecodeFirstFrameOnly) {
             // Ensure static image
-            if (image.sd_isAnimated) {
+            if (image.sd_imageFrameCount > 1) {
 #if SD_MAC
                 image = [[NSImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:kCGImagePropertyOrientationUp];
 #else
@@ -668,11 +668,17 @@ static NSString * _defaultDiskCacheDirectory;
                 // Query full size cache key which generate a thumbnail, should not write back to full size memory cache
                 shouldCacheToMomery = NO;
             }
+            // Special case: If user query image in list for the same URL, to avoid decode and write **same** image object into disk cache multiple times, we query and check memory cache here again.
+            if (shouldCacheToMomery && self.config.shouldCacheImagesInMemory) {
+                diskImage = [self.memoryCache objectForKey:key];
+            }
             // decode image data only if in-memory cache missed
-            diskImage = [self diskImageForKey:key data:diskData options:options context:context];
-            if (shouldCacheToMomery && diskImage && self.config.shouldCacheImagesInMemory) {
-                NSUInteger cost = diskImage.sd_memoryCost;
-                [self.memoryCache setObject:diskImage forKey:key cost:cost];
+            if (!diskImage) {
+                diskImage = [self diskImageForKey:key data:diskData options:options context:context];
+                if (shouldCacheToMomery && diskImage && self.config.shouldCacheImagesInMemory) {
+                    NSUInteger cost = diskImage.sd_memoryCost;
+                    [self.memoryCache setObject:diskImage forKey:key cost:cost];
+                }
             }
         }
         return diskImage;

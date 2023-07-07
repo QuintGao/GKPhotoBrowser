@@ -48,6 +48,10 @@
 - (void)setModel:(GKTimeLineModel *)model {
     _model = model;
     
+    [self updateFrameWithWidth:self.width];
+}
+
+- (void)updateFrameWithWidth:(CGFloat)width {
     CGFloat iconX = 10;
     CGFloat iconY = 15;
     CGFloat iconWH = 40;
@@ -55,24 +59,24 @@
     
     CGFloat nameX = CGRectGetMaxX(_iconF) + 10;
     CGFloat nameY = iconY + 2;
-    CGSize nameSize = [self sizeWithText:model.name font:kNameFont];
+    CGSize nameSize = [self sizeWithText:_model.name font:kNameFont];
     _nameF = (CGRect){{nameX, nameY}, nameSize};
     
     CGFloat contentX = nameX;
     CGFloat contentY = CGRectGetMaxY(_nameF) + 10;
-    CGFloat maxW = kScreenW - contentX - 50;
-    CGSize contentSize = [self sizeWithText:model.content font:kTextFont maxW:maxW];
+    CGFloat maxW = width - contentX - 50;
+    CGSize contentSize = [self sizeWithText:_model.content font:kTextFont maxW:maxW];
     _contentF = (CGRect){{contentX, contentY}, {maxW, contentSize.height}};
     
     CGFloat photosX = contentX;
     CGFloat photosY = CGRectGetMaxY(_contentF) + 10;
     CGFloat photosW = maxW - 20;
-    CGSize photosSize = [GKPhotosView sizeWithImages:model.images width:photosW andMargin:5];
+    CGSize photosSize = [GKPhotosView sizeWithImages:_model.images width:photosW andMargin:5];
     _photosF = (CGRect){{photosX, photosY}, photosSize};
     
     CGFloat lineX = 0;
     CGFloat lineY = CGRectGetMaxY(_photosF) + 10;
-    CGFloat lineW = kScreenW;
+    CGFloat lineW = width;
     CGFloat lineH = 0.5;
     _lineF = CGRectMake(lineX, lineY, lineW, lineH);
     

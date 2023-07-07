@@ -17,37 +17,37 @@ PODS:
   - GKCover (3.0.1)
   - GKMessageTool (1.0.5):
     - MBProgressHUD
-  - GKNavigationBar (1.8.4):
-    - GKNavigationBar/GestureHandle (= 1.8.4)
-    - GKNavigationBar/NavigationBar (= 1.8.4)
-  - GKNavigationBar/GestureHandle (1.8.4)
-  - GKNavigationBar/NavigationBar (1.8.4)
-  - GKPhotoBrowser (2.6.0):
-    - GKPhotoBrowser/Default (= 2.6.0)
-  - GKPhotoBrowser/AVPlayer (2.6.0):
+  - GKNavigationBar (1.8.5):
+    - GKNavigationBar/GestureHandle (= 1.8.5)
+    - GKNavigationBar/NavigationBar (= 1.8.5)
+  - GKNavigationBar/GestureHandle (1.8.5)
+  - GKNavigationBar/NavigationBar (1.8.5)
+  - GKPhotoBrowser (2.6.1):
+    - GKPhotoBrowser/Default (= 2.6.1)
+  - GKPhotoBrowser/AVPlayer (2.6.1):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Core (2.6.0)
-  - GKPhotoBrowser/Default (2.6.0):
+  - GKPhotoBrowser/Core (2.6.1)
+  - GKPhotoBrowser/Default (2.6.1):
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/Progress (2.6.0):
+  - GKPhotoBrowser/Progress (2.6.1):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/SD (2.6.0):
+  - GKPhotoBrowser/SD (2.6.1):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (2.6.0):
+  - GKPhotoBrowser/YY (2.6.1):
     - GKPhotoBrowser/Core
     - YYWebImage
   - GKSliderView (1.1.0)
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
   - SDAutoLayout (2.2.1)
-  - SDWebImage (5.15.5):
-    - SDWebImage/Core (= 5.15.5)
-  - SDWebImage/Core (5.15.5)
+  - SDWebImage (5.16.0):
+    - SDWebImage/Core (= 5.16.0)
+  - SDWebImage/Core (5.16.0)
   - TZImagePickerController (3.8.3):
     - TZImagePickerController/Basic (= 3.8.3)
     - TZImagePickerController/Location (= 3.8.3)
@@ -108,13 +108,13 @@ SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
-  GKNavigationBar: 329602e567ffaf87cd22fa7f1cff59fbbeca5701
-  GKPhotoBrowser: af17e9f772335be7c3827d41f429ef31115c7920
+  GKNavigationBar: 1adeb07fd4a7936223923134d6c03f73488298b4
+  GKPhotoBrowser: 3039348915f46a631491ae9ba274ec07a23402df
   GKSliderView: b5fc3b68bbfdb05ee403303377921d6564de61a9
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
-  SDWebImage: fd7e1a22f00303e058058278639bf6196ee431fe
+  SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
   TZImagePickerController: e9909edbadf7381140efc5b5c9f5bdbfd630f7d4
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54

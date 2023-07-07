@@ -19,18 +19,6 @@
 static CVReturn DisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow, const CVTimeStamp *inOutputTime, CVOptionFlags flagsIn, CVOptionFlags *flagsOut, void *displayLinkContext);
 #endif
 
-#if SD_WATCH
-static CFTimeInterval CACurrentMediaTime(void)
-{
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-
-    uint64_t time = mach_absolute_time();
-    double seconds = (double)time * (double)timebase.numer / (double)timebase.denom / 1e9;
-    return seconds;
-}
-#endif
-
 #define kSDDisplayLinkInterval 1.0 / 60
 
 @interface SDDisplayLink ()
@@ -57,6 +45,7 @@ static CFTimeInterval CACurrentMediaTime(void)
 - (void)dealloc {
 #if SD_MAC
     if (_displayLink) {
+        CVDisplayLinkStop(_displayLink);
         CVDisplayLinkRelease(_displayLink);
         _displayLink = NULL;
     }
@@ -74,14 +63,15 @@ static CFTimeInterval CACurrentMediaTime(void)
     if (self) {
         _target = target;
         _selector = sel;
+        // CA/CV/NSTimer will retain to the target, we need to break this using weak proxy
+        SDWeakProxy *weakProxy = [SDWeakProxy proxyWithTarget:self];
 #if SD_MAC
         CVDisplayLinkCreateWithActiveCGDisplays(&_displayLink);
-        CVDisplayLinkSetOutputCallback(_displayLink, DisplayLinkCallback, (__bridge void *)self);
+        // Simulate retain for target, the target is weak proxy to self
+        CVDisplayLinkSetOutputCallback(_displayLink, DisplayLinkCallback, (__bridge_retained void *)weakProxy);
 #elif SD_IOS || SD_TV
-        SDWeakProxy *weakProxy = [SDWeakProxy proxyWithTarget:self];
         _displayLink = [CADisplayLink displayLinkWithTarget:weakProxy selector:@selector(displayLinkDidRefresh:)];
 #else
-        SDWeakProxy *weakProxy = [SDWeakProxy proxyWithTarget:self];
         _displayLink = [NSTimer timerWithTimeInterval:kSDDisplayLinkInterval target:weakProxy selector:@selector(displayLinkDidRefresh:) userInfo:nil repeats:YES];
 #endif
     }
@@ -101,13 +91,19 @@ static CFTimeInterval CACurrentMediaTime(void)
     if (periodPerSecond > 0) {
         duration = (double)outputTime.videoRefreshPeriod / periodPerSecond;
     }
-#else
+#elif SD_UIKIT
     // iOS 10+/watchOS use `nextTime`
-    if (@available(iOS 10.0, tvOS 10.0, watchOS 2.0, *)) {
+    if (@available(iOS 10.0, tvOS 10.0, *)) {
         duration = self.nextFireTime - CACurrentMediaTime();
     } else {
         // iOS 9 use `previousTime`
         duration = CACurrentMediaTime() - self.previousFireTime;
+    }
+#else
+    if (self.nextFireTime != 0) {
+        // `CFRunLoopTimerGetNextFireDate`: This time could be a date in the past if a run loop has not been able to process the timer since the firing time arrived.
+        // Don't rely on this, always calculate based on elapsed time
+        duration = CFRunLoopTimerGetNextFireDate((__bridge CFRunLoopTimerRef)self.displayLink) - self.nextFireTime;
     }
 #endif
     // When system sleep, the targetTimestamp will mass up, fallback refresh rate
@@ -230,13 +226,13 @@ static CFTimeInterval CACurrentMediaTime(void)
         self.previousFireTime = self.displayLink.timestamp;
     }
 #endif
-#if SD_WATCH
-    self.nextFireTime = CFRunLoopTimerGetNextFireDate((__bridge CFRunLoopTimerRef)self.displayLink);
-#endif
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     [_target performSelector:_selector withObject:self];
 #pragma clang diagnostic pop
+#if SD_WATCH
+    self.nextFireTime = CFRunLoopTimerGetNextFireDate((__bridge CFRunLoopTimerRef)self.displayLink);
+#endif
 }
 
 @end
@@ -244,7 +240,9 @@ static CFTimeInterval CACurrentMediaTime(void)
 #if SD_MAC
 static CVReturn DisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow, const CVTimeStamp *inOutputTime, CVOptionFlags flagsIn, CVOptionFlags *flagsOut, void *displayLinkContext) {
     // CVDisplayLink callback is not on main queue
+    // Actually `SDWeakProxy` but not `SDDisplayLink`
     SDDisplayLink *object = (__bridge SDDisplayLink *)displayLinkContext;
+    if (!object) return kCVReturnSuccess;
     // CVDisplayLink does not use runloop, but we can provide similar behavior for modes
     // May use `default` runloop to avoid extra callback when in `eventTracking` (mouse drag, scroll) or `modalPanel` (modal panel)
     NSString *runloopMode = object.runloopMode;

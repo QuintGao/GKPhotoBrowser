@@ -220,8 +220,9 @@ static Class progressClass = nil;
     if (self.handler.captureImage) {
         self.view = [[UIImageView alloc] initWithImage:self.handler.captureImage];
     }else {
-        self.view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
+        self.view = [[UIView alloc] initWithFrame:GKPhotoBrowserConfigure.getKeyWindow.bounds];
     }
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view.userInteractionEnabled = YES;
 }
 
@@ -257,14 +258,6 @@ static Class progressClass = nil;
     });
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    
-    if ([self.imageProtocol respondsToSelector:@selector(clearMemory)]) {
-        [self.imageProtocol clearMemory];
-    }
-}
-
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
@@ -278,6 +271,23 @@ static Class progressClass = nil;
         if ([self.imageProtocol respondsToSelector:@selector(clearMemory)]) {
             [self.imageProtocol clearMemory];
         }
+    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    
+    if ([self.imageProtocol respondsToSelector:@selector(clearMemory)]) {
+        [self.imageProtocol clearMemory];
+    }
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    if ([GKPhotoBrowserConfigure isMac]) {
+        self.contentView.frame = self.view.bounds;
+        [self layoutSubviews];
     }
 }
 
@@ -595,10 +605,8 @@ static Class progressClass = nil;
             photoView.zoomEnded = ^(GKPhotoView * _Nonnull curPhotoView, CGFloat scale) {
                 if (curPhotoView.tag == weakPhotoView.tag) {
                     if (scale == 1.0f) {
-                        weakPhotoView.scrollView.clipsToBounds = YES;
                         [weakSelf.gestureHandler addPanGesture:NO];
                     }else {
-                        weakPhotoView.scrollView.clipsToBounds = YES;
                         [weakSelf.gestureHandler removePanGesture];
                     }
                 }
@@ -688,6 +696,9 @@ static Class progressClass = nil;
         if (photoView != self.curPhotoView) {
             [photoView didScrollDisappear];
         }
+        if (photoView == self.curPhotoView && photoView.scrollView.zoomScale > 1) {
+            photoView.scrollView.clipsToBounds = NO;
+        }
     }];
     
     if (self.isResumePhotoZoom) {
@@ -754,6 +765,11 @@ static Class progressClass = nil;
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.curPhotoView willScrollDisappear];
+    [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (photoView != self.curPhotoView) {
+            photoView.scrollView.clipsToBounds = YES;
+        }
+    }];
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewWillBeginDragging:)]) {
         [self.delegate photoBrowser:self scrollViewWillBeginDragging:scrollView];
     }
@@ -933,8 +949,6 @@ static Class progressClass = nil;
     
     self.photoScrollView.frame  = frame;
     self.photoScrollView.center = CGPointMake(pointX, photoScrollH * 0.5);
-    self.photoScrollView.contentOffset = CGPointMake(self.currentIndex * photoScrollW, 0);
-    self.photoScrollView.contentSize = CGSizeMake(photoScrollW * self.photos.count, 0);
     
     // 调整所有显示的photoView的frame
     CGFloat w = photoScrollW - self.photoViewPadding * 2;
@@ -948,6 +962,17 @@ static Class progressClass = nil;
         [photoView resetFrame];
     }];
     
+    self.photoScrollView.contentOffset = CGPointMake(self.currentIndex * photoScrollW, 0);
+    self.photoScrollView.contentSize = CGSizeMake(photoScrollW * self.photos.count, 0);
+    
+    [self layoutCoverViews];
+    
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {
+        [self.delegate photoBrowser:self willLayoutSubViews:self.currentIndex];
+    }
+}
+
+- (void)layoutCoverViews {
     CGFloat width = self.contentView.bounds.size.width;
     CGFloat height = self.contentView.bounds.size.height;
     
@@ -962,6 +987,9 @@ static Class progressClass = nil;
     }else {
         centerY = height - 20 - (self.isAdaptiveSafeArea ? kSafeBottomSpace : 0);
     }
+    
+    CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
+    self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
     self.pageControl.center = CGPointMake(centerX, centerY);
     self.saveBtn.center = CGPointMake(width - 60, centerY);
     self.progressView.center = CGPointMake(centerX, centerY);
@@ -971,10 +999,6 @@ static Class progressClass = nil;
     
     if (self.layoutBlock) {
         self.layoutBlock(self, self.contentView.bounds);
-    }
-    
-    if ([self.delegate respondsToSelector:@selector(photoBrowser:willLayoutSubViews:)]) {
-        [self.delegate photoBrowser:self willLayoutSubViews:self.currentIndex];
     }
 }
 
