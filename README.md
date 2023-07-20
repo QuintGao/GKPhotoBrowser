@@ -144,6 +144,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.6.3 - 2023.07.20 修复视频切换后不能自动播放问题
  * 2.6.2 - 2023.07.07 1、适配 Mac 2、修复放大后有黑边的问题 #177
  * 2.6.1 - 2023.07.05 自定义coverView时不隐藏pageControl
  * 2.6.0 - 2023.06.05

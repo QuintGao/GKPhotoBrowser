@@ -24,6 +24,8 @@
 @property (nonatomic, strong) UILabel       *failureLabel;
 @property (nonatomic, strong) UIImageView   *failureImgView;
 
+@property (nonatomic, assign) BOOL isLoading;
+
 @end
 
 @implementation GKLoadingView
@@ -330,6 +332,8 @@
 }
 
 - (void)startLoading {
+    if (self.isLoading) return;
+    self.isLoading = YES;
     [self.failureLabel removeFromSuperview];
     self.failureLabel = nil;
     
@@ -385,10 +389,12 @@
 }
 
 - (void)stopLoading {
+    self.isLoading = NO;
     [self hideLoadingView];
 }
 
 - (void)showFailure {
+    self.isLoading = NO;
     [self.animatedLayer removeFromSuperlayer];
     self.animatedLayer = nil;
     
@@ -417,6 +423,7 @@
 }
 
 - (void)hideFailure {
+    self.isLoading = NO;
     [self.animatedLayer removeFromSuperlayer];
     self.animatedLayer = nil;
     

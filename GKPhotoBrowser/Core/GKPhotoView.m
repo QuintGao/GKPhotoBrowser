@@ -202,6 +202,7 @@
             self.photo.isVideoClicked = NO;
         }
         [self.player gk_stop];
+        self.player.assetURL = nil;
         self.playBtn.hidden = NO;
         return;
     }
@@ -238,6 +239,7 @@
     if (!self.photo.isVideo) return;
     if (!self.player) return;
     [self.player gk_stop];
+    self.player.assetURL = nil;
 }
 
 - (void)updateFrame {

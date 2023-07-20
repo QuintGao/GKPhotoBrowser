@@ -108,7 +108,6 @@
         [self removePlayerObserver];
         self.currentTime = 0;
         self.player = nil;
-        self.assetURL = nil;
         [self.videoPlayView removeFromSuperview];
         self.videoPlayView = nil;
         self.seekTime = 0;
@@ -158,6 +157,8 @@
     self.isAddObserver = YES;
     // 播放状态
     [self.player.currentItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+    // 缓存
+    [self.player.currentItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
     // 缓冲状态
     [self.player.currentItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
     // 视频尺寸
@@ -177,6 +178,7 @@
         self.timeObserver = nil;
     }
     [self.player.currentItem removeObserver:self forKeyPath:@"status"];
+    [self.player.currentItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
     [self.player.currentItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
     [self.player.currentItem removeObserver:self forKeyPath:@"presentationSize"];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.player.currentItem];
@@ -213,13 +215,16 @@
                 default:
                     break;
             }
+        }else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
+            if (self.status == GKVideoPlayerStatusPaused || self.status == GKVideoPlayerStatusEnded) return;
+            if (self.player.currentItem.isPlaybackBufferEmpty) {
+                self.status = GKVideoPlayerStatusBuffering;
+            }
         }else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
             if (self.status == GKVideoPlayerStatusPaused || self.status == GKVideoPlayerStatusEnded) return;
             if (self.player.currentItem.playbackLikelyToKeepUp) {
                 self.status = GKVideoPlayerStatusPlaying;
                 if (self.isPlaying) [self.player play];
-            }else {
-                self.status = GKVideoPlayerStatusBuffering;
             }
         }else if ([keyPath isEqualToString:@"presentationSize"]) {
             CGSize size = self.player.currentItem.presentationSize;
