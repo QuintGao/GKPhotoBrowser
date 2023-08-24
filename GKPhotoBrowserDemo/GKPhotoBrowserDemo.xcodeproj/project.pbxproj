@@ -57,23 +57,6 @@
 		90EEF67CE4A0A3BDF6976160 /* Pods_GKPhotoBrowserDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		795FA5A41FF333420057BDB0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 795FA5831FF333420057BDB0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 795FA58A1FF333420057BDB0;
-			remoteInfo = GKPhotoBrowserDemo;
-		};
-		795FA5AF1FF333430057BDB0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 795FA5831FF333420057BDB0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 795FA58A1FF333420057BDB0;
-			remoteInfo = GKPhotoBrowserDemo;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		607090EA21082DC90041ED2D /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -130,8 +113,6 @@
 		795FA59A1FF333420057BDB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		795FA59C1FF333420057BDB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		795FA59D1FF333420057BDB0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		795FA5A31FF333420057BDB0 /* GKPhotoBrowserDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GKPhotoBrowserDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		795FA5AE1FF333430057BDB0 /* GKPhotoBrowserDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GKPhotoBrowserDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		795FA5DC1FF3381F0057BDB0 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		795FA5DD1FF3381F0057BDB0 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		795FA5DF1FF3381F0057BDB0 /* GKMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKMainViewController.m; sourceTree = "<group>"; };
@@ -186,20 +167,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				90EEF67CE4A0A3BDF6976160 /* Pods_GKPhotoBrowserDemo.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		795FA5A01FF333420057BDB0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		795FA5AB1FF333430057BDB0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,8 +241,6 @@
 			isa = PBXGroup;
 			children = (
 				795FA58B1FF333420057BDB0 /* GKPhotoBrowserDemo.app */,
-				795FA5A31FF333420057BDB0 /* GKPhotoBrowserDemoTests.xctest */,
-				795FA5AE1FF333430057BDB0 /* GKPhotoBrowserDemoUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -453,42 +418,6 @@
 			productReference = 795FA58B1FF333420057BDB0 /* GKPhotoBrowserDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		795FA5A21FF333420057BDB0 /* GKPhotoBrowserDemoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 795FA5BA1FF333430057BDB0 /* Build configuration list for PBXNativeTarget "GKPhotoBrowserDemoTests" */;
-			buildPhases = (
-				795FA59F1FF333420057BDB0 /* Sources */,
-				795FA5A01FF333420057BDB0 /* Frameworks */,
-				795FA5A11FF333420057BDB0 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				795FA5A51FF333420057BDB0 /* PBXTargetDependency */,
-			);
-			name = GKPhotoBrowserDemoTests;
-			productName = GKPhotoBrowserDemoTests;
-			productReference = 795FA5A31FF333420057BDB0 /* GKPhotoBrowserDemoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		795FA5AD1FF333430057BDB0 /* GKPhotoBrowserDemoUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 795FA5BD1FF333430057BDB0 /* Build configuration list for PBXNativeTarget "GKPhotoBrowserDemoUITests" */;
-			buildPhases = (
-				795FA5AA1FF333430057BDB0 /* Sources */,
-				795FA5AB1FF333430057BDB0 /* Frameworks */,
-				795FA5AC1FF333430057BDB0 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				795FA5B01FF333430057BDB0 /* PBXTargetDependency */,
-			);
-			name = GKPhotoBrowserDemoUITests;
-			productName = GKPhotoBrowserDemoUITests;
-			productReference = 795FA5AE1FF333430057BDB0 /* GKPhotoBrowserDemoUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -501,16 +430,6 @@
 					795FA58A1FF333420057BDB0 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
-					};
-					795FA5A21FF333420057BDB0 = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 795FA58A1FF333420057BDB0;
-					};
-					795FA5AD1FF333430057BDB0 = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 795FA58A1FF333420057BDB0;
 					};
 				};
 			};
@@ -528,8 +447,6 @@
 			projectRoot = "";
 			targets = (
 				795FA58A1FF333420057BDB0 /* GKPhotoBrowserDemo */,
-				795FA5A21FF333420057BDB0 /* GKPhotoBrowserDemoTests */,
-				795FA5AD1FF333430057BDB0 /* GKPhotoBrowserDemoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -550,20 +467,6 @@
 				60415CB72121715000D1D54B /* test.txt in Resources */,
 				7925A4EE2A1F3A1400972F47 /* chat.txt in Resources */,
 				795FA5981FF333420057BDB0 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		795FA5A11FF333420057BDB0 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		795FA5AC1FF333430057BDB0 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,34 +583,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		795FA59F1FF333420057BDB0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		795FA5AA1FF333430057BDB0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		795FA5A51FF333420057BDB0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 795FA58A1FF333420057BDB0 /* GKPhotoBrowserDemo */;
-			targetProxy = 795FA5A41FF333420057BDB0 /* PBXContainerItemProxy */;
-		};
-		795FA5B01FF333430057BDB0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 795FA58A1FF333420057BDB0 /* GKPhotoBrowserDemo */;
-			targetProxy = 795FA5AF1FF333430057BDB0 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		795FA5991FF333420057BDB0 /* LaunchScreen.storyboard */ = {
@@ -875,66 +751,6 @@
 			};
 			name = Release;
 		};
-		795FA5BB1FF333430057BDB0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 85SKD6C7ZZ;
-				EXCLUDED_ARCHS = "";
-				INFOPLIST_FILE = GKPhotoBrowserDemoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserDemoTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GKPhotoBrowserDemo.app/GKPhotoBrowserDemo";
-			};
-			name = Debug;
-		};
-		795FA5BC1FF333430057BDB0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 85SKD6C7ZZ;
-				EXCLUDED_ARCHS = "";
-				INFOPLIST_FILE = GKPhotoBrowserDemoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserDemoTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GKPhotoBrowserDemo.app/GKPhotoBrowserDemo";
-			};
-			name = Release;
-		};
-		795FA5BE1FF333430057BDB0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 85SKD6C7ZZ;
-				INFOPLIST_FILE = GKPhotoBrowserDemoUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserDemoUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = GKPhotoBrowserDemo;
-			};
-			name = Debug;
-		};
-		795FA5BF1FF333430057BDB0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 85SKD6C7ZZ;
-				INFOPLIST_FILE = GKPhotoBrowserDemoUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.aiyinsitanfm.GKPhotoBrowserDemoUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = GKPhotoBrowserDemo;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -952,24 +768,6 @@
 			buildConfigurations = (
 				795FA5B81FF333430057BDB0 /* Debug */,
 				795FA5B91FF333430057BDB0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		795FA5BA1FF333430057BDB0 /* Build configuration list for PBXNativeTarget "GKPhotoBrowserDemoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				795FA5BB1FF333430057BDB0 /* Debug */,
-				795FA5BC1FF333430057BDB0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		795FA5BD1FF333430057BDB0 /* Build configuration list for PBXNativeTarget "GKPhotoBrowserDemoUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				795FA5BE1FF333430057BDB0 /* Debug */,
-				795FA5BF1FF333430057BDB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
