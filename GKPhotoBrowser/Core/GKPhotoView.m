@@ -573,7 +573,11 @@
         self.scrollView.contentOffset = self.photo.zoomOffset;
         [self setScrollMaxZoomScale:self.realZoomScale];
     }else {
-        self.scrollView.contentOffset = self.photo.offset;
+        if (self.scrollView.contentSize.height < self.scrollView.frame.size.height) {
+            self.scrollView.contentOffset = CGPointZero;
+        }else {
+            self.scrollView.contentOffset = self.photo.offset;
+        }
     }
     
     self.loadingView.frame = self.bounds;

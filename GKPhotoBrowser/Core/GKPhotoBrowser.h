@@ -29,11 +29,17 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // 单击事件
 - (void)photoBrowser:(GKPhotoBrowser *)browser singleTapWithIndex:(NSInteger)index;
 
+// 双击事件
+- (void)photoBrowser:(GKPhotoBrowser *)browser doubleTapWithIndex:(NSInteger)index;
+
 // 长按事件
 - (void)photoBrowser:(GKPhotoBrowser *)browser longPressWithIndex:(NSInteger)index;
 
 // 旋转事件
 - (void)photoBrowser:(GKPhotoBrowser *)browser onDeciceChangedWithIndex:(NSInteger)index isLandscape:(BOOL)isLandscape;
+
+// 缩放事件
+- (void)photoBrowser:(GKPhotoBrowser *)browser zoomEndedWithIndex:(NSInteger)index zoomScale:(CGFloat)scale;
 
 // photoView复用回调
 - (void)photoBrowser:(GKPhotoBrowser *)browser reuseAtIndex:(NSInteger)index photoView:(GKPhotoView *)photoView;
@@ -122,6 +128,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 
 /// 是否禁用双击事件，默认NO
 @property (nonatomic, assign) BOOL isDoubleTapDisabled;
+
+/// 是否禁用双击放大缩小
+@property (nonatomic, assign) BOOL isDoubleTapZoomDisabled;
 
 /// 是否显示状态栏，默认NO：不显示状态栏
 @property (nonatomic, assign) BOOL isStatusBarShow;

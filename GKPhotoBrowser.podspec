@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary      = "iOS可高度自定义的图片浏览器，支持图片浏览、视频播放等多种功能"
   s.homepage     = "https://github.com/QuintGao/GKPhotoBrowser"
   s.license      = "MIT"
-  s.authors      = { "高坤" => "1094887059@qq.com" }
+  s.authors      = { "QuintGao" => "1094887059@qq.com" }
   s.social_media_url   = "https://github.com/QuintGao"
   s.ios.deployment_target = "9.0"
   s.source       = { :git => "https://github.com/QuintGao/GKPhotoBrowser.git", :tag => s.version.to_s }

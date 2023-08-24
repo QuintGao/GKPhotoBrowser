@@ -172,6 +172,7 @@
 //        [browser setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
         
 //        browser.isFollowSystemRotation = YES;
+        
         browser.delegate = self;
         [browser showFromVC:self];
         self.browser = browser;

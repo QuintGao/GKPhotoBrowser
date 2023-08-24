@@ -609,6 +609,9 @@ static Class progressClass = nil;
                     }else {
                         [weakSelf.gestureHandler removePanGesture];
                     }
+                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:zoomEndedWithIndex:zoomScale:)]) {
+                        [weakSelf.delegate photoBrowser:weakSelf zoomEndedWithIndex:weakSelf.currentIndex zoomScale:scale];
+                    }
                 }
             };
             

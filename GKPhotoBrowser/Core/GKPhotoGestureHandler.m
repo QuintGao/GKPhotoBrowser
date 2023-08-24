@@ -149,12 +149,18 @@ int const static kDirectionPanThreshold = 5;
         [self.browser.delegate photoBrowser:self.browser singleTapWithIndex:self.browser.currentIndex];
     }
     
-    // 禁言默认单击事件
+    // 禁止默认单击事件
     if (self.browser.isSingleTapDisabled) return;
     [self browserDismiss];
 }
 
 - (void)handleDoubleTap:(UITapGestureRecognizer *)tapGesture {
+    if ([self.browser.delegate respondsToSelector:@selector(photoBrowser:doubleTapWithIndex:)]) {
+        [self.browser.delegate photoBrowser:self.browser doubleTapWithIndex:self.browser.currentIndex];
+    }
+    // 禁止双击放大
+    if (self.browser.isDoubleTapZoomDisabled) return;
+
     GKPhotoView *photoView = self.browser.curPhotoView;
     if (!photoView) return;
     GKPhoto *photo = photoView.photo;
