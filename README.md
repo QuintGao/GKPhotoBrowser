@@ -144,6 +144,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.6.4 - 2033.08.24 1、修复横屏滑动后切换到竖屏显示异常问题 2、新增双击和放大缩小代理
  * 2.6.3 - 2023.07.20 修复视频切换后不能自动播放问题
  * 2.6.2 - 2023.07.07 1、适配 Mac 2、修复放大后有黑边的问题 #177
  * 2.6.1 - 2023.07.05 自定义coverView时不隐藏pageControl
