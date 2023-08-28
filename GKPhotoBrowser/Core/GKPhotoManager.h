@@ -70,9 +70,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** 视频手动点击播放 */
 @property (nonatomic, assign) BOOL               isVideoClicked;
 
-- (void)getImage:(nullable void(^)(NSData *_Nullable data, UIImage *_Nullable image))completion;
+- (void)getImage:(nullable void(^)(NSData *_Nullable data, UIImage *_Nullable image, NSError *_Nullable error))completion;
 
-- (void)getVideo:(nullable void(^)(NSURL *_Nullable url))completion;
+- (void)getVideo:(nullable void(^)(NSURL *_Nullable url, NSError *_Nullable error))completion;
 
 @end
 
@@ -81,18 +81,18 @@ NS_ASSUME_NONNULL_BEGIN
 /// 加载相册图片资源
 /// @param imageAsset PHAsset对象
 /// @param completion 完成回调
-+ (PHImageRequestID)loadImageDataWithImageAsset:(PHAsset *)imageAsset completion:(nonnull void(^)(NSData *_Nullable data))completion;
++ (PHImageRequestID)loadImageDataWithImageAsset:(PHAsset *)imageAsset completion:(nonnull void(^)(NSData *_Nullable data, NSError *_Nullable error))completion;
 
 /// 根据宽度加载相册资源图片
 /// @param asset PHAsset对象
 /// @param photoWidth 宽度
 /// @param completion 完成回调
-+ (PHImageRequestID)loadImageWithAsset:(PHAsset *)asset photoWidth:(CGFloat)photoWidth completion:(nonnull void(^)(UIImage *_Nullable image))completion;
++ (PHImageRequestID)loadImageWithAsset:(PHAsset *)asset photoWidth:(CGFloat)photoWidth completion:(nonnull void(^)(UIImage *_Nullable image, NSError *_Nullable error))completion;
 
 /// 加载相册视频资源
 /// @param asset PHAsset对象
 /// @param completion 完成回调
-+ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(nonnull void(^)(NSURL *url))completion;
++ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(nonnull void(^)(NSURL *url, NSError *_Nullable error))completion;
 
 @end
 

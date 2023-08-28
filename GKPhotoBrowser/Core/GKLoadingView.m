@@ -78,6 +78,14 @@
         
         textF.origin.y = imgF.origin.y + imgF.size.height + 10;
         self.failureLabel.frame = textF;
+        
+        CGPoint center = self.failureImgView.center;
+        center.x = self.bounds.size.width * 0.5;
+        self.failureImgView.center = center;
+        
+        center = self.failureLabel.center;
+        center.x = self.bounds.size.width * 0.5;
+        self.failureLabel.center = center;
     }
     
     [self layoutAnimatedLayer];

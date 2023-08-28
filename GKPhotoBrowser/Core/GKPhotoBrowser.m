@@ -29,7 +29,7 @@ static Class progressClass = nil;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-@interface GKPhotoBrowser()<UIScrollViewDelegate, GKPhotoGestureDelegate, GKPhotoRotationDelegate>
+@interface GKPhotoBrowser()<UIScrollViewDelegate, GKPhotoViewDelegate, GKPhotoGestureDelegate, GKPhotoRotationDelegate>
 
 @property (nonatomic, strong) UIView         *contentView;
 
@@ -585,6 +585,7 @@ static Class progressClass = nil;
         GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
             photoView                 = [self dequeueReusablePhotoView];
+            photoView.delegate        = self;
             photoView.player          = self.player;
             photoView.loadStyle       = self.loadStyle;
             photoView.originLoadStyle = self.originLoadStyle;
@@ -599,37 +600,6 @@ static Class progressClass = nil;
             photoView.videoPlayImage  = self.videoPlayImage;
             photoView.isVideoPausedWhenDragged = self.isVideoPausedWhenDragged;
             photoView.isClearMemoryWhenViewReuse = self.isClearMemoryWhenViewReuse;
-            
-            __typeof(self) __weak weakSelf = self;
-            __typeof(photoView) __weak weakPhotoView = photoView;
-            photoView.zoomEnded = ^(GKPhotoView * _Nonnull curPhotoView, CGFloat scale) {
-                if (curPhotoView.tag == weakPhotoView.tag) {
-                    if (scale == 1.0f) {
-                        [weakSelf.gestureHandler addPanGesture:NO];
-                    }else {
-                        [weakSelf.gestureHandler removePanGesture];
-                    }
-                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:zoomEndedWithIndex:zoomScale:)]) {
-                        [weakSelf.delegate photoBrowser:weakSelf zoomEndedWithIndex:weakSelf.currentIndex zoomScale:scale];
-                    }
-                }
-            };
-            
-            photoView.loadFailed = ^(GKPhotoView * _Nonnull curPhotoView) {
-                if (curPhotoView.tag == weakPhotoView.tag) {
-                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadFailedAtIndex:)]) {
-                        [weakSelf.delegate photoBrowser:weakSelf loadFailedAtIndex:weakSelf.currentIndex];
-                    }
-                }
-            };
-            
-            photoView.loadProgressBlock = ^(GKPhotoView * _Nonnull curPhotoView, float progress, BOOL isOriginImage) {
-                if (curPhotoView.tag == weakPhotoView.tag) {
-                    if ([weakSelf.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
-                        [weakSelf.delegate photoBrowser:weakSelf loadImageAtIndex:weakSelf.currentIndex progress:progress isOriginImage:isOriginImage];
-                    }
-                }
-            };
             
             CGRect frame            = self.photoScrollView.bounds;
             
@@ -721,6 +691,48 @@ static Class progressClass = nil;
 }
 
 #pragma mark - 代理
+#pragma mark - GKPhotoViewDelegate
+- (void)photoView:(GKPhotoView *)photoView zoomEndedWithScale:(CGFloat)scale {
+    GKPhotoView *curPhotoView = self.curPhotoView;
+    if (curPhotoView.tag == photoView.tag) {
+        if (scale == 1.0f) {
+            [self.gestureHandler addPanGesture:NO];
+        }else {
+            [self.gestureHandler removePanGesture];
+        }
+        if ([self.delegate respondsToSelector:@selector(photoBrowser:zoomEndedWithIndex:zoomScale:)]) {
+            [self.delegate photoBrowser:self zoomEndedWithIndex:self.currentIndex zoomScale:scale];
+        }
+    }
+}
+
+- (void)photoView:(GKPhotoView *)photoView loadFailedWithError:(NSError *)error {
+    NSInteger index = photoView.tag;
+    
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:loadFailedAtIndex:error:)]) {
+        [self.delegate photoBrowser:self loadFailedAtIndex:index error:error];
+    }
+    NSString *failText = self.failureText ?: @"图片加载失败";
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:failedTextAtIndex:)]) {
+        failText = [self.delegate photoBrowser:self failedTextAtIndex:index];
+    }
+    UIImage *failImage = self.failureImage ?: GKPhotoBrowserImage(@"loading_error");
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:failedImageAtIndex:)]) {
+        failImage = [self.delegate photoBrowser:self failedImageAtIndex:index];
+    }
+    photoView.loadingView.failText = failText;
+    photoView.loadingView.failImage = failImage;
+}
+
+- (void)photoView:(GKPhotoView *)photoView loadProgress:(float)progress isOriginImage:(BOOL)isOriginImage {
+    GKPhotoView *curPhotoView = self.curPhotoView;
+    if (curPhotoView.tag == photoView.tag) {
+        if ([self.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
+            [self.delegate photoBrowser:self loadImageAtIndex:self.currentIndex progress:progress isOriginImage:isOriginImage];
+        }
+    }
+}
+
 #pragma mark - GKPhotoGestureDelegate
 - (void)browserWillDisappear {
     [self.curPhotoView willDismissDisappear];

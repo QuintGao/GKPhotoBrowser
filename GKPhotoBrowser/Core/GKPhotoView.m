@@ -160,17 +160,21 @@
     // 如果没有设置，则设置播放内容
     if (!self.player.assetURL || self.player.assetURL != self.photo.videoUrl) {
         __weak __typeof(self) weakSelf = self;
-        [self.photo getVideo:^(NSURL * _Nonnull url) {
+        [self.photo getVideo:^(NSURL * _Nullable url, NSError * _Nullable error) {
             __strong __typeof(weakSelf) self = weakSelf;
             if (!self) return;
             if (!self.player) return;
-            self.player.coverImage = self.imageView.image;
-            self.player.assetURL = url;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.player gk_prepareToPlay];
-                [self updateFrame];
-                [self.player gk_play];
-            });
+            if (error) {
+                [self loadFailedWithError:error];
+            }else {
+                self.player.coverImage = self.imageView.image;
+                self.player.assetURL = url;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.player gk_prepareToPlay];
+                    [self updateFrame];
+                    [self.player gk_play];
+                });
+            }
         }];
     }else {
         [self.player gk_play];
@@ -333,7 +337,7 @@
             }
             
             __weak __typeof(self) weakSelf = self;
-            [photo getImage:^(NSData * _Nonnull data, UIImage * _Nonnull image) {
+            [photo getImage:^(NSData * _Nullable data, UIImage * _Nullable image, NSError * _Nullable error) {
                 __strong __typeof(weakSelf) self = weakSelf;
                 UIImage *newImage = nil;
                 if (data) {
@@ -343,10 +347,18 @@
                     if (!newImage) {
                         newImage = [UIImage imageWithData:data];
                     }
-                }else {
+                }else if (image) {
                     newImage = image;
                 }
-                [self setupImageView:image];
+                if (newImage) {
+                    [self setupImageView:newImage];
+                }else {
+                    [self loadFailedWithError:error];
+                    if (self.failStyle != GKPhotoBrowserFailStyleCustom) {
+                        [self addSubview:self.loadingView];
+                        [self.loadingView showFailure];
+                    }
+                }
             }];
             return;
         }
@@ -389,9 +401,9 @@
                 // 图片加载中，回调进度
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (isOrigin && self.originLoadStyle == GKLoadingStyleCustom) {
-                        !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, YES);
+                        [self loadProgress:progress isOriginImage:YES];
                     }else if (!isOrigin && self.loadStyle == GKLoadingStyleCustom) {
-                        !self.loadProgressBlock ? : self.loadProgressBlock(self, progress, NO);
+                        [self loadProgress:progress isOriginImage:NO];
                     }else if (self.loadStyle == GKLoadingStyleDeterminate || self.originLoadStyle == GKLoadingStyleDeterminate) {
                         self.loadingView.progress = progress;
                     }
@@ -406,9 +418,8 @@
                         [self.loadingView stopLoading];
                         
                         if ([photo.url.absoluteString isEqualToString:url.absoluteString]) {
-                            if (self.failStyle == GKPhotoBrowserFailStyleCustom) {
-                                !self.loadFailed ? : self.loadFailed(self);
-                            }else {
+                            [self loadFailedWithError:error];
+                            if (self.failStyle != GKPhotoBrowserFailStyleCustom) {
                                 [self addSubview:self.loadingView];
                                 [self.loadingView showFailure];
                             }
@@ -422,9 +433,9 @@
                         
                         // 图片加载完成，回调进度
                         if (isOrigin && self.originLoadStyle == GKLoadingStyleCustom) {
-                            !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f, YES);
+                            [self loadProgress:1.0 isOriginImage:YES];
                         }else if (!isOrigin && self.loadStyle == GKLoadingStyleCustom) {
-                            !self.loadProgressBlock ? : self.loadProgressBlock(self, 1.0f, NO);
+                            [self loadProgress:1.0 isOriginImage:NO];
                         }
                         
                         self.scrollView.scrollEnabled = YES;
@@ -620,7 +631,7 @@
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
-    !self.zoomEnded ? : self.zoomEnded(self, scrollView.zoomScale);
+    [self zoomEndedWithScale:scrollView.zoomScale];
     [self setScrollMaxZoomScale:self.realZoomScale];
 }
 
@@ -630,6 +641,25 @@
 
 - (void)dealloc {
     [self cancelCurrentImageLoad];
+}
+
+#pragma mark - Private
+- (void)zoomEndedWithScale:(CGFloat)scale {
+    if ([self.delegate respondsToSelector:@selector(photoView:zoomEndedWithScale:)]) {
+        [self.delegate photoView:self zoomEndedWithScale:scale];
+    }
+}
+
+- (void)loadFailedWithError:(NSError *)error {
+    if ([self.delegate respondsToSelector:@selector(photoView:loadFailedWithError:)]) {
+        [self.delegate photoView:self loadFailedWithError:error];
+    }
+}
+
+- (void)loadProgress:(float)progress isOriginImage:(BOOL)isOriginImage {
+    if ([self.delegate respondsToSelector:@selector(photoView:loadProgress:isOriginImage:)]) {
+        [self.delegate photoView:self loadProgress:progress isOriginImage:isOriginImage];
+    }
 }
 
 #pragma mark - 懒加载

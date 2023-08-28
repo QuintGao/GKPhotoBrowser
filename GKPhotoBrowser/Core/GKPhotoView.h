@@ -20,6 +20,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class GKPhotoView;
 
+@protocol GKPhotoViewDelegate <NSObject>
+
+// 缩放结束
+- (void)photoView:(GKPhotoView *)photoView zoomEndedWithScale:(CGFloat)scale;
+
+// 加载失败
+- (void)photoView:(GKPhotoView *)photoView loadFailedWithError:(NSError *)error;
+
+// 加载进度，isOriginImage：是否是原图
+- (void)photoView:(GKPhotoView *)photoView loadProgress:(float)progress isOriginImage:(BOOL)isOriginImage;
+
+@end
+
 @interface GKPhotoView : UIView<UIScrollViewDelegate>
 
 @property (nonatomic, strong, readonly) GKScrollView *scrollView;
@@ -34,9 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<GKVideoPlayerProtocol> player;
 
-@property (nonatomic, copy) void(^zoomEnded)(GKPhotoView *photoView, CGFloat scale);
-@property (nonatomic, copy) void(^loadFailed)(GKPhotoView *photoView);
-@property (nonatomic, copy) void(^loadProgressBlock)(GKPhotoView *photoView, float progress, BOOL isOriginImage);
+@property (nonatomic, weak) id<GKPhotoViewDelegate> delegate;
 
 /** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
 @property (nonatomic, assign) BOOL isFullWidthForLandScape;

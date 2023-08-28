@@ -64,7 +64,13 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 - (void)photoBrowser:(GKPhotoBrowser *)browser loadImageAtIndex:(NSInteger)index progress:(float)progress isOriginImage:(BOOL)isOriginImage;
 
 // browser加载失败自定义弹窗
-- (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index;
+- (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index error:(NSError *)error;
+
+// 自定义单个图片的加载失败文字，优先级高于failureText
+- (NSString *)photoBrowser:(GKPhotoBrowser *)browser failedTextAtIndex:(NSInteger)index;
+
+// 自定义单个图片的加载失败图片，优先级高于failureImage
+- (NSString *)photoBrowser:(GKPhotoBrowser *)browser failedImageAtIndex:(NSInteger)index;
 
 // 视频播放状态回调
 - (void)photoBrowser:(GKPhotoBrowser *)browser videoStateChangeWithPhotoView:(GKPhotoView *)photoView status:(GKVideoPlayerStatus)status;

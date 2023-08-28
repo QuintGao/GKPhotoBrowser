@@ -28,9 +28,10 @@
     return self.videoUrl || self.videoAsset;
 }
 
-- (void)getImage:(void (^)(NSData * _Nullable, UIImage * _Nullable))completion {
+- (void)getImage:(void (^)(NSData * _Nullable, UIImage * _Nullable, NSError * _Nullable))completion {
     if (!self.imageAsset) {
-        completion(nil, nil);
+        NSError *error = [NSError errorWithDomain:@"" code:-1 userInfo:@{@"message": @"没有图片资源"}];
+        completion(nil, nil, error);
         return;
     }
     __weak __typeof(self) weakSelf = self;
@@ -43,31 +44,33 @@
     if (phAsset.mediaType == PHAssetMediaTypeImage) {
         // Gif
         if ([[phAsset valueForKey:@"filename"] hasSuffix:@"GIF"]) {
-            self.imageRequestID = [GKPhotoManager loadImageDataWithImageAsset:phAsset completion:^(NSData * _Nullable data) {
+            self.imageRequestID = [GKPhotoManager loadImageDataWithImageAsset:phAsset completion:^(NSData * _Nullable data, NSError * _Nullable error) {
                 __strong __typeof(weakSelf) self = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (data) {
-                        !completion ?: completion(data, nil);
-                        self.imageRequestID = 0;
-                    }
+                    self.imageRequestID = 0;
+                    !completion ?: completion(data, nil, error);
                 });
             }];
         }else {
             CGFloat width = [GKPhotoBrowserConfigure getKeyWindow].bounds.size.width;
-            self.imageRequestID = [GKPhotoManager loadImageWithAsset:phAsset photoWidth:width * 2 completion:^(UIImage * _Nullable image) {
+            self.imageRequestID = [GKPhotoManager loadImageWithAsset:phAsset photoWidth:width * 2 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
                 __strong __typeof(weakSelf) self = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    !completion ?: completion(nil, image);
                     self.imageRequestID = 0;
+                    !completion ?: completion(nil, image, error);
                 });
             }];
         }
+    }else {
+        NSError *error = [NSError errorWithDomain:@"" code:-1 userInfo:@{@"message": @"不是图片资源"}];
+        !completion ?: completion(nil, nil, error);
     }
 }
 
-- (void)getVideo:(void (^)(NSURL * _Nullable))completion {
+- (void)getVideo:(void (^)(NSURL * _Nullable, NSError * _Nullable))completion {
     if (!self.isVideo) {
-        completion(nil);
+        NSError *error = [NSError errorWithDomain:@"" code:-1 userInfo:@{@"message": @"不是视频内容"}];
+        completion(nil, error);
         return;
     }
     __weak __typeof(self) weakSelf = self;
@@ -77,16 +80,16 @@
     }
     PHAsset *asset = self.videoAsset;
     if (asset && asset.mediaType == PHAssetMediaTypeVideo) {
-        self.videoRequestID = [GKPhotoManager loadVideoWithAsset:asset completion:^(NSURL * _Nonnull url) {
+        self.videoRequestID = [GKPhotoManager loadVideoWithAsset:asset completion:^(NSURL * _Nonnull url, NSError * _Nullable error) {
             __strong __typeof(weakSelf) self = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.videoUrl = url;
                 self.videoRequestID = 0;
-                !completion ?: completion(url);
+                !completion ?: completion(url, error);
             });
         }];
     }else {
-        !completion ?: completion(self.videoUrl);
+        !completion ?: completion(self.videoUrl, nil);
     }
 }
 
@@ -94,22 +97,24 @@
 
 @implementation GKPhotoManager
 
-+ (PHImageRequestID)loadImageDataWithImageAsset:(PHAsset *)imageAsset completion:(void (^)(NSData * _Nullable))completion {
++ (PHImageRequestID)loadImageDataWithImageAsset:(PHAsset *)imageAsset completion:(nonnull void (^)(NSData * _Nullable, NSError * _Nullable))completion {
     PHImageRequestOptions *options = [PHImageRequestOptions new];
     options.networkAccessAllowed = YES;
     options.resizeMode = PHImageRequestOptionsResizeModeFast;
     PHImageRequestID requestID = [[PHImageManager defaultManager] requestImageDataForAsset:imageAsset options:options resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-        BOOL complete = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue];
+        NSError *error = [info objectForKey:PHImageErrorKey];
+        
+        BOOL complete = ![[info objectForKey:PHImageCancelledKey] boolValue] && !error && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue];
         if (complete && imageData) {
-            completion(imageData);
+            completion(imageData, nil);
         } else {
-            completion(nil);
+            completion(nil, error);
         }
     }];
     return requestID;
 }
 
-+ (PHImageRequestID)loadImageWithAsset:(PHAsset *)asset photoWidth:(CGFloat)photoWidth completion:(void (^)(UIImage * _Nullable))completion {
++ (PHImageRequestID)loadImageWithAsset:(PHAsset *)asset photoWidth:(CGFloat)photoWidth completion:(nonnull void (^)(UIImage * _Nullable, NSError * _Nullable))completion {
     CGSize imageSize;
     CGFloat scale = 2.0;
     if (UIScreen.mainScreen.bounds.size.width > 700) {
@@ -131,9 +136,10 @@
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
     option.resizeMode = PHImageRequestOptionsResizeModeFast;
     PHImageRequestID requestID = [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:imageSize contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        NSError *error = [info objectForKey:PHImageErrorKey];
         BOOL cancelled = [[info objectForKey:PHImageCancelledKey] boolValue];
         if (!cancelled && result) {
-            !completion ? : completion(result);
+            !completion ? : completion(result, nil);
         }
         // Download image from iCloud / 从iCloud下载图片
         if ([info objectForKey:PHImageResultIsInCloudKey] && !result) {
@@ -142,20 +148,32 @@
             options.resizeMode = PHImageRequestOptionsResizeModeFast;
             [[PHImageManager defaultManager] requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
                 UIImage *resultImage = [UIImage imageWithData:imageData];
-                !completion ? : completion(resultImage);
+                NSError *error = info[PHImageErrorKey];
+                if (resultImage) {
+                    !completion ?: completion(resultImage, nil);
+                }else {
+                    !completion ?: completion(nil, error);
+                }
             }];
+        }else {
+            !completion ?: completion(nil, error);
         }
     }];
     return requestID;
 }
 
-+ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(void (^)(NSURL * _Nonnull))completion {
++ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(nonnull void (^)(NSURL * _Nonnull, NSError * _Nullable))completion {
     PHVideoRequestOptions *option = [[PHVideoRequestOptions alloc] init];
     option.networkAccessAllowed = YES;
     option.progressHandler = nil;
     PHImageRequestID requestID = [[PHImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem *playerItem, NSDictionary *info) {
         AVURLAsset *urlAsset = (AVURLAsset *)playerItem.asset;
-        !completion ?: completion(urlAsset.URL);
+        NSError *error = [info objectForKey:PHImageErrorKey];
+        if (error && !urlAsset) {
+            !completion ?: completion(nil, error);
+        }else {
+            !completion ?: completion(urlAsset.URL, nil);
+        }
     }];
     return requestID;
 }
