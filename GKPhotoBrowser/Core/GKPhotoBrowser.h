@@ -220,28 +220,26 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 如果设置为YES，则结束显示时会调用GKWebImageProtocol协议的clearMemory方法
 @property (nonatomic, assign) BOOL isClearMemoryWhenDisappear;
 
-/// 视图重用时是否清除对应url的换成，默认NO
-/// 如果设置为YES，则视图放入重用池时回调用GKWebImageProtocol协议的clearMemoryForURL:方法
+/// 视图重用时是否清除对应url的缓存，默认NO
+/// 如果设置为YES，则视图放入重用池时会调用GKWebImageProtocol协议的clearMemoryForURL:方法
 @property (nonatomic, assign) BOOL isClearMemoryWhenViewReuse;
 
 // 初始化方法
-
-/**
- 创建图片浏览器
-
- @param photos 包含GKPhoto对象的数组
- @param currentIndex 当前的页码
- @return 图片浏览器对象
- */
+/// 创建图片浏览器
+///   - photos: 包含GKPhoto对象的数组
+///   - currentIndex: 当前的索引
 + (instancetype)photoBrowserWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)currentIndex;
 
+/// 创建图片浏览器
+/// @param photos 包含GKPhoto对象的数组
+/// @param currentIndex 当前的索引
 - (instancetype)initWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)currentIndex;
 
 /// 自定义图片请求类
 /// @param protocol 需实现GKWebImageProtocol协议
 - (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol;
 
-/// 视频播放处理类，需要视频播放时必须添加
+/// 自定义视频播放处理类，需要视频播放时必须添加
 /// @param protocol 需实现GKVideoPlayerProtocol协议
 - (void)setupVideoPlayerProtocol:(id<GKVideoPlayerProtocol>)protocol;
 

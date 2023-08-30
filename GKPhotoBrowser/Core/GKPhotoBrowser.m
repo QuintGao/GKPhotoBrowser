@@ -305,7 +305,6 @@ static Class progressClass = nil;
     self.contentView.center = self.view.center;
     self.contentView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.contentView];
-    
     [self.contentView addSubview:self.photoScrollView];
     
     [self setupCoverViews];
@@ -327,7 +326,6 @@ static Class progressClass = nil;
     [self.gestureHandler addGestureRecognizer];
     
     if (self.isFollowSystemRotation) return;
-    
     if (!self.isScreenRotateDisabled) {
         [self.rotationHandler addDeviceOrientationObserver];
     }
@@ -567,7 +565,6 @@ static Class progressClass = nil;
             [photoView prepareForReuse];
             [photoView removeFromSuperview];
             GKPhoto *photo = nil;
-            
             [photoView setupPhoto:photo];
             
             [viewsForRemove addObject:photoView];
@@ -602,10 +599,10 @@ static Class progressClass = nil;
             photoView.isVideoPausedWhenDragged = self.isVideoPausedWhenDragged;
             photoView.isClearMemoryWhenViewReuse = self.isClearMemoryWhenViewReuse;
             
-            CGRect frame            = self.photoScrollView.bounds;
+            CGRect frame = self.photoScrollView.bounds;
             
-            CGFloat photoScrollW    = frame.size.width;
-            CGFloat photoScrollH    = frame.size.height;
+            CGFloat photoScrollW = frame.size.width;
+            CGFloat photoScrollH = frame.size.height;
             // 调整当前显示的photoView的frame
             CGFloat w = photoScrollW - self.photoViewPadding * 2;
             CGFloat h = photoScrollH;
@@ -679,7 +676,6 @@ static Class progressClass = nil;
         [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
             GKPhoto *photo = self.photos[idx];
             photo.isZooming = NO;
-            
             [photoView.scrollView setZoomScale:1.0 animated:NO];
         }];
     }
@@ -796,7 +792,6 @@ static Class progressClass = nil;
     if (self.handler.isRecover) return;
     
     [self updateReusableViews];
-    
     [self setupPhotoViews];
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewDidScroll:)]) {
@@ -893,10 +888,10 @@ static Class progressClass = nil;
 }
 
 - (GKPhoto *)currentPhoto {
-    if (self.currentIndex >= self.photos.count) {
-        return nil;
+    if (self.currentIndex >= 0 && self.currentIndex < self.photos.count) {
+        return self.photos[self.currentIndex];
     }
-    return self.photos[self.currentIndex];
+    return nil;
 }
 
 - (GKPhotoView *)currentPhotoView {

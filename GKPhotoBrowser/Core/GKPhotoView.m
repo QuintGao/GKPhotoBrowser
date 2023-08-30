@@ -614,7 +614,9 @@
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (self.photo.isZooming && scrollView.zoomScale != 1.0f && (scrollView.isDragging || scrollView.isDecelerating)) {
-        self.photo.zoomOffset = scrollView.contentOffset;
+        CGPoint offset = scrollView.contentOffset;
+        if (offset.x < 0) offset.x = 0; // 处理快速滑动时的bug
+        self.photo.zoomOffset = offset;
     }
     
     if (scrollView.zoomScale == 1.0f) {
@@ -631,7 +633,9 @@
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
-    [self zoomEndedWithScale:scrollView.zoomScale];
+    self.photo.zoomScale = scale;
+    self.photo.isZooming = scale != 1;
+    [self zoomEndedWithScale:scale];
     [self setScrollMaxZoomScale:self.realZoomScale];
 }
 

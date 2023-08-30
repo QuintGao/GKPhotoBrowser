@@ -199,6 +199,8 @@
     
     // 超出裁剪
     photoView.imageView.clipsToBounds = YES;
+    photoView.scrollView.clipsToBounds = NO;
+    photoView.clipsToBounds = NO;
     
     GKPhoto *photo = photoView.photo;
     
@@ -246,7 +248,6 @@
     // Fix bug：解决长图点击隐藏时可能出现的闪动bug
     UIViewContentMode mode = photo.sourceImageView ? photo.sourceImageView.contentMode : UIViewContentModeScaleAspectFill;
     photoView.imageView.contentMode = mode;
-
     [UIView animateWithDuration:self.browser.animDuration animations:^{
         photoView.player.videoPlayView.alpha = 0;
         photoView.imageView.frame = sourceRect;
