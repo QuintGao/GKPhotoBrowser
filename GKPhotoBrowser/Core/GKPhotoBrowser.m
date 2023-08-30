@@ -553,6 +553,7 @@ static Class progressClass = nil;
         [_reusablePhotoViews removeObject:photoView];
     }else {
         photoView = [[GKPhotoView alloc] initWithFrame:self.photoScrollView.bounds imageProtocol:_imageProtocol];
+        photoView.clipsToBounds = YES;
     }
     photoView.tag = -1;
     return photoView;
