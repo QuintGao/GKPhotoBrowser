@@ -315,7 +315,7 @@ int const static kDirectionPanThreshold = 5;
     GKPhotoView *photoView = self.browser.curPhotoView;
     if (!photoView) return;
     photoView.imageView.clipsToBounds = YES;
-    
+    photoView.clipsToBounds = NO;
     GKPhoto *photo = photoView.photo;
     if (self.browser.isHideSourceView) {
         photo.sourceImageView.alpha = 0;
