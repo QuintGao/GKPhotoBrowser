@@ -110,6 +110,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign, readonly) UIDeviceOrientation currentOrientation;
 /** 视频播放器 */
 @property (nonatomic, strong, readonly) id<GKVideoPlayerProtocol> player;
+/** 视频进度试图 */
+@property (nonatomic, weak, readonly, nullable) UIView *progressView;
 /** 显示方式 */
 @property (nonatomic, assign) GKPhotoBrowserShowStyle showStyle;
 /** 隐藏方式 */

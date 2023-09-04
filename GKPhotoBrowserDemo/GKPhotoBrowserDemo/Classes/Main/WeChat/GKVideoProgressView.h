@@ -7,17 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <GKPhotoBrowser/GKVideoPlayerProtocol.h>
+#import <GKPhotoBrowser/GKPhotoBrowser.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GKVideoProgressView : UIView
-
-@property (nonatomic, copy) void(^playPauseBlock)(void);
-
-- (void)updateCurrentTime:(NSTimeInterval)currentTime totalTime:(NSTimeInterval)totalTime;
-
-- (void)updateStatus:(GKVideoPlayerStatus)status;
+@interface GKVideoProgressView : UIView<GKProgressViewProtocol>
 
 @end
 

@@ -20,9 +20,19 @@
 
 @property (nonatomic, strong) UILabel *totalTimeLabel;
 
+@property (nonatomic, assign) NSTimeInterval totalTime;
+@property (nonatomic, assign) BOOL isSeeking;
+
 @end
 
 @implementation GKVideoProgressView
+
+@synthesize browser = _browser;
+@synthesize progressView = _progressView;
+
+- (UIView *)progressView {
+    return self;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -65,77 +75,13 @@
     self.sliderView.sliderBtn.layer.cornerRadius = 10;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-//    [self.playBtn sizeToFit];
-//    [self.currentTimeLabel sizeToFit];
-//    [self.totalTimeLabel sizeToFit];
-//
-//    CGFloat x = 0;
-//    CGFloat y = 0;
-//    CGFloat w = 0;
-//    CGFloat h = 0;
-//    CGFloat totalW = self.bounds.size.width;
-//    CGFloat totalH = self.bounds.size.height;
-//    CGFloat margin = 10;
-//
-//    w = self.playBtn.frame.size.width;
-//    h = self.playBtn.frame.size.height;
-//    x = margin;
-//    y = (totalH - h) / 2;
-//    self.playBtn.frame = CGRectMake(x, y, w, h);
-//
-//    x = CGRectGetMaxX(self.playBtn.frame) + margin;
-//    w = self.currentTimeLabel.frame.size.width;
-//    h = self.currentTimeLabel.frame.size.height;
-//    y = (totalH - h) / 2;
-//    self.currentTimeLabel.frame = CGRectMake(x, y, w, h);
-//
-//    w = self.totalTimeLabel.frame.size.width;
-//    h = self.totalTimeLabel.frame.size.height;
-//    x = totalW - margin - w;
-//    y = (totalH - h) / 2;
-//    self.totalTimeLabel.frame = CGRectMake(x, y, w, h);
-//
-//    x = CGRectGetMaxX(self.currentTimeLabel.frame) + margin;
-//    w = totalW - x - margin - CGRectGetWidth(self.totalTimeLabel.frame) - margin;
-//    h = 20;
-//    y = (totalH - h) / 2;
-//    self.sliderView.frame = CGRectMake(x, y, w, h);
-//    self.sliderView.backgroundColor = UIColor.redColor;
-}
-
-- (void)updateCurrentTime:(NSTimeInterval)currentTime totalTime:(NSTimeInterval)totalTime {
-//    if (self.isSeeking) return;
-//    self.totalTime = totalTime;
-    CGFloat progress = 0;
-    if (totalTime == 0) {
-        progress = 0;
-    }else {
-        progress = currentTime / totalTime;
-    }
-    if (progress <= 0) progress = 0;
-    if (progress >= 1) progress = 1;
-    self.sliderView.value = progress;
-    self.currentTimeLabel.text = [self convertTimeSecond:currentTime];
-    self.totalTimeLabel.text = [self convertTimeSecond:totalTime];
-}
-
-- (void)updateStatus:(GKVideoPlayerStatus)status {
-    if (status == GKVideoPlayerStatusEnded) {
-        self.sliderView.value = 0;
-        self.currentTimeLabel.text = @"00:00";
-        self.playBtn.selected = NO;
-    }else if (status == GKVideoPlayerStatusFailed || status == GKVideoPlayerStatusPaused) {
-        self.playBtn.selected = NO;
-    }else {
-        self.playBtn.selected = YES;
-    }
-}
-
 - (void)playPause {
-    !self.playPauseBlock ?: self.playPauseBlock();
+    GKPhotoView *photoView = self.browser.curPhotoView;
+    if (photoView.player.isPlaying) {
+        [photoView pauseAction];
+    }else {
+        [photoView playAction];
+    }
 }
 
 - (NSString *)convertTimeSecond:(NSInteger)timeSecond {
@@ -149,6 +95,55 @@
         theLastTime = [NSString stringWithFormat:@"%02zd:%02zd:%02zd", second/3600, second%3600/60, second%60];
     }
     return theLastTime;
+}
+
+#pragma mark - GKProgressViewProtocol
+- (void)updatePlayStatus:(GKVideoPlayerStatus)status {
+    if (status == GKVideoPlayerStatusEnded) {
+        self.sliderView.value = 0;
+        self.currentTimeLabel.text = @"00:00";
+        self.playBtn.selected = NO;
+    }else if (status == GKVideoPlayerStatusFailed || status == GKVideoPlayerStatusPaused) {
+        self.playBtn.selected = NO;
+    }else {
+        self.playBtn.selected = YES;
+    }
+}
+
+- (void)updateCurrentTime:(NSTimeInterval)currentTime totalTime:(NSTimeInterval)totalTime {
+    self.totalTime = totalTime;
+    if (self.sliderView.isDragging) return;
+    if (self.isSeeking) return;
+    CGFloat progress = 0;
+    if (totalTime == 0) {
+        progress = 0;
+    }else {
+        progress = currentTime / totalTime;
+    }
+    if (progress <= 0) progress = 0;
+    if (progress >= 1) progress = 1;
+    self.sliderView.value = progress;
+    self.currentTimeLabel.text = [self convertTimeSecond:currentTime];
+    self.totalTimeLabel.text = [self convertTimeSecond:totalTime];
+}
+
+- (void)updateLayoutWithFrame:(CGRect)frame {
+    self.frame = CGRectMake(0, frame.size.height - 80 - kSafeBottomSpace, frame.size.width, 80);
+}
+
+#pragma mark - GKSliderViewDelegate
+- (void)sliderView:(GKSliderView *)sliderView valueChanged:(float)value {
+    NSTimeInterval currentTime = self.totalTime * value;
+    self.currentTimeLabel.text = [self convertTimeSecond:currentTime];
+}
+
+- (void)sliderView:(GKSliderView *)sliderView touchEnded:(float)value {
+    self.isSeeking = YES;
+    __weak __typeof(self) weakSelf = self;
+    [self.browser.player gk_seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        self.isSeeking = NO;
+    }];
 }
 
 #pragma mark - Lazy

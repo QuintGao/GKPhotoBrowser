@@ -150,6 +150,7 @@
 - (void)playToEnd {
     self.status = GKVideoPlayerStatusEnded;
     _isPlaying = NO;
+    [self gk_seekToTime:0 completionHandler:nil];
 }
 
 #pragma mark - Observer

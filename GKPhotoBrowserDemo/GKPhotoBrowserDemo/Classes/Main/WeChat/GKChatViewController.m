@@ -95,9 +95,10 @@
     browser.hidesSavedBtn = YES;
     browser.hidesCountLabel = YES;
     browser.delegate = self;
-    browser.hidesVideoSlider = YES;
     browser.isSingleTapDisabled = YES;
     browser.isVideoPausedWhenDragged = NO;
+    [browser setupVideoProgressProtocol:[GKVideoProgressView new]];
+    browser.isVideoReplay = NO;
     [browser showFromVC:self];
 }
 
@@ -105,78 +106,9 @@
 - (void)photoBrowser:(GKPhotoBrowser *)browser singleTapWithIndex:(NSInteger)index {
     GKPhoto *photo = browser.curPhoto;
     if (photo.isVideo) {
-        GKPhotoView *photoView = browser.curPhotoView;
-        if (!photoView) return;
-        GKVideoProgressView *progressView = [photoView viewWithTag:1001];
-        if (!progressView) return;
-        progressView.hidden = !progressView.isHidden;
+        browser.progressView.hidden = !browser.progressView.isHidden;
     }else {
         [browser dismiss];
-    }
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser reuseAtIndex:(NSInteger)index photoView:(GKPhotoView *)photoView {
-    GKPhoto *photo = browser.photos[index];
-    if (photo.isVideo) {
-        UIView *view = [photoView viewWithTag:1001];
-        if (view) return;
-        
-        GKVideoProgressView *progressView = [[GKVideoProgressView alloc] initWithFrame:CGRectMake(0, photoView.bounds.size.height - 80, photoView.bounds.size.width, 80)];
-        progressView.tag = 1001;
-        [photoView addSubview:progressView];
-        
-        __weak __typeof(photoView) weakPhotoView = photoView;
-        progressView.playPauseBlock = ^{
-            __strong __typeof(weakPhotoView) photoView = weakPhotoView;
-            if (photoView.player.isPlaying) {
-                [photoView pauseAction];
-            }else {
-                [photoView playAction];
-            }
-        };
-    }else {
-        UIView *view = [photoView viewWithTag:1001];
-        if (view) {
-            [view removeFromSuperview];
-        }
-    }
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser willLayoutSubViews:(NSInteger)index {
-    GKPhotoView *photoView = browser.curPhotoView;
-    if (!photoView) return;
-    GKVideoProgressView *progressView = [photoView viewWithTag:1001];
-    if (!progressView) return;
-    progressView.frame = CGRectMake(0, photoView.bounds.size.height - 80, photoView.bounds.size.width, 80);
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser videoTimeChangeWithPhotoView:(nonnull GKPhotoView *)photoView currentTime:(NSTimeInterval)currentTime totalTime:(NSTimeInterval)totalTime {
-    if (!photoView) return;
-    GKVideoProgressView *progressView = [photoView viewWithTag:1001];
-    if (!progressView) return;
-    [progressView updateCurrentTime:currentTime totalTime:totalTime];
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser videoStateChangeWithPhotoView:(nonnull GKPhotoView *)photoView status:(GKVideoPlayerStatus)status {
-    if (!photoView) return;
-    GKVideoProgressView *progressView = [photoView viewWithTag:1001];
-    if (!progressView) return;
-    [progressView updateStatus:status];
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser panBeginWithIndex:(NSInteger)index {
-    if (!browser.curPhoto.isVideo) return;
-    GKVideoProgressView *progressView = [browser.curPhotoView viewWithTag:1001];
-    if (!progressView) return;
-    progressView.hidden = YES;
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser panEndedWithIndex:(NSInteger)index willDisappear:(BOOL)disappear {
-    if (!browser.curPhoto.isVideo) return;
-    GKVideoProgressView *progressView = [browser.curPhotoView viewWithTag:1001];
-    if (!progressView) return;
-    if (!disappear) {
-        progressView.hidden = NO;
     }
 }
 

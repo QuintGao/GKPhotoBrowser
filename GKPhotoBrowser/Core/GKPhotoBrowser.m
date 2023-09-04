@@ -145,9 +145,11 @@ static Class progressClass = nil;
             case GKVideoPlayerStatusFailed: {
                 [self.curPhotoView showFailure];
             } break;
-                
-            default:
-                break;
+            default: break;
+        }
+        
+        if ([self.progress respondsToSelector:@selector(updatePlayStatus:)]) {
+            [self.progress updatePlayStatus:status];
         }
         
         __block GKPhotoView *photoView = nil;

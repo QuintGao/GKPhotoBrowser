@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) UIView *progressView;
 
+@optional
 // 更新状态
 - (void)updatePlayStatus:(GKVideoPlayerStatus)status;
 
