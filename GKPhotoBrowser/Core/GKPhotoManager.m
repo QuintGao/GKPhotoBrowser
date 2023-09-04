@@ -162,7 +162,7 @@
     return requestID;
 }
 
-+ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(nonnull void (^)(NSURL * _Nonnull, NSError * _Nullable))completion {
++ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(nonnull void (^)(NSURL * _Nullable, NSError * _Nullable))completion {
     PHVideoRequestOptions *option = [[PHVideoRequestOptions alloc] init];
     option.networkAccessAllowed = YES;
     option.progressHandler = nil;

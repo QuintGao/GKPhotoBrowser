@@ -61,7 +61,7 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
 - (void)gk_stop;
 
 // seek
-- (void)gk_seekToTime:(NSTimeInterval)time completionHandler:(nonnull void (^)(BOOL finished))completionHandler;
+- (void)gk_seekToTime:(NSTimeInterval)time completionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 // 更新布局
 - (void)gk_updateFrame:(CGRect)frame;

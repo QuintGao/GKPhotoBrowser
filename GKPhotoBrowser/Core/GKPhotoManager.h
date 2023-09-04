@@ -92,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 加载相册视频资源
 /// @param asset PHAsset对象
 /// @param completion 完成回调
-+ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(nonnull void(^)(NSURL *url, NSError *_Nullable error))completion;
++ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(nonnull void(^)(NSURL *_Nullable url, NSError *_Nullable error))completion;
 
 @end
 
