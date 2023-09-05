@@ -40,11 +40,11 @@
         self.imageRequestID = 0;
     }
     
-    PHAsset *phAsset = self.imageAsset;
-    if (phAsset.mediaType == PHAssetMediaTypeImage) {
+    PHAsset *asset = self.imageAsset;
+    if (asset && asset.mediaType == PHAssetMediaTypeImage) {
         // Gif
-        if ([[phAsset valueForKey:@"filename"] hasSuffix:@"GIF"]) {
-            self.imageRequestID = [GKPhotoManager loadImageDataWithImageAsset:phAsset completion:^(NSData * _Nullable data, NSError * _Nullable error) {
+        if ([[asset valueForKey:@"filename"] hasSuffix:@"GIF"]) {
+            self.imageRequestID = [GKPhotoManager loadImageDataWithImageAsset:asset completion:^(NSData * _Nullable data, NSError * _Nullable error) {
                 __strong __typeof(weakSelf) self = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.imageRequestID = 0;
@@ -53,7 +53,7 @@
             }];
         }else {
             CGFloat width = [GKPhotoBrowserConfigure getKeyWindow].bounds.size.width;
-            self.imageRequestID = [GKPhotoManager loadImageWithAsset:phAsset photoWidth:width * 2 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
+            self.imageRequestID = [GKPhotoManager loadImageWithAsset:asset photoWidth:width * 2 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
                 __strong __typeof(weakSelf) self = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.imageRequestID = 0;
@@ -69,7 +69,7 @@
 
 - (void)getVideo:(void (^)(NSURL * _Nullable, NSError * _Nullable))completion {
     if (!self.isVideo) {
-        NSError *error = [NSError errorWithDomain:@"" code:-1 userInfo:@{@"message": @"不是视频内容"}];
+        NSError *error = [NSError errorWithDomain:@"" code:-1 userInfo:@{@"message": @"不是视频资源"}];
         completion(nil, error);
         return;
     }
@@ -89,7 +89,12 @@
             });
         }];
     }else {
-        !completion ?: completion(self.videoUrl, nil);
+        if (self.videoUrl) {
+            !completion ?: completion(self.videoUrl, nil);
+        }else {
+            NSError *error = [NSError errorWithDomain:@"" code:-1 userInfo:@{@"message": @"不是视频资源"}];
+            !completion ?: completion(nil, error);
+        }
     }
 }
 
@@ -156,7 +161,9 @@
                 }
             }];
         }else {
-            !completion ?: completion(nil, error);
+            if (!result && error) {
+                !completion ?: completion(nil, error);
+            }
         }
     }];
     return requestID;
