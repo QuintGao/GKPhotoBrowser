@@ -216,6 +216,7 @@ static Class progressClass = nil;
 
 - (void)dealloc {
     [self.rotationHandler delDeviceOrientationObserver];
+    [self.player gk_stop];
 }
 
 - (void)loadView {

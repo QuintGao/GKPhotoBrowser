@@ -36,8 +36,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) UIImage  *placeholderImage;
 
 #pragma mark - 以下属性播放视频时使用
+/** 视频地址 */
 @property (nonatomic, strong) NSURL              *videoUrl;
+/** 视频相册资源 */
 @property (nonatomic, strong, nullable) PHAsset  *videoAsset;
+/** 视频尺寸 */
 @property (nonatomic, assign) CGSize             videoSize;
 @property (nonatomic, assign, readonly) BOOL     isVideo;
 // 是否自动播放视频，默认YES
