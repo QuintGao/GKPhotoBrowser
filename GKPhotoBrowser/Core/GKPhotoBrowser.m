@@ -478,6 +478,18 @@ static Class progressClass = nil;
     [self updateCurrentPhotoView];
 }
 
+- (void)resetPhotoBrowserWithPhoto:(GKPhoto *)photo index:(NSInteger)index {
+    if (index < 0 || index >= self.photos.count) return;
+    NSMutableArray *photos = [NSMutableArray arrayWithArray:self.photos];
+    [photos replaceObjectAtIndex:index withObject:photo];
+    self.photos = photos;
+    [self updateReusableViews];
+    [self setupPhotoViews];
+    [self updateViewIndex];
+    [self layoutSubviews];
+    [self updateCurrentPhotoView];
+}
+
 - (void)loadCurrentPhotoImage {
     [self.curPhotoView loadOriginImage];
 }

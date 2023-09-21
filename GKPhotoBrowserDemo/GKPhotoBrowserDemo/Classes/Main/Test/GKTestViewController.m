@@ -144,6 +144,21 @@
         browser.delegate = self;
         [browser showFromVC:self];
         self.browser = browser;
+        
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            [photoArrs enumerateObjectsUsingBlock:^(GKPhoto *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                if (idx == 2) {
+//                    obj.videoUrl = [NSURL URLWithString:@"http://vd3.bdstatic.com/mda-ph53eii3pywz9ax9/cae_h264/1691439126672883676/mda-ph53eii3pywz9ax9.mp4"];
+//                }
+//            }];
+//            [self.browser resetPhotoBrowserWithPhotos:photoArrs];
+//        });
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            GKPhoto *photo = photoArrs[2];
+            photo.videoUrl = [NSURL URLWithString:@"http://vd3.bdstatic.com/mda-ph53eii3pywz9ax9/cae_h264/1691439126672883676/mda-ph53eii3pywz9ax9.mp4"];
+            [self.browser resetPhotoBrowserWithPhoto:photo index:2];
+        });
     };
     
     return cell;

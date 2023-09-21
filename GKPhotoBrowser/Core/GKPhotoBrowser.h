@@ -259,40 +259,25 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 
 /**
  显示图片浏览器
-
- @param vc 控制器
  */
 - (void)showFromVC:(UIViewController *)vc;
 
-/**
- 隐藏图片浏览器
- */
+/// 隐藏图片浏览器
 - (void)dismiss;
 
-/**
- 选中指定位置的内容
-
- @param index 位置索引
- */
+/// 选中指定位置的内容
 - (void)selectedPhotoWithIndex:(NSInteger)index animated:(BOOL)animated;
 
-/**
- 移除指定位置的内容
-
- @param index 位置索引
- */
+/// 移除指定位置的内容
 - (void)removePhotoAtIndex:(NSInteger)index;
 
-/**
- 重置图片浏览器
-
- @param photos 图片内容数组
- */
+/// 重置浏览器数据源
 - (void)resetPhotoBrowserWithPhotos:(NSArray *)photos;
 
-/**
- 加载原图方法，外部调用
- */
+/// 重置某个索引对于的数据
+- (void)resetPhotoBrowserWithPhoto:(GKPhoto *)photo index:(NSInteger)index;
+
+/// 加载原图方法，外部调用
 - (void)loadCurrentPhotoImage;
 
 @end
