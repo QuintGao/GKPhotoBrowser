@@ -144,6 +144,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.7.2 - 2023.09.22 新增刷新单个photo数据的方法 #186
  * 2.7.1 - 2023.09.12 修复问题 #184 #185
  * 2.7.0 - 2023.09.04 修复视频播放设置isVideoReplay=NO后视频不能播放的问题
  * 2.6.5 - 2023.08.30 1、新增加载失败错误处理 #180 2、修复放大后快速滑动重叠问题 #181
