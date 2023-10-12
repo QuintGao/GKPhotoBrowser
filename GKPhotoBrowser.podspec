@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GKPhotoBrowser"
-  s.version      = "2.7.2"
+  s.version      = "2.7.3"
   s.summary      = "iOS可高度自定义的图片浏览器，支持图片浏览、视频播放等多种功能"
   s.homepage     = "https://github.com/QuintGao/GKPhotoBrowser"
   s.license      = "MIT"
@@ -37,7 +37,6 @@ Pod::Spec.new do |s|
   s.subspec 'AVPlayer' do |ss|
     ss.source_files = 'GKPhotoBrowser/AVPlayer'
     ss.dependency 'GKPhotoBrowser/Core'
-    ss.dependency 'GKSliderView'
   end
   
   s.subspec 'Progress' do |ss|
