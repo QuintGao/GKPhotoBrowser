@@ -254,6 +254,7 @@
     if (self.player.videoPlayView.superview != self.imageView) {
         [self.imageView addSubview:self.player.videoPlayView];
     }
+    [self.imageView bringSubviewToFront:self.player.videoPlayView];
     [self.player gk_updateFrame:self.imageView.bounds];
 }
 
@@ -475,7 +476,13 @@
     
     if (self.isAdaptiveSafeArea) {
         if (isLandscape) {
-            width  -= (kSafeTopSpace + kSafeBottomSpace);
+            if (self.isFollowSystemRotation) {
+                CGFloat safeAreaLeft = GKPhotoBrowserConfigure.gk_safeAreaInsets.left;
+                CGFloat safeAreaRight = GKPhotoBrowserConfigure.gk_safeAreaInsets.right;
+                width -= (safeAreaLeft + safeAreaRight);
+            }else {
+                width -= (kSafeTopSpace + kSafeBottomSpace);
+            }
         }else {
             height -= (kSafeTopSpace + kSafeBottomSpace);
         }

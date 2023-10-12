@@ -603,6 +603,7 @@ static Class progressClass = nil;
             photoView.loadStyle       = self.loadStyle;
             photoView.originLoadStyle = self.originLoadStyle;
             photoView.failStyle       = self.failStyle;
+            photoView.isFollowSystemRotation = self.isFollowSystemRotation;
             photoView.isFullWidthForLandScape = self.isFullWidthForLandScape;
             photoView.isAdaptiveSafeArea = self.isAdaptiveSafeArea;
             photoView.failureText     = self.failureText;

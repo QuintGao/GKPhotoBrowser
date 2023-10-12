@@ -49,6 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<GKPhotoViewDelegate> delegate;
 
+/// 是否跟随系统旋转，默认是NO，如果设置为YES，isScreenRotateDisabled属性将失效
+@property (nonatomic, assign) BOOL isFollowSystemRotation;
+
 /** 横屏时是否充满屏幕宽度，默认YES，为NO时图片自动填充屏幕 */
 @property (nonatomic, assign) BOOL isFullWidthForLandScape;
 
