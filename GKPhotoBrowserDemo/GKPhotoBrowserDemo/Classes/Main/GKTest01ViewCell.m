@@ -13,6 +13,8 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.imgView = [UIImageView new];
+        self.imgView.contentMode = UIViewContentModeScaleAspectFill;
+        self.imgView.clipsToBounds = YES;
         [self.contentView addSubview:self.imgView];
     }
     return self;

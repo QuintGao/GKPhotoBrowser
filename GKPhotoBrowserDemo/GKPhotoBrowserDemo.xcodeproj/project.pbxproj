@@ -714,7 +714,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 75UA6PQ9U3;
+				DEVELOPMENT_TEAM = 3D47N4555T;
 				EXCLUDED_ARCHS = "";
 				GCC_PREFIX_HEADER = GKPhotoBrowserDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = GKPhotoBrowserDemo/Info.plist;
@@ -736,7 +736,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 75UA6PQ9U3;
+				DEVELOPMENT_TEAM = 3D47N4555T;
 				EXCLUDED_ARCHS = "";
 				GCC_PREFIX_HEADER = GKPhotoBrowserDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = GKPhotoBrowserDemo/Info.plist;
