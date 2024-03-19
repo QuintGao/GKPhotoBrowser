@@ -934,6 +934,7 @@ static Class progressClass = nil;
         pageControl.currentPage = self.currentIndex;
         pageControl.hidesForSinglePage = YES;
         pageControl.hidden = YES;
+        pageControl.enabled = NO;
         if (@available(iOS 14.0, *)) {
             pageControl.backgroundStyle = UIPageControlBackgroundStyleMinimal;
         }
