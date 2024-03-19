@@ -144,6 +144,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.7.4 - 2024.03.19 1、修复pageControl可点击的问题 2、添加隐私清单文件
  * 2.7.3 - 2023.10.12 修复问题 #188 #189
  * 2.7.2 - 2023.09.22 新增刷新单个photo数据的方法 #186
  * 2.7.1 - 2023.09.12 修复问题 #184 #185
