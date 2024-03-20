@@ -2,7 +2,7 @@
 //  UIImage+GKNavigationBar.m
 //  GKNavigationBar
 //
-//  Created by gaokun on 2019/11/1.
+//  Created by QuintGao on 2019/11/1.
 //  Copyright © 2019 QuintGao. All rights reserved.
 //
 
@@ -34,6 +34,8 @@
 }
 
 + (UIImage *)gk_changeImage:(UIImage *)image color:(UIColor *)color {
+    if (!image) return nil;
+    if (image.size.width <= 0 || image.size.height <= 0) return nil;
     UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextTranslateCTM(context, 0, image.size.height);

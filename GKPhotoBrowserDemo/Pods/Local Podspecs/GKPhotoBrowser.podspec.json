@@ -34,10 +34,12 @@
     {
       "name": "Core",
       "source_files": "GKPhotoBrowser/Core",
-      "resources": [
-        "GKPhotoBrowser/GKPhotoBrowser.bundle",
-        "GKPhotoBrowser/PrivacyInfo.xcprivacy"
-      ]
+      "resources": "GKPhotoBrowser/GKPhotoBrowser.bundle",
+      "resource_bundles": {
+        "GKPhotoBrowser": [
+          "GKPhotoBrowser/PrivacyInfo.xcprivacy"
+        ]
+      }
     },
     {
       "name": "SD",

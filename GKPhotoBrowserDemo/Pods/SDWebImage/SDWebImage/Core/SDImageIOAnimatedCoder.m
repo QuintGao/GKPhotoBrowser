@@ -27,10 +27,12 @@ static CGImageSourceRef (*SDCGImageGetImageSource)(CGImageRef);
 
 // Specify File Size for lossy format encoding, like JPEG
 static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestinationRequestedFileSize";
+// Avoid ImageIO translate JFIF orientation to EXIF orientation which cause bug because returned CGImage already apply the orientation transform
+static NSString * kSDCGImageSourceSkipMetadata = @"kCGImageSourceSkipMetadata";
 
 // This strip the un-wanted CGImageProperty, like the internal CGImageSourceRef in iOS 15+
 // However, CGImageCreateCopy still keep those CGImageProperty, not suit for our use case
-static CGImageRef __nullable SDCGImageCreateCopy(CGImageRef cg_nullable image) {
+static CGImageRef __nullable SDCGImageCreateMutableCopy(CGImageRef cg_nullable image, CGBitmapInfo bitmapInfo) {
     if (!image) return nil;
     size_t width = CGImageGetWidth(image);
     size_t height = CGImageGetHeight(image);
@@ -38,7 +40,6 @@ static CGImageRef __nullable SDCGImageCreateCopy(CGImageRef cg_nullable image) {
     size_t bitsPerPixel = CGImageGetBitsPerPixel(image);
     size_t bytesPerRow = CGImageGetBytesPerRow(image);
     CGColorSpaceRef space = CGImageGetColorSpace(image);
-    CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(image);
     CGDataProviderRef provider = CGImageGetDataProvider(image);
     const CGFloat *decode = CGImageGetDecode(image);
     bool shouldInterpolate = CGImageGetShouldInterpolate(image);
@@ -47,17 +48,211 @@ static CGImageRef __nullable SDCGImageCreateCopy(CGImageRef cg_nullable image) {
     return newImage;
 }
 
-static inline CGSize SDCalculateScaleDownPixelSize(NSUInteger limitBytes, CGSize originalSize, NSUInteger frameCount, NSUInteger bytesPerPixel) {
-    if (CGSizeEqualToSize(originalSize, CGSizeZero)) return CGSizeMake(1, 1);
-    NSUInteger totalFramePixelSize = limitBytes / bytesPerPixel / (frameCount ?: 1);
-    CGFloat ratio = originalSize.height / originalSize.width;
-    CGFloat width = sqrt(totalFramePixelSize / ratio);
-    CGFloat height = width * ratio;
-    width = MAX(1, floor(width));
-    height = MAX(1, floor(height));
-    CGSize size = CGSizeMake(width, height);
+static inline BOOL SDCGImageIs8Bit(CGImageRef cg_nullable image) {
+    return CGImageGetBitsPerComponent(image) == 8;
+}
+
+static inline CGImageRef __nullable SDCGImageCreateCopy(CGImageRef cg_nullable image) {
+    if (!image) return nil;
+    return SDCGImageCreateMutableCopy(image, CGImageGetBitmapInfo(image));
+}
+
+static BOOL SDLoadOnePixelBitmapBuffer(CGImageRef imageRef, uint8_t *r, uint8_t *g, uint8_t *b, uint8_t *a) {
+    CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(imageRef);
+    CGImageAlphaInfo alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
+    CGBitmapInfo byteOrderInfo = bitmapInfo & kCGBitmapByteOrderMask;
     
-    return size;
+    // Get pixels
+    CGDataProviderRef provider = CGImageGetDataProvider(imageRef);
+    if (!provider) {
+        return NO;
+    }
+    CFDataRef data = CGDataProviderCopyData(provider);
+    if (!data) {
+        return NO;
+    }
+    
+    CFRange range = CFRangeMake(0, 4); // one pixel
+    if (CFDataGetLength(data) < range.location + range.length) {
+        CFRelease(data);
+        return NO;
+    }
+    uint8_t pixel[4] = {0};
+    CFDataGetBytes(data, range, pixel);
+    CFRelease(data);
+    
+    BOOL byteOrderNormal = NO;
+    switch (byteOrderInfo) {
+        case kCGBitmapByteOrderDefault: {
+            byteOrderNormal = YES;
+        } break;
+        case kCGBitmapByteOrder16Little:
+        case kCGBitmapByteOrder32Little: {
+        } break;
+        case kCGBitmapByteOrder16Big:
+        case kCGBitmapByteOrder32Big: {
+            byteOrderNormal = YES;
+        } break;
+        default: break;
+    }
+    switch (alphaInfo) {
+        case kCGImageAlphaPremultipliedFirst:
+        case kCGImageAlphaFirst: {
+            if (byteOrderNormal) {
+                // ARGB8888
+                *a = pixel[0];
+                *r = pixel[1];
+                *g = pixel[2];
+                *b = pixel[3];
+            } else {
+                // BGRA8888
+                *b = pixel[0];
+                *g = pixel[1];
+                *r = pixel[2];
+                *a = pixel[3];
+            }
+        }
+            break;
+        case kCGImageAlphaPremultipliedLast:
+        case kCGImageAlphaLast: {
+            if (byteOrderNormal) {
+                // RGBA8888
+                *r = pixel[0];
+                *g = pixel[1];
+                *b = pixel[2];
+                *a = pixel[3];
+            } else {
+                // ABGR8888
+                *a = pixel[0];
+                *b = pixel[1];
+                *g = pixel[2];
+                *r = pixel[3];
+            }
+        }
+            break;
+        case kCGImageAlphaNone: {
+            if (byteOrderNormal) {
+                // RGB
+                *r = pixel[0];
+                *g = pixel[1];
+                *b = pixel[2];
+            } else {
+                // BGR
+                *b = pixel[0];
+                *g = pixel[1];
+                *r = pixel[2];
+            }
+        }
+            break;
+        case kCGImageAlphaNoneSkipLast: {
+            if (byteOrderNormal) {
+                // RGBX
+                *r = pixel[0];
+                *g = pixel[1];
+                *b = pixel[2];
+            } else {
+                // XBGR
+                *b = pixel[1];
+                *g = pixel[2];
+                *r = pixel[3];
+            }
+        }
+            break;
+        case kCGImageAlphaNoneSkipFirst: {
+            if (byteOrderNormal) {
+                // XRGB
+                *r = pixel[1];
+                *g = pixel[2];
+                *b = pixel[3];
+            } else {
+                // BGRX
+                *b = pixel[0];
+                *g = pixel[1];
+                *r = pixel[2];
+            }
+        }
+            break;
+        case kCGImageAlphaOnly: {
+            // A
+            *a = pixel[0];
+        }
+            break;
+        default:
+            break;
+    }
+    
+    return YES;
+}
+
+static CGImageRef SDImageIOPNGPluginBuggyCreateWorkaround(CGImageRef cgImage) CF_RETURNS_RETAINED {
+    CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(cgImage);
+    CGImageAlphaInfo alphaInfo = (bitmapInfo & kCGBitmapAlphaInfoMask);
+    CGImageAlphaInfo newAlphaInfo = alphaInfo;
+    if (alphaInfo == kCGImageAlphaLast) {
+        newAlphaInfo = kCGImageAlphaPremultipliedLast;
+    } else if (alphaInfo == kCGImageAlphaFirst) {
+        newAlphaInfo = kCGImageAlphaPremultipliedFirst;
+    }
+    if (newAlphaInfo != alphaInfo) {
+        CGBitmapInfo byteOrderInfo = bitmapInfo & kCGBitmapByteOrderMask;
+        CGBitmapInfo newBitmapInfo = newAlphaInfo | byteOrderInfo;
+        if (SD_OPTIONS_CONTAINS(bitmapInfo, kCGBitmapFloatComponents)) {
+            // Keep float components
+            newBitmapInfo |= kCGBitmapFloatComponents;
+        }
+        // Create new CGImage with corrected alpha info...
+        CGImageRef newCGImage = SDCGImageCreateMutableCopy(cgImage, newBitmapInfo);
+        return newCGImage;
+    } else {
+        CGImageRetain(cgImage);
+        return cgImage;
+    }
+}
+
+static BOOL SDImageIOPNGPluginBuggyNeedWorkaround(void) {
+    // See: #3605 FB13322459
+    // ImageIO on iOS 17 (17.0~17.2), there is one serious problem on ImageIO PNG plugin. The decode result for indexed color PNG use the wrong CGImageAlphaInfo
+    // The returned CGImageAlphaInfo is alpha last, but the actual bitmap data is premultiplied alpha last, which cause many runtime render bug.
+    // The bug only exists on 8-bits indexed color, not about 16-bits
+    // So, we do a hack workaround:
+    // 1. Decode a indexed color PNG in runtime
+    // 2. If the bitmap is premultiplied alpha, then assume it's buggy
+    // 3. If buggy, then all premultiplied `CGImageAlphaInfo` will assume to be non-premultiplied
+    // :)
+    
+    if (@available(iOS 17, tvOS 17, macOS 14, watchOS 11, *)) {
+        // Continue
+    } else {
+        return NO;
+    }
+    static BOOL isBuggy = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString *base64String = @"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUyMjKlMgnVAAAAAXRSTlMyiDGJ5gAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=";
+        NSData *onePixelIndexedPNGData = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)onePixelIndexedPNGData, nil);
+        NSCParameterAssert(source);
+        CGImageRef cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil);
+        NSCParameterAssert(cgImage);
+        uint8_t r, g, b, a;
+        r = g = b = a = 0;
+        BOOL success = SDLoadOnePixelBitmapBuffer(cgImage, &r, &g, &b, &a);
+        if (!success) {
+            isBuggy = NO; // Impossible...
+        } else {
+            if (r == 50 && g == 50 && b == 50 && a == 50) {
+                // Correct value
+                isBuggy = NO;
+            } else {
+                SD_LOG("%@", @"Detected the current OS's ImageIO PNG Decoder is buggy on indexed color PNG. Perform workaround solution...");
+                isBuggy = YES;
+            }
+        }
+        CFRelease(source);
+        CGImageRelease(cgImage);
+    });
+    
+    return isBuggy;
 }
 
 @interface SDImageIOCoderFrame : NSObject
@@ -245,7 +440,7 @@ static inline CGSize SDCalculateScaleDownPixelSize(NSUInteger limitBytes, CGSize
         }
     }
     // Parse the image properties
-    NSDictionary *properties = (__bridge_transfer NSDictionary *)CGImageSourceCopyPropertiesAtIndex(source, index, NULL);
+    NSDictionary *properties = (__bridge_transfer NSDictionary *)CGImageSourceCopyPropertiesAtIndex(source, index, (__bridge CFDictionaryRef)@{kSDCGImageSourceSkipMetadata : @(YES)});
     CGFloat pixelWidth = [properties[(__bridge NSString *)kCGImagePropertyPixelWidth] doubleValue];
     CGFloat pixelHeight = [properties[(__bridge NSString *)kCGImagePropertyPixelHeight] doubleValue];
     CGImagePropertyOrientation exifOrientation = (CGImagePropertyOrientation)[properties[(__bridge NSString *)kCGImagePropertyOrientation] unsignedIntegerValue];
@@ -334,6 +529,14 @@ static inline CGSize SDCalculateScaleDownPixelSize(NSUInteger limitBytes, CGSize
 #endif
         }
     }
+    // :)
+    CFStringRef uttype = CGImageSourceGetType(source);
+    SDImageFormat imageFormat = [NSData sd_imageFormatFromUTType:uttype];
+    if (imageFormat == SDImageFormatPNG && SDCGImageIs8Bit(imageRef) && SDImageIOPNGPluginBuggyNeedWorkaround()) {
+        CGImageRef newImageRef = SDImageIOPNGPluginBuggyCreateWorkaround(imageRef);
+        CGImageRelease(imageRef);
+        imageRef = newImageRef;
+    }
     
 #if SD_UIKIT || SD_WATCH
     UIImageOrientation imageOrientation = [SDImageCoderHelper imageOrientationFromEXIFOrientation:exifOrientation];
@@ -384,10 +587,16 @@ static inline CGSize SDCalculateScaleDownPixelSize(NSUInteger limitBytes, CGSize
         lazyDecode = lazyDecodeValue.boolValue;
     }
     
+    NSUInteger limitBytes = 0;
+    NSNumber *limitBytesValue = options[SDImageCoderDecodeScaleDownLimitBytes];
+    if (limitBytesValue != nil) {
+        limitBytes = limitBytesValue.unsignedIntegerValue;
+    }
+    
 #if SD_MAC
     // If don't use thumbnail, prefers the built-in generation of frames (GIF/APNG)
     // Which decode frames in time and reduce memory usage
-    if (thumbnailSize.width == 0 || thumbnailSize.height == 0) {
+    if (limitBytes == 0 && (thumbnailSize.width == 0 || thumbnailSize.height == 0)) {
         SDAnimatedImageRep *imageRep = [[SDAnimatedImageRep alloc] initWithData:data];
         if (imageRep) {
             NSSize size = NSMakeSize(imageRep.pixelsWide / scale, imageRep.pixelsHigh / scale);
@@ -432,11 +641,6 @@ static inline CGSize SDCalculateScaleDownPixelSize(NSUInteger limitBytes, CGSize
     size_t frameCount = CGImageSourceGetCount(source);
     UIImage *animatedImage;
     
-    NSUInteger limitBytes = 0;
-    NSNumber *limitBytesValue = options[SDImageCoderDecodeScaleDownLimitBytes];
-    if (limitBytesValue != nil) {
-        limitBytes = limitBytesValue.unsignedIntegerValue;
-    }
     // Parse the image properties
     NSDictionary *properties = (__bridge_transfer NSDictionary *)CGImageSourceCopyPropertiesAtIndex(source, 0, NULL);
     size_t width = [properties[(__bridge NSString *)kCGImagePropertyPixelWidth] doubleValue];
@@ -445,7 +649,7 @@ static inline CGSize SDCalculateScaleDownPixelSize(NSUInteger limitBytes, CGSize
     if (limitBytes > 0) {
         // Hack since ImageIO public API (not CGImageDecompressor/CMPhoto) always return back RGBA8888 CGImage
         CGSize imageSize = CGSizeMake(width, height);
-        CGSize framePixelSize = SDCalculateScaleDownPixelSize(limitBytes, imageSize, frameCount, 4);
+        CGSize framePixelSize = [SDImageCoderHelper scaledSizeWithImageSize:imageSize limitBytes:limitBytes bytesPerPixel:4 frameCount:frameCount];
         // Override thumbnail size
         thumbnailSize = framePixelSize;
         preserveAspectRatio = YES;
@@ -568,7 +772,7 @@ static inline CGSize SDCalculateScaleDownPixelSize(NSUInteger limitBytes, CGSize
     if (_limitBytes > 0) {
         // Hack since ImageIO public API (not CGImageDecompressor/CMPhoto) always return back RGBA8888 CGImage
         CGSize imageSize = CGSizeMake(_width, _height);
-        CGSize framePixelSize = SDCalculateScaleDownPixelSize(_limitBytes, imageSize, _frameCount, 4);
+        CGSize framePixelSize = [SDImageCoderHelper scaledSizeWithImageSize:imageSize limitBytes:_limitBytes bytesPerPixel:4 frameCount:_frameCount];
         // Override thumbnail size
         _thumbnailSize = framePixelSize;
         _preserveAspectRatio = YES;
@@ -773,7 +977,7 @@ static inline CGSize SDCalculateScaleDownPixelSize(NSUInteger limitBytes, CGSize
         if (_limitBytes > 0) {
             // Hack since ImageIO public API (not CGImageDecompressor/CMPhoto) always return back RGBA8888 CGImage
             CGSize imageSize = CGSizeMake(_width, _height);
-            CGSize framePixelSize = SDCalculateScaleDownPixelSize(_limitBytes, imageSize, _frameCount, 4);
+            CGSize framePixelSize = [SDImageCoderHelper scaledSizeWithImageSize:imageSize limitBytes:_limitBytes bytesPerPixel:4 frameCount:_frameCount];
             // Override thumbnail size
             _thumbnailSize = framePixelSize;
             _preserveAspectRatio = YES;

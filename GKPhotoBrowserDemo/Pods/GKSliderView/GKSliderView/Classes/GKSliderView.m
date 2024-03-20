@@ -3,7 +3,7 @@
 //  GKSliderView
 //
 //  Created by QuintGao on 2017/9/6.
-//  Copyright © 2017年 高坤. All rights reserved.
+//  Copyright © 2017年 QuintGao. All rights reserved.
 //
 
 #import "GKSliderView.h"
@@ -162,6 +162,7 @@
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 
 @property (nonatomic, assign) CGPoint touchPoint;
+@property (nonatomic, assign) float touchValue;
 
 @property (nonatomic, assign) BOOL isDragging;
 
@@ -503,7 +504,9 @@
     // 修复真机测试时按下就触发移动方法，导致的bug
     if (CGPointEqualToPoint(self.touchPoint, point)) return;
     
-    [self sliderTouchMoving:btn point:point];
+    // 获取进度值 由于btn是从 0-(self.width - btn.width)
+    float value = (point.x - self.ignoreMargin - btn.gk_width * 0.5) / (self.gk_width - 2 * self.ignoreMargin - btn.gk_width);
+    [self sliderTouchMovingWithValue:value];
 }
 
 - (void)handleTap:(UITapGestureRecognizer *)tap {
@@ -522,12 +525,19 @@
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)pan {
+    CGPoint location = [pan locationInView:pan.view];
     switch (pan.state) {
         case UIGestureRecognizerStateBegan:
+            self.touchPoint = location;
+            self.touchValue = self.value;
             [self sliderTouchBegin:self.sliderBtn];
             break;
-        case UIGestureRecognizerStateChanged:
-            [self sliderTouchMoving:self.sliderBtn point:[pan locationInView:pan.view]];
+        case UIGestureRecognizerStateChanged: {
+            // 差值
+            CGFloat diff = (location.x - self.touchPoint.x) / pan.view.frame.size.width;
+            CGFloat value = self.touchValue + diff;
+            [self sliderTouchMovingWithValue:value];
+        }
             break;
         case UIGestureRecognizerStateEnded:
             [self sliderTouchEnded:self.sliderBtn];
@@ -549,15 +559,9 @@
     }
 }
 
-- (void)sliderTouchMoving:(UIButton *)btn point:(CGPoint)touchPoint {
-    // 点击的位置
-    CGPoint point = touchPoint;
-    
-    // 获取进度值 由于btn是从 0-(self.width - btn.width)
-    float value = (point.x - self.ignoreMargin - btn.gk_width * 0.5) / (self.gk_width - 2 * self.ignoreMargin - btn.gk_width);
-    
+- (void)sliderTouchMovingWithValue:(float)value {
     // value的值需在0-1之间
-    value = value >= 1.0 ? 1.0 : value <= 0.0 ? 0.0 : value;
+    value = MIN(MAX(0, value), 1);
     
     [self setValue:value];
     

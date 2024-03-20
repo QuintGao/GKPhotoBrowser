@@ -19,7 +19,8 @@ Pod::Spec.new do |s|
   
   s.subspec 'Core' do |ss|
     ss.source_files = 'GKPhotoBrowser/Core'
-    ss.resource = 'GKPhotoBrowser/GKPhotoBrowser.bundle','GKPhotoBrowser/PrivacyInfo.xcprivacy'
+    ss.resource = 'GKPhotoBrowser/GKPhotoBrowser.bundle'
+    ss.resource_bundles = {'GKPhotoBrowser' => ['GKPhotoBrowser/PrivacyInfo.xcprivacy']}
   end
   
   s.subspec 'SD' do |ss|

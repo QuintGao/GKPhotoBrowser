@@ -3,7 +3,7 @@
 //  GKSliderView
 //
 //  Created by QuintGao on 2017/9/6.
-//  Copyright © 2017年 高坤. All rights reserved.
+//  Copyright © 2017年 QuintGao. All rights reserved.
 //  自定义的一个slider
 
 #import <UIKit/UIKit.h>

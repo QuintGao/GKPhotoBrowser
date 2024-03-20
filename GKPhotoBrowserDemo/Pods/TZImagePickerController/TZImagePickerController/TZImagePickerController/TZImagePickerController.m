@@ -4,7 +4,7 @@
 //
 //  Created by 谭真 on 15/12/24.
 //  Copyright © 2015年 谭真. All rights reserved.
-//  version 3.8.2 - 2022.07.20
+//  version 3.8.4 - 2023.11.21
 //  更多信息，请前往项目的github地址：https://github.com/banchichen/TZImagePickerController
 
 #import "TZImagePickerController.h"
@@ -521,6 +521,8 @@
     if (allowCrop) { // 允许裁剪的时候，不能选原图和GIF
         self.allowPickingOriginalPhoto = NO;
         self.allowPickingGif = NO;
+        self.photoWidth = 1200;
+        self.photoPreviewMaxWidth = 1200;
     }
 }
 
@@ -676,6 +678,15 @@
 - (void)removeSelectedModel:(TZAssetModel *)model {
     [_selectedModels removeObject:model];
     [_selectedAssetIds removeObject:model.asset.localIdentifier];
+}
+
+- (void)setSelectedModels:(NSMutableArray<TZAssetModel *> *)selectedModels {
+    _selectedModels = selectedModels;
+    NSMutableArray *selectedAssetIds = [NSMutableArray array];
+    for (TZAssetModel *model in selectedModels) {
+        [selectedAssetIds addObject:model.asset.localIdentifier];
+    }
+    _selectedAssetIds = selectedAssetIds;
 }
 
 - (UIImage *)createImageWithColor:(UIColor *)color size:(CGSize)size radius:(CGFloat)radius {
@@ -1015,7 +1026,7 @@
 
 + (BOOL)tz_isRightToLeftLayout {
     if (@available(iOS 9.0, *)) {
-        if ([UIView userInterfaceLayoutDirectionForSemanticContentAttribute:UISemanticContentAttributeUnspecified] == UIUserInterfaceLayoutDirectionRightToLeft) {
+        if ([UIView userInterfaceLayoutDirectionForSemanticContentAttribute:UIView.appearance.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft) {
             return YES;
         }
     } else {

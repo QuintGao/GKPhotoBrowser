@@ -23,7 +23,7 @@ SDImageCoderOptions * _Nonnull SDGetDecodeOptionsFromContext(SDWebImageContext *
     NSValue *thumbnailSizeValue;
     BOOL shouldScaleDown = SD_OPTIONS_CONTAINS(options, SDWebImageScaleDownLargeImages);
     NSNumber *scaleDownLimitBytesValue = context[SDWebImageContextImageScaleDownLimitBytes];
-    if (!scaleDownLimitBytesValue && shouldScaleDown) {
+    if (scaleDownLimitBytesValue == nil && shouldScaleDown) {
         // Use the default limit bytes
         scaleDownLimitBytesValue = @(SDImageCoderHelper.defaultScaleDownLimitBytes);
     }
@@ -123,15 +123,19 @@ UIImage * _Nullable SDImageCacheDecodeImageData(NSData * _Nonnull imageData, NSS
         image = [imageCoder decodedImageWithData:imageData options:coderOptions];
     }
     if (image) {
-        BOOL shouldDecode = !SD_OPTIONS_CONTAINS(options, SDWebImageAvoidDecodeImage);
-        BOOL lazyDecode = [coderOptions[SDImageCoderDecodeUseLazyDecoding] boolValue];
-        if (lazyDecode) {
-            // lazyDecode = NO means we should not forceDecode, highest priority
-            shouldDecode = NO;
+        SDImageForceDecodePolicy policy = SDImageForceDecodePolicyAutomatic;
+        NSNumber *polivyValue = context[SDWebImageContextImageForceDecodePolicy];
+        if (polivyValue != nil) {
+            policy = polivyValue.unsignedIntegerValue;
         }
-        if (shouldDecode) {
-            image = [SDImageCoderHelper decodedImageWithImage:image];
+        // TODO: Deprecated, remove in SD 6.0...
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        if (SD_OPTIONS_CONTAINS(options, SDWebImageAvoidDecodeImage)) {
+            policy = SDImageForceDecodePolicyNever;
         }
+#pragma clang diagnostic pop
+        image = [SDImageCoderHelper decodedImageWithImage:image policy:policy];
         // assign the decode options, to let manager check whether to re-decode if needed
         image.sd_decodeOptions = coderOptions;
     }

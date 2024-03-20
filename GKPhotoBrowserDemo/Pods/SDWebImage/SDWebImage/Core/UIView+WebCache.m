@@ -18,14 +18,6 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
 
 @implementation UIView (WebCache)
 
-- (nullable NSURL *)sd_imageURL {
-    return objc_getAssociatedObject(self, @selector(sd_imageURL));
-}
-
-- (void)setSd_imageURL:(NSURL * _Nullable)sd_imageURL {
-    objc_setAssociatedObject(self, @selector(sd_imageURL), sd_imageURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 - (nullable NSString *)sd_latestOperationKey {
     return objc_getAssociatedObject(self, @selector(sd_latestOperationKey));
 }
@@ -34,8 +26,15 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
     objc_setAssociatedObject(self, @selector(sd_latestOperationKey), sd_latestOperationKey, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+#pragma mark - State
+
+- (NSURL *)sd_imageURL {
+    return [self sd_imageLoadStateForKey:self.sd_latestOperationKey].url;
+}
+
 - (NSProgress *)sd_imageProgress {
-    NSProgress *progress = objc_getAssociatedObject(self, @selector(sd_imageProgress));
+    SDWebImageLoadState *loadState = [self sd_imageLoadStateForKey:self.sd_latestOperationKey];
+    NSProgress *progress = loadState.progress;
     if (!progress) {
         progress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
         self.sd_imageProgress = progress;
@@ -44,7 +43,15 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
 }
 
 - (void)setSd_imageProgress:(NSProgress *)sd_imageProgress {
-    objc_setAssociatedObject(self, @selector(sd_imageProgress), sd_imageProgress, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (!sd_imageProgress) {
+        return;
+    }
+    SDWebImageLoadState *loadState = [self sd_imageLoadStateForKey:self.sd_latestOperationKey];
+    if (!loadState) {
+        loadState = [SDWebImageLoadState new];
+    }
+    loadState.progress = sd_imageProgress;
+    [self sd_setImageLoadState:loadState forKey:self.sd_latestOperationKey];
 }
 
 - (nullable id<SDWebImageOperation>)sd_internalSetImageWithURL:(nullable NSURL *)url
@@ -69,8 +76,16 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
         context = [mutableContext copy];
     }
     self.sd_latestOperationKey = validOperationKey;
-    [self sd_cancelImageLoadOperationWithKey:validOperationKey];
-    self.sd_imageURL = url;
+    if (!(SD_OPTIONS_CONTAINS(options, SDWebImageAvoidAutoCancelImage))) {
+        // cancel previous loading for the same set-image operation key by default
+        [self sd_cancelImageLoadOperationWithKey:validOperationKey];
+    }
+    SDWebImageLoadState *loadState = [self sd_imageLoadStateForKey:validOperationKey];
+    if (!loadState) {
+        loadState = [SDWebImageLoadState new];
+    }
+    loadState.url = url;
+    [self sd_setImageLoadState:loadState forKey:validOperationKey];
     
     SDWebImageManager *manager = context[SDWebImageContextCustomManager];
     if (!manager) {
@@ -103,7 +118,7 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
     
     if (url) {
         // reset the progress
-        NSProgress *imageProgress = objc_getAssociatedObject(self, @selector(sd_imageProgress));
+        NSProgress *imageProgress = loadState.progress;
         if (imageProgress) {
             imageProgress.totalUnitCount = 0;
             imageProgress.completedUnitCount = 0;
@@ -217,11 +232,11 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
 #endif
             dispatch_main_async_safe(^{
 #if SD_UIKIT || SD_MAC
-                [self sd_setImage:targetImage imageData:targetData basedOnClassOrViaCustomSetImageBlock:setImageBlock transition:transition cacheType:cacheType imageURL:imageURL];
+                [self sd_setImage:targetImage imageData:targetData options:options basedOnClassOrViaCustomSetImageBlock:setImageBlock transition:transition cacheType:cacheType imageURL:imageURL callback:callCompletedBlockClosure];
 #else
                 [self sd_setImage:targetImage imageData:targetData basedOnClassOrViaCustomSetImageBlock:setImageBlock cacheType:cacheType imageURL:imageURL];
-#endif
                 callCompletedBlockClosure();
+#endif
             });
         }];
         [self sd_setImageLoadOperation:operation forKey:validOperationKey];
@@ -240,14 +255,18 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
     return operation;
 }
 
-- (void)sd_cancelCurrentImageLoad {
+- (void)sd_cancelLatestImageLoad {
     [self sd_cancelImageLoadOperationWithKey:self.sd_latestOperationKey];
-    self.sd_latestOperationKey = nil;
 }
 
+- (void)sd_cancelCurrentImageLoad {
+    [self sd_cancelImageLoadOperationWithKey:self.sd_latestOperationKey];
+}
+
+// Set image logic without transition (like placeholder and watchOS)
 - (void)sd_setImage:(UIImage *)image imageData:(NSData *)imageData basedOnClassOrViaCustomSetImageBlock:(SDSetImageBlock)setImageBlock cacheType:(SDImageCacheType)cacheType imageURL:(NSURL *)imageURL {
 #if SD_UIKIT || SD_MAC
-    [self sd_setImage:image imageData:imageData basedOnClassOrViaCustomSetImageBlock:setImageBlock transition:nil cacheType:cacheType imageURL:imageURL];
+    [self sd_setImage:image imageData:imageData options:0 basedOnClassOrViaCustomSetImageBlock:setImageBlock transition:nil cacheType:cacheType imageURL:imageURL callback:nil];
 #else
     // watchOS does not support view transition. Simplify the logic
     if (setImageBlock) {
@@ -259,8 +278,9 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
 #endif
 }
 
+// Set image logic with transition
 #if SD_UIKIT || SD_MAC
-- (void)sd_setImage:(UIImage *)image imageData:(NSData *)imageData basedOnClassOrViaCustomSetImageBlock:(SDSetImageBlock)setImageBlock transition:(SDWebImageTransition *)transition cacheType:(SDImageCacheType)cacheType imageURL:(NSURL *)imageURL {
+- (void)sd_setImage:(UIImage *)image imageData:(NSData *)imageData options:(SDWebImageOptions)options basedOnClassOrViaCustomSetImageBlock:(SDSetImageBlock)setImageBlock transition:(SDWebImageTransition *)transition cacheType:(SDImageCacheType)cacheType imageURL:(NSURL *)imageURL callback:(SDWebImageNoParamsBlock)callback {
     UIView *view = self;
     SDSetImageBlock finalSetImageBlock;
     if (setImageBlock) {
@@ -288,6 +308,7 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
     }
 #endif
     
+    BOOL waitTransition = SD_OPTIONS_CONTAINS(options, SDWebImageWaitTransition);
     if (transition) {
         NSString *originalOperationKey = view.sd_latestOperationKey;
 
@@ -317,6 +338,11 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
                 }
                 if (transition.completion) {
                     transition.completion(finished);
+                }
+                if (waitTransition) {
+                    if (callback) {
+                        callback();
+                    }
                 }
             }];
         }];
@@ -362,12 +388,35 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
                 if (transition.completion) {
                     transition.completion(YES);
                 }
+                if (waitTransition) {
+                    if (callback) {
+                        callback();
+                    }
+                }
             }];
         }];
 #endif
+        if (!waitTransition) {
+            if (callback) {
+                callback();
+            }
+        }
     } else {
         if (finalSetImageBlock) {
             finalSetImageBlock(image, imageData, cacheType, imageURL);
+            // TODO, in 6.0
+            // for `waitTransition`, the `setImageBlock` will provide a extra `completionHandler` params
+            // Execute `callback` only after that completionHandler is called
+            if (waitTransition) {
+                if (callback) {
+                    callback();
+                }
+            }
+        }
+        if (!waitTransition) {
+            if (callback) {
+                callback();
+            }
         }
     }
 }

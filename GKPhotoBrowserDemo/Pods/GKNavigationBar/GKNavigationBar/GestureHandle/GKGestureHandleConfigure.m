@@ -1,8 +1,8 @@
 //
 //  GKGestureHandleConfigure.m
-//  GKNavigationBarExample
+//  GKNavigationBar
 //
-//  Created by gaokun on 2020/10/29.
+//  Created by QuintGao on 2020/10/29.
 //  Copyright © 2020 QuintGao. All rights reserved.
 //
 
@@ -55,6 +55,8 @@
 }
 
 - (UIImage *)getCaptureWithView:(UIView *)view {
+    if (!view) return nil;
+    if (view.bounds.size.width <= 0 || view.bounds.size.height <= 0) return nil;
     UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, UIScreen.mainScreen.scale);
     [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();

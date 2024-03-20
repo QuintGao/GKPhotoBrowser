@@ -21,22 +21,6 @@ NSNotificationName const SDWebImageDownloadStopNotification = @"SDWebImageDownlo
 NSNotificationName const SDWebImageDownloadFinishNotification = @"SDWebImageDownloadFinishNotification";
 
 static void * SDWebImageDownloaderContext = &SDWebImageDownloaderContext;
-static void * SDWebImageDownloaderOperationKey = &SDWebImageDownloaderOperationKey;
-
-BOOL SDWebImageDownloaderOperationGetCompleted(id<SDWebImageDownloaderOperation> operation) {
-    NSCParameterAssert(operation);
-    NSNumber *value = objc_getAssociatedObject(operation, SDWebImageDownloaderOperationKey);
-    if (value != nil) {
-        return value.boolValue;
-    } else {
-        return NO;
-    }
-}
-
-void SDWebImageDownloaderOperationSetCompleted(id<SDWebImageDownloaderOperation> operation, BOOL isCompleted) {
-    NSCParameterAssert(operation);
-    objc_setAssociatedObject(operation, SDWebImageDownloaderOperationKey, @(isCompleted), OBJC_ASSOCIATION_RETAIN);
-}
 
 @interface SDWebImageDownloadToken ()
 
@@ -120,11 +104,12 @@ void SDWebImageDownloaderOperationSetCompleted(id<SDWebImageDownloaderOperation>
         _URLOperations = [NSMutableDictionary new];
         NSMutableDictionary<NSString *, NSString *> *headerDictionary = [NSMutableDictionary dictionary];
         NSString *userAgent = nil;
-#if SD_UIKIT
         // User-Agent Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.43
+#if SD_VISION
+        userAgent = [NSString stringWithFormat:@"%@/%@ (%@; visionOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], UITraitCollection.currentTraitCollection.displayScale];
+#elif SD_UIKIT
         userAgent = [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale]];
 #elif SD_WATCH
-        // User-Agent Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.43
         userAgent = [NSString stringWithFormat:@"%@/%@ (%@; watchOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[WKInterfaceDevice currentDevice] model], [[WKInterfaceDevice currentDevice] systemVersion], [[WKInterfaceDevice currentDevice] screenScale]];
 #elif SD_MAC
         userAgent = [NSString stringWithFormat:@"%@/%@ (Mac OS X %@)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[NSProcessInfo processInfo] operatingSystemVersionString]];
@@ -239,7 +224,7 @@ void SDWebImageDownloaderOperationSetCompleted(id<SDWebImageDownloaderOperation>
     BOOL shouldNotReuseOperation;
     if (operation) {
         @synchronized (operation) {
-            shouldNotReuseOperation = operation.isFinished || operation.isCancelled || SDWebImageDownloaderOperationGetCompleted(operation);
+            shouldNotReuseOperation = operation.isFinished || operation.isCancelled;
         }
     } else {
         shouldNotReuseOperation = YES;
@@ -288,6 +273,8 @@ void SDWebImageDownloaderOperationSetCompleted(id<SDWebImageDownloaderOperation>
 }
 
 #pragma mark Helper methods
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (SDWebImageOptions)imageOptionsFromDownloaderOptions:(SDWebImageDownloaderOptions)downloadOptions {
     SDWebImageOptions options = 0;
     if (downloadOptions & SDWebImageDownloaderScaleDownLargeImages) options |= SDWebImageScaleDownLargeImages;
@@ -298,6 +285,7 @@ void SDWebImageDownloaderOperationSetCompleted(id<SDWebImageDownloaderOperation>
     
     return options;
 }
+#pragma clang diagnostic pop
 
 - (nullable NSOperation<SDWebImageDownloaderOperation> *)createDownloaderOperationWithUrl:(nonnull NSURL *)url
                                                                                   options:(SDWebImageDownloaderOptions)options
@@ -515,12 +503,6 @@ didReceiveResponse:(NSURLResponse *)response
     
     // Identify the operation that runs this task and pass it the delegate method
     NSOperation<SDWebImageDownloaderOperation> *dataOperation = [self operationWithTask:task];
-    if (dataOperation) {
-        @synchronized (dataOperation) {
-            // Mark the downloader operation `isCompleted = YES`, no longer re-use this operation when new request comes in
-            SDWebImageDownloaderOperationSetCompleted(dataOperation, YES);
-        }
-    }
     if ([dataOperation respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
         [dataOperation URLSession:session task:task didCompleteWithError:error];
     }
@@ -574,8 +556,8 @@ didReceiveResponse:(NSURLResponse *)response
     self = [super init];
     if (self) {
         _downloadOperation = downloadOperation;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadDidReceiveResponse:) name:SDWebImageDownloadReceiveResponseNotification object:downloadOperation];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadDidStop:) name:SDWebImageDownloadStopNotification object:downloadOperation];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadDidReceiveResponse:) name:SDWebImageDownloadReceiveResponseNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadDidStop:) name:SDWebImageDownloadStopNotification object:nil];
     }
     return self;
 }
@@ -625,6 +607,8 @@ didReceiveResponse:(NSURLResponse *)response
     return YES;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (id<SDWebImageOperation>)requestImageWithURL:(NSURL *)url options:(SDWebImageOptions)options context:(SDWebImageContext *)context progress:(SDImageLoaderProgressBlock)progressBlock completed:(SDImageLoaderCompletedBlock)completedBlock {
     UIImage *cachedImage = context[SDWebImageContextLoaderCachedImage];
     
@@ -651,6 +635,7 @@ didReceiveResponse:(NSURLResponse *)response
     
     return [self downloadImageWithURL:url options:downloaderOptions context:context progress:progressBlock completed:completedBlock];
 }
+#pragma clang diagnostic pop
 
 - (BOOL)shouldBlockFailedURLWithURL:(NSURL *)url error:(NSError *)error {
     return [self shouldBlockFailedURLWithURL:url error:error options:0 context:nil];
