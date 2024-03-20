@@ -20,7 +20,6 @@ target 'GKPhotoBrowserDemo' do
   pod 'Masonry'
   pod 'TZImagePickerController'
   pod 'GKSliderView'
-  pod 'MJRefresh', '~> 3.7.8'
   
   pod 'GKPhotoBrowser', :path => '../'
   pod 'GKPhotoBrowser/YY', :path => '../'

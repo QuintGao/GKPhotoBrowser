@@ -22,28 +22,27 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.8.9)
   - GKNavigationBar/GestureHandle (1.8.9)
   - GKNavigationBar/NavigationBar (1.8.9)
-  - GKPhotoBrowser (2.7.4):
-    - GKPhotoBrowser/Default (= 2.7.4)
-  - GKPhotoBrowser/AVPlayer (2.7.4):
+  - GKPhotoBrowser (2.7.6):
+    - GKPhotoBrowser/Default (= 2.7.6)
+  - GKPhotoBrowser/AVPlayer (2.7.6):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (2.7.4)
-  - GKPhotoBrowser/Default (2.7.4):
+  - GKPhotoBrowser/Core (2.7.6)
+  - GKPhotoBrowser/Default (2.7.6):
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/Progress (2.7.4):
+  - GKPhotoBrowser/Progress (2.7.6):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/SD (2.7.4):
+  - GKPhotoBrowser/SD (2.7.6):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (2.7.4):
+  - GKPhotoBrowser/YY (2.7.6):
     - GKPhotoBrowser/Core
     - YYWebImage
   - GKSliderView (1.2.0)
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
-  - MJRefresh (3.7.6)
   - SDAutoLayout (2.2.1)
   - SDWebImage (5.19.0):
     - SDWebImage/Core (= 5.19.0)
@@ -75,7 +74,6 @@ DEPENDENCIES:
   - GKSliderView
   - Masonry
   - MBProgressHUD
-  - MJRefresh
   - SDAutoLayout
   - SDWebImage
   - TZImagePickerController
@@ -92,7 +90,6 @@ SPEC REPOS:
     - GKSliderView
     - Masonry
     - MBProgressHUD
-    - MJRefresh
     - SDAutoLayout
     - SDWebImage
     - TZImagePickerController
@@ -111,11 +108,10 @@ SPEC CHECKSUMS:
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 1cfc9fd346bdc71dab5c370296038283e8e3451b
-  GKPhotoBrowser: 38c7af781c8583025d134be7c7b3bc0f3f1a9452
+  GKPhotoBrowser: aa57bfcbcdba825927a22f5d7bfcb5b51a73fd0e
   GKSliderView: 49480065d2155bbc219bde5f9136f785757ed8d4
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
-  MJRefresh: 2fe7fb43a5167ceda20bb7e63f130c04fd1814a5
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
   SDWebImage: 981fd7e860af070920f249fd092420006014c3eb
   TZImagePickerController: f1c9f1cae6ac0e30b31aaa9698f9bf4a7cf5b84f
@@ -125,6 +121,6 @@ SPEC CHECKSUMS:
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
 
-PODFILE CHECKSUM: 58c9ecaf705c3bbe4cb648e682bb8d7a887ef3ee
+PODFILE CHECKSUM: b1e4cb63c0865ea41139a96decd3d3153fa512e9
 
 COCOAPODS: 1.15.2
