@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Photos/Photos.h>
 
 #define kNameFont [UIFont systemFontOfSize:16.0]
 #define kTextFont [UIFont systemFontOfSize:15.0]
@@ -30,9 +31,13 @@
 
 @property (nonatomic, copy) NSString *thumbnail_url;
 @property (nonatomic, copy) NSString *url;
+@property (nonatomic, strong) PHAsset *image_asset;
 
 @property (nonatomic, copy) NSString *video_url;
 @property (nonatomic, assign) BOOL   isVideo;
+
+@property (nonatomic, strong) UIImage *coverImage;
+@property (nonatomic, strong) PHAsset *video_asset;
 
 @property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) CGFloat height;

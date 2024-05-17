@@ -65,7 +65,11 @@
     [self.iconView sd_setImageWithURL:[NSURL URLWithString:model.icon.url]];
     
     GKTimeLineImage *img = model.images.firstObject;
-    [self.imgView sd_setImageWithURL:[NSURL URLWithString:img.url]];
+    if (img.coverImage) {
+        self.imgView.image = img.coverImage;
+    }else {
+        [self.imgView sd_setImageWithURL:[NSURL URLWithString:img.url]];        
+    }
     
     self.playImgView.hidden = !img.isVideo;
 }

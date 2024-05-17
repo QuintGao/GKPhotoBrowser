@@ -38,7 +38,7 @@
 }
 
 - (BOOL)isVideo {
-    return self.video_url.length > 0;
+    return self.video_url.length > 0 || self.video_asset;
 }
 
 @end
