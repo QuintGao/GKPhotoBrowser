@@ -29,7 +29,7 @@ GKPhotoBrowser是一个可高度自定义的图片、视频浏览器，支持多
 - 支持多种显示方式（none，zoom，push）
 - 支持多种隐藏方式（zoom，zoomScale，zoomSlide）
 - 支持多种加载方式（不明确、不明确带阴影、明确进度）
-- 支持自定义遮罩视图（支持SDAutoLayout，不支持Masonry）
+- 支持自定义遮罩视图
 - 支持屏幕旋转
 - 支持gif图片加载
 - 支持自定义图片加载、视频播放、进度显示等功能

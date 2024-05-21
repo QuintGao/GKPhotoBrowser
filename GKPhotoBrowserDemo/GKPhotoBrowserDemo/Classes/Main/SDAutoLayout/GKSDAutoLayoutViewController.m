@@ -12,6 +12,7 @@
 #import "GKTopView.h"
 #import "GKBottomView.h"
 #import <SDAutoLayout/SDAutoLayout.h>
+#import <Masonry/Masonry.h>
 
 @interface GKSDAutoLayoutViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -131,8 +132,9 @@
         if (kIsiPad) {
             browser.isFollowSystemRotation = YES;
         }
-    
         
+        browser.hidesCountLabel = YES;
+    
         weakSelf.topView = [[GKTopView alloc] init];
         
         weakSelf.bottomView = [[GKBottomView alloc] init];
@@ -147,11 +149,24 @@
             CGFloat x = (KIsiPhoneX && photoBrowser.isLandscape) ? 30 : 0;
             
 //            self.topView.frame = CGRectMake(x, 0, w, topH);
-            weakSelf.topView.sd_layout.leftSpaceToView(photoBrowser.contentView, x).topEqualToView(photoBrowser.contentView).widthIs(w).heightIs(topH);
+//            weakSelf.topView.sd_layout.leftSpaceToView(photoBrowser.contentView, x).topEqualToView(photoBrowser.contentView).widthIs(w).heightIs(topH);
+            
+            [weakSelf.topView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(photoBrowser.contentView).offset(x);
+                make.top.equalTo(photoBrowser.contentView);
+                make.width.mas_equalTo(w);
+                make.height.mas_equalTo(topH);
+            }];
             
             CGFloat btmH = (KIsiPhoneX && !photoBrowser.isLandscape) ? 94 : 60;
 //            self.bottomView.frame = CGRectMake(x, superFrame.size.height - btmH, w, btmH);
-            weakSelf.bottomView.sd_layout.leftSpaceToView(photoBrowser.contentView, x).topSpaceToView(photoBrowser.contentView, superFrame.size.height - btmH).widthIs(w).heightIs(btmH);
+//            weakSelf.bottomView.sd_layout.leftSpaceToView(photoBrowser.contentView, x).topSpaceToView(photoBrowser.contentView, superFrame.size.height - btmH).widthIs(w).heightIs(btmH);
+            [weakSelf.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(photoBrowser.contentView).offset(x);
+                make.top.equalTo(photoBrowser.contentView).offset(superFrame.size.height - btmH);
+                make.width.mas_equalTo(w);
+                make.height.mas_equalTo(btmH);
+            }];
         }];
         
         [browser showFromVC:weakSelf];
