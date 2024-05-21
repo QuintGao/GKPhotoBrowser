@@ -22,28 +22,28 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.8.9)
   - GKNavigationBar/GestureHandle (1.8.9)
   - GKNavigationBar/NavigationBar (1.8.9)
-  - GKPhotoBrowser (2.7.6):
-    - GKPhotoBrowser/Default (= 2.7.6)
-  - GKPhotoBrowser/AVPlayer (2.7.6):
+  - GKPhotoBrowser (2.8.0):
+    - GKPhotoBrowser/Default (= 2.8.0)
+  - GKPhotoBrowser/AVPlayer (2.8.0):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (2.7.6)
-  - GKPhotoBrowser/Default (2.7.6):
+  - GKPhotoBrowser/Core (2.8.0)
+  - GKPhotoBrowser/Default (2.8.0):
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (2.7.6):
+  - GKPhotoBrowser/KF (2.8.0):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (2.7.6):
+  - GKPhotoBrowser/Progress (2.8.0):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/SD (2.7.6):
+  - GKPhotoBrowser/SD (2.8.0):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (2.7.6):
+  - GKPhotoBrowser/YY (2.8.0):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser/ZFPlayer (2.7.6):
+  - GKPhotoBrowser/ZFPlayer (2.8.0):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.0)
@@ -117,7 +117,7 @@ SPEC CHECKSUMS:
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 1cfc9fd346bdc71dab5c370296038283e8e3451b
-  GKPhotoBrowser: 415935ca5a17b410bcf9f0689f4084fe06c3a003
+  GKPhotoBrowser: d0d87e09f600a60100861e58544d5e985a7529c1
   GKSliderView: 49480065d2155bbc219bde5f9136f785757ed8d4
   Kingfisher: c148cd7b47ebde9989f6bc7c27dcaa79d81279a0
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201

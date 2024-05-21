@@ -33,6 +33,7 @@ GKPhotoBrowser是一个可高度自定义的图片、视频浏览器，支持多
 - 支持屏幕旋转
 - 支持gif图片加载
 - 支持自定义图片加载、视频播放、进度显示等功能
+- 支持Swift
 
 ## 安装
 默认安装，支持图片（SDWebImage加载）和视频（AVPlayer播放）
@@ -51,9 +52,17 @@ YYWebImage加载图片
 ```objc
 pod 'GKPhotoBrowser/YY'
 ```
+Kingfisher加载图片
+```objc
+pod 'GKPhotoBrowser/KF'
+```
 AVPlayer播放视频
 ```objc
 pod 'GKPhotoBrowser/AVPlayer'
+```
+ZFPlayer播放视频
+```objc
+pod 'GKPhotoBrowser/ZFPlayer'
 ```
 
 视频播放进度条

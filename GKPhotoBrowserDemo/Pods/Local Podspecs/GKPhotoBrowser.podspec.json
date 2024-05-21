@@ -1,6 +1,6 @@
 {
   "name": "GKPhotoBrowser",
-  "version": "2.7.6",
+  "version": "2.8.0",
   "summary": "iOS可高度自定义的图片浏览器，支持图片浏览、视频播放等多种功能",
   "homepage": "https://github.com/QuintGao/GKPhotoBrowser",
   "license": "MIT",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/QuintGao/GKPhotoBrowser.git",
-    "tag": "2.7.6"
+    "tag": "2.8.0"
   },
   "swift_versions": "5.0",
   "default_subspecs": "Default",
@@ -95,6 +95,9 @@
         "ZFPlayer/AVPlayer": [
 
         ]
+      },
+      "pod_target_xcconfig": {
+        "VALID_ARCHS": "x86_64 armv7 arm64"
       }
     },
     {
