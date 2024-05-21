@@ -31,6 +31,9 @@ PODS:
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
+  - GKPhotoBrowser/KF (2.7.6):
+    - GKPhotoBrowser/Core
+    - Kingfisher
   - GKPhotoBrowser/Progress (2.7.6):
     - GKPhotoBrowser/Core
     - GKSliderView
@@ -40,7 +43,11 @@ PODS:
   - GKPhotoBrowser/YY (2.7.6):
     - GKPhotoBrowser/Core
     - YYWebImage
+  - GKPhotoBrowser/ZFPlayer (2.7.6):
+    - GKPhotoBrowser/Core
+    - ZFPlayer/AVPlayer
   - GKSliderView (1.2.0)
+  - Kingfisher (4.10.1)
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
   - SDAutoLayout (2.2.1)
@@ -70,7 +77,10 @@ DEPENDENCIES:
   - GKMessageTool
   - GKNavigationBar
   - GKPhotoBrowser (from `../`)
+  - GKPhotoBrowser/KF (from `../`)
+  - GKPhotoBrowser/SD (from `../`)
   - GKPhotoBrowser/YY (from `../`)
+  - GKPhotoBrowser/ZFPlayer (from `../`)
   - GKSliderView
   - Masonry
   - MBProgressHUD
@@ -79,7 +89,6 @@ DEPENDENCIES:
   - TZImagePickerController
   - YYModel
   - YYWebImage (~> 1.0.5)
-  - ZFPlayer/AVPlayer
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -88,6 +97,7 @@ SPEC REPOS:
     - GKMessageTool
     - GKNavigationBar
     - GKSliderView
+    - Kingfisher
     - Masonry
     - MBProgressHUD
     - SDAutoLayout
@@ -108,8 +118,9 @@ SPEC CHECKSUMS:
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 1cfc9fd346bdc71dab5c370296038283e8e3451b
-  GKPhotoBrowser: aa57bfcbcdba825927a22f5d7bfcb5b51a73fd0e
+  GKPhotoBrowser: 415935ca5a17b410bcf9f0689f4084fe06c3a003
   GKSliderView: 49480065d2155bbc219bde5f9136f785757ed8d4
+  Kingfisher: c148cd7b47ebde9989f6bc7c27dcaa79d81279a0
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
@@ -121,6 +132,6 @@ SPEC CHECKSUMS:
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
 
-PODFILE CHECKSUM: b1e4cb63c0865ea41139a96decd3d3153fa512e9
+PODFILE CHECKSUM: bddaace9c8b0212e961d47e51e6c9603989ea1db
 
 COCOAPODS: 1.15.2

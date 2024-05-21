@@ -8,6 +8,9 @@
 #import "GKPhotoRotationHandler.h"
 #import "GKPhotoBrowser.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @interface GKPhotoRotationHandler()
 
 // 在浏览器显示前是否已经添加过屏幕旋转监测
@@ -119,10 +122,7 @@
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
             if (@available(iOS 13.0, *)) {} else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
-#pragma clang diagnostic pop
             }
             
             float rotation = currentOrientation == UIDeviceOrientationLandscapeRight ? 1.5 : 0.5;
@@ -161,10 +161,7 @@
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
             if (@available(iOS 13.0, *)) {} else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientation)currentOrientation animated:YES];
-#pragma clang diagnostic pop
             }
             
             // 旋转view
@@ -228,3 +225,5 @@
 }
 
 @end
+
+#pragma clang diagnostic pop

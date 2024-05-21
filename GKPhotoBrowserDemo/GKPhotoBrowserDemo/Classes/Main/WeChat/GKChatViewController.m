@@ -10,6 +10,7 @@
 #import "GKChatViewCell.h"
 #import <Masonry/Masonry.h>
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
+#import <GKPhotoBrowser/GKZFPlayerManager.h>
 #import "GKVideoProgressView.h"
 #import <TZImagePickerController/TZImagePickerController.h>
 
@@ -165,6 +166,7 @@
     browser.isSingleTapDisabled = YES;
     browser.isVideoPausedWhenDragged = NO;
     [browser setupVideoProgressProtocol:[GKVideoProgressView new]];
+    [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];
     browser.isVideoReplay = NO;
     [browser showFromVC:self];
     self.browser = browser;

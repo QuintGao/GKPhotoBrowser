@@ -1,0 +1,4 @@
+${PODS_ROOT}/Target Support Files/Pods-SwiftExample/Pods-SwiftExample-resources.sh
+${PODS_ROOT}/../../GKPhotoBrowser/GKPhotoBrowser.bundle
+${PODS_CONFIGURATION_BUILD_DIR}/GKPhotoBrowser.common/GKPhotoBrowser.Privacy.bundle
+${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage-library/SDWebImage.bundle

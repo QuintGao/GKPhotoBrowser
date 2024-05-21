@@ -33,8 +33,7 @@
 
 - (void)showFromVC:(UIViewController *)vc {
     if (self.browser.showStyle == GKPhotoBrowserShowStylePush) {
-        UIImage *image = [self getCaptureWithView:vc.view.window];
-        self.captureImage = image;
+        self.captureImage = [self getCaptureWithView:vc.view.window];
         self.browser.hidesBottomBarWhenPushed = YES;
         [vc.navigationController pushViewController:self.browser animated:YES];
     }else {

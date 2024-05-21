@@ -1,0 +1,6 @@
+framework module GKPhotoBrowser {
+  umbrella header "GKPhotoBrowser.default-AVPlayer-Core-KF-Progress-SD-YY-ZFPlayer-umbrella.h"
+
+  export *
+  module * { export * }
+}

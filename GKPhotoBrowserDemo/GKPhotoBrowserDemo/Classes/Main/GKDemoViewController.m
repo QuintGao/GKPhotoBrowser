@@ -8,6 +8,7 @@
 
 #import "GKDemoViewController.h"
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
+#import <GKPhotoBrowser/GKPhotoBrowser-Swift.h>
 #import "GKPhotosView.h"
 #import <Masonry/Masonry.h>
 #import <GKPhotoBrowser/GKSDWebImageManager.h>
@@ -194,8 +195,10 @@
     browser.failStyle = self.failStyle;
     if (self.imgLoadStyle == 0) {
         [browser setupWebImageProtocol:[[GKSDWebImageManager alloc] init]];
-    }else {
+    }else if (self.imgLoadStyle == 1) {
         [browser setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
+    }else {
+        [browser setupWebImageProtocol:[[GKKFWebImageManager alloc] init]];
     }
     browser.isPopGestureEnabled = YES; // push显示，在第一页时手势返回
     
@@ -334,7 +337,7 @@
 
 - (UISegmentedControl *)imgLoadControl {
     if (!_imgLoadControl) {
-        _imgLoadControl = [[UISegmentedControl alloc] initWithItems:@[@"SDWebImage", @"YYWebImage"]];
+        _imgLoadControl = [[UISegmentedControl alloc] initWithItems:@[@"SDWebImage", @"YYWebImage", @"Kingfisher"]];
         [_imgLoadControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
         _imgLoadControl.selectedSegmentIndex = 0;
     }

@@ -1,3 +1,5 @@
+workspace 'GKPhotoBrowserDemo.xcworkspace'
+
 source 'https://github.com/CocoaPods/Specs.git'
 
 platform :ios, '9.0'
@@ -23,13 +25,26 @@ target 'GKPhotoBrowserDemo' do
   
   pod 'GKPhotoBrowser', :path => '../'
   pod 'GKPhotoBrowser/YY', :path => '../'
+  pod 'GKPhotoBrowser/KF', :path => '../'
+  pod 'GKPhotoBrowser/ZFPlayer', :path => '../'
 #  pod 'GKPhotoBrowser', :subspecs => ['SD', 'YY', 'AVPlayer'], :path => '../'
 #  pod 'GKPhotoBrowser/SD', :path => '../'
 #  pod 'GKPhotoBrowser/AVPlayer', :path => '../'
 #  pod 'GKPhotoBrowser/Progress', :path => '../'
 
-  pod 'ZFPlayer/AVPlayer'
+#  pod 'ZFPlayer/AVPlayer'
 
+end
+
+target 'SwiftExample' do
+  project "SwiftExample/SwiftExample.xcodeproj"
+  
+  use_frameworks!
+  
+  pod 'GKPhotoBrowser/SD', :path => '../'
+  pod 'GKPhotoBrowser/KF', :path => '../'
+#  pod 'Kingfisher'
+  pod 'TZImagePickerController'
 end
 
 post_install do |installer|
@@ -57,4 +72,8 @@ post_install do |installer|
         end
     end
     ALFramework.remove_from_project
+end
+
+pre_install do |installer|
+ Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
 end

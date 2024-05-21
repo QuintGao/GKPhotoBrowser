@@ -75,41 +75,45 @@ static Class progressClass = nil;
 
 - (instancetype)initWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)currentIndex {
     if (self = [super init]) {
-        self.photos       = photos;
+        self.photos = photos;
         self.currentIndex = currentIndex;
-        self.isStatusBarShow         = NO;
-        self.isHideSourceView        = YES;
-        self.statusBarStyle          = UIStatusBarStyleLightContent;
-        self.isFullWidthForLandScape = YES;
-        self.maxZoomScale            = kMaxZoomScale;
-        self.doubleZoomScale         = self.maxZoomScale;
-        self.animDuration            = kAnimationDuration;
-        self.photoViewPadding        = kPhotoViewPadding;
-        self.hidesSavedBtn           = YES;
-        self.showPlayImage           = YES;
-        self.isVideoReplay           = YES;
-        self.isVideoPausedWhenDragged = YES;
-        
-        _visiblePhotoViews  = [NSMutableArray new];
-        _reusablePhotoViews = [NSMutableSet new];
-        
-        imageManagerClass = NSClassFromString(@"GKSDWebImageManager");
-        if (!imageManagerClass) {
-            imageManagerClass = NSClassFromString(@"GKYYWebImageManager");
-        }
-        if (imageManagerClass) {
-            [self setupWebImageProtocol:[imageManagerClass new]];
-        }
-        videoManagerClass = NSClassFromString(@"GKAVPlayerManager");
-        if (videoManagerClass) {
-            [self setupVideoPlayerProtocol:[videoManagerClass new]];
-        }
-        progressClass = NSClassFromString(@"GKProgressView");
-        if (progressClass) {
-            [self setupVideoProgressProtocol:[progressClass new]];
-        }
+        [self initialize];
     }
     return self;
+}
+
+- (void)initialize {
+    self.isStatusBarShow         = NO;
+    self.isHideSourceView        = YES;
+    self.statusBarStyle          = UIStatusBarStyleLightContent;
+    self.isFullWidthForLandScape = YES;
+    self.maxZoomScale            = kMaxZoomScale;
+    self.doubleZoomScale         = self.maxZoomScale;
+    self.animDuration            = kAnimationDuration;
+    self.photoViewPadding        = kPhotoViewPadding;
+    self.hidesSavedBtn           = YES;
+    self.showPlayImage           = YES;
+    self.isVideoReplay           = YES;
+    self.isVideoPausedWhenDragged = YES;
+    
+    _visiblePhotoViews  = [NSMutableArray new];
+    _reusablePhotoViews = [NSMutableSet new];
+    
+    imageManagerClass = NSClassFromString(@"GKSDWebImageManager");
+    if (!imageManagerClass) {
+        imageManagerClass = NSClassFromString(@"GKYYWebImageManager");
+    }
+    if (imageManagerClass) {
+        [self setupWebImageProtocol:[imageManagerClass new]];
+    }
+    videoManagerClass = NSClassFromString(@"GKAVPlayerManager");
+    if (videoManagerClass) {
+        [self setupVideoPlayerProtocol:[videoManagerClass new]];
+    }
+    progressClass = NSClassFromString(@"GKProgressView");
+    if (progressClass) {
+        [self setupVideoProgressProtocol:[progressClass new]];
+    }
 }
 
 - (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol {
