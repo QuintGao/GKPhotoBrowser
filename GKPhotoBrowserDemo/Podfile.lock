@@ -78,7 +78,6 @@ DEPENDENCIES:
   - GKNavigationBar
   - GKPhotoBrowser (from `../`)
   - GKPhotoBrowser/KF (from `../`)
-  - GKPhotoBrowser/SD (from `../`)
   - GKPhotoBrowser/YY (from `../`)
   - GKPhotoBrowser/ZFPlayer (from `../`)
   - GKSliderView
@@ -132,6 +131,6 @@ SPEC CHECKSUMS:
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
 
-PODFILE CHECKSUM: bddaace9c8b0212e961d47e51e6c9603989ea1db
+PODFILE CHECKSUM: 24cbe7823c7dcf2dc67f17c650a090610fdf93bb
 
 COCOAPODS: 1.15.2

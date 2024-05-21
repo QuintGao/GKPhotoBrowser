@@ -1,5 +1,0 @@
-#import <Foundation/Foundation.h>
-@interface PodsDummy_GKPhotoBrowser_default_AVPlayer_Core_KF_Progress_SD_YY_ZFPlayer : NSObject
-@end
-@implementation PodsDummy_GKPhotoBrowser_default_AVPlayer_Core_KF_Progress_SD_YY_ZFPlayer
-@end

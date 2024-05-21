@@ -36,17 +36,6 @@ target 'GKPhotoBrowserDemo' do
 
 end
 
-target 'SwiftExample' do
-  project "SwiftExample/SwiftExample.xcodeproj"
-  
-  use_frameworks!
-  
-  pod 'GKPhotoBrowser/SD', :path => '../'
-  pod 'GKPhotoBrowser/KF', :path => '../'
-#  pod 'Kingfisher'
-  pod 'TZImagePickerController'
-end
-
 post_install do |installer|
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|

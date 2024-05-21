@@ -9,6 +9,7 @@
 #import "GKMainViewController.h"
 #import "GKTest01ViewController.h"
 #import "GKSDAutoLayoutViewController.h"
+#import "GKPhotoBrowserDemo-Swift.h"
 
 @interface GKMainViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -46,6 +47,8 @@
 - (void)setupData {
     self.dataList = @[@{@"text"  : @"GKPhotoBrowser使用",
                         @"class" : @"GKDemoViewController"},
+                      @{@"text"  : @"Swift-Kingfisher-ZFPlayer",
+                        @"class" : @"GKSwiftViewController"},
                       @{@"text"  : @"TableViewCell单图none",
                         @"class" : @"GKTest01ViewController"},
                       @{@"text"  : @"TableViewCell多图zoom",
@@ -106,6 +109,9 @@
     Class cls = NSClassFromString(dic[@"class"]);
     
     UIViewController *vc = [cls new];
+    if (!vc) {
+        vc = [[GKSwiftViewController alloc] init];
+    }
     
     [self.navigationController pushViewController:vc animated:YES];
 }

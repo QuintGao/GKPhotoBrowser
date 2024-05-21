@@ -53,6 +53,7 @@
 		795FA6281FF34F230057BDB0 /* GKPhotoBrowser.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */; };
 		795FA6291FF34F230057BDB0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6271FF34F220057BDB0 /* README.md */; };
 		79B33755249111E100590023 /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = 79B33754249111E100590023 /* test.gif */; };
+		79E99CE72BFC3A8500FBC92E /* GKSwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */; };
 		90EEF67CE4A0A3BDF6976160 /* Pods_GKPhotoBrowserDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -155,6 +156,8 @@
 		795FA6261FF34F210057BDB0 /* GKPhotoBrowser.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GKPhotoBrowser.podspec; path = ../../GKPhotoBrowser.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		795FA6271FF34F220057BDB0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		79B33754249111E100590023 /* test.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test.gif; sourceTree = "<group>"; };
+		79E99CE52BFC3A8400FBC92E /* GKPhotoBrowserDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GKPhotoBrowserDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKSwiftViewController.swift; sourceTree = "<group>"; };
 		9FA13BB792485E23EB16327E /* libPods-SwiftExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SwiftExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3BFFE77B2F30889EE03AD41 /* Pods-SwiftExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftExample/Pods-SwiftExample.release.xcconfig"; sourceTree = "<group>"; };
 		E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GKPhotoBrowserDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -298,6 +301,7 @@
 				7925A54D2A28913200972F47 /* LargeImage */,
 				60415CAE2121643E00D1D54B /* SDAutoLayout */,
 				7927F0CD20A97F0C0017FD5B /* Test */,
+				79E99CE42BFC3A6C00FBC92E /* Swift */,
 				795FA5F71FF338200057BDB0 /* GKPhotosView.h */,
 				795FA5E01FF3381F0057BDB0 /* GKPhotosView.m */,
 				795FA5E51FF338200057BDB0 /* GKTest01ViewCell.h */,
@@ -368,6 +372,15 @@
 			path = WeChat;
 			sourceTree = "<group>";
 		};
+		79E99CE42BFC3A6C00FBC92E /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */,
+				79E99CE52BFC3A8400FBC92E /* GKPhotoBrowserDemo-Bridging-Header.h */,
+			);
+			path = Swift;
+			sourceTree = "<group>";
+		};
 		AC164CC01C3860407343047D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -424,6 +437,7 @@
 				TargetAttributes = {
 					795FA58A1FF333420057BDB0 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1540;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -497,7 +511,7 @@
 				"${BUILT_PRODUCTS_DIR}/GKCover/GKCover.framework",
 				"${BUILT_PRODUCTS_DIR}/GKMessageTool/GKMessageTool.framework",
 				"${BUILT_PRODUCTS_DIR}/GKNavigationBar/GKNavigationBar.framework",
-				"${BUILT_PRODUCTS_DIR}/GKPhotoBrowser.default-AVPlayer-Core-KF-Progress-SD-YY-ZFPlayer/GKPhotoBrowser.framework",
+				"${BUILT_PRODUCTS_DIR}/GKPhotoBrowser/GKPhotoBrowser.framework",
 				"${BUILT_PRODUCTS_DIR}/GKSliderView/GKSliderView.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
@@ -545,6 +559,7 @@
 				795FA6171FF338200057BDB0 /* GKTest01ViewController.m in Sources */,
 				7907911D29B6E40A000D70A5 /* GKDemoViewController.m in Sources */,
 				795FA6181FF338200057BDB0 /* GKTest02ViewCell.m in Sources */,
+				79E99CE72BFC3A8500FBC92E /* GKSwiftViewController.swift in Sources */,
 				795FA6191FF338200057BDB0 /* UIView+GKFrame.m in Sources */,
 				7925A5532A28915700972F47 /* GKLargeImageManager.m in Sources */,
 				602CC2DC21226AD500DE81BF /* GKTopView.m in Sources */,
@@ -708,6 +723,7 @@
 			baseConfigurationReference = 1BD88472E22F06A033FA0CC2 /* Pods-GKPhotoBrowserDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3D47N4555T;
@@ -721,6 +737,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "GKPhotoBrowserDemo/Classes/Main/Swift/GKPhotoBrowserDemo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -730,6 +749,7 @@
 			baseConfigurationReference = EE7DA052FCA02BBA178A7C45 /* Pods-GKPhotoBrowserDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3D47N4555T;
@@ -743,6 +763,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "GKPhotoBrowserDemo/Classes/Main/Swift/GKPhotoBrowserDemo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

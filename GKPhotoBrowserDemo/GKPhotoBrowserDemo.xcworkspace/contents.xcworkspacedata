@@ -5,9 +5,6 @@
       location = "group:GKPhotoBrowserDemo.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:SwiftExample/SwiftExample.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>
