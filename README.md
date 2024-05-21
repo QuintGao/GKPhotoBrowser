@@ -144,6 +144,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.8.0 - 2024.05.21 1、网络加载支持Kingfisher 2、视频播放支持ZFPlayer 3、增加SwiftDemo
  * 2.7.6 - 2024.03.20 privacy fix
  * 2.7.4 - 2024.03.19 1、修复pageControl可点击的问题 2、添加隐私清单文件
  * 2.7.3 - 2023.10.12 修复问题 #188 #189
