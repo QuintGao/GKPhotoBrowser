@@ -10,6 +10,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/QuintGao/GKPhotoBrowser.git", :tag => s.version.to_s }
   s.swift_version = '5.0'
   s.default_subspec = 'Default'
+  s.static_framework = true
   
   s.subspec 'Default' do |ss|
     ss.dependency 'GKPhotoBrowser/SD'

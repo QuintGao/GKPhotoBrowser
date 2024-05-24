@@ -8,15 +8,11 @@
 
 #import "GKDemoViewController.h"
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
-#import <GKPhotoBrowser/GKPhotoBrowser-Swift.h>
-#import "GKPhotosView.h"
 #import <Masonry/Masonry.h>
-#import <GKPhotoBrowser/GKSDWebImageManager.h>
-#import <GKPhotoBrowser/GKYYWebImageManager.h>
-#import <MBProgressHUD/MBProgressHUD.h>
-#import <GKMessageTool/GKMessageTool.h>
+#import "GKDemoWebViewController.h"
+#import "GKDemoPhotoViewController.h"
 
-@interface GKDemoViewController ()<GKPhotosViewDelegate, GKPhotoBrowserDelegate>
+@interface GKDemoViewController ()
 
 // 必须弱引用
 @property (nonatomic, weak) GKPhotoBrowser *browser;
@@ -46,10 +42,14 @@
 @property (nonatomic, strong) UILabel *imgLoadLabel;
 @property (nonatomic, strong) UISegmentedControl *imgLoadControl;
 
-@property (nonatomic, strong) GKPhotosView *photosView;
-@property (nonatomic, strong) NSArray *photos;
+// 视频加载方式
+@property (nonatomic, assign) NSInteger videoLoadStyle;
+@property (nonatomic, strong) UILabel *videoLoadLabel;
+@property (nonatomic, strong) UISegmentedControl *videoLoadControl;
 
-@property (nonatomic, strong) UIImageView *customFailView;
+@property (nonatomic, strong) UIButton *webBtn;
+
+@property (nonatomic, strong) UIButton *photoBtn;
 
 @end
 
@@ -59,7 +59,6 @@
     [super viewDidLoad];
     
     [self initUI];
-    [self loadData];
 }
 
 - (void)initUI {
@@ -76,9 +75,11 @@
     [self.view addSubview:self.failControl];
     [self.view addSubview:self.imgLoadLabel];
     [self.view addSubview:self.imgLoadControl];
+    [self.view addSubview:self.videoLoadLabel];
+    [self.view addSubview:self.videoLoadControl];
     
     [self.showLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.gk_navigationBar.mas_bottom).offset(20);
+        make.top.equalTo(self.gk_navigationBar.mas_bottom).offset(10);
         make.centerX.equalTo(self.view);
     }];
     
@@ -88,7 +89,7 @@
     }];
     
     [self.hideLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.showControl.mas_bottom).offset(20);
+        make.top.equalTo(self.showControl.mas_bottom).offset(10);
         make.centerX.equalTo(self.view);
     }];
     
@@ -98,7 +99,7 @@
     }];
     
     [self.loadLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.hideControl.mas_bottom).offset(20);
+        make.top.equalTo(self.hideControl.mas_bottom).offset(10);
         make.centerX.equalTo(self.view);
     }];
     
@@ -108,7 +109,7 @@
     }];
     
     [self.failLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.loadControl.mas_bottom).offset(20);
+        make.top.equalTo(self.loadControl.mas_bottom).offset(10);
         make.centerX.equalTo(self.view);
     }];
     
@@ -118,7 +119,7 @@
     }];
     
     [self.imgLoadLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.failControl.mas_bottom).offset(20);
+        make.top.equalTo(self.failControl.mas_bottom).offset(10);
         make.centerX.equalTo(self.view);
     }];
     
@@ -127,37 +128,32 @@
         make.centerX.equalTo(self.view);
     }];
     
-    self.photosView =  [GKPhotosView photosViewWithWidth:self.view.bounds.size.width - 20 andMargin:10];
-    self.photosView.delegate = self;
-    [self.view addSubview:self.photosView];
-}
-
-- (void)loadData {
-    NSArray *images = @[
-                        @"https://img2.baidu.com/it/u=3316344338,3288169191&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
-                        @"https://img0.baidu.com/it/u=3886978592,3432337795&fm=253&fmt=auto&app=138&f=JPEG?w=1194&h=500",
-                        @"https://img1.baidu.com/it/u=2226546102,192117690&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889",
-                        @"https://img.zdwx.net/group1/M00/05/71/wKgCFF7Gg4GAVIB8ABNYPLSU3f0067.jpg",
-                        @"https://hbimg.huaban.com/553632d876c342a9ffb007999b67432b69bebcf8684b4",
-                        @"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201703%2F23%2F20170323121431_QzNxW.thumb.400_0.gif&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1680760815&t=a95782bbf075125d6ccfbb401a831364"];
-    self.photos = images;
+    [self.videoLoadLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.imgLoadControl.mas_bottom).offset(10);
+        make.centerX.equalTo(self.view);
+    }];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        CGFloat height = [GKPhotosView sizeWithCount:images.count width:self.view.bounds.size.width - 20 andMargin:10].height;
-        CGFloat y = CGRectGetMaxY(self.imgLoadControl.frame) + 20;
-        self.photosView.frame = CGRectMake(10, y, self.view.bounds.size.width - 20, height);
-        
-        self.photosView.photos = images;
-    });
-}
-
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
+    [self.videoLoadControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.videoLoadLabel.mas_bottom).offset(10);
+        make.centerX.equalTo(self.view);
+    }];
     
-    [self.photosView updateWidth:self.view.bounds.size.width - 20];
-    CGFloat height = [GKPhotosView sizeWithCount:self.photos.count width:self.view.bounds.size.width - 20 andMargin:10].height;
-    CGFloat y = CGRectGetMaxY(self.imgLoadControl.frame) + 20;
-    self.photosView.frame = CGRectMake(10, y, self.view.bounds.size.width - 20, height);
+    [self.view addSubview:self.webBtn];
+    [self.view addSubview:self.photoBtn];
+    
+    [self.webBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view).offset(80);
+        make.top.equalTo(self.videoLoadControl.mas_bottom).offset(50);
+        make.width.mas_equalTo(80);
+        make.height.mas_equalTo(30);
+    }];
+    
+    [self.photoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-80);
+        make.top.equalTo(self.videoLoadControl.mas_bottom).offset(50);
+        make.width.mas_equalTo(80);
+        make.height.mas_equalTo(30);
+    }];
 }
 
 #pragma mark - Action
@@ -172,80 +168,31 @@
         self.failStyle = (GKPhotoBrowserFailStyle)control.selectedSegmentIndex;
     }else if (control == self.imgLoadControl) {
         self.imgLoadStyle = control.selectedSegmentIndex;
+    }else if (control == self.videoLoadControl) {
+        self.videoLoadStyle = control.selectedSegmentIndex;
     }
 }
 
-#pragma mark - GKPhotosViewDelegate
-- (void)photoTapped:(UIImageView *)imgView {
-    NSMutableArray *photos = [NSMutableArray array];
-    
-    [self.photos enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        GKPhoto *photo = [[GKPhoto alloc] init];
-        photo.url = [NSURL URLWithString:obj];
-        photo.sourceImageView = self.photosView.subviews[idx];
-        [photos addObject:photo];
-    }];
-    
-    NSInteger index = imgView.tag;
-    
-    GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-    browser.showStyle = self.showStyle;
-    browser.hideStyle = self.hideStyle;
-    browser.loadStyle = self.loadStyle;
-    browser.failStyle = self.failStyle;
-    if (self.imgLoadStyle == 0) {
-        [browser setupWebImageProtocol:[[GKSDWebImageManager alloc] init]];
-    }else if (self.imgLoadStyle == 1) {
-        [browser setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
-    }else {
-        [browser setupWebImageProtocol:[[GKKFWebImageManager alloc] init]];
-    }
-    browser.isPopGestureEnabled = YES; // push显示，在第一页时手势返回
-    
-    [browser showFromVC:self];
-    browser.delegate = self;
-    self.browser = browser;
+- (void)webBtnClick:(id)sender {
+    GKDemoWebViewController *webVC = [[GKDemoWebViewController alloc] init];
+    webVC.showStyle = self.showStyle;
+    webVC.hideStyle = self.hideStyle;
+    webVC.loadStyle = self.loadStyle;
+    webVC.failStyle = self.failStyle;
+    webVC.imageLoadStyle = self.imgLoadStyle;
+    webVC.videoLoadStyle = self.videoLoadStyle;
+    [self.navigationController pushViewController:webVC animated:YES];
 }
 
-#pragma mark - GKPhotoBrowserDelegate
-- (void)photoBrowser:(GKPhotoBrowser *)browser didChangedIndex:(NSInteger)index {
-    
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser didSelectAtIndex:(NSInteger)index {
-    
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser loadImageAtIndex:(NSInteger)index progress:(float)progress isOriginImage:(BOOL)isOriginImage {
-    if (progress == 1.0f) {
-        [GKMessageTool hideMessage];
-    }else {
-        [GKMessageTool showMessage:nil];
-    }
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index {    
-    if (self.customFailView) return;
-    self.customFailView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
-    [self.customFailView sizeToFit];
-    
-    UIView *photoView = browser.curPhotoView;
-    self.customFailView.center = CGPointMake(photoView.bounds.size.width * 0.5, photoView.bounds.size.height * 0.5);
-    [photoView addSubview:self.customFailView];
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser panBeginWithIndex:(NSInteger)index {
-    
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser panEndedWithIndex:(NSInteger)index willDisappear:(BOOL)disappear {
-    
-}
-
-- (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index {
-    NSLog(@"browser dismiss");
-    [self.customFailView removeFromSuperview];
-    self.customFailView = nil;
+- (void)photoBtnClick:(id)sender {
+    GKDemoPhotoViewController *photoVC = [[GKDemoPhotoViewController alloc] init];
+    photoVC.showStyle = self.showStyle;
+    photoVC.hideStyle = self.hideStyle;
+    photoVC.loadStyle = self.loadStyle;
+    photoVC.failStyle = self.failStyle;
+    photoVC.imageLoadStyle = self.imgLoadStyle;
+    photoVC.videoLoadStyle = self.videoLoadStyle;
+    [self.navigationController pushViewController:photoVC animated:YES];
 }
 
 #pragma mark - Lazy
@@ -342,6 +289,53 @@
         _imgLoadControl.selectedSegmentIndex = 0;
     }
     return _imgLoadControl;
+}
+
+- (UILabel *)videoLoadLabel {
+    if (!_videoLoadLabel) {
+        _videoLoadLabel = [[UILabel alloc] init];
+        _videoLoadLabel.font = [UIFont systemFontOfSize:15];
+        _videoLoadLabel.textColor = UIColor.blackColor;
+        _videoLoadLabel.text = @"视频加载方式";
+    }
+    return _videoLoadLabel;
+}
+
+- (UISegmentedControl *)videoLoadControl {
+    if (!_videoLoadControl) {
+        _videoLoadControl = [[UISegmentedControl alloc] initWithItems:@[@"AVPlayer", @"ZFPlayer"]];
+        [_videoLoadControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
+        _videoLoadControl.selectedSegmentIndex = 0;
+    }
+    return _videoLoadControl;
+}
+
+- (UIButton *)webBtn {
+    if (!_webBtn) {
+        _webBtn = [[UIButton alloc] init];
+        [_webBtn setTitle:@"网络图片" forState:UIControlStateNormal];
+        [_webBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        _webBtn.backgroundColor = UIColor.blackColor;
+        _webBtn.layer.cornerRadius = 5;
+        _webBtn.layer.masksToBounds = YES;
+        _webBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [_webBtn addTarget:self action:@selector(webBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _webBtn;
+}
+
+- (UIButton *)photoBtn {
+    if (!_photoBtn) {
+        _photoBtn = [[UIButton alloc] init];
+        [_photoBtn setTitle:@"相册图片" forState:UIControlStateNormal];
+        [_photoBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        _photoBtn.backgroundColor = UIColor.blackColor;
+        _photoBtn.layer.cornerRadius = 5;
+        _photoBtn.layer.masksToBounds = YES;
+        _photoBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [_photoBtn addTarget:self action:@selector(photoBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _photoBtn;
 }
 
 @end

@@ -54,6 +54,8 @@
 		795FA6291FF34F230057BDB0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6271FF34F220057BDB0 /* README.md */; };
 		79B33755249111E100590023 /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = 79B33754249111E100590023 /* test.gif */; };
 		79E99CE72BFC3A8500FBC92E /* GKSwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */; };
+		79FCF8B52C00589500639BC8 /* GKDemoWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCF8B42C00589500639BC8 /* GKDemoWebViewController.m */; };
+		79FCF8B82C00589E00639BC8 /* GKDemoPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCF8B72C00589E00639BC8 /* GKDemoPhotoViewController.m */; };
 		90EEF67CE4A0A3BDF6976160 /* Pods_GKPhotoBrowserDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -158,6 +160,10 @@
 		79B33754249111E100590023 /* test.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test.gif; sourceTree = "<group>"; };
 		79E99CE52BFC3A8400FBC92E /* GKPhotoBrowserDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GKPhotoBrowserDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKSwiftViewController.swift; sourceTree = "<group>"; };
+		79FCF8B32C00589500639BC8 /* GKDemoWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKDemoWebViewController.h; sourceTree = "<group>"; };
+		79FCF8B42C00589500639BC8 /* GKDemoWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKDemoWebViewController.m; sourceTree = "<group>"; };
+		79FCF8B62C00589E00639BC8 /* GKDemoPhotoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKDemoPhotoViewController.h; sourceTree = "<group>"; };
+		79FCF8B72C00589E00639BC8 /* GKDemoPhotoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKDemoPhotoViewController.m; sourceTree = "<group>"; };
 		9FA13BB792485E23EB16327E /* libPods-SwiftExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SwiftExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3BFFE77B2F30889EE03AD41 /* Pods-SwiftExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftExample/Pods-SwiftExample.release.xcconfig"; sourceTree = "<group>"; };
 		E226CAABE93571C9A572D4E4 /* Pods_GKPhotoBrowserDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GKPhotoBrowserDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -285,6 +291,10 @@
 				795FA5E61FF338200057BDB0 /* GKBaseViewController.m */,
 				7907911B29B6E40A000D70A5 /* GKDemoViewController.h */,
 				7907911C29B6E40A000D70A5 /* GKDemoViewController.m */,
+				79FCF8B32C00589500639BC8 /* GKDemoWebViewController.h */,
+				79FCF8B42C00589500639BC8 /* GKDemoWebViewController.m */,
+				79FCF8B62C00589E00639BC8 /* GKDemoPhotoViewController.h */,
+				79FCF8B72C00589E00639BC8 /* GKDemoPhotoViewController.m */,
 				795FA6091FF338200057BDB0 /* GKTest01ViewController.h */,
 				795FA5F21FF338200057BDB0 /* GKTest01ViewController.m */,
 				795FA5E71FF338200057BDB0 /* GKTest02ViewController.h */,
@@ -414,6 +424,7 @@
 				795FA5891FF333420057BDB0 /* Resources */,
 				97A440345E9F899EBB2359F3 /* [CP] Embed Pods Frameworks */,
 				607090EA21082DC90041ED2D /* Embed Frameworks */,
+				693E00D987CF7E3C98532840 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -500,6 +511,26 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		693E00D987CF7E3C98532840 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo-resources.sh",
+				"${PODS_ROOT}/../../GKPhotoBrowser/GKPhotoBrowser.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/GKPhotoBrowser/GKPhotoBrowser.Privacy.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GKPhotoBrowser.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GKPhotoBrowser.Privacy.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		97A440345E9F899EBB2359F3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -511,7 +542,6 @@
 				"${BUILT_PRODUCTS_DIR}/GKCover/GKCover.framework",
 				"${BUILT_PRODUCTS_DIR}/GKMessageTool/GKMessageTool.framework",
 				"${BUILT_PRODUCTS_DIR}/GKNavigationBar/GKNavigationBar.framework",
-				"${BUILT_PRODUCTS_DIR}/GKPhotoBrowser/GKPhotoBrowser.framework",
 				"${BUILT_PRODUCTS_DIR}/GKSliderView/GKSliderView.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
@@ -530,7 +560,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKCover.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKMessageTool.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKNavigationBar.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKPhotoBrowser.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKSliderView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
@@ -563,6 +592,7 @@
 				795FA6191FF338200057BDB0 /* UIView+GKFrame.m in Sources */,
 				7925A5532A28915700972F47 /* GKLargeImageManager.m in Sources */,
 				602CC2DC21226AD500DE81BF /* GKTopView.m in Sources */,
+				79FCF8B82C00589E00639BC8 /* GKDemoPhotoViewController.m in Sources */,
 				795FA6141FF338200057BDB0 /* GKToutiaoViewController.m in Sources */,
 				795FA6151FF338200057BDB0 /* GKToutiaoModel.m in Sources */,
 				795FA6121FF338200057BDB0 /* GKToutiaoDetailViewController.m in Sources */,
@@ -576,6 +606,7 @@
 				7925A4E92A1F36D300972F47 /* GKChatViewController.m in Sources */,
 				795FA61F1FF338200057BDB0 /* GKTimeLineModel.m in Sources */,
 				60415CB22121648F00D1D54B /* GKSDAutoLayoutViewController.m in Sources */,
+				79FCF8B52C00589500639BC8 /* GKDemoWebViewController.m in Sources */,
 				795FA59E1FF333420057BDB0 /* main.m in Sources */,
 				795FA6131FF338200057BDB0 /* GKToutiaoViewCell.m in Sources */,
 				795FA6221FF338200057BDB0 /* GKTest03ViewController.m in Sources */,

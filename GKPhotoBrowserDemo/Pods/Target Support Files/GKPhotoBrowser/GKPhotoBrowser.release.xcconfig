@@ -2,8 +2,6 @@ CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO
 CONFIGURATION_BUILD_DIR = ${PODS_CONFIGURATION_BUILD_DIR}/GKPhotoBrowser
 FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/GKSliderView" "${PODS_CONFIGURATION_BUILD_DIR}/Kingfisher" "${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage" "${PODS_CONFIGURATION_BUILD_DIR}/YYCache" "${PODS_CONFIGURATION_BUILD_DIR}/YYImage" "${PODS_CONFIGURATION_BUILD_DIR}/YYWebImage" "${PODS_CONFIGURATION_BUILD_DIR}/ZFPlayer"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-LIBRARY_SEARCH_PATHS = $(inherited) "${TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}" /usr/lib/swift
-OTHER_LDFLAGS = $(inherited) -framework "AVFoundation" -framework "Accelerate" -framework "AssetsLibrary" -framework "CFNetwork" -framework "CoreFoundation" -framework "GKSliderView" -framework "ImageIO" -framework "Kingfisher" -framework "MediaPlayer" -framework "MobileCoreServices" -framework "QuartzCore" -framework "SDWebImage" -framework "UIKit" -framework "YYWebImage"
 OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS -suppress-warnings
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
@@ -14,4 +12,3 @@ PODS_XCFRAMEWORKS_BUILD_DIR = $(PODS_CONFIGURATION_BUILD_DIR)/XCFrameworkInterme
 PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.${PRODUCT_NAME:rfc1034identifier}
 SKIP_INSTALL = YES
 USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES
-VALID_ARCHS = x86_64 armv7 arm64

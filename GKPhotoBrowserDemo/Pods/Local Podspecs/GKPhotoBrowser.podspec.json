@@ -17,6 +17,7 @@
   },
   "swift_versions": "5.0",
   "default_subspecs": "Default",
+  "static_framework": true,
   "subspecs": [
     {
       "name": "Default",
@@ -95,9 +96,6 @@
         "ZFPlayer/AVPlayer": [
 
         ]
-      },
-      "pod_target_xcconfig": {
-        "VALID_ARCHS": "x86_64 armv7 arm64"
       }
     },
     {

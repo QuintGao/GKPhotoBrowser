@@ -97,7 +97,7 @@
                 
                 // 如果使用YYWebImage，请使用YYImage加载本地图片
                 NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:obj ofType:nil]];
-                photo.image = [SDAnimatedImage imageNamed:obj];
+//                photo.image = [SDAnimatedImage imageNamed:obj];
                 photo.image = [YYImage imageWithData:data];
                 
                 if (!photo.image) {
@@ -114,6 +114,7 @@
         browser.isFollowSystemRotation = YES;
         browser.isPopGestureEnabled = YES;
         browser.hidesPageControl = true;
+        [browser setupWebImageProtocol:[GKYYWebImageManager new]];
         [browser showFromVC:weakSelf];
     };
     

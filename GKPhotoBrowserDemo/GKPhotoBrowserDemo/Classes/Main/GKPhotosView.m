@@ -101,7 +101,9 @@ static CGFloat   photoH;
         
         GKTimeLineImage *image = images[i];
         
-        if ([image.url hasPrefix:@"http"]) {
+        if (image.coverImage) {
+            imgView.image = image.coverImage;
+        }else if ([image.url hasPrefix:@"http"]) {
             NSString *urlStr = image.thumbnail_url ? image.thumbnail_url : image.url;
             [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
         }else if ([image.url hasSuffix:@"gif"]){

@@ -10,6 +10,30 @@
 #import "GKPhotoView.h"
 #import "GKProgressViewProtocol.h"
 
+#if __has_include(<GKPhotoBrowser/GKPhotoBrowser-Swift.h>)
+#import <GKPhotoBrowser/GKPhotoBrowser-Swift.h>
+#endif
+
+#if __has_include(<GKPhotoBrowser/GKSDWebImageManager.h>)
+#import <GKPhotoBrowser/GKSDWebImageManager.h>
+#endif
+
+#if __has_include(<GKPhotoBrowser/GKYYWebImageManager.h>)
+#import <GKPhotoBrowser/GKYYWebImageManager.h>
+#endif
+
+#if __has_include(<GKPhotoBrowser/GKAVPlayerManager.h>)
+#import <GKPhotoBrowser/GKAVPlayerManager.h>
+#endif
+
+#if __has_include(<GKPhotoBrowser/GKZFPlayerManager.h>)
+#import <GKPhotoBrowser/GKZFPlayerManager.h>
+#endif
+
+#if __has_include(<GKPhotoBrowser/GKProgressView.h>)
+#import <GKPhotoBrowser/GKProgressView.h>
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class GKPhotoBrowser;
