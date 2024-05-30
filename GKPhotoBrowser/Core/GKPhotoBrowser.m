@@ -429,7 +429,7 @@ static Class imageManagerClass = nil;
     }else {
         CGFloat centerX = self.contentView.bounds.size.width * 0.5f;
         
-        self.countLabel.center = CGPointMake(centerX, (KIsiPhoneX && !self.isLandscape) ? 50 : 30);
+        self.countLabel.center = CGPointMake(centerX, (KIsiPhoneX && !self.isLandscape) ? 65 : 30);
         CGFloat pointY = 0;
         if (self.isLandscape) {
             pointY = self.contentView.bounds.size.height - 20;
