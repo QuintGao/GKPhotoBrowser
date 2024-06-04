@@ -116,7 +116,7 @@
     if (self.player.assetURL != self.photo.videoUrl) return;
     self.videoLoadingView.frame = self.bounds;
     [self addSubview:self.videoLoadingView];
-    [self.videoLoadingView startLoading];
+    [self loadVideo:YES success:NO];
 }
 
 - (void)hideLoading {
@@ -124,15 +124,16 @@
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
-    [self.videoLoadingView stopLoading];
+    [self loadVideo:NO success:YES];
 }
 
-- (void)showFailure {
+- (void)showFailure:(NSError *)error {
     if (!self.photo.isVideo) return;
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
-    [self.videoLoadingView showFailure];
+    [self loadFailedWithError:error];
+    [self loadVideo:NO success:NO];
 }
 
 - (void)showPlayBtn {
@@ -166,6 +167,7 @@
             if (!self.player) return;
             if (error) {
                 [self loadFailedWithError:error];
+                [self loadVideo:NO success:NO];
             }else {
                 self.player.coverImage = self.imageView.image;
                 self.player.assetURL = url;
@@ -270,6 +272,24 @@
     self.photo.isVideoClicked = NO;
     self.playBtn.hidden = NO;
     [self.player gk_pause];
+}
+
+- (void)loadVideo:(BOOL)isStart success:(BOOL)success {
+    if (self.videoLoadStyle == GKPhotoBrowserLoadStyleCustom) {
+        if ([self.delegate respondsToSelector:@selector(photoView:loadStart:success:)]) {
+            [self.delegate photoView:self loadStart:isStart success:success];
+        }
+    }else {
+        if (isStart) {
+            [self.videoLoadingView startLoading];
+        }else {
+            if (success) {
+                [self.videoLoadingView stopLoading];
+            }else {
+                [self.videoLoadingView showFailure];
+            }
+        }
+    }
 }
 
 #pragma mark - 加载图片
@@ -718,22 +738,18 @@
         _loadingView.radius      = 12;
         _loadingView.bgColor     = [UIColor blackColor];
         _loadingView.strokeColor = [UIColor whiteColor];
-        _loadingView.failText    = self.failureText;
-        _loadingView.failImage   = self.failureImage;
     }
     return _loadingView;
 }
 
 - (GKLoadingView *)videoLoadingView {
     if (!_videoLoadingView) {
-        _videoLoadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.loadStyle];
-        _videoLoadingView.failStyle = self.failStyle;
+        _videoLoadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.videoLoadStyle];
+        _videoLoadingView.failStyle = self.videoFailStyle;
         _videoLoadingView.lineWidth = 3;
         _videoLoadingView.radius = 12;
         _videoLoadingView.bgColor = UIColor.blackColor;
         _videoLoadingView.strokeColor = UIColor.whiteColor;
-        _videoLoadingView.failText = self.failureText;
-        _videoLoadingView.failImage = self.failureImage;
     }
     return _videoLoadingView;
 }

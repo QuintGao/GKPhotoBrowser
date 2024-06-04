@@ -46,11 +46,12 @@
     
     
     GKTimeLineImage *image3 = [GKTimeLineImage new];
-    image3.url = @"https://img1.baidu.com/it/u=2226546102,192117690&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889";
+    image3.url = @"https://img.zdwx.net/group1/M00/05/71/wKgCFF7Gg4GAVIB8ABNYPLSU3f0067.jpg";
     
     
     GKTimeLineImage *image4 = [GKTimeLineImage new];
-    image4.url = @"https://img.zdwx.net/group1/M00/05/71/wKgCFF7Gg4GAVIB8ABNYPLSU3f0067.jpg";
+    image4.url = @"https://img1.baidu.com/it/u=2226546102,192117690&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889";
+    image4.video_url = @"https://vd4.bdstatic.com/mdadd-pcekgt2uzhhuegqt/default/h264/1678890479874385171/mda-pcekgt2uzhhuegqt.mp4?abtest=peav_l52&appver=&auth_key=1680752423-0-0-4bd1b130e6dc6318f95ac68536d24da8&bcevod_channel=searchbox_feed&cd=0&cr=0&did=cfcd208495d565ef66e7dff9f98764da&logid=622881057&model=&osver=&pd=1&pt=4&sl=341&sle=1&split=403358&vid=10495600563257373332&vt=1";
     
     
     GKTimeLineImage *image5 = [GKTimeLineImage new];
@@ -107,6 +108,7 @@
     browser.hideStyle = self.hideStyle;
     browser.loadStyle = self.loadStyle;
     browser.failStyle = self.failStyle;
+    
     if (self.imageLoadStyle == 0) {
         [browser setupWebImageProtocol:[[GKSDWebImageManager alloc] init]];
     }else if (self.imageLoadStyle == 1) {
@@ -114,7 +116,11 @@
     }else {
         [browser setupWebImageProtocol:[[GKKFWebImageManager alloc] init]];
     }
-    if (self.videoLoadStyle == 0) {
+    
+    browser.videoLoadStyle = self.videoLoadStyle;
+    browser.videoFailStyle = self.videoFailStyle;
+    
+    if (self.videoPlayStyle == 0) {
         [browser setupVideoPlayerProtocol:[[GKAVPlayerManager alloc] init]];
     }else {
         [browser setupVideoPlayerProtocol:[[GKZFPlayerManager alloc] init]];
@@ -142,7 +148,10 @@
     }
 }
 
-- (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index {
+- (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index error:(nonnull NSError *)error {
+    if (browser.curPhoto.isVideo) {
+        return;
+    }
     if (self.customFailView) return;
     self.customFailView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
     [self.customFailView sizeToFit];
@@ -150,6 +159,13 @@
     UIView *photoView = browser.curPhotoView;
     self.customFailView.center = CGPointMake(photoView.bounds.size.width * 0.5, photoView.bounds.size.height * 0.5);
     [photoView addSubview:self.customFailView];
+}
+
+- (void)photoBrowser:(GKPhotoBrowser *)browser willLayoutSubViews:(NSInteger)index {
+    if (self.customFailView) {
+        UIView *photoView = browser.curPhotoView;
+        self.customFailView.center = CGPointMake(photoView.bounds.size.width * 0.5, photoView.bounds.size.height * 0.5);
+    }
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser panBeginWithIndex:(NSInteger)index {
@@ -164,6 +180,18 @@
     NSLog(@"browser dismiss");
     [self.customFailView removeFromSuperview];
     self.customFailView = nil;
+}
+
+- (void)photoBrowser:(GKPhotoBrowser *)browser videoLoadStart:(BOOL)isStart success:(BOOL)success {
+    if (isStart) {
+        [GKMessageTool showMessage:nil];
+    }else {
+        if (success) {
+            [GKMessageTool hideMessage];
+        }else {
+            [GKMessageTool showText:@"播放失败"];
+        }
+    }
 }
 
 @end

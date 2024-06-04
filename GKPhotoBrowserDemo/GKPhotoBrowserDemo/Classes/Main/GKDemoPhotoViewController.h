@@ -23,7 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) NSInteger imageLoadStyle;
 
-@property (nonatomic, assign) NSInteger videoLoadStyle;
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle videoLoadStyle;
+
+@property (nonatomic, assign) GKPhotoBrowserFailStyle videoFailStyle;
+
+@property (nonatomic, assign) NSInteger videoPlayStyle;
 
 @end
 

@@ -31,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 加载进度，isOriginImage：是否是原图
 - (void)photoView:(GKPhotoView *)photoView loadProgress:(float)progress isOriginImage:(BOOL)isOriginImage;
 
+// 视频加载
+- (void)photoView:(GKPhotoView *)photoView loadStart:(BOOL)isStart success:(BOOL)success;
+
 @end
 
 @interface GKPhotoView : UIView<UIScrollViewDelegate>
@@ -42,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UIButton     *playBtn;
 
 @property (nonatomic, strong, readonly) GKLoadingView *loadingView;
+
+@property (nonatomic, strong, readonly) GKLoadingView *videoLoadingView;
 
 @property (nonatomic, strong, readonly) GKPhoto *photo;
 
@@ -70,9 +75,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle originLoadStyle;
 @property (nonatomic, assign) GKPhotoBrowserFailStyle failStyle;
-
-@property (nonatomic, copy) NSString    *failureText;
-@property (nonatomic, strong) UIImage   *failureImage;
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle videoLoadStyle;
+@property (nonatomic, assign) GKPhotoBrowserFailStyle videoFailStyle;
 
 @property (nonatomic, assign) BOOL      showPlayImage;
 @property (nonatomic, strong) UIImage   *videoPlayImage;
@@ -112,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 加载
 - (void)showLoading;
 - (void)hideLoading;
-- (void)showFailure;
+- (void)showFailure:(NSError *)error;
 - (void)showPlayBtn;
 
 // 左右滑动

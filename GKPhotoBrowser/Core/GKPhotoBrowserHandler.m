@@ -156,11 +156,14 @@
     }else {
         // 显示状态栏
         self.browser.isStatusBarShow = YES;
-        
-        // 防止返回时跳动
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self recoverAnimation];
-        });
+        if (self.browser.hideStyle == GKPhotoBrowserHideStyleNone) {
+            [self browserDismissNone];
+        }else {
+            // 防止返回时跳动
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self recoverAnimation];
+            });
+        }
     }
 }
 

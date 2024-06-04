@@ -43,9 +43,19 @@
 @property (nonatomic, strong) UISegmentedControl *imgLoadControl;
 
 // 视频加载方式
-@property (nonatomic, assign) NSInteger videoLoadStyle;
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle videoLoadStyle;
 @property (nonatomic, strong) UILabel *videoLoadLabel;
 @property (nonatomic, strong) UISegmentedControl *videoLoadControl;
+
+// 视频加载失败
+@property (nonatomic, assign) GKPhotoBrowserFailStyle videoFailStyle;
+@property (nonatomic, strong) UILabel *videoFailLabel;
+@property (nonatomic, strong) UISegmentedControl *videoFailControl;
+
+// 视频播放类
+@property (nonatomic, assign) NSInteger videoPlayStyle;
+@property (nonatomic, strong) UILabel *videoPlayLabel;
+@property (nonatomic, strong) UISegmentedControl *videoPlayControl;
 
 @property (nonatomic, strong) UIButton *webBtn;
 
@@ -59,6 +69,11 @@
     [super viewDidLoad];
     
     [self initUI];
+    
+    self.showControl.selectedSegmentIndex = 1;
+    self.hideControl.selectedSegmentIndex = 1;
+    self.showStyle = GKPhotoBrowserShowStyleZoom;
+    self.hideStyle = GKPhotoBrowserHideStyleZoom;
 }
 
 - (void)initUI {
@@ -77,6 +92,10 @@
     [self.view addSubview:self.imgLoadControl];
     [self.view addSubview:self.videoLoadLabel];
     [self.view addSubview:self.videoLoadControl];
+    [self.view addSubview:self.videoFailLabel];
+    [self.view addSubview:self.videoFailControl];
+    [self.view addSubview:self.videoPlayLabel];
+    [self.view addSubview:self.videoPlayControl];
     
     [self.showLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.gk_navigationBar.mas_bottom).offset(10);
@@ -138,19 +157,39 @@
         make.centerX.equalTo(self.view);
     }];
     
+    [self.videoFailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.videoLoadControl.mas_bottom).offset(10);
+        make.centerX.equalTo(self.view);
+    }];
+    
+    [self.videoFailControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.videoFailLabel.mas_bottom).offset(10);
+        make.centerX.equalTo(self.view);
+    }];
+    
+    [self.videoPlayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.videoFailControl.mas_bottom).offset(10);
+        make.centerX.equalTo(self.view);
+    }];
+    
+    [self.videoPlayControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.videoPlayLabel.mas_bottom).offset(10);
+        make.centerX.equalTo(self.view);
+    }];
+    
     [self.view addSubview:self.webBtn];
     [self.view addSubview:self.photoBtn];
     
     [self.webBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(80);
-        make.top.equalTo(self.videoLoadControl.mas_bottom).offset(50);
+        make.top.equalTo(self.videoPlayControl.mas_bottom).offset(50);
         make.width.mas_equalTo(80);
         make.height.mas_equalTo(30);
     }];
     
     [self.photoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.view).offset(-80);
-        make.top.equalTo(self.videoLoadControl.mas_bottom).offset(50);
+        make.top.equalTo(self.videoPlayControl.mas_bottom).offset(50);
         make.width.mas_equalTo(80);
         make.height.mas_equalTo(30);
     }];
@@ -169,7 +208,15 @@
     }else if (control == self.imgLoadControl) {
         self.imgLoadStyle = control.selectedSegmentIndex;
     }else if (control == self.videoLoadControl) {
-        self.videoLoadStyle = control.selectedSegmentIndex;
+        if (control.selectedSegmentIndex == 2) {
+            self.videoLoadStyle = GKPhotoBrowserLoadStyleCustom;
+        }else {
+            self.videoLoadStyle = (GKPhotoBrowserLoadStyle)control.selectedSegmentIndex;            
+        }
+    }else if (control == self.videoFailControl) {
+        self.videoFailStyle = (GKPhotoBrowserFailStyle)control.selectedSegmentIndex;
+    }else if (control == self.videoPlayControl) {
+        self.videoPlayStyle = self.videoPlayStyle;
     }
 }
 
@@ -181,6 +228,8 @@
     webVC.failStyle = self.failStyle;
     webVC.imageLoadStyle = self.imgLoadStyle;
     webVC.videoLoadStyle = self.videoLoadStyle;
+    webVC.videoFailStyle = self.videoFailStyle;
+    webVC.videoPlayStyle = self.videoPlayStyle;
     [self.navigationController pushViewController:webVC animated:YES];
 }
 
@@ -192,6 +241,8 @@
     photoVC.failStyle = self.failStyle;
     photoVC.imageLoadStyle = self.imgLoadStyle;
     photoVC.videoLoadStyle = self.videoLoadStyle;
+    photoVC.videoFailStyle = self.videoFailStyle;
+    photoVC.videoPlayStyle = self.videoPlayStyle;
     [self.navigationController pushViewController:photoVC animated:YES];
 }
 
@@ -227,7 +278,7 @@
 
 - (UISegmentedControl *)hideControl {
     if (!_hideControl) {
-        _hideControl = [[UISegmentedControl alloc] initWithItems:@[@"zoom", @"zoomScale", @"zoomSlide"]];
+        _hideControl = [[UISegmentedControl alloc] initWithItems:@[@"无动画", @"zoom", @"zoomScale", @"zoomSlide"]];
         [_hideControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
         _hideControl.selectedSegmentIndex = 0;
     }
@@ -303,11 +354,49 @@
 
 - (UISegmentedControl *)videoLoadControl {
     if (!_videoLoadControl) {
-        _videoLoadControl = [[UISegmentedControl alloc] initWithItems:@[@"AVPlayer", @"ZFPlayer"]];
+        _videoLoadControl = [[UISegmentedControl alloc] initWithItems:@[@"不明确", @"不明确+阴影", @"自定义"]];
         [_videoLoadControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
         _videoLoadControl.selectedSegmentIndex = 0;
     }
     return _videoLoadControl;
+}
+
+- (UILabel *)videoFailLabel {
+    if (!_videoFailLabel) {
+        _videoFailLabel = [[UILabel alloc] init];
+        _videoFailLabel.font = [UIFont systemFontOfSize:15];
+        _videoFailLabel.textColor = UIColor.blackColor;
+        _videoFailLabel.text = @"视频加载失败显示";
+    }
+    return _videoFailLabel;
+}
+
+- (UISegmentedControl *)videoFailControl {
+    if (!_videoFailControl) {
+        _videoFailControl = [[UISegmentedControl alloc] initWithItems:@[@"文字", @"图片", @"文字+图片", @"自定义"]];
+        [_videoFailControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
+        _videoFailControl.selectedSegmentIndex = 0;
+    }
+    return _videoFailControl;
+}
+
+- (UILabel *)videoPlayLabel {
+    if (!_videoPlayLabel) {
+        _videoPlayLabel = [[UILabel alloc] init];
+        _videoPlayLabel.font = [UIFont systemFontOfSize:15];
+        _videoPlayLabel.textColor = UIColor.blackColor;
+        _videoPlayLabel.text = @"视频播放类";
+    }
+    return _videoPlayLabel;
+}
+
+- (UISegmentedControl *)videoPlayControl {
+    if (!_videoPlayControl) {
+        _videoPlayControl = [[UISegmentedControl alloc] initWithItems:@[@"AVPlayer", @"ZFPlayer"]];
+        [_videoPlayControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
+        _videoPlayControl.selectedSegmentIndex = 0;
+    }
+    return _videoPlayControl;
 }
 
 - (UIButton *)webBtn {

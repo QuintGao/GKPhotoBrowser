@@ -90,17 +90,22 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 // browser加载失败自定义弹窗
 - (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index error:(NSError *)error;
 
-// 自定义单个图片的加载失败文字，优先级高于failureText
+// 自定义单个图片或视频的加载失败文字，优先级高于failureText
 - (NSString *)photoBrowser:(GKPhotoBrowser *)browser failedTextAtIndex:(NSInteger)index;
 
-// 自定义单个图片的加载失败图片，优先级高于failureImage
+// 自定义单个图片或视频的加载失败图片，优先级高于failureImage
 - (UIImage *)photoBrowser:(GKPhotoBrowser *)browser failedImageAtIndex:(NSInteger)index;
 
+// 视频相关
 // 视频播放状态回调
 - (void)photoBrowser:(GKPhotoBrowser *)browser videoStateChangeWithPhotoView:(GKPhotoView *)photoView status:(GKVideoPlayerStatus)status;
 
 // 视频播放进度回调
 - (void)photoBrowser:(GKPhotoBrowser *)browser videoTimeChangeWithPhotoView:(GKPhotoView *)photoView currentTime:(NSTimeInterval)currentTime totalTime:(NSTimeInterval)totalTime;
+
+// 视频加载回调，用于自定义加载方式
+// isStart: 是否开始加载  success：加载是否成功
+- (void)photoBrowser:(GKPhotoBrowser *)browser videoLoadStart:(BOOL)isStart success:(BOOL)success;
 
 // browser UIScrollViewDelegate
 - (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewWillBeginDragging:(UIScrollView *)scrollView;
@@ -136,16 +141,20 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, strong, readonly) id<GKVideoPlayerProtocol> player;
 /** 视频进度试图 */
 @property (nonatomic, weak, readonly, nullable) UIView *progressView;
-/** 显示方式 */
+/** 显示方式，默认GKPhotoBrowserShowStyleZoom */
 @property (nonatomic, assign) GKPhotoBrowserShowStyle showStyle;
-/** 隐藏方式 */
+/** 隐藏方式，默认GKPhotoBrowserHideStyleZoom */
 @property (nonatomic, assign) GKPhotoBrowserHideStyle hideStyle;
-/** 图片加载方式 */
+/** 图片加载方式，默认GKPhotoBrowserLoadStyleIndeterminate */
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
-/** 原图加载加载方式 */
+/** 原图加载加载方式，默认GKPhotoBrowserLoadStyleIndeterminate */
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle originLoadStyle;
-/** 图片加载失败显示方式 */
+/** 图片加载失败显示方式，默认GKPhotoBrowserFailStyleOnlyText */
 @property (nonatomic, assign) GKPhotoBrowserFailStyle failStyle;
+/** 视频加载方式，默认GKPhotoBrowserLoadStyleIndeterminate */
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle videoLoadStyle;
+/** 视频播放失败显示方式，默认GKPhotoBrowserFailStyleOnlyText */
+@property (nonatomic, assign) GKPhotoBrowserFailStyle videoFailStyle;
 /** 代理 */
 @property (nonatomic, weak) id<GKPhotoBrowserDelegate> delegate;
 
@@ -225,6 +234,10 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 加载失败时显示的文字或图片
 @property (nonatomic, copy) NSString    *failureText;
 @property (nonatomic, strong) UIImage   *failureImage;
+
+/// 视频播放失败显示的文字或图片
+@property (nonatomic, copy) NSString *videoFailureText;
+@property (nonatomic, strong) UIImage *videoFailureImage;
 
 /// 是否添加导航控制器，默认NO，添加后会默认隐藏导航栏
 /// showStyle = GKPhotoBrowserShowStylePush时无效

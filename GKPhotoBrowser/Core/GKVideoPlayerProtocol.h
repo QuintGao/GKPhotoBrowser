@@ -45,6 +45,8 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
 
 @property (nonatomic, copy) void(^playerGetVideoSize)(id<GKVideoPlayerProtocol> mgr, CGSize size);
 
+@property (nonatomic, strong, nullable) NSError *error;
+
 // 准备视频资源
 - (void)gk_prepareToPlay;
 

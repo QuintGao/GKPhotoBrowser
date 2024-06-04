@@ -29,6 +29,7 @@
 @synthesize playerStatusChange = _playerStatusChange;
 @synthesize playerPlayTimeChange = _playerPlayTimeChange;
 @synthesize playerGetVideoSize = _playerGetVideoSize;
+@synthesize error = _error;
 
 - (void)initPlayer {
     ZFAVPlayerManager *manager = [[ZFAVPlayerManager alloc] init];
@@ -99,6 +100,12 @@
         __strong __typeof(weakSelf) self = weakSelf;
         self->_totalTime = duration;
         self.currentTime = currentTime;
+    };
+    
+    // 播放失败
+    player.playerPlayFailed = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, id  _Nonnull error) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        self->_error = error;
     };
     
     // 设置播放地址

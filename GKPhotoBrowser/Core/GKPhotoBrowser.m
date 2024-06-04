@@ -95,6 +95,12 @@ static Class progressClass = nil;
     self.showPlayImage           = YES;
     self.isVideoReplay           = YES;
     self.isVideoPausedWhenDragged = YES;
+    self.showStyle = GKPhotoBrowserShowStyleZoom;
+    self.hideStyle = GKPhotoBrowserHideStyleZoom;
+    self.loadStyle = GKPhotoBrowserLoadStyleIndeterminate;
+    self.originLoadStyle = GKPhotoBrowserLoadStyleIndeterminate;
+    self.videoLoadStyle = GKPhotoBrowserLoadStyleIndeterminate;
+    self.failStyle = GKPhotoBrowserFailStyleOnlyText;
     
     _visiblePhotoViews  = [NSMutableArray new];
     _reusablePhotoViews = [NSMutableSet new];
@@ -147,7 +153,8 @@ static Class progressClass = nil;
                 }
             } break;
             case GKVideoPlayerStatusFailed: {
-                [self.curPhotoView showFailure];
+                [self.curPhotoView showFailure:self.player.error];
+                self.progressView.hidden = YES;
             } break;
             default: break;
         }
@@ -607,11 +614,11 @@ static Class progressClass = nil;
             photoView.loadStyle       = self.loadStyle;
             photoView.originLoadStyle = self.originLoadStyle;
             photoView.failStyle       = self.failStyle;
+            photoView.videoLoadStyle  = self.videoLoadStyle;
+            photoView.videoFailStyle  = self.videoFailStyle;
             photoView.isFollowSystemRotation = self.isFollowSystemRotation;
             photoView.isFullWidthForLandScape = self.isFullWidthForLandScape;
             photoView.isAdaptiveSafeArea = self.isAdaptiveSafeArea;
-            photoView.failureText     = self.failureText;
-            photoView.failureImage    = self.failureImage;
             photoView.maxZoomScale    = self.maxZoomScale;
             photoView.doubleZoomScale = self.doubleZoomScale;
             photoView.showPlayImage   = self.showPlayImage;
@@ -729,16 +736,29 @@ static Class progressClass = nil;
     if ([self.delegate respondsToSelector:@selector(photoBrowser:loadFailedAtIndex:error:)]) {
         [self.delegate photoBrowser:self loadFailedAtIndex:index error:error];
     }
-    NSString *failText = self.failureText ?: @"图片加载失败";
-    if ([self.delegate respondsToSelector:@selector(photoBrowser:failedTextAtIndex:)]) {
-        failText = [self.delegate photoBrowser:self failedTextAtIndex:index];
+    if (photoView.photo.isVideo) {
+        NSString *failText = self.failureText ?: @"视频播放失败";
+        if ([self.delegate respondsToSelector:@selector(photoBrowser:failedTextAtIndex:)]) {
+            failText = [self.delegate photoBrowser:self failedTextAtIndex:index];
+        }
+        UIImage *failImage = self.failureImage ?: GKPhotoBrowserImage(@"loading_error");
+        if ([self.delegate respondsToSelector:@selector(photoBrowser:failedImageAtIndex:)]) {
+            failImage = [self.delegate photoBrowser:self failedImageAtIndex:index];
+        }
+        photoView.videoLoadingView.failText = failText;
+        photoView.videoLoadingView.failImage = failImage;
+    }else {
+        NSString *failText = self.failureText ?: @"图片加载失败";
+        if ([self.delegate respondsToSelector:@selector(photoBrowser:failedTextAtIndex:)]) {
+            failText = [self.delegate photoBrowser:self failedTextAtIndex:index];
+        }
+        UIImage *failImage = self.failureImage ?: GKPhotoBrowserImage(@"loading_error");
+        if ([self.delegate respondsToSelector:@selector(photoBrowser:failedImageAtIndex:)]) {
+            failImage = [self.delegate photoBrowser:self failedImageAtIndex:index];
+        }
+        photoView.loadingView.failText = failText;
+        photoView.loadingView.failImage = failImage;
     }
-    UIImage *failImage = self.failureImage ?: GKPhotoBrowserImage(@"loading_error");
-    if ([self.delegate respondsToSelector:@selector(photoBrowser:failedImageAtIndex:)]) {
-        failImage = [self.delegate photoBrowser:self failedImageAtIndex:index];
-    }
-    photoView.loadingView.failText = failText;
-    photoView.loadingView.failImage = failImage;
 }
 
 - (void)photoView:(GKPhotoView *)photoView loadProgress:(float)progress isOriginImage:(BOOL)isOriginImage {
@@ -746,6 +766,15 @@ static Class progressClass = nil;
     if (curPhotoView.tag == photoView.tag) {
         if ([self.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
             [self.delegate photoBrowser:self loadImageAtIndex:self.currentIndex progress:progress isOriginImage:isOriginImage];
+        }
+    }
+}
+
+- (void)photoView:(GKPhotoView *)photoView loadStart:(BOOL)isStart success:(BOOL)success {
+    GKPhotoView *curPhotoView = self.curPhotoView;
+    if (curPhotoView.tag == photoView.tag) {
+        if ([self.delegate respondsToSelector:@selector(photoBrowser:videoLoadStart:success:)]) {
+            [self.delegate photoBrowser:self videoLoadStart:isStart success:success];
         }
     }
 }

@@ -52,6 +52,7 @@
 @synthesize playerStatusChange = _playerStatusChange;
 @synthesize playerPlayTimeChange = _playerPlayTimeChange;
 @synthesize playerGetVideoSize = _playerGetVideoSize;
+@synthesize error = _error;
 
 - (void)initPlayer {
     if (self.player) [self gk_stop];
@@ -211,6 +212,7 @@
                     }
                 } break;
                 case AVPlayerItemStatusFailed: {
+                    self.error = self.player.error;
                     self.status = GKVideoPlayerStatusFailed;
                 } break;
                 default:

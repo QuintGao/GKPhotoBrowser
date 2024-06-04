@@ -34,6 +34,7 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserShowStyle) {
 
 // 图片浏览器的隐藏方式
 typedef NS_ENUM(NSUInteger, GKPhotoBrowserHideStyle) {
+    GKPhotoBrowserHideStyleNone,           // 无动画
     GKPhotoBrowserHideStyleZoom,           // 点击缩放消失
     GKPhotoBrowserHideStyleZoomScale,      // 点击缩放消失、滑动缩小后消失
     GKPhotoBrowserHideStyleZoomSlide       // 点击缩放消失、滑动平移后消失

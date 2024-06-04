@@ -32,7 +32,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = UIColor.whiteColor;
-    self.gk_navTitle = @"网络图片";
+    self.gk_navTitle = @"相册图片";
     
     TZImagePickerConfig *config = [TZImagePickerConfig sharedInstance];
     config.allowPickingVideo = YES;
@@ -100,10 +100,8 @@
     [self.photos enumerateObjectsUsingBlock:^(GKTimeLineImage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         GKPhoto *photo = [[GKPhoto alloc] init];
         if (obj.isVideo) {
-            photo.image = obj.coverImage;
             photo.videoAsset = obj.video_asset;
         }else {
-            photo.image = obj.coverImage;
             photo.imageAsset = obj.image_asset;
         }
         photo.sourceImageView = self.photosView.subviews[idx];
@@ -117,6 +115,7 @@
     browser.hideStyle = self.hideStyle;
     browser.loadStyle = self.loadStyle;
     browser.failStyle = self.failStyle;
+    
     if (self.imageLoadStyle == 0) {
         [browser setupWebImageProtocol:[[GKSDWebImageManager alloc] init]];
     }else if (self.imageLoadStyle == 1) {
@@ -124,7 +123,11 @@
     }else {
         [browser setupWebImageProtocol:[[GKKFWebImageManager alloc] init]];
     }
-    if (self.videoLoadStyle == 0) {
+    
+    browser.videoLoadStyle = self.videoLoadStyle;
+    browser.videoFailStyle = self.videoFailStyle;
+    
+    if (self.videoPlayStyle == 0) {
         [browser setupVideoPlayerProtocol:[[GKAVPlayerManager alloc] init]];
     }else {
         [browser setupVideoPlayerProtocol:[[GKZFPlayerManager alloc] init]];
