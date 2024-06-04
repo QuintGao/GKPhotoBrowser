@@ -153,6 +153,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 2.8.2 - 2024.06.04 1、视频加载优化，增加播放失败处理 2、视频播放支持IJKPlayer
  * 2.8.1 - 2024.05.24 头文件导入优化，pod优化
  * 2.8.0 - 2024.05.21 1、网络加载支持Kingfisher 2、视频播放支持ZFPlayer 3、增加SwiftDemo
  * 2.7.6 - 2024.03.20 privacy fix
