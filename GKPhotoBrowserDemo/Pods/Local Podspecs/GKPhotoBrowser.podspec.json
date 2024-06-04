@@ -99,6 +99,18 @@
       }
     },
     {
+      "name": "IJKPlayer",
+      "source_files": "GKPhotoBrowser/IJKPlayer",
+      "dependencies": {
+        "GKPhotoBrowser/Core": [
+
+        ],
+        "IJKMediaFramework": [
+
+        ]
+      }
+    },
+    {
       "name": "Progress",
       "source_files": "GKPhotoBrowser/Progress",
       "dependencies": {

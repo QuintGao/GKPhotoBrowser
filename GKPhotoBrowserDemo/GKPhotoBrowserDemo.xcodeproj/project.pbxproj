@@ -758,7 +758,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3D47N4555T;
-				EXCLUDED_ARCHS = "";
+				EXCLUDED_ARCHS = arm64;
 				GCC_PREFIX_HEADER = GKPhotoBrowserDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = GKPhotoBrowserDemo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GKPhotoBrowser;
@@ -784,7 +784,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3D47N4555T;
-				EXCLUDED_ARCHS = "";
+				EXCLUDED_ARCHS = arm64;
 				GCC_PREFIX_HEADER = GKPhotoBrowserDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = GKPhotoBrowserDemo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GKPhotoBrowser;

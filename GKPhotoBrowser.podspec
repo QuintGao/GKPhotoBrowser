@@ -53,6 +53,12 @@ Pod::Spec.new do |s|
     ss.dependency 'ZFPlayer/AVPlayer'
   end
   
+  s.subspec 'IJKPlayer' do |ss|
+    ss.source_files = 'GKPhotoBrowser/IJKPlayer'
+    ss.dependency 'GKPhotoBrowser/Core'
+    ss.dependency 'IJKMediaFramework'
+  end
+  
   s.subspec 'Progress' do |ss|
     ss.source_files = 'GKPhotoBrowser/Progress'
     ss.dependency 'GKPhotoBrowser/Core'

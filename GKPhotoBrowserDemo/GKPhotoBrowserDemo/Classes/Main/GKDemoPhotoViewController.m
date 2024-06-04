@@ -110,6 +110,12 @@
     
     NSInteger index = imgView.tag;
     
+    Class cls = NSClassFromString(@"GKIJKPlayerManager");
+    if (self.videoPlayStyle == 2 && !cls) {
+        [GKMessageTool showText:@"请先 pod 'GKPhotoBrowser/IJKPlayer'"];
+        return;
+    }
+    
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
     browser.showStyle = self.showStyle;
     browser.hideStyle = self.hideStyle;
@@ -129,8 +135,10 @@
     
     if (self.videoPlayStyle == 0) {
         [browser setupVideoPlayerProtocol:[[GKAVPlayerManager alloc] init]];
-    }else {
+    }else if (self.videoPlayStyle == 1) {
         [browser setupVideoPlayerProtocol:[[GKZFPlayerManager alloc] init]];
+    }else {
+        [browser setupVideoPlayerProtocol:[[cls alloc] init]];
     }
     browser.isPopGestureEnabled = YES; // push显示，在第一页时手势返回
     

@@ -27,6 +27,7 @@ target 'GKPhotoBrowserDemo' do
   pod 'GKPhotoBrowser/YY', :path => '../'
   pod 'GKPhotoBrowser/KF', :path => '../'
   pod 'GKPhotoBrowser/ZFPlayer', :path => '../'
+#  pod 'GKPhotoBrowser/IJKPlayer', :path => '../'
 #  pod 'GKPhotoBrowser', :subspecs => ['SD', 'YY', 'AVPlayer'], :path => '../'
 #  pod 'GKPhotoBrowser/SD', :path => '../'
 #  pod 'GKPhotoBrowser/AVPlayer', :path => '../'
@@ -37,32 +38,32 @@ target 'GKPhotoBrowserDemo' do
 end
 
 post_install do |installer|
-    installer.pods_project.targets.each do |target|
-        target.build_configurations.each do |config|
-            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
-            config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = ""
-        end
+  installer.pods_project.targets.each do |t|
+    t.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
+      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+      xcconfig_path = config.base_configuration_reference.real_path
+      xcconfig = File.read(xcconfig_path)
+      xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
+      File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
     end
-    
-    # 移除MobileCorServices弃用警告
-    MCSFramework = installer.pods_project.frameworks_group["iOS"]["MobileCoreServices.framework"]
-    MCSFramework.referrers.each do |ref|
-        if ref.isa == "PBXBuildFile"
-            ref.remove_from_project
-        end
+  end
+  
+  # 移除MobileCorServices弃用警告
+  MCSFramework = installer.pods_project.frameworks_group["iOS"]["MobileCoreServices.framework"]
+  MCSFramework.referrers.each do |ref|
+    if ref.isa == "PBXBuildFile"
+      ref.remove_from_project
     end
-    MCSFramework.remove_from_project
-    
-    # 移除AssetsLibrary弃用警告
-    ALFramework = installer.pods_project.frameworks_group["iOS"]["AssetsLibrary.framework"]
-    ALFramework.referrers.each do |ref|
-        if ref.isa == "PBXBuildFile"
-            ref.remove_from_project
-        end
+  end
+  MCSFramework.remove_from_project
+  
+  # 移除AssetsLibrary弃用警告
+  ALFramework = installer.pods_project.frameworks_group["iOS"]["AssetsLibrary.framework"]
+  ALFramework.referrers.each do |ref|
+    if ref.isa == "PBXBuildFile"
+      ref.remove_from_project
     end
-    ALFramework.remove_from_project
+  end
+  ALFramework.remove_from_project
 end
-
-#pre_install do |installer|
-# Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
-#end

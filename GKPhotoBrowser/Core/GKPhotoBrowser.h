@@ -30,6 +30,10 @@
 #import <GKPhotoBrowser/GKZFPlayerManager.h>
 #endif
 
+#if __has_include(<GKPhotoBrowser/GKIJKPlayerManager.h>)
+#import <GKPhotoBrowser/GKIJKPlayerManager.h>
+#endif
+
 #if __has_include(<GKPhotoBrowser/GKProgressView.h>)
 #import <GKPhotoBrowser/GKProgressView.h>
 #endif
