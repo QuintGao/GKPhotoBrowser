@@ -83,8 +83,8 @@ static CGFloat   photoH;
     _images = images;
     
     // 防止出现重用
-//    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    if (self.subviews.count > 0) return;
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+//    if (self.subviews.count > 0) return;
     
     for (NSInteger i = 0; i < images.count; i++) {
         UIImageView *imgView = [NSClassFromString(@"SDAnimatedImageView") new];
@@ -101,16 +101,22 @@ static CGFloat   photoH;
         
         GKTimeLineImage *image = images[i];
         
-        if (image.coverImage) {
-            imgView.image = image.coverImage;
-        }else if ([image.url hasPrefix:@"http"]) {
-            NSString *urlStr = image.thumbnail_url ? image.thumbnail_url : image.url;
-            [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
-        }else if ([image.url hasSuffix:@"gif"]){
-            imgView.image = [SDAnimatedImage imageNamed:image.url];
+        if (image.islocal) {
+            NSData *data = [NSData dataWithContentsOfURL:image.imageURL];
+            imgView.image = [UIImage imageWithData:data];
         }else {
-            imgView.image = [UIImage imageNamed:image.url];
+            if (image.coverImage) {
+                imgView.image = image.coverImage;
+            }else if ([image.url hasPrefix:@"http"]) {
+                NSString *urlStr = image.thumbnail_url ? image.thumbnail_url : image.url;
+                [imgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
+            }else if ([image.url hasSuffix:@"gif"]){
+                imgView.image = [SDAnimatedImage imageNamed:image.url];
+            }else {
+                imgView.image = [UIImage imageNamed:image.url];
+            }
         }
+        
         if (image.isVideo) {
             UIImageView *playView = [[UIImageView alloc] init];
             playView.image = GKPhotoBrowserImage(@"gk_video_play");

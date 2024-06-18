@@ -9,6 +9,7 @@
 #import "GKZFPlayerManager.h"
 #import <ZFPlayer/ZFPlayer.h>
 #import <ZFPlayer/ZFAVPlayerManager.h>
+#import "GKPhotoBrowserConfigure.h"
 
 @interface GKZFPlayerManager()
 

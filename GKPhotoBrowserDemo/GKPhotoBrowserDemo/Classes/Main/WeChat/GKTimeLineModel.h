@@ -29,6 +29,11 @@
 
 @interface GKTimeLineImage : NSObject
 
+@property (nonatomic, assign) BOOL islocal;
+
+@property (nonatomic, strong) NSURL *imageURL;
+@property (nonatomic, strong) NSURL *videoURL;
+
 @property (nonatomic, copy) NSString *thumbnail_url;
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic, strong) PHAsset *image_asset;

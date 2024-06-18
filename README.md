@@ -64,6 +64,10 @@ ZFPlayer播放视频
 ```objc
 pod 'GKPhotoBrowser/ZFPlayer'
 ```
+IJKPlayer播放视频
+```objc
+pod 'GKPhotoBrowser/IJKPlayer'
+```
 
 视频播放进度条
 ```objc

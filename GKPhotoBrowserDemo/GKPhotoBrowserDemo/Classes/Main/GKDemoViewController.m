@@ -11,6 +11,7 @@
 #import <Masonry/Masonry.h>
 #import "GKDemoWebViewController.h"
 #import "GKDemoPhotoViewController.h"
+#import "GKDemoLocalViewController.h"
 
 @interface GKDemoViewController ()
 
@@ -60,6 +61,8 @@
 @property (nonatomic, strong) UIButton *webBtn;
 
 @property (nonatomic, strong) UIButton *photoBtn;
+
+@property (nonatomic, strong) UIButton *localBtn;
 
 @end
 
@@ -179,16 +182,26 @@
     
     [self.view addSubview:self.webBtn];
     [self.view addSubview:self.photoBtn];
+    [self.view addSubview:self.localBtn];
+    
+    CGFloat margin = (self.view.frame.size.width - 80 * 3) / 4;
     
     [self.webBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.view).offset(80);
+        make.left.equalTo(self.view).offset(margin);
         make.top.equalTo(self.videoPlayControl.mas_bottom).offset(50);
         make.width.mas_equalTo(80);
         make.height.mas_equalTo(30);
     }];
     
     [self.photoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.view).offset(-80);
+        make.centerX.equalTo(self.view);
+        make.top.equalTo(self.videoPlayControl.mas_bottom).offset(50);
+        make.width.mas_equalTo(80);
+        make.height.mas_equalTo(30);
+    }];
+    
+    [self.localBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-margin);
         make.top.equalTo(self.videoPlayControl.mas_bottom).offset(50);
         make.width.mas_equalTo(80);
         make.height.mas_equalTo(30);
@@ -235,6 +248,19 @@
 
 - (void)photoBtnClick:(id)sender {
     GKDemoPhotoViewController *photoVC = [[GKDemoPhotoViewController alloc] init];
+    photoVC.showStyle = self.showStyle;
+    photoVC.hideStyle = self.hideStyle;
+    photoVC.loadStyle = self.loadStyle;
+    photoVC.failStyle = self.failStyle;
+    photoVC.imageLoadStyle = self.imgLoadStyle;
+    photoVC.videoLoadStyle = self.videoLoadStyle;
+    photoVC.videoFailStyle = self.videoFailStyle;
+    photoVC.videoPlayStyle = self.videoPlayStyle;
+    [self.navigationController pushViewController:photoVC animated:YES];
+}
+
+- (void)localBtnClick:(id)sender {
+    GKDemoLocalViewController *photoVC = [[GKDemoLocalViewController alloc] init];
     photoVC.showStyle = self.showStyle;
     photoVC.hideStyle = self.hideStyle;
     photoVC.loadStyle = self.loadStyle;
@@ -425,6 +451,20 @@
         [_photoBtn addTarget:self action:@selector(photoBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _photoBtn;
+}
+
+- (UIButton *)localBtn {
+    if (!_localBtn) {
+        _localBtn = [[UIButton alloc] init];
+        [_localBtn setTitle:@"本地图片" forState:UIControlStateNormal];
+        [_localBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        _localBtn.backgroundColor = UIColor.blackColor;
+        _localBtn.layer.cornerRadius = 5;
+        _localBtn.layer.masksToBounds = YES;
+        _localBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [_localBtn addTarget:self action:@selector(localBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _localBtn;
 }
 
 @end

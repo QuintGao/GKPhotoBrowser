@@ -8,19 +8,10 @@
 
 #import "GKSDWebImageManager.h"
 
-#if __has_include(<SDWebImage/SDImageCache.h>)
-#import <SDWebImage/UIImageView+WebCache.h>
-#import <SDWebImage/UIView+WebCache.h>
-#import <SDWebImage/SDWebImageDownloader.h>
-#import <SDWebImage/SDImageCache.h>
-#import <SDWebImage/SDAnimatedImageView.h>
-#import <SDWebImage/UIImage+GIF.h>
+#if __has_include(<SDWebImage/SDWebImage.h>)
+#import <SDWebImage/SDWebImage.h>
 #else
-#import "UIImageView+WebCache.h"
-#import "UIView+WebCache.h"
-#import "SDWebImageDownloader.h"
-#import "SDImageCache.h"
-#import "SDAnimatedImageView.h"
+#import "SDWebImage.h"
 #endif
 
 @implementation GKSDWebImageManager
