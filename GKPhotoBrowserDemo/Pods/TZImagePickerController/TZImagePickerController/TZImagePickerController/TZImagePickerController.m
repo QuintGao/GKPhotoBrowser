@@ -4,7 +4,7 @@
 //
 //  Created by 谭真 on 15/12/24.
 //  Copyright © 2015年 谭真. All rights reserved.
-//  version 3.8.4 - 2023.11.21
+//  version 3.8.6 - 2024.06.27
 //  更多信息，请前往项目的github地址：https://github.com/banchichen/TZImagePickerController
 
 #import "TZImagePickerController.h"
@@ -193,7 +193,6 @@
         self.allowTakeVideo = YES;
         self.videoMaximumDuration = 10 * 60;
         self.sortAscendingByModificationDate = YES;
-        self.autoDismiss = YES;
         self.columnNumber = columnNumber;
         [self configDefaultSetting];
         
@@ -289,6 +288,7 @@
 }
 
 - (void)configDefaultSetting {
+    self.autoDismiss = YES;
     self.autoSelectCurrentWhenDone = YES;
     self.timeout = 30;
     self.photoWidth = 828.0;

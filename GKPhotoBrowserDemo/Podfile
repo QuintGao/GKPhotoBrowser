@@ -2,7 +2,7 @@ workspace 'GKPhotoBrowserDemo.xcworkspace'
 
 source 'https://github.com/CocoaPods/Specs.git'
 
-platform :ios, '9.0'
+platform :ios, '10.0'
 
 # 去掉烦人的警告
 inhibit_all_warnings!
@@ -27,6 +27,9 @@ target 'GKPhotoBrowserDemo' do
   pod 'GKPhotoBrowser/YY', :path => '../'
   pod 'GKPhotoBrowser/KF', :path => '../'
   pod 'GKPhotoBrowser/ZFPlayer', :path => '../'
+  pod 'GKPhotoBrowser/AF', :path => '../'
+  pod 'GKPhotoBrowser/Alamofire', :path => '../'
+
 #  pod 'GKPhotoBrowser/IJKPlayer', :path => '../'
 #  pod 'GKPhotoBrowser', :subspecs => ['SD', 'YY', 'AVPlayer'], :path => '../'
 #  pod 'GKPhotoBrowser/SD', :path => '../'

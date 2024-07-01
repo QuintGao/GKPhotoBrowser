@@ -79,7 +79,7 @@
                 "url": "https://p6-pc-sign.douyinpic.com/tos-cn-p-0015/oknhVhVSE1IACxfBP8DzNAY9JbAfB1kgyX7jI2~tplv-dy-cropcenter:323:430.jpeg?biz_tag=pcweb_cover&from=3213915784&s=PackSourceEnum_PUBLISH&sc=cover&se=true&sh=323_430&x-expires=1993168800&x-signature=X0%2FLZFWf5%2FMKjUtthTmAia5AHw0%3D",
                 "width": "323",
                 "height": "430",
-                "video_url": "https://www.douyin.com/aweme/v1/play/?video_id=v0200fg10000cfu89djc77u8qtilafc0&line=0&file_id=a7954205d1c74ebd9f8d8ae5107bb677&sign=2779a30f644fc1f9ca94855443728a02&is_play_url=1&source=PackSourceEnum_AWEME_DETAIL&aid=6383"
+                "video_url": "https://cdn.pixabay.com/video/2024/05/30/214582_tiny.mp4"
             }
         ]
     },
@@ -140,13 +140,13 @@
         ]
     },
     {
-        "name": "哈哈哈", 
+        "name": "哈哈哈",
         "icon": {
             "url": "https://gips0.baidu.com/it/u=4239622437,2186142577&fm=3012&app=3012&autime=1678336321&size=b200,200&fmt=auto",
-            "width": "300", 
+            "width": "300",
             "height": "300"
-        }, 
-        "content": "GKPhotoBrowser-自定义图片浏览器，已经为你封装好了显示和隐藏时的一些动画，可以很方便的设置其属性", 
+        },
+        "content": "GKPhotoBrowser-自定义图片浏览器，已经为你封装好了显示和隐藏时的一些动画，可以很方便的设置其属性",
         "images": [
             {
                 "thumbnail_url": "https://f7.baidu.com/it/u=217975233,794761984&fm=222&app=106&f=JPEG@s_0,w_660,h_370,q_80",
@@ -159,7 +159,7 @@
                 "url": "https://f7.baidu.com/it/u=604984609,3956647426&fm=222&app=106&f=JPEG@s_0,w_660,h_370,q_80",
                 "width": "500",
                 "height": "282"
-            }, 
+            },
             {
                 "thumbnail_url": "https://f7.baidu.com/it/u=921157395,1927119643&fm=222&app=106&f=JPEG@s_0,w_660,h_370,q_80",
                 "url": "https://f7.baidu.com/it/u=921157395,1927119643&fm=222&app=106&f=JPEG@s_0,w_660,h_370,q_80",

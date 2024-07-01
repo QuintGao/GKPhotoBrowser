@@ -162,7 +162,9 @@
             case GKLoadingStyleDeterminate:
                 [self setupDeterminateAnim:_animatedLayer];
                 break;
-                
+            case GKLoadingStyleDeterminateSector:
+                [self setupDeterminateFullAnim:_animatedLayer];
+                break;
             default:
                 break;
         }
@@ -260,6 +262,24 @@
     layer.strokeEnd = 0.0f;
 }
 
+- (void)setupDeterminateFullAnim:(CAShapeLayer *)layer {
+    CGPoint arcCenter = [self layerCenter];
+    
+    layer.anchorPoint = CGPointMake(0.5, 0.5);
+    layer.fillColor = UIColor.clearColor.CGColor;
+    
+    CGFloat radius = self.radius - 3;
+    layer.lineWidth = radius;
+    layer.strokeStart = 0;
+    layer.strokeEnd = 0;
+    layer.lineCap = kCALineCapButt;
+    layer.lineJoin = kCALineJoinMiter;
+    
+    CGRect pathRect = CGRectMake((arcCenter.x * 2 - radius)/2, (arcCenter.y * 2 - radius)/2, radius, radius);
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:pathRect cornerRadius:radius];
+    layer.path = path.CGPath;
+}
+
 - (void)setFrame:(CGRect)frame {
     if (!CGRectEqualToRect(frame, super.frame)) {
         [super setFrame:frame];
@@ -269,7 +289,9 @@
 - (void)setLineWidth:(CGFloat)lineWidth {
     _lineWidth = lineWidth;
     
-    self.animatedLayer.lineWidth   = lineWidth;
+    if (self.loadingStyle != GKLoadingStyleDeterminateSector) {
+        self.animatedLayer.lineWidth   = lineWidth;
+    }
     self.backgroundLayer.lineWidth = lineWidth;
     
     [self layoutIfNeeded];
@@ -303,6 +325,10 @@
 
 - (void)setProgress:(CGFloat)progress {
     _progress = progress;
+    
+    if (progress) {
+        self.backgroundLayer.hidden = NO;
+    }
     
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
@@ -393,6 +419,8 @@
         
         animationGroup.animations = @[strokeStartAnimation, strokeEndAnimation];
         [self.animatedLayer addAnimation:animationGroup forKey:@"progress"];
+    }else if (self.loadingStyle == GKLoadingStyleDeterminateSector) {
+        self.backgroundLayer.hidden = YES;
     }
 }
 

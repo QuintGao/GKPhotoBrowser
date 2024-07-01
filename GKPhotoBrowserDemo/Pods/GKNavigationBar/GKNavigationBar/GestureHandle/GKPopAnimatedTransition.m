@@ -65,10 +65,10 @@
         }
     } completion:^(BOOL finished) {
         if (self.isHideTabBar) {
-            self.toViewController.gk_captureImage = nil;
             if (self.transitionContext.transitionWasCancelled) {
                 [self.toViewController.view removeFromSuperview];
-            }else {
+            }else {//transition 完成: 将之前的 tab 截屏清空
+                self.toViewController.gk_captureImage = nil;
                 [self.containerView addSubview:self.toViewController.view];
             }
             

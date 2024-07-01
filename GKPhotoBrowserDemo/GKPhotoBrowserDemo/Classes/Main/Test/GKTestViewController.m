@@ -12,6 +12,12 @@
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
 #import "GKVideoProgressView.h"
 #import <Masonry/Masonry.h>
+#import <PhotosUI/PhotosUI.h>
+#import <SDWebImage/SDWebImage.h>
+#import <AFNetworking/AFNetworking.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#import <GKLivePhotoManager/GKLivePhotoManager.h>
+#import "KNProgressHUD.h"
 
 @interface GKTestViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -29,6 +35,17 @@
 
 @property (nonatomic, assign) NSTimeInterval currentTime;
 @property (nonatomic, assign) NSTimeInterval totalTime;
+
+@property (nonatomic, assign) BOOL movieFinished;
+@property (nonatomic, assign) BOOL imageFinished;
+
+@property (nonatomic, strong) PHLivePhotoView *photoView;
+
+@property (nonatomic, strong) GKLoadingView *loadingView;
+
+@property (nonatomic, strong) KNProgressHUD *hud;
+
+@property (nonatomic, assign) float progress;
 
 @end
 
@@ -56,12 +73,254 @@
 //    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timeCount) userInfo:nil repeats:YES];
 //    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     
-    GKBottomView *btmView = [GKBottomView new];
-    btmView.frame = CGRectMake(0, 100, self.view.frame.size.width, 100);
-    [self.view addSubview:btmView];
-    [self setupView];
+//    GKBottomView *btmView = [GKBottomView new];
+//    btmView.frame = CGRectMake(0, 100, self.view.frame.size.width, 100);
+//    [self.view addSubview:btmView];
+//    [self setupView];
+//
+//    [self setupData];
+    
+//    self.photoView = [[PHLivePhotoView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 300)/2, 100, 300, 300)];
+//    [self.view addSubview:self.photoView];
+//    
+//    [self requestMovie];
+    
+    self.view.backgroundColor = UIColor.blackColor;
+    
+    self.loadingView = [GKLoadingView loadingViewWithFrame:self.view.bounds style:GKLoadingStyleDeterminateSector];
+    self.loadingView.radius = 40;
+    self.loadingView.lineWidth = 1;
+    self.loadingView.bgColor = UIColor.whiteColor;
+    self.loadingView.strokeColor = UIColor.whiteColor;
+    [self.view addSubview:self.loadingView];
+    
+    [self.loadingView startLoading];
+    
+//    self.hud = [[KNProgressHUD alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+//    [self.view addSubview:self.hud];
+//    
+//    self.progress = 0;
+    
+    [self addProgress];
+}
 
-    [self setupData];
+- (void)addProgress {
+    if (self.progress >= 1.0) {
+        return;
+    }
+    self.progress += 0.01;
+    self.loadingView.progress = self.progress;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self addProgress];
+    });
+}
+
+- (void)requestMovie {
+    NSURL *movieURL = [NSURL URLWithString:@"https://video.weibo.com/media/play?livephoto=https%3A%2F%2Fus.sinaimg.cn%2F002TS7JWjx08fNcQ4Aar0f0f0100e0dt0k01.mov"];
+    NSURL *imageURL = [NSURL URLWithString:@"https://wx2.sinaimg.cn/orj360/c4d5a512ly1hqvjl5qkfij22by2quqv7.jpg"];
+    
+    NSString *url = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:@"test"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:url]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:url withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    NSString *moviePath = [url stringByAppendingPathComponent:@"test.mov"];
+    NSString *imagePath = [url stringByAppendingPathComponent:@"test.jpg"];
+    [[NSFileManager defaultManager] removeItemAtPath:moviePath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:imagePath error:nil];
+    
+    NSURL *movieFileURL = [NSURL fileURLWithPath:moviePath];
+    NSURL *imageFileURL = [NSURL fileURLWithPath:imagePath];
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    
+    __block BOOL movieFinished = NO;
+    __block BOOL imageFinished = NO;
+    
+    [[manager downloadTaskWithRequest:[NSURLRequest requestWithURL:movieURL] progress:nil destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+        return movieFileURL;
+    } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+        movieFinished = YES;
+        if (movieFinished && imageFinished) {
+            [self loadLivePhotoWith:moviePath imagePath:imagePath];
+        }
+    }] resume];
+    
+    [[manager downloadTaskWithRequest:[NSURLRequest requestWithURL:imageURL] progress:nil destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+        return imageFileURL;
+    } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+        imageFinished = YES;
+        if (movieFinished && imageFinished) {
+            [self loadLivePhotoWith:moviePath imagePath:imagePath];
+        }
+    }] resume];
+}
+
+- (void)loadLivePhotoWith:(NSString *)moviePath imagePath:(NSString *)imagePath {
+    [[GKLivePhotoManager manager] handleDataWithVideoPath:moviePath imagePath:imagePath completion:^(NSString * _Nullable outVideoPath, NSString * _Nullable outImagePath, NSError * _Nullable error) {
+        [[GKLivePhotoManager manager] createLivePhotoWithVideoPath:outVideoPath imagePath:outImagePath targetSize:CGSizeMake(300, 300) completion:^(PHLivePhoto * _Nullable livePhoto, NSError * _Nullable error) {
+            if (livePhoto) {
+                self.photoView.livePhoto = livePhoto;
+                [self.photoView startPlaybackWithStyle:PHLivePhotoViewPlaybackStyleFull];
+            }
+        }];
+    }];
+}
+
+- (void)getImageWithPath:(NSURL *)filePath completion:(void(^)(NSString *imagePath))completion {
+    AVURLAsset *asset = [AVURLAsset assetWithURL:filePath];
+    
+    AVAssetTrack *track = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
+    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    generator.appliesPreferredTrackTransform = YES;
+    generator.maximumSize = track.naturalSize;
+    CGImageRef image = [generator copyCGImageAtTime:CMTimeMakeWithSeconds(0, asset.duration.timescale) actualTime:nil error:nil];
+    if (image != nil) {
+        NSData *data = UIImagePNGRepresentation([UIImage imageWithCGImage:image]);
+        NSArray *urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+        NSURL *url = urls[0];
+        NSString *imageURL = [url.path stringByAppendingPathComponent:@"temp.jpg"];
+        [data writeToFile:imageURL atomically:YES];
+        !completion ?: completion(imageURL);
+        CGImageRelease(image);
+    }
+}
+
+- (void)dealImageWithOriginPath:(NSString *)originPath
+                 filePath:(NSString *)finalPath
+                     assetIdentifier:(NSString *)assetIdentifier {
+    CGImageDestinationRef dest = CGImageDestinationCreateWithURL((CFURLRef)[NSURL fileURLWithPath:finalPath], kUTTypeJPEG, 1, nil);
+    CGImageSourceRef imageSourceRef = CGImageSourceCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:originPath], nil);
+    NSMutableDictionary *metaData = [(__bridge_transfer  NSDictionary*)CGImageSourceCopyPropertiesAtIndex(imageSourceRef, 0, nil) mutableCopy];
+    
+    NSMutableDictionary *makerNote = [NSMutableDictionary dictionary];
+    [makerNote setValue:assetIdentifier forKey:@"17"];
+    [metaData setValue:makerNote forKey:(__bridge_transfer  NSString*)kCGImagePropertyMakerAppleDictionary];
+    CGImageDestinationAddImageFromSource(dest, imageSourceRef, 0, (CFDictionaryRef)metaData);
+    CGImageDestinationFinalize(dest);
+    CFRelease(dest);
+}
+
+- (void)movieTransformWithSourcePath:(NSString *)sourcePath outputPath:(NSString *)outputPath identifier:(NSString *)identifier success:(void(^)(NSString *videoPath))success failure:(void(^)(NSString *error))failure {
+    NSURL *sourceURL = [NSURL fileURLWithPath:sourcePath];
+    AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:sourceURL options:nil];
+    NSArray *comptiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:avAsset];
+    if ([comptiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
+        AVAssetExportSession *session = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPresetHighestQuality];
+        AVMutableMetadataItem *item = [AVMutableMetadataItem metadataItem];
+        item.key = @"com.apple.quicktime.content.identifier";
+        item.keySpace = AVMetadataKeySpaceQuickTimeMetadata;
+        item.value = identifier;
+        item.dataType = @"com.apple.metadata.datatype.UTF-8";
+        NSArray *metadata = [NSArray arrayWithObject:item];
+        session.metadata = metadata;
+        session.outputURL = [NSURL fileURLWithPath:outputPath];
+        session.outputFileType = AVFileTypeQuickTimeMovie;
+        session.shouldOptimizeForNetworkUse = YES;
+        
+        // 如果有文件则直接返回
+        if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath]) {
+            !success ?: success(outputPath);
+            return;
+        }
+        
+        __block AVAssetExportSession *weakSession = session;
+        [session exportAsynchronouslyWithCompletionHandler:^{
+            switch (weakSession.status) {
+                case AVAssetExportSessionStatusUnknown: {
+                    NSLog(@"未知状态");
+                }
+                    break;
+                case AVAssetExportSessionStatusWaiting: {
+                    NSLog(@"等待中");
+                }
+                    break;
+                case AVAssetExportSessionStatusExporting: {
+                    NSLog(@"导出中");
+                }
+                    break;
+                case AVAssetExportSessionStatusCompleted: {
+                    NSLog(@"导出完成");
+                    !success ?: success(outputPath);
+                }
+                    break;
+                case AVAssetExportSessionStatusFailed: {
+                    NSLog(@"导出失败");
+                    !failure ?: failure(weakSession.error.localizedDescription);
+                }
+                    break;
+                case AVAssetExportSessionStatusCancelled:{
+                    NSLog(@"导出取消");
+                    !failure ?: failure(weakSession.error.localizedDescription);
+                }
+                    break;
+                default:
+                    break;
+            }
+        }];
+    }
+}
+
+- (void)requestLivePhotoWithMovieURL:(NSURL *)movieURL imageURL:(NSURL *)imageURL {
+//    NSString *moviePath = [[NSBundle mainBundle] pathForResource:@"IMG_E8375" ofType:@"mov"];
+//    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"IMG_E8375" ofType:@"heic"];
+//    
+//    movieURL = [NSURL fileURLWithPath:moviePath];
+//    imageURL = [NSURL fileURLWithPath:imagePath];
+    
+//    [self addAssetID:NSUUID.UUID.UUIDString imageURL:imageURL destinationURL:imageURL];
+    
+    NSLog(@"requestLivePhoto");
+    
+    [PHLivePhoto requestLivePhotoWithResourceFileURLs:@[movieURL, imageURL] placeholderImage:nil targetSize:CGSizeMake(300, 300) contentMode:PHImageContentModeAspectFill resultHandler:^(PHLivePhoto * _Nullable livePhoto, NSDictionary * _Nonnull info) {
+        NSLog(@"%@--%@", livePhoto, info);
+        if (livePhoto) {
+            [self.photoView setLivePhoto:livePhoto];
+        }
+    }];
+}
+
+- (void)addAssetID:(NSString *)assetIdentifier imageURL:(NSURL *)imageURL destinationURL:(NSURL *)destinationURL {
+    NSString *kFigAppleMakerNote_AssetIdentifier = @"17";
+    
+    NSData *data = [NSData dataWithContentsOfURL:imageURL];
+    UIImage *image = [[UIImage alloc] initWithData:data];
+    
+    CGImageRef imageRef = image.CGImage;
+    
+    NSDictionary *imageMetadata = @{(NSString *)kCGImagePropertyMakerAppleDictionary : @{kFigAppleMakerNote_AssetIdentifier : assetIdentifier}};
+    
+    CFStringRef type = CGImageGetUTType(imageRef);
+//    CGImageDestinationRef dest = CGImageDestinationCreateWithData((CFMutableDataRef)data, type, 1, nil);
+    
+//    CFURLRef ref;
+    CFURLRef urlRef = (__bridge CFURLRef)destinationURL;
+    
+    CGImageDestinationRef dest = CGImageDestinationCreateWithURL(urlRef, type, 1, nil);
+    
+    CGImageDestinationAddImage(dest, imageRef, (CFDictionaryRef)imageMetadata);
+    CGImageDestinationFinalize(dest);
+    
+    
+    
+    
+    
+//    CGImageDestinationRef dest = CGImageDestinationCreateWithURL((CFURLRef)[NSURL fileURLWithPath:finalPath], kUTTypeJPEG, 1, nil);
+//    CGImageSourceRef imageSourceRef = CGImageSourceCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:originPath], nil);
+//    NSMutableDictionary *metaData = [(__bridge_transfer  NSDictionary*)CGImageSourceCopyPropertiesAtIndex(imageSourceRef, 0, nil) mutableCopy];
+//    
+//    NSMutableDictionary *makerNote = [NSMutableDictionary dictionary];
+//    [makerNote setValue:assetIdentifier forKey:@"17"];
+//    [metaData setValue:makerNote forKey:(__bridge_transfer  NSString*)kCGImagePropertyMakerAppleDictionary];
+//    CGImageDestinationAddImageFromSource(dest, imageSourceRef, 0, (CFDictionaryRef)metaData);
+//    CGImageDestinationFinalize(dest);
+//    CFRelease(dest);
+}
+
+- (AVAsset *)cutVideoWithPath:(NSString *)videoPath {
+    AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:videoPath]];
+    return asset;
 }
 
 - (void)timeCount {

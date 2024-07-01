@@ -117,6 +117,17 @@ static CGFloat   photoH;
             }
         }
         
+        if (image.isLivePhoto) {
+            UILabel *label = [[UILabel alloc] init];
+            label.frame = CGRectMake(0, 0, 40, 20);
+            label.text = @"Live";
+            label.font = [UIFont systemFontOfSize:14];
+            label.textAlignment = NSTextAlignmentCenter;
+            label.textColor = UIColor.whiteColor;
+            label.backgroundColor = [UIColor.whiteColor colorWithAlphaComponent:0.6];
+            [imgView addSubview:label];
+        }
+        
         if (image.isVideo) {
             UIImageView *playView = [[UIImageView alloc] init];
             playView.image = GKPhotoBrowserImage(@"gk_video_play");
@@ -217,6 +228,13 @@ static CGFloat   photoH;
             [obj.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj1, NSUInteger idx, BOOL * _Nonnull stop) {
                 obj1.center = CGPointMake(w / 2, h / 2);
             }];
+        }
+        
+        if (obj.subviews) {
+            UIView *subview = obj.subviews.firstObject;
+            if ([subview isKindOfClass:UILabel.class]) {
+                subview.frame = CGRectMake(w - subview.frame.size.width, h - subview.frame.size.height, subview.frame.size.width, subview.frame.size.height);
+            }
         }
     }];
 }

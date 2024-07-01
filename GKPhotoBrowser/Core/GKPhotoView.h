@@ -10,6 +10,7 @@
 #import "GKPhotoManager.h"
 #import "GKWebImageProtocol.h"
 #import "GKVideoPlayerProtocol.h"
+#import "GKLivePhotoProtocol.h"
 #import "GKLoadingView.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -48,11 +49,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) GKLoadingView *videoLoadingView;
 
+@property (nonatomic, strong, readonly) GKLoadingView *liveLoadingView;
+
 @property (nonatomic, strong, readonly) GKPhoto *photo;
+
+@property (nonatomic, weak, readonly) id<GKWebImageProtocol> imageProtocol;
 
 @property (nonatomic, weak) id<GKVideoPlayerProtocol> player;
 
+@property (nonatomic, weak) id<GKLivePhotoProtocol> livePhoto;
+
 @property (nonatomic, weak) id<GKPhotoViewDelegate> delegate;
+
+@property (nonatomic, assign) CGSize imageSize;
 
 /// 是否跟随系统旋转，默认是NO，如果设置为YES，isScreenRotateDisabled属性将失效
 @property (nonatomic, assign) BOOL isFollowSystemRotation;
@@ -69,14 +78,14 @@ NS_ASSUME_NONNULL_BEGIN
 /** 双击放大倍数 */
 @property (nonatomic, assign) CGFloat doubleZoomScale;
 
-/** 是否重新布局 */
-@property (nonatomic, assign) BOOL isLayoutSubViews;
+@property (nonatomic, assign) CGFloat realZoomScale;
 
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle originLoadStyle;
 @property (nonatomic, assign) GKPhotoBrowserFailStyle failStyle;
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle videoLoadStyle;
 @property (nonatomic, assign) GKPhotoBrowserFailStyle videoFailStyle;
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle liveLoadStyle;
 
 @property (nonatomic, assign) BOOL      showPlayImage;
 @property (nonatomic, strong) UIImage   *videoPlayImage;
@@ -92,14 +101,13 @@ NS_ASSUME_NONNULL_BEGIN
 // 准备复用
 - (void)prepareForReuse;
 
+- (void)resetImageView;
+
 // 设置数据
 - (void)setupPhoto:(GKPhoto *)photo;
 
 // 设置放大倍数
 - (void)setScrollMaxZoomScale:(CGFloat)scale;
-
-// 加载原图（必须传originUrl）
-- (void)loadOriginImage;
 
 // 缩放
 - (void)zoomToRect:(CGRect)rect animated:(BOOL)animated;
@@ -130,6 +138,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)didDismissDisappear;
 
 - (void)updateFrame;
+
+- (void)loadFailedWithError:(NSError *)error;
 
 @end
 

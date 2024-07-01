@@ -44,6 +44,8 @@ typedef NS_ENUM(NSUInteger, GKPanGestureRecognizerDirection) {
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 @property (nonatomic, strong) GKPanGestureRecognizer *panGesture;
 
+@property (nonatomic, assign) BOOL isClickDismiss;
+
 - (void)addGestureRecognizer;
 - (void)addPanGesture:(BOOL)isFirst;
 - (void)removePanGesture;

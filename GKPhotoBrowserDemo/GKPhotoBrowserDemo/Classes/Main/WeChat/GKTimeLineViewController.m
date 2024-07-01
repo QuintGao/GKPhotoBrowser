@@ -134,7 +134,11 @@
             photo.url = [NSURL URLWithString:obj.url];
             
             photo.sourceImageView = cell.photosView.subviews[idx];
-            if (obj.isVideo) {
+            
+            if (obj.isLivePhoto) {
+                photo.isLivePhoto = YES;
+                photo.videoUrl = [NSURL URLWithString:obj.video_url];
+            }else if (obj.isVideo) {
                 photo.videoUrl = [NSURL URLWithString:obj.video_url];
             }
             

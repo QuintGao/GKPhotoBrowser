@@ -44,6 +44,8 @@
 @property (nonatomic, strong) UIImage *coverImage;
 @property (nonatomic, strong) PHAsset *video_asset;
 
+@property (nonatomic, assign) BOOL isLivePhoto;
+
 @property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) CGFloat height;
 

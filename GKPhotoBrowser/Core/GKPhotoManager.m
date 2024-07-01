@@ -25,7 +25,7 @@
 }
 
 - (BOOL)isVideo {
-    return self.videoUrl || self.videoAsset;
+    return !self.isLivePhoto && (self.videoUrl || self.videoAsset);
 }
 
 - (void)getImage:(void (^)(NSData * _Nullable, UIImage * _Nullable, NSError * _Nullable))completion {
@@ -96,6 +96,13 @@
             !completion ?: completion(nil, error);
         }
     }
+}
+
+- (BOOL)isLivePhoto {
+    if (self.imageAsset) {
+        return self.imageAsset.mediaSubtypes == PHAssetMediaSubtypePhotoLive;
+    }
+    return _isLivePhoto;
 }
 
 @end

@@ -177,7 +177,9 @@ code_sign_if_enabled() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/GKCover/GKCover.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/GKLivePhotoManager/GKLivePhotoManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/GKMessageTool/GKMessageTool.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/GKNavigationBar/GKNavigationBar.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/GKSliderView/GKSliderView.framework"
@@ -194,7 +196,9 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/GKCover/GKCover.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/GKLivePhotoManager/GKLivePhotoManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/GKMessageTool/GKMessageTool.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/GKNavigationBar/GKNavigationBar.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/GKSliderView/GKSliderView.framework"

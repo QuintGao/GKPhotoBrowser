@@ -20,8 +20,15 @@ import Kingfisher
         
         imageView?.kf.setImage(with: url, placeholder: placeholderImage, progressBlock: { resiveSize, totalSize in
             progressBlock?(Int(resiveSize), Int(totalSize))
-        }, completionHandler: { image, error, imageType, imageURL in
-            completionBlock?(image, imageURL, true, error)
+        }, completionHandler: { result in
+            switch result {
+            case .success(let imageResult):
+                completionBlock?(imageResult.image, imageResult.source.url, true, nil)
+                break
+            case .failure(let error):
+                completionBlock?(nil, nil, false, error)
+                break
+            }
         })
     }
     
@@ -30,17 +37,13 @@ import Kingfisher
     }
     
     public func imageFromMemory(for url: URL?) -> UIImage? {
-        return ImageCache.default.retrieveImageInDiskCache(forKey: url?.absoluteString ?? "")
+        return ImageCache.default.retrieveImageInMemoryCache(forKey: url?.absoluteString ?? "")
     }
     
     public func image(with data: Data?) -> UIImage? {
         guard let data = data else { return nil }
-        return Kingfisher<Image>.animated(
-            with: data,
-            scale: 1,
-            duration: 0.0,
-            preloadAll: true,
-            onlyFirstFrame: false)
+        let options = ImageCreatingOptions(scale: 1, duration: 0.0, preloadAll: true, onlyFirstFrame: false)
+        return KingfisherWrapper.image(data: data, options: options)
     }
     
     public func clearMemory(for url: URL?) {

@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) NSInteger videoPlayStyle;
 
+@property (nonatomic, assign) NSInteger livePhotoStyle;
+
 @end
 
 NS_ASSUME_NONNULL_END

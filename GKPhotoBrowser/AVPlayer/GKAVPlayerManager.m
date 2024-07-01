@@ -212,7 +212,7 @@
                     }
                 } break;
                 case AVPlayerItemStatusFailed: {
-                    self.error = self.player.error;
+                    self.error = self.player.currentItem.error;
                     self.status = GKVideoPlayerStatusFailed;
                 } break;
                 default:

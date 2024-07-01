@@ -46,6 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否自动播放视频，默认YES
 @property (nonatomic, assign, getter=isAutoPlay) BOOL autoPlay;
 
+#pragma mark - LivePhoto
+// 是否是livePhoto，需从外部传入
+@property (nonatomic, assign) BOOL              isLivePhoto;
 
 /************************内部使用，无需关心 ********************/
 /** 图片是否加载完成 */
@@ -73,8 +76,12 @@ NS_ASSUME_NONNULL_BEGIN
 /** 视频手动点击播放 */
 @property (nonatomic, assign) BOOL               isVideoClicked;
 
+/// 根据相册资源获取图片
+/// - Parameter completion: 完成回调
 - (void)getImage:(nullable void(^)(NSData *_Nullable data, UIImage *_Nullable image, NSError *_Nullable error))completion;
 
+/// 根据相册资源获取视频
+/// - Parameter completion: 完成回调
 - (void)getVideo:(nullable void(^)(NSURL *_Nullable url, NSError *_Nullable error))completion;
 
 @end

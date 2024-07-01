@@ -59,6 +59,8 @@
                         @"class" : @"GKTimeLineViewController"},
                       @{@"text"  : @"微信聊天",
                         @"class" : @"GKChatViewController"},
+                      @{@"text"  : @"微博-LivePhoto",
+                        @"class" : @"GKLivePhotoViewController"},
                       @{@"text"  : @"今日头条",
                         @"class" : @"GKToutiaoViewController"},
                       @{@"text"  : @"简书",

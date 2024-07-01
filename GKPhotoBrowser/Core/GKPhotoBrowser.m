@@ -9,6 +9,7 @@
 #import "GKPhotoBrowser.h"
 #import "GKPhotoGestureHandler.h"
 #import "GKPhotoRotationHandler.h"
+#import "GKPhotoView+Image.h"
 
 #if __has_include(<GKYYWebImageManager.h>)
 #import "GKYYWebImageManager.h"
@@ -25,6 +26,7 @@
 static Class imageManagerClass = nil;
 static Class videoManagerClass = nil;
 static Class progressClass = nil;
+static Class livePhotoClass = nil;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -65,6 +67,9 @@ static Class progressClass = nil;
 // 进度条
 @property (nonatomic, strong) id<GKProgressViewProtocol> progress;
 
+// livePhoto
+@property (nonatomic, strong) id<GKLivePhotoProtocol> livePhoto;
+
 @end
 
 @implementation GKPhotoBrowser
@@ -101,6 +106,7 @@ static Class progressClass = nil;
     self.originLoadStyle = GKPhotoBrowserLoadStyleIndeterminate;
     self.videoLoadStyle = GKPhotoBrowserLoadStyleIndeterminate;
     self.failStyle = GKPhotoBrowserFailStyleOnlyText;
+    self.liveLoadStyle = GKPhotoBrowserLoadStyleDeterminateSector;
     
     _visiblePhotoViews  = [NSMutableArray new];
     _reusablePhotoViews = [NSMutableSet new];
@@ -119,6 +125,10 @@ static Class progressClass = nil;
     progressClass = NSClassFromString(@"GKProgressView");
     if (progressClass) {
         [self setupVideoProgressProtocol:[progressClass new]];
+    }
+    livePhotoClass = NSClassFromString(@"GKAFLivePhotoManager");
+    if (livePhotoClass) {
+        [self setupLivePhotoProtocol:[livePhotoClass new]];
     }
 }
 
@@ -213,6 +223,12 @@ static Class progressClass = nil;
     };
 }
 
+- (void)setupLivePhotoProtocol:(id<GKLivePhotoProtocol>)protocol {
+    protocol.browser = self;
+    [protocol gk_clear];
+    self.livePhoto = protocol;
+}
+
 - (void)setupVideoProgressProtocol:(id<GKProgressViewProtocol>)protocol {
     protocol.browser = self;
     self.progress = protocol;
@@ -227,7 +243,6 @@ static Class progressClass = nil;
 
 - (void)dealloc {
     [self.rotationHandler delDeviceOrientationObserver];
-    [self.player gk_stop];
 }
 
 - (void)loadView {
@@ -286,6 +301,13 @@ static Class progressClass = nil;
             [self.imageProtocol clearMemory];
         }
     }
+    // 手动释放，防止某些情况下释放不了
+    self.imageProtocol = nil;
+    [self.player gk_stop];
+    self.player = nil;
+    [self.livePhoto gk_stop];
+    self.livePhoto = nil;
+    self.progress = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -611,11 +633,13 @@ static Class progressClass = nil;
             photoView                 = [self dequeueReusablePhotoView];
             photoView.delegate        = self;
             photoView.player          = self.player;
+            photoView.livePhoto       = self.livePhoto;
             photoView.loadStyle       = self.loadStyle;
             photoView.originLoadStyle = self.originLoadStyle;
             photoView.failStyle       = self.failStyle;
             photoView.videoLoadStyle  = self.videoLoadStyle;
             photoView.videoFailStyle  = self.videoFailStyle;
+            photoView.liveLoadStyle   = self.liveLoadStyle;
             photoView.isFollowSystemRotation = self.isFollowSystemRotation;
             photoView.isFullWidthForLandScape = self.isFullWidthForLandScape;
             photoView.isAdaptiveSafeArea = self.isAdaptiveSafeArea;
@@ -644,7 +668,7 @@ static Class progressClass = nil;
             [photoView resetFrame];
         }
         
-        if (photoView.photo == nil && self.handler.isShow) {
+        if (photoView.photo == nil && self.handler.isShow && !self.gestureHandler.isClickDismiss) {
             [photoView setupPhoto:self.photos[i]];
         }
         if ([self.delegate respondsToSelector:@selector(photoBrowser:reuseAtIndex:photoView:)]) {

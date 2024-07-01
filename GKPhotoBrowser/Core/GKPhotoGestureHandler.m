@@ -151,6 +151,7 @@ int const static kDirectionPanThreshold = 5;
     
     // 禁止默认单击事件
     if (self.browser.isSingleTapDisabled) return;
+    self.isClickDismiss = YES;
     [self browserDismiss];
 }
 

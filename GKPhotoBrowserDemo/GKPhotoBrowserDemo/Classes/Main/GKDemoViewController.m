@@ -58,6 +58,11 @@
 @property (nonatomic, strong) UILabel *videoPlayLabel;
 @property (nonatomic, strong) UISegmentedControl *videoPlayControl;
 
+// livePhoto处理类
+@property (nonatomic, assign) NSInteger livePhotoStyle;
+@property (nonatomic, strong) UILabel *livePhotoLabel;
+@property (nonatomic, strong) UISegmentedControl *livePhotoControl;
+
 @property (nonatomic, strong) UIButton *webBtn;
 
 @property (nonatomic, strong) UIButton *photoBtn;
@@ -99,6 +104,8 @@
     [self.view addSubview:self.videoFailControl];
     [self.view addSubview:self.videoPlayLabel];
     [self.view addSubview:self.videoPlayControl];
+    [self.view addSubview:self.livePhotoLabel];
+    [self.view addSubview:self.livePhotoControl];
     
     [self.showLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.gk_navigationBar.mas_bottom).offset(10);
@@ -180,6 +187,16 @@
         make.centerX.equalTo(self.view);
     }];
     
+    [self.livePhotoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.videoPlayControl.mas_bottom).offset(10);
+        make.centerX.equalTo(self.view);
+    }];
+    
+    [self.livePhotoControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.livePhotoLabel.mas_bottom).offset(10);
+        make.centerX.equalTo(self.view);
+    }];
+    
     [self.view addSubview:self.webBtn];
     [self.view addSubview:self.photoBtn];
     [self.view addSubview:self.localBtn];
@@ -188,21 +205,21 @@
     
     [self.webBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(margin);
-        make.top.equalTo(self.videoPlayControl.mas_bottom).offset(50);
+        make.top.equalTo(self.livePhotoControl.mas_bottom).offset(50);
         make.width.mas_equalTo(80);
         make.height.mas_equalTo(30);
     }];
     
     [self.photoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view);
-        make.top.equalTo(self.videoPlayControl.mas_bottom).offset(50);
+        make.top.equalTo(self.livePhotoControl.mas_bottom).offset(50);
         make.width.mas_equalTo(80);
         make.height.mas_equalTo(30);
     }];
     
     [self.localBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.view).offset(-margin);
-        make.top.equalTo(self.videoPlayControl.mas_bottom).offset(50);
+        make.top.equalTo(self.livePhotoControl.mas_bottom).offset(50);
         make.width.mas_equalTo(80);
         make.height.mas_equalTo(30);
     }];
@@ -230,6 +247,8 @@
         self.videoFailStyle = (GKPhotoBrowserFailStyle)control.selectedSegmentIndex;
     }else if (control == self.videoPlayControl) {
         self.videoPlayStyle = control.selectedSegmentIndex;
+    }else if (control == self.livePhotoControl) {
+        self.livePhotoStyle = control.selectedSegmentIndex;
     }
 }
 
@@ -243,6 +262,7 @@
     webVC.videoLoadStyle = self.videoLoadStyle;
     webVC.videoFailStyle = self.videoFailStyle;
     webVC.videoPlayStyle = self.videoPlayStyle;
+    webVC.livePhotoStyle = self.livePhotoStyle;
     [self.navigationController pushViewController:webVC animated:YES];
 }
 
@@ -256,6 +276,7 @@
     photoVC.videoLoadStyle = self.videoLoadStyle;
     photoVC.videoFailStyle = self.videoFailStyle;
     photoVC.videoPlayStyle = self.videoPlayStyle;
+    photoVC.livePhotoStyle = self.livePhotoStyle;
     [self.navigationController pushViewController:photoVC animated:YES];
 }
 
@@ -269,6 +290,7 @@
     photoVC.videoLoadStyle = self.videoLoadStyle;
     photoVC.videoFailStyle = self.videoFailStyle;
     photoVC.videoPlayStyle = self.videoPlayStyle;
+    photoVC.livePhotoStyle = self.livePhotoStyle;
     [self.navigationController pushViewController:photoVC animated:YES];
 }
 
@@ -423,6 +445,25 @@
         _videoPlayControl.selectedSegmentIndex = 0;
     }
     return _videoPlayControl;
+}
+
+- (UILabel *)livePhotoLabel {
+    if (!_livePhotoLabel) {
+        _livePhotoLabel = [[UILabel alloc] init];
+        _livePhotoLabel.font = [UIFont systemFontOfSize:15];
+        _livePhotoLabel.textColor = UIColor.blackColor;
+        _livePhotoLabel.text = @"livePhoto处理类";
+    }
+    return _livePhotoLabel;
+}
+
+- (UISegmentedControl *)livePhotoControl {
+    if (!_livePhotoControl) {
+        _livePhotoControl = [[UISegmentedControl alloc] initWithItems:@[@"AFNetworking", @"Alamofire"]];
+        [_livePhotoControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
+        _livePhotoControl.selectedSegmentIndex = 0;
+    }
+    return _livePhotoControl;
 }
 
 - (UIButton *)webBtn {

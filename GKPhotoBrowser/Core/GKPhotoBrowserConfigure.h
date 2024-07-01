@@ -45,6 +45,7 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserLoadStyle) {
     GKPhotoBrowserLoadStyleIndeterminate,        // 不明确的加载方式
     GKPhotoBrowserLoadStyleIndeterminateMask,    // 不明确的加载方式带阴影
     GKPhotoBrowserLoadStyleDeterminate,          // 明确的加载方式带进度条
+    GKPhotoBrowserLoadStyleDeterminateSector,    // 明确的加载方式扇形进度
     GKPhotoBrowserLoadStyleCustom                // 自定义加载方式
 };
 

@@ -202,6 +202,7 @@ github "QuintGao/GKNavigationBar"
   <summary><font size=4>最近更新</font></summary>
 
 ```
+* 1.9.0 - 2024.03.21 1、tabBar截屏清除优化 2、增加隐私清单
 * 1.8.9 - 2024.01.16 修复开启缩放后的异常问题 #111
 * 1.8.8 - 2023.10.13 适配iOS17，修复非全屏模式的bug
 * 1.8.7 - 2023.08.15 导航栏部分属性支持StoryBoard，手势处理优化

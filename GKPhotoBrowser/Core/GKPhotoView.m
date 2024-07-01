@@ -7,6 +7,9 @@
 //
 
 #import "GKPhotoView.h"
+#import "GKPhotoView+Image.h"
+#import "GKPhotoView+Video.h"
+#import "GKPhotoView+LivePhoto.h"
 
 @implementation GKScrollView
 
@@ -39,23 +42,21 @@
 
 @interface GKPhotoView()
 
-@property (nonatomic, strong, readwrite) GKScrollView   *scrollView;
+@property (nonatomic, strong) GKScrollView   *scrollView;
 
-@property (nonatomic, strong, readwrite) UIImageView    *imageView;
+@property (nonatomic, strong) UIImageView    *imageView;
 
-@property (nonatomic, strong, readwrite) UIButton       *playBtn;
+@property (nonatomic, strong) UIButton       *playBtn;
 
-@property (nonatomic, strong, readwrite) GKLoadingView  *loadingView;
+@property (nonatomic, strong) GKLoadingView  *loadingView;
 
-@property (nonatomic, strong, readwrite) GKLoadingView  *videoLoadingView;
+@property (nonatomic, strong) GKLoadingView  *videoLoadingView;
 
-@property (nonatomic, strong, readwrite) GKPhoto        *photo;
+@property (nonatomic, strong) GKLoadingView  *liveLoadingView;
 
-@property (nonatomic, strong) id<GKWebImageProtocol>    imageProtocol;
+@property (nonatomic, strong) GKPhoto        *photo;
 
-@property (nonatomic, assign) CGFloat realZoomScale;
-
-@property (nonatomic, assign) CGSize imageSize;
+@property (nonatomic, weak) id<GKWebImageProtocol>    imageProtocol;
 
 @end
 
@@ -73,6 +74,10 @@
     return self;
 }
 
+- (void)dealloc {
+    [self cancelImageLoad];
+}
+
 - (void)prepareForReuse {
     self.imageSize = CGSizeZero;
     [self.loadingView stopLoading];
@@ -80,12 +85,20 @@
     [self.playBtn removeFromSuperview];
     [self.videoLoadingView stopLoading];
     [self.videoLoadingView removeFromSuperview];
-    [self cancelCurrentImageLoad];
+    [self.liveLoadingView stopLoading];
+    [self.liveLoadingView removeFromSuperview];
+    [self cancelImageLoad];
     if (self.isClearMemoryWhenViewReuse && [self.imageProtocol respondsToSelector:@selector(clearMemoryForURL:)]) {
         [self.imageProtocol clearMemoryForURL:self.photo.url];
     }
     [self.imageView removeFromSuperview];
     self.imageView = nil;
+}
+
+- (void)resetImageView {
+    [self.imageView removeFromSuperview];
+    self.imageView = nil;
+    [self.scrollView addSubview:self.imageView];
 }
 
 - (void)setupPhoto:(GKPhoto *)photo {
@@ -100,393 +113,96 @@
     }
 }
 
-- (void)loadOriginImage {
-    // 恢复数据
-    self.photo.image    = nil;
-    self.photo.finished = NO;
-    self.photo.failed   = NO;
-    
-    [self loadImageWithPhoto:self.photo isOrigin:YES];
-}
-
 - (void)showLoading {
-    if (!self.photo.isVideo) return;
-    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
-    if (!self.player) return;
-    if (self.player.assetURL != self.photo.videoUrl) return;
-    self.videoLoadingView.frame = self.bounds;
-    [self addSubview:self.videoLoadingView];
-    [self loadVideo:YES success:NO];
+    if (self.photo.isLivePhoto) {
+        [self showLiveLoading];
+    }else {
+        [self showVideoLoading];
+    }
 }
 
 - (void)hideLoading {
-    if (!self.photo.isVideo) return;
-    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
-    if (!self.player) return;
-    if (self.player.assetURL != self.photo.videoUrl) return;
-    [self loadVideo:NO success:YES];
+    if (self.photo.isLivePhoto) {
+        [self hideLiveLoading];
+    }else{
+        [self hideVideoLoading];
+    }
 }
 
 - (void)showFailure:(NSError *)error {
-    if (!self.photo.isVideo) return;
-    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
-    if (!self.player) return;
-    if (self.player.assetURL != self.photo.videoUrl) return;
-    [self loadFailedWithError:error];
-    [self loadVideo:NO success:NO];
+    if (self.photo.isLivePhoto) {
+        [self showLiveFailure:error];
+    }else {
+        [self showVideoFailure:error];
+    }
 }
 
 - (void)showPlayBtn {
-    if (!self.photo.isVideo) return;
-    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
-    if (!self.player) return;
-    if (self.player.assetURL != self.photo.videoUrl) return;
-    if (!self.showPlayImage) return;
-    self.playBtn.hidden = NO;
+    [self showVideoPlayBtn];
 }
 
 - (void)didScrollAppear {
-    if (!self.photo.isVideo) return;
-    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) {
-        if (!self.playBtn.superview) {
-            [self addSubview:self.playBtn];
-            [self.playBtn sizeToFit];
-            self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
-        }
-        self.playBtn.hidden = NO;
-        return;
-    }
-    if (!self.player) return;
-    
-    // 如果没有设置，则设置播放内容
-    if (!self.player.assetURL || self.player.assetURL != self.photo.videoUrl) {
-        __weak __typeof(self) weakSelf = self;
-        [self.photo getVideo:^(NSURL * _Nullable url, NSError * _Nullable error) {
-            __strong __typeof(weakSelf) self = weakSelf;
-            if (!self) return;
-            if (!self.player) return;
-            if (error) {
-                [self loadFailedWithError:error];
-                [self loadVideo:NO success:NO];
-            }else {
-                self.player.coverImage = self.imageView.image;
-                self.player.assetURL = url;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.player gk_prepareToPlay];
-                    [self updateFrame];
-                    [self.player gk_play];
-                });
-            }
-        }];
+    if (self.photo.isLivePhoto) {
+        [self liveDidScrollAppear];
     }else {
-        [self.player gk_play];
+        [self videoDidScrollAppear];
     }
-    
-    if (!self.showPlayImage) return;
-    if (!self.playBtn.superview) {
-        [self addSubview:self.playBtn];
-    }
-    self.playBtn.hidden = YES;
 }
 
 - (void)willScrollDisappear {
-    if (!self.photo.isVideo) return;
-    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) {
-        if (self.player.isPlaying) {
-            [self.player gk_pause];
-        }
-        return;
+    if (self.photo.isLivePhoto) {
+        [self liveWillScrollDisappear];
+    }else {
+        [self videoWillScrollDisappear];
     }
-    if (!self.player) return;
-    [self.player gk_pause];
 }
 
 - (void)didScrollDisappear {
-    if (!self.photo.isVideo) return;
-    if (!self.photo.isAutoPlay) {
-        if (self.photo.isVideoClicked) {
-            self.photo.isVideoClicked = NO;
-        }
-        [self.player gk_stop];
-        self.player.assetURL = nil;
-        self.playBtn.hidden = NO;
-        return;
+    if (self.photo.isLivePhoto) {
+        [self liveDidScrollDisappear];
+    }else {
+        [self videoDidScrollDisappear];
     }
-    if (!self.player) return;
-    if (!self.showPlayImage) return;
-    self.playBtn.hidden = NO;
 }
 
 - (void)didDismissAppear {
-    if (!self.photo.isVideo) return;
-    if (!self.player) return;
-    if (self.player.status == GKVideoPlayerStatusEnded) {
-        [self.player gk_replay];
+    if (self.photo.isLivePhoto) {
+        [self liveDidDismissAppear];
     }else {
-        [self.player gk_play];
+        [self videoDidDismissAppear];
     }
-    if (!self.showPlayImage) return;
-    self.playBtn.hidden = YES;
 }
 
 - (void)willDismissDisappear {
-    if (!self.photo.isVideo) return;
-    if (!self.player) return;
-    if (!self.isVideoPausedWhenDragged) return;
-    if (self.player.status == GKVideoPlayerStatusEnded) {
-        if (!self.showPlayImage) return;
-        self.playBtn.hidden = YES;
+    if (self.photo.isLivePhoto) {
+        [self liveWillDismissDisappear];
     }else {
-        [self.player gk_pause];
+        [self videoWillDismissDisappear];
     }
 }
 
 - (void)didDismissDisappear {
-    if (!self.photo.isVideo) return;
-    if (!self.player) return;
-    [self.player gk_stop];
-    self.player.assetURL = nil;
+    if (self.photo.isLivePhoto) {
+        [self liveDidDismissDisappear];
+    }else {
+        [self videoDidDismissDisappear];
+    }
 }
 
 - (void)updateFrame {
-    if (!self.photo.isVideo) return;
-    if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
-    if (!self.player) return;
-    if (self.player.assetURL != self.photo.videoUrl) return;
-    if (self.player.videoPlayView.superview != self.imageView) {
-        [self.imageView addSubview:self.player.videoPlayView];
+    if (self.photo.isLivePhoto) {
+        [self liveUpdateFrame];
+    }else {
+        [self videoUpdateFrame];
     }
-    [self.imageView bringSubviewToFront:self.player.videoPlayView];
-    [self.player gk_updateFrame:self.imageView.bounds];
 }
 
 - (void)playAction {
-    if (!self.photo.isVideo) return;
-    self.photo.isVideoClicked = YES;
-    [self didScrollAppear];
+    [self videoPlay];
 }
 
 - (void)pauseAction {
-    if (!self.photo.isVideo) return;
-    if (!self.player) return;
-    self.photo.isVideoClicked = NO;
-    self.playBtn.hidden = NO;
-    [self.player gk_pause];
-}
-
-- (void)loadVideo:(BOOL)isStart success:(BOOL)success {
-    if (self.videoLoadStyle == GKPhotoBrowserLoadStyleCustom) {
-        if ([self.delegate respondsToSelector:@selector(photoView:loadStart:success:)]) {
-            [self.delegate photoView:self loadStart:isStart success:success];
-        }
-    }else {
-        if (isStart) {
-            [self.videoLoadingView startLoading];
-        }else {
-            if (success) {
-                [self.videoLoadingView stopLoading];
-            }else {
-                [self.videoLoadingView showFailure];
-            }
-        }
-    }
-}
-
-#pragma mark - 加载图片
-- (void)loadImageWithPhoto:(GKPhoto *)photo isOrigin:(BOOL)isOrigin {
-    // 取消以前的加载
-    [_imageProtocol cancelImageRequestWithImageView:self.imageView];
-    
-    if (photo) {
-        [self.imageView removeFromSuperview];
-        self.imageView = nil;
-        [self.scrollView addSubview:self.imageView];
-        if (!photo.isVideo && self.showPlayImage) {
-            self.playBtn.hidden = YES;
-        }else if (photo.isVideo && !photo.isAutoPlay && !photo.isVideoClicked) {
-            [self addSubview:self.playBtn];
-            self.playBtn.hidden = NO;
-        }
-        
-        // 每次设置数据时，恢复缩放
-        [self.scrollView setZoomScale:1.0 animated:NO];
-        
-        // 优先加载缓存图片
-        UIImage *placeholderImage = nil;
-        UIImage *image = [_imageProtocol imageFromMemoryForURL:photo.url];
-        if (image) {
-            photo.finished = YES;
-            placeholderImage = image;
-        }
-        
-        UIImage *originImage = [_imageProtocol imageFromMemoryForURL:photo.originUrl];
-        if (originImage) {
-            photo.originFinished = YES;
-            placeholderImage = originImage;
-            isOrigin = YES;
-        }
-        
-        // 如果没有就加载sourceImageView的image
-        if (!placeholderImage) {
-            placeholderImage = photo.sourceImageView.image;
-        }
-        // 如果还没有就加载传入的站位图
-        if (!placeholderImage) {
-            placeholderImage = photo.placeholderImage;
-        }
-        
-        self.imageView.image          = placeholderImage;
-        self.imageView.contentMode    = photo.sourceImageView.contentMode;
-        self.scrollView.scrollEnabled = NO;
-        
-        if (photo.image) {
-            [self setupImageView:photo.image];
-            return;
-        }else if (photo.imageAsset) {
-            [self addSubview:self.loadingView];
-            if (!photo.failed) {
-                [self.loadingView hideFailure];
-            }
-            [self adjustFrame];
-            
-            if (!photo.failed && !placeholderImage) {
-                if (isOrigin && self.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
-                    [self.loadingView startLoading];
-                }else if (!isOrigin && self.loadStyle != GKPhotoBrowserLoadStyleCustom) {
-                    [self.loadingView startLoading];
-                }
-            }
-            
-            __weak __typeof(self) weakSelf = self;
-            [photo getImage:^(NSData * _Nullable data, UIImage * _Nullable image, NSError * _Nullable error) {
-                __strong __typeof(weakSelf) self = weakSelf;
-                UIImage *newImage = nil;
-                if (data) {
-                    if ([self.imageProtocol respondsToSelector:@selector(imageWithData:)]) {
-                        newImage = [self.imageProtocol imageWithData:data];
-                    }
-                    if (!newImage) {
-                        newImage = [UIImage imageWithData:data];
-                    }
-                }else if (image) {
-                    newImage = image;
-                }
-                if (newImage) {
-                    [self setupImageView:newImage];
-                }else {
-                    [self loadFailedWithError:error];
-                    if (self.failStyle != GKPhotoBrowserFailStyleCustom) {
-                        [self addSubview:self.loadingView];
-                        [self.loadingView showFailure];
-                    }
-                }
-            }];
-            return;
-        }
-        
-        // 进度条
-        [self addSubview:self.loadingView];
-        if (!photo.failed) {
-            [self.loadingView hideFailure];
-        }
-        
-        if (self.imageView.image) {
-            [self adjustFrame];
-        }else if (!CGRectEqualToRect(photo.sourceFrame, CGRectZero)) {
-            [self adjustFrame];
-        }
-        
-        NSURL *url = nil;
-        if (photo.originFinished) {
-            url = photo.originUrl;
-        }else {
-            url = isOrigin ? photo.originUrl : photo.url;
-        }
-        
-        if (url.absoluteString.length > 0) {
-            if (!photo.failed && !placeholderImage) {
-                if (isOrigin && self.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
-                    [self.loadingView startLoading];
-                }else if (!isOrigin && self.loadStyle != GKPhotoBrowserLoadStyleCustom) {
-                    [self.loadingView startLoading];
-                }
-            }
-            
-            __weak __typeof(self) weakSelf = self;
-            GKWebImageProgressBlock progressBlock = ^(NSInteger receivedSize, NSInteger expectedSize) {
-                __strong __typeof(weakSelf) self = weakSelf;
-                if (expectedSize <= 0) return;
-                float progress = (float)receivedSize / expectedSize;
-                if (progress <= 0) progress = 0;
-                
-                // 图片加载中，回调进度
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (isOrigin && self.originLoadStyle == GKLoadingStyleCustom) {
-                        [self loadProgress:progress isOriginImage:YES];
-                    }else if (!isOrigin && self.loadStyle == GKLoadingStyleCustom) {
-                        [self loadProgress:progress isOriginImage:NO];
-                    }else if (self.loadStyle == GKLoadingStyleDeterminate || self.originLoadStyle == GKLoadingStyleDeterminate) {
-                        self.loadingView.progress = progress;
-                    }
-                });
-            };
-            
-            GKWebImageCompletionBlock completionBlock = ^(UIImage *image, NSURL *url, BOOL finished, NSError *error) {
-                __strong __typeof(weakSelf) self = weakSelf;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (error) {
-                        photo.failed = YES;
-                        [self.loadingView stopLoading];
-                        
-                        if ([photo.url.absoluteString isEqualToString:url.absoluteString]) {
-                            [self loadFailedWithError:error];
-                            if (self.failStyle != GKPhotoBrowserFailStyleCustom) {
-                                [self addSubview:self.loadingView];
-                                [self.loadingView showFailure];
-                            }
-                        }
-                    }else {
-                        self.imageSize = image.size;
-                        photo.finished = YES;
-                        if (isOrigin) {
-                            photo.originFinished = YES;
-                        }
-                        
-                        // 图片加载完成，回调进度
-                        if (isOrigin && self.originLoadStyle == GKLoadingStyleCustom) {
-                            [self loadProgress:1.0 isOriginImage:YES];
-                        }else if (!isOrigin && self.loadStyle == GKLoadingStyleCustom) {
-                            [self loadProgress:1.0 isOriginImage:NO];
-                        }
-                        
-                        self.scrollView.scrollEnabled = YES;
-                        [self.loadingView stopLoading];
-                    }
-                    if (!isOrigin) {
-                        [self adjustFrame];
-                    }
-                    if (self.imageView.image && CGSizeEqualToSize(self.imageView.frame.size, CGSizeZero)) {
-                        [self adjustFrame];
-                    }
-                    if (!self.imageView.image && !CGSizeEqualToSize(self.imageSize, CGSizeZero)) {
-                        [self adjustFrame];
-                    }
-                });
-            };
-            
-            [_imageProtocol setImageForImageView:self.imageView url:url placeholderImage:placeholderImage progress:progressBlock completion:completionBlock];
-        }else {
-            if (self.imageView.image) {
-                photo.finished = YES;
-                self.scrollView.scrollEnabled = YES;
-                [self.loadingView stopLoading];
-            }
-            [self adjustFrame];
-        }
-    }else {
-        self.imageView.image = nil;
-        [self adjustFrame];
-    }
+    [self videoPause];
 }
 
 - (void)resetFrame {
@@ -511,120 +227,16 @@
     self.scrollView.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
     self.loadingView.frame = self.bounds;
     self.videoLoadingView.frame = self.bounds;
+    self.liveLoadingView.frame = self.bounds;
     
     if (self.photo) {
         [self adjustFrame];
     }
 }
 
-- (void)setupImageView:(UIImage *)image {
-    self.photo.finished = YES;
-    self.imageView.image = image;
-    self.scrollView.scrollEnabled = YES;
-    [self.loadingView stopLoading];
-    [self.loadingView hideFailure];
-    [self.loadingView removeFromSuperview];
-    [self adjustFrame];
-}
-
 #pragma mark - 调整frame
 - (void)adjustFrame {
-    CGRect frame = self.scrollView.frame;
-    if (frame.size.width == 0 || frame.size.height == 0) return;
-    
-    if (self.imageView.image || !CGSizeEqualToSize(self.imageSize, CGSizeZero)) {
-        CGSize imageSize = self.imageView.image.size;
-        if (CGSizeEqualToSize(imageSize, CGSizeZero)) {
-            imageSize = self.imageSize;
-        }
-        // 视频处理，保证视频可以完全显示
-        if (self.photo.isVideo && !CGSizeEqualToSize(self.photo.videoSize, CGSizeZero)) {
-            imageSize = self.photo.videoSize;
-            self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-        }
-        
-        if (imageSize.width == 0) imageSize.width = self.scrollView.frame.size.width;
-        if (imageSize.height == 0) imageSize.height = self.scrollView.frame.size.height;
-        
-        CGRect imageF = (CGRect){{0, 0}, imageSize};
-        
-        // 图片的宽度 = 屏幕的宽度
-        CGFloat ratio = frame.size.width / imageF.size.width;
-        imageF.size.width  = frame.size.width;
-        imageF.size.height = ratio * imageF.size.height;
-        
-        // 默认情况下，显示出的图片的宽度 = 屏幕的宽度
-        // 如果kIsFullWidthForLandScape = NO，需要把图片全部显示在屏幕上
-        // 此时由于图片的宽度已经等于屏幕的宽度，所以只需判断图片显示的高度>屏幕高度时，将图片的高度缩小到屏幕的高度即可
-        
-        if (!self.isFullWidthForLandScape || self.photo.isVideo) {
-            // 图片的高度 > 屏幕的高度
-            if (imageF.size.height > frame.size.height) {
-                CGFloat scale = imageF.size.width / imageF.size.height;
-                imageF.size.height = frame.size.height;
-                imageF.size.width  = imageF.size.height * scale;
-            }
-        }
-        
-        // 设置图片的frame
-        self.imageView.bounds = imageF;
-        self.scrollView.contentSize = self.imageView.frame.size;
-        
-        if (imageF.size.height <= self.scrollView.bounds.size.height) {
-            self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, self.scrollView.bounds.size.height * 0.5);
-        }else {
-            self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, imageF.size.height * 0.5);
-        }
-        
-        // 根据图片大小找到最大缩放等级，保证最大缩放时候，不会有黑边
-        // 找到最大的缩放比例
-        CGFloat scaleH = frame.size.height / imageF.size.height;
-        CGFloat scaleW = frame.size.width / imageF.size.width;
-        self.realZoomScale = MAX(MAX(scaleH, scaleW), self.maxZoomScale);
-        
-        if (self.doubleZoomScale == self.maxZoomScale) {
-            self.doubleZoomScale = self.realZoomScale;
-        }else if (self.doubleZoomScale > self.realZoomScale) {
-            self.doubleZoomScale = self.realZoomScale;
-        }
-        // 初始化
-        self.scrollView.minimumZoomScale = 1.0;
-        self.scrollView.maximumZoomScale = self.realZoomScale;
-    }else if (!CGRectEqualToRect(self.photo.sourceFrame, CGRectZero)) {
-        if (self.photo.sourceFrame.size.width == 0 || self.photo.sourceFrame.size.height == 0) return;
-        CGFloat width = frame.size.width;
-        CGFloat height = width * self.photo.sourceFrame.size.height / self.photo.sourceFrame.size.width;
-        self.imageView.bounds = CGRectMake(0, 0, width, height);
-        self.imageView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
-        self.scrollView.contentSize = self.imageView.frame.size;
-    }else {
-        self.imageView.bounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
-        self.imageView.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
-        self.scrollView.contentSize = self.imageView.frame.size;
-    }
-    
-    // frame调整完毕，重新设置缩放
-    if (self.photo.isZooming) {
-        [self.scrollView setZoomScale:1.0f animated:NO];
-        [self setScrollMaxZoomScale:self.photo.zoomScale];
-        [self zoomToRect:self.photo.zoomRect animated:NO];
-        self.scrollView.contentOffset = self.photo.zoomOffset;
-        [self setScrollMaxZoomScale:self.realZoomScale];
-    }else {
-        if (self.scrollView.contentSize.height < self.scrollView.frame.size.height) {
-            self.scrollView.contentOffset = CGPointZero;
-        }else {
-            self.scrollView.contentOffset = self.photo.offset;
-        }
-    }
-    
-    self.loadingView.frame = self.bounds;
-    self.videoLoadingView.frame = self.bounds;
-    if (self.showPlayImage) {
-        [self.playBtn sizeToFit];
-        self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
-    }
-    [self updateFrame];
+    [self adjustImageFrame];
 }
 
 - (CGPoint)centerOfScrollViewContent:(UIScrollView *)scrollView {
@@ -666,14 +278,6 @@
     [self setScrollMaxZoomScale:self.realZoomScale];
 }
 
-- (void)cancelCurrentImageLoad {
-    [_imageProtocol cancelImageRequestWithImageView:self.imageView];
-}
-
-- (void)dealloc {
-    [self cancelCurrentImageLoad];
-}
-
 #pragma mark - Private
 - (void)zoomEndedWithScale:(CGFloat)scale {
     if ([self.delegate respondsToSelector:@selector(photoView:zoomEndedWithScale:)]) {
@@ -684,12 +288,6 @@
 - (void)loadFailedWithError:(NSError *)error {
     if ([self.delegate respondsToSelector:@selector(photoView:loadFailedWithError:)]) {
         [self.delegate photoView:self loadFailedWithError:error];
-    }
-}
-
-- (void)loadProgress:(float)progress isOriginImage:(BOOL)isOriginImage {
-    if ([self.delegate respondsToSelector:@selector(photoView:loadProgress:isOriginImage:)]) {
-        [self.delegate photoView:self loadProgress:progress isOriginImage:isOriginImage];
     }
 }
 
@@ -752,6 +350,17 @@
         _videoLoadingView.strokeColor = UIColor.whiteColor;
     }
     return _videoLoadingView;
+}
+
+- (GKLoadingView *)liveLoadingView {
+    if (!_liveLoadingView) {
+        _liveLoadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.liveLoadStyle];
+        _liveLoadingView.radius = 30;
+        _liveLoadingView.lineWidth = 1;
+        _liveLoadingView.bgColor = [UIColor whiteColor];
+        _liveLoadingView.strokeColor = [UIColor whiteColor];
+    }
+    return _liveLoadingView;
 }
 
 @end

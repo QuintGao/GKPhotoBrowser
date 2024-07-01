@@ -34,6 +34,10 @@
 #import <GKPhotoBrowser/GKIJKPlayerManager.h>
 #endif
 
+#if __has_include(<GKPhotoBrowser/GKAFLivePhotoManager.h>)
+#import <GKPhotoBrowser/GKAFLivePhotoManager.h>
+#endif
+
 #if __has_include(<GKPhotoBrowser/GKProgressView.h>)
 #import <GKPhotoBrowser/GKProgressView.h>
 #endif
@@ -159,6 +163,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle videoLoadStyle;
 /** 视频播放失败显示方式，默认GKPhotoBrowserFailStyleOnlyText */
 @property (nonatomic, assign) GKPhotoBrowserFailStyle videoFailStyle;
+/** livePhoto加载方式，默认GKPhotoBrowserLoadStyleDeterminateSector*/
+@property (nonatomic, assign) GKPhotoBrowserLoadStyle liveLoadStyle;
 /** 代理 */
 @property (nonatomic, weak) id<GKPhotoBrowserDelegate> delegate;
 
@@ -285,6 +291,10 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 自定义视频播放处理类，需要视频播放时必须添加
 /// @param protocol 需实现GKVideoPlayerProtocol协议
 - (void)setupVideoPlayerProtocol:(id<GKVideoPlayerProtocol>)protocol;
+
+/// 自定义livePhoto加载处理类
+/// @param protocol 需实现GKLivePhotoProtocol协议
+- (void)setupLivePhotoProtocol:(id<GKLivePhotoProtocol>)protocol;
 
 /// 自定义视频播放进度条
 /// @param protocol 需实现GKProgressViewProtocol协议

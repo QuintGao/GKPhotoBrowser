@@ -140,7 +140,6 @@
 #pragma mark - BrowserDismiss
 - (void)browserDismiss {
     GKPhotoView *photoView = self.browser.curPhotoView;
-    photoView.isLayoutSubViews = YES;
     
     if (!self.browser.isFollowSystemRotation) {
         // 状态栏恢复到竖屏

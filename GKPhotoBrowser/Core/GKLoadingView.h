@@ -13,6 +13,7 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
     GKLoadingStyleIndeterminate,      // 不明确的加载方式
     GKLoadingStyleIndeterminateMask,  // 不明确的加载方式带阴影
     GKLoadingStyleDeterminate,        // 明确的加载方式--进度条
+    GKLoadingStyleDeterminateSector,  // 明确的加载方式--扇形进度
     GKLoadingStyleCustom              // 自定义
 };
 

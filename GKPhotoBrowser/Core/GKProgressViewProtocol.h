@@ -1,8 +1,9 @@
 //
 //  GKProgressViewProtocol.h
-//  Pods
+//  GKPhotoBrowser
 //
 //  Created by QuintGao on 2023/6/2.
+//  Copyright © 2023 QuintGao. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

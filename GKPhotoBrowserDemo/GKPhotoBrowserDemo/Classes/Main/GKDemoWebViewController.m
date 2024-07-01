@@ -61,8 +61,17 @@
     GKTimeLineImage *image6 = [GKTimeLineImage new];
     image6.url = @"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201703%2F23%2F20170323121431_QzNxW.thumb.400_0.gif&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1680760815&t=a95782bbf075125d6ccfbb401a831364";
     
+    GKTimeLineImage *image7 = [GKTimeLineImage new];
+    image7.url = [[NSBundle mainBundle] pathForResource:@"IMG_E8375" ofType:@"heic"];
+    image7.video_url = [[NSBundle mainBundle] pathForResource:@"IMG_E8375" ofType:@"mov"];
+    image7.isLivePhoto = YES;
     
-    NSArray *images = @[image1, image2, image3, image4, image5, image6];
+    GKTimeLineImage *image8 = [GKTimeLineImage new];
+    image8.url = @"https://ak.picdn.net/shutterstock/videos/1061172265/thumb/1.jpg";
+    image8.video_url = @"https://ak.picdn.net/shutterstock/videos/1061172265/preview/stock-footage-caribbean-beach-background-sunny-tropical-beach-hot-afternoon-on-an-empty-beach-the-best-beaches.mp4";
+    image8.isLivePhoto = YES;
+    
+    NSArray *images = @[image1, image2, image3, image4, image5, image6, image7, image8];
     
     self.photos = images;
     
@@ -91,7 +100,19 @@
     
     [self.photos enumerateObjectsUsingBlock:^(GKTimeLineImage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         GKPhoto *photo = [[GKPhoto alloc] init];
-        if (obj.isVideo) {
+        if (obj.isLivePhoto) {
+            photo.isLivePhoto = YES;
+            if ([obj.url containsString:@"http"]) {
+                photo.url = [NSURL URLWithString:obj.url];
+            }else {
+                photo.url = [NSURL fileURLWithPath:obj.url];
+            }
+            if ([obj.video_url containsString:@"http"]) {
+                photo.videoUrl = [NSURL URLWithString:obj.video_url];
+            }else {
+                photo.videoUrl = [NSURL fileURLWithPath:obj.video_url];
+            }
+        }else if (obj.isVideo) {
             photo.url = [NSURL URLWithString:obj.url];
             photo.videoUrl = [NSURL URLWithString:obj.video_url];
         }else {
@@ -133,6 +154,11 @@
     }else {
         [browser setupVideoPlayerProtocol:[[cls alloc] init]];
     }
+    if (self.livePhotoStyle == 0) {
+        [browser setupLivePhotoProtocol:GKAFLivePhotoManager.new];
+    }else {
+        [browser setupLivePhotoProtocol:GKAlamofireLivePhotoManager.new];
+    }
     browser.isPopGestureEnabled = YES; // push显示，在第一页时手势返回
     
     [browser showFromVC:self];
@@ -157,9 +183,9 @@
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index error:(nonnull NSError *)error {
-    if (browser.curPhoto.isVideo) {
-        return;
-    }
+    if (browser.curPhoto.isVideo) return;
+    if (browser.failStyle != GKPhotoBrowserFailStyleCustom) return;
+    
     if (self.customFailView) return;
     self.customFailView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
     [self.customFailView sizeToFit];

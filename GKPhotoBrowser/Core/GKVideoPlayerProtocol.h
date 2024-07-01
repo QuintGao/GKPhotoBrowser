@@ -1,6 +1,6 @@
 //
 //  GKVideoPlayerProtocol.h
-//  GKPhotoBrowserDemo
+//  GKPhotoBrowser
 //
 //  Created by QuintGao on 2023/3/1.
 //  Copyright © 2023 QuintGao. All rights reserved.

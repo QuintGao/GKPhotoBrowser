@@ -194,6 +194,11 @@
     }else {
         [browser setupWebImageProtocol:[[GKKFWebImageManager alloc] init]];
     }
+    if (self.livePhotoStyle == 0) {
+        [browser setupLivePhotoProtocol:GKAFLivePhotoManager.new];
+    }else {
+        [browser setupLivePhotoProtocol:GKAlamofireLivePhotoManager.new];
+    }
     
     browser.videoLoadStyle = self.videoLoadStyle;
     browser.videoFailStyle = self.videoFailStyle;

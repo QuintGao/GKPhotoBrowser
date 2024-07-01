@@ -9,6 +9,7 @@
 #import "GKVideoProgressView.h"
 #import <GKSliderView/GKSliderView.h>
 #import <Masonry/Masonry.h>
+#import "GKPhotoView+Video.h"
 
 @interface GKVideoProgressView()<GKSliderViewDelegate>
 
@@ -78,9 +79,9 @@
 - (void)playPause {
     GKPhotoView *photoView = self.browser.curPhotoView;
     if (photoView.player.isPlaying) {
-        [photoView pauseAction];
+        [photoView videoPause];
     }else {
-        [photoView playAction];
+        [photoView videoPlay];
     }
 }
 

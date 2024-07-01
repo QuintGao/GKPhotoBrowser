@@ -140,6 +140,11 @@
     }else {
         [browser setupVideoPlayerProtocol:[[cls alloc] init]];
     }
+    if (self.livePhotoStyle == 0) {
+        [browser setupLivePhotoProtocol:GKAFLivePhotoManager.new];
+    }else {
+        [browser setupLivePhotoProtocol:GKAlamofireLivePhotoManager.new];
+    }
     browser.isPopGestureEnabled = YES; // push显示，在第一页时手势返回
     
     [browser showFromVC:self];

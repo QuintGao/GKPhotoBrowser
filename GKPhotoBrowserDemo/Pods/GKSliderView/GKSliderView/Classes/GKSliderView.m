@@ -76,7 +76,9 @@
 
 @end
 
-@implementation GKLineLoadingView
+@implementation GKLineLoadingView {
+    CGFloat _lineHeight;
+}
 
 + (void)showLoadingInView:(UIView *)view lineHeight:(CGFloat)lineHeight {
     GKLineLoadingView *loadingView = [[GKLineLoadingView alloc] initWithFrame:view.frame lineHeight:lineHeight];
@@ -97,11 +99,26 @@
 
 - (instancetype)initWithFrame:(CGRect)frame lineHeight:(CGFloat)lineHeight {
     if (self = [super initWithFrame:frame]) {
+        _lineHeight = lineHeight;
         self.backgroundColor = kLineLoadingColor;
         self.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
         self.bounds = CGRectMake(0, 0, 1.0f, lineHeight);
     }
     return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    CGRect frame = self.superview.frame;
+    self.center = CGPointMake(frame.size.width * 0.5, frame.size.height * 0.5);
+    self.bounds = CGRectMake(0, 0, 1.0f, _lineHeight);
+    
+    CAAnimationGroup *animationGroup = [self.layer animationForKey:@"lineLoading"];
+    CABasicAnimation *scaleAnimation = (CABasicAnimation *)animationGroup.animations.firstObject;
+    if (!scaleAnimation) return;
+    if ([scaleAnimation.toValue isEqual: @(1.0 * frame.size.width)]) return;
+    scaleAnimation.toValue = @(1.0 * frame.size.width);
 }
 
 - (void)startLoading {
@@ -206,6 +223,15 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    
+    [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:GKLineLoadingView.class]) {
+            CGPoint center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+            if (!CGPointEqualToPoint(obj.center, center)) {
+                obj.frame = self.bounds;
+            }
+        }
+    }];
     
     if (self.sliderBtn.hidden) {
         self.bgProgressView.gk_width   = self.gk_width;
