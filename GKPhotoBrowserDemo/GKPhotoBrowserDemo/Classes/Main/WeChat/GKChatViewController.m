@@ -146,7 +146,7 @@
                 photo.url = [NSURL URLWithString:img.url];
             }
         }
-        photo.image = img.coverImage;
+//        photo.image = img.coverImage;
         
         // 首次点击的是视频，自动播放
         if (img.isVideo && index == idx) {

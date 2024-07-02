@@ -56,7 +56,7 @@
         self.scrollView.scrollEnabled = NO;
         
         if (photo.image) {
-            [self setupImageView:image];
+            [self setupImageView:photo.image];
         }else if (photo.imageAsset) {
             [self loadAssetImageWithPhoto:photo isOrigin:isOrigin placeholderImage:placeholderImage];
         }else {
@@ -328,7 +328,10 @@
             [self.delegate photoView:self loadProgress:progress isOriginImage:isOriginImage];
         }
     }
-    if (self.loadStyle == GKPhotoBrowserLoadStyleDeterminate || self.originLoadStyle == GKPhotoBrowserLoadStyleDeterminate) {
+    if (self.loadStyle == GKPhotoBrowserLoadStyleDeterminate || 
+        self.originLoadStyle == GKPhotoBrowserLoadStyleDeterminate ||
+        self.loadStyle == GKPhotoBrowserLoadStyleDeterminateSector ||
+        self.originLoadStyle == GKPhotoBrowserLoadStyleDeterminateSector) {
         self.loadingView.progress = progress;
     }
 }
