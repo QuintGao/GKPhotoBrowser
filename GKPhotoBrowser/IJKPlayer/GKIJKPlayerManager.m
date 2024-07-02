@@ -6,6 +6,7 @@
 //
 
 #import "GKIJKPlayerManager.h"
+#import "GKPhotoBrowserConfigure.h"
 #if __has_include(<IJKMediaFramework/IJKMediaFramework.h>)
 #import <IJKMediaFramework/IJKMediaFramework.h>
 #endif

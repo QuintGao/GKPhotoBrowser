@@ -71,8 +71,6 @@ static float progressRatio = 4 / 5.0;
         NSURL *imageFileURL = [NSURL fileURLWithPath:imagePath];
         
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    
-        __block float progress = 0;
         
         if (photo.url) {
             __block BOOL isVideoFinished = NO;
@@ -235,7 +233,7 @@ static float progressRatio = 4 / 5.0;
 }
 
 - (NSString *)filePathWithOriginURL:(NSURL *)url ext:(NSString *)ext {
-    NSString *name = GKDiskCacheFileNameForKey(url.path);
+    NSString *name = GKDiskCacheFileNameForKey(url.absoluteString);
     name = [NSString stringWithFormat:@"%@.%@", name, ext];
     return [self.fileDirectory stringByAppendingPathComponent:name];
 }

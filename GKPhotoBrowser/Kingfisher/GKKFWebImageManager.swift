@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import GKPhotoBrowser
 import Kingfisher
 
 @objc open class GKKFWebImageManager: NSObject, GKWebImageProtocol {

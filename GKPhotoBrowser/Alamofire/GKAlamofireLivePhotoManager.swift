@@ -8,7 +8,6 @@
 import UIKit
 import Alamofire
 import GKLivePhotoManager
-import GKPhotoBrowser
 import CommonCrypto
 
 @objc open class GKAlamofireLivePhotoManager: NSObject, GKLivePhotoProtocol {
@@ -43,27 +42,27 @@ import CommonCrypto
         gk_clear()
     }
     
-    public func loadLivePhoto(with photo: GKPhoto!, targetSize: CGSize, progressBlock: ((Float) -> Void)!, completion: ((Bool) -> Void)? = nil) {
+    public func loadLivePhoto(with photo: GKPhoto, targetSize: CGSize, progressBlock: ((Float) -> Void)?, completion: ((Bool) -> Void)? = nil) {
         self.photo = photo
         self.progressBlock = progressBlock
         self.completioBlock = completion
         
         if let asset = photo.imageAsset, asset.mediaSubtypes == .photoLive {
             loadLivePhoto(asset, targetSize: targetSize)
-        }else if (photo.videoUrl != nil) {
+        }else if let videoUrl = photo.videoUrl {
             let fileManager = FileManager.default
             // 如果传入的是本地地址，判断是否存在
-            if fileManager.fileExists(atPath: photo.videoUrl.path) {
-                loadLivePhoto(with: photo.videoUrl.path, imagePath: photo.url.path, targetSize: targetSize)
+            if fileManager.fileExists(atPath: videoUrl.path) {
+                loadLivePhoto(with: videoUrl.path, imagePath: photo.url?.path ?? nil, targetSize: targetSize)
                 return
             }
             
             // 本地视频地址
-            let videoPath = filePath(with: photo.videoUrl, ext: "mov")
+            let videoPath = filePath(with: videoUrl, ext: "mov")
             // 本地图片地址
             var imagePath: String? = nil
-            if photo.url != nil {
-                imagePath = filePath(with: photo.url, ext: "jpg")
+            if let url = photo.url {
+                imagePath = filePath(with: url, ext: "jpg")
             }
             
             // 判断是否下载过，下载过直接加载
@@ -87,8 +86,6 @@ import CommonCrypto
                 (imageFileURL, [])
             }
             
-            var progress: Float = 0
-            
             if photo.url != nil {
                 var isVideoFinished = false
                 var isImageFinished = false
@@ -96,7 +93,7 @@ import CommonCrypto
                 var videoProgress: Float = 0
                 var imageProgress: Float = 0
                 
-                AF.download(photo.videoUrl, to: videoFileDest)
+                AF.download(videoUrl, to: videoFileDest)
                     .downloadProgress { [weak self] progress in
                         guard let self = self else { return }
                         videoProgress = Float(progress.completedUnitCount/progress.totalUnitCount)
@@ -105,7 +102,7 @@ import CommonCrypto
                     }
                     .response { [weak self] response in
                         guard let self = self else { return }
-                        if let error = response.error {
+                        if response.error != nil {
                             self.completioBlock?(false)
                             return
                         }
@@ -123,7 +120,7 @@ import CommonCrypto
                     }
                     .resume()
                 
-                AF.download(photo.url, to: imageFileDst)
+                AF.download(photo.url!, to: imageFileDst)
                     .downloadProgress { [weak self] progress in
                         guard let self = self else { return }
                         imageProgress = Float(progress.completedUnitCount/progress.totalUnitCount)
@@ -132,7 +129,7 @@ import CommonCrypto
                     }
                     .response { [weak self] response in
                         guard let self = self else { return }
-                        if let error = response.error {
+                        if response.error != nil {
                             self.completioBlock?(false)
                             return
                         }
@@ -146,14 +143,14 @@ import CommonCrypto
                     }
                     .resume()
             }else {
-                AF.download(photo.videoUrl, to: videoFileDest)
+                AF.download(videoUrl, to: videoFileDest)
                     .downloadProgress { [weak self] progress in
                         guard let self = self else { return }
                         let videoProgress = Float(progress.completedUnitCount/progress.totalUnitCount)
                         self.progressBlock?(videoProgress * self.progressRatio)
                     }
                     .response { response in
-                        if let error = response.error {
+                        if response.error != nil {
                             self.completioBlock?(false)
                             return
                         }
@@ -182,14 +179,13 @@ import CommonCrypto
         }
         
         guard let photo = self.photo else { return }
-        let videoPath = filePath(with: photo.videoUrl, ext: "mov")
-        var imgPath: String? = nil
-        if photo.url != nil {
-            imgPath = filePath(with: photo.url, ext: "jpg")
+        if let videoUrl = photo.videoUrl {
+            let videoPath = filePath(with: videoUrl, ext: "mov")
+            try? fileManager.removeItem(atPath: videoPath)
         }
-        try? fileManager.removeItem(atPath: videoPath)
-        if let imgPath {
-            try? fileManager.removeItem(atPath: imgPath)
+        if let url = photo.url {
+            let imagePath = filePath(with: url, ext: "jpg")
+            try? fileManager.removeItem(atPath: imagePath)
         }
     }
     
@@ -235,7 +231,7 @@ import CommonCrypto
         
         GKLivePhotoManager.default().handleData(withVideoPath: videoPath, imagePath: imgPath) { [weak self] outVideoPath, outImagePath, error in
             guard let self = self else { return }
-            if let error {
+            if error != nil {
                 self.completioBlock?(false)
                 return
             }
@@ -253,7 +249,7 @@ import CommonCrypto
     }
     
     private func filePath(with url: URL, ext: String) -> String {
-        var name = url.path.md5()
+        var name = url.absoluteString.md5()
         name = name + "." + ext
         return fileDirectory + "/" + name
     }

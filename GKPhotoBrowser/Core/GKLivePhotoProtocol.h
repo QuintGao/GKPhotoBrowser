@@ -22,7 +22,7 @@
 @property (nonatomic, strong, nullable) GKPhoto *photo;
 
 // 加载livePhoto
-- (void)loadLivePhotoWithPhoto:(GKPhoto *)photo targetSize:(CGSize)targetSize progressBlock:(void(^)(float progress))progressBlock completion:(void(^_Nullable)(BOOL success))completion;
+- (void)loadLivePhotoWithPhoto:(GKPhoto *_Nonnull)photo targetSize:(CGSize)targetSize progressBlock:(void(^_Nullable)(float progress))progressBlock completion:(void(^_Nullable)(BOOL success))completion;
 
 // 播放livePhoto
 - (void)gk_play;

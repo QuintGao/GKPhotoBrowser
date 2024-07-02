@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <GKPhotoBrowser/GKPhotoBrowser.h>
+#import "GKVideoPlayerProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

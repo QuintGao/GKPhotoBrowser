@@ -15,16 +15,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GKPhoto : NSObject
 
 /** 图片地址 */
-@property (nonatomic, strong) NSURL              *url;
+@property (nonatomic, strong, nullable) NSURL *url;
 
 /** 原图地址 */
-@property (nonatomic, strong) NSURL              *originUrl;
+@property (nonatomic, strong, nullable) NSURL *originUrl;
 
 /** 来源imageView */
-@property (nonatomic, strong) UIImageView        *sourceImageView;
+@property (nonatomic, strong, nullable) UIImageView *sourceImageView;
 
 /** 来源frame */
-@property (nonatomic, assign) CGRect             sourceFrame;
+@property (nonatomic, assign) CGRect sourceFrame;
 
 /** 图片(静态) */
 @property (nonatomic, strong, nullable) UIImage  *image;
@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - 以下属性播放视频时使用
 /** 视频地址 */
-@property (nonatomic, strong) NSURL              *videoUrl;
+@property (nonatomic, strong, nullable) NSURL    *videoUrl;
 /** 视频相册资源 */
 @property (nonatomic, strong, nullable) PHAsset  *videoAsset;
 /** 视频尺寸 */

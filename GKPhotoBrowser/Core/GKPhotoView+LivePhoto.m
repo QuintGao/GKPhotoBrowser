@@ -43,8 +43,8 @@
         } completion:^(BOOL success) {
             __strong __typeof(weakSelf) self = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
+                [self hideLoading];
                 if (success) {
-                    [self hideLoading];
                     self.imageView.userInteractionEnabled = YES;
                     [self.imageView addSubview:self.livePhoto.livePhotoView];
                     [self adjustFrame];

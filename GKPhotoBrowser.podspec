@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GKPhotoBrowser"
-  s.version      = "2.8.2"
+  s.version      = "3.0.0"
   s.summary      = "iOS可高度自定义的图片浏览器，支持图片浏览、视频播放等多种功能"
   s.homepage     = "https://github.com/QuintGao/GKPhotoBrowser"
   s.license      = "MIT"
@@ -16,6 +16,7 @@ Pod::Spec.new do |s|
     ss.dependency 'GKPhotoBrowser/SD'
     ss.dependency 'GKPhotoBrowser/AVPlayer'
     ss.dependency 'GKPhotoBrowser/Progress'
+    ss.dependency 'GKPhotoBrowser/AF'
   end
   
   s.subspec 'Core' do |ss|
@@ -45,15 +46,15 @@ Pod::Spec.new do |s|
   s.subspec 'AF' do |ss|
     ss.source_files = 'GKPhotoBrowser/AFNetworking'
     ss.dependency 'GKPhotoBrowser/Core'
-    ss.dependency 'AFNetworking'
     ss.dependency 'GKLivePhotoManager'
+    ss.dependency 'AFNetworking'
   end
   
   s.subspec 'Alamofire' do |ss|
     ss.source_files = 'GKPhotoBrowser/Alamofire'
     ss.dependency 'GKPhotoBrowser/Core'
-    ss.dependency 'Alamofire'
     ss.dependency 'GKLivePhotoManager'
+    ss.dependency 'Alamofire'
   end
   
   s.subspec 'AVPlayer' do |ss|
