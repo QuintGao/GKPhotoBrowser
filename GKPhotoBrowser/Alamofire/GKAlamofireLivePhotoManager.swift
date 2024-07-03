@@ -235,7 +235,7 @@ import CommonCrypto
             imgPath = nil
         }
         
-        GKLivePhotoManager.default().handleData(withVideoPath: videoPath, imagePath: imagePath) { [weak self] progress in
+        GKLivePhotoManager.default().handleData(withVideoPath: videoPath, imagePath: imgPath) { [weak self] progress in
             self?.progressBlock?(progress);
         } completion: { [weak self] outVideoPath, outImagePath, error in
             guard let self = self else { return }
