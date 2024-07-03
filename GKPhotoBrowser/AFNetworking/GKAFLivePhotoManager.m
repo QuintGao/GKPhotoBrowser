@@ -29,6 +29,7 @@ static float progressRatio = 4 / 5.0;
 @synthesize browser;
 @synthesize livePhotoView = _livePhotoView;
 @synthesize photo;
+@synthesize liveStatusChanged;
 
 - (void)dealloc {
     [self gk_clear];
@@ -189,7 +190,10 @@ static float progressRatio = 4 / 5.0;
     }
     
     __weak __typeof(self) weakSelf = self;
-    [[GKLivePhotoManager manager] createLivePhotoWithAsset:photo.imageAsset targetSize:targetSize completion:^(PHLivePhoto * _Nullable livePhoto, NSError * _Nullable error) {
+    [[GKLivePhotoManager manager] createLivePhotoWithAsset:photo.imageAsset targetSize:targetSize progressBlock:^(float progress) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        !self.progressBlock ?: self.progressBlock(progress);
+    } completion:^(PHLivePhoto * _Nullable livePhoto, NSError * _Nullable error) {
         __strong __typeof(weakSelf) self = weakSelf;
         if (livePhoto) {
             self.livePhotoView.livePhoto = livePhoto;
@@ -216,7 +220,10 @@ static float progressRatio = 4 / 5.0;
         imagePath = nil;
     }
     
-    [[GKLivePhotoManager manager] handleDataWithVideoPath:videoPath imagePath:imagePath completion:^(NSString * _Nullable outVideoPath, NSString * _Nullable outImagePath, NSError * _Nullable error) {
+    [[GKLivePhotoManager manager] handleDataWithVideoPath:videoPath imagePath:imagePath progressBlock:^(float progress) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        !self.progressBlock ?: self.progressBlock(progress);
+    } completion:^(NSString * _Nullable outVideoPath, NSString * _Nullable outImagePath, NSError * _Nullable error) {
         [self.filePathList addObject:outVideoPath];
         [self.filePathList addObject:outImagePath];
         [[GKLivePhotoManager manager] createLivePhotoWithVideoPath:outVideoPath imagePath:outImagePath targetSize:targetSize completion:^(PHLivePhoto * _Nullable livePhoto, NSError * _Nullable error) {
@@ -244,12 +251,12 @@ static float progressRatio = 4 / 5.0;
 }
 
 - (void)livePhotoView:(PHLivePhotoView *)livePhotoView willBeginPlaybackWithStyle:(PHLivePhotoViewPlaybackStyle)playbackStyle {
-//    NSLog(@"开始播放");
     [self autoresizeToView:livePhotoView];
+    !self.liveStatusChanged ?: self.liveStatusChanged(self, GKLivePlayStatusBegin);
 }
 
 - (void)livePhotoView:(PHLivePhotoView *)livePhotoView didEndPlaybackWithStyle:(PHLivePhotoViewPlaybackStyle)playbackStyle {
-//    NSLog(@"播放结束");
+    !self.liveStatusChanged ?: self.liveStatusChanged(self, GKLivePlayStatusEnded);
 }
 
 - (void)autoresizeToView:(UIView *)view {

@@ -303,8 +303,11 @@
         }
     }
     
+    self.liveMarkView.frame = CGRectMake(10, kSafeTopSpace, 64, 20);
+    
     self.loadingView.frame = self.bounds;
     self.videoLoadingView.frame = self.bounds;
+    self.liveLoadingView.frame = self.bounds;
     if (self.showPlayImage) {
         [self.playBtn sizeToFit];
         self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);

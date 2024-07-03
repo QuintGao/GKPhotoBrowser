@@ -21,6 +21,9 @@ import CommonCrypto
     }()
     
     public var photo: GKPhoto?
+    
+    public var liveStatusChanged: (((any GKLivePhotoProtocol)?, GKLivePlayStatus) -> Void)!
+    
     var progressBlock: ((Float) -> Void)?
     var completioBlock: ((Bool) -> Void)?
     
@@ -200,7 +203,10 @@ import CommonCrypto
             size = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
         }
         
-        GKLivePhotoManager.default().createLivePhoto(with: asset, targetSize: targetSize) { [weak self] livePhoto, error in
+        GKLivePhotoManager.default().createLivePhoto(with: asset, targetSize: targetSize) { [weak self] progress in
+            guard let self = self else { return }
+            self.progressBlock?(progress);
+        } completion: { [weak self] livePhoto, error in
             guard let self = self else { return }
             if let livePhoto {
                 self.livePhotoView?.livePhoto = livePhoto
@@ -229,7 +235,9 @@ import CommonCrypto
             imgPath = nil
         }
         
-        GKLivePhotoManager.default().handleData(withVideoPath: videoPath, imagePath: imgPath) { [weak self] outVideoPath, outImagePath, error in
+        GKLivePhotoManager.default().handleData(withVideoPath: videoPath, imagePath: imagePath) { [weak self] progress in
+            self?.progressBlock?(progress);
+        } completion: { [weak self] outVideoPath, outImagePath, error in
             guard let self = self else { return }
             if error != nil {
                 self.completioBlock?(false)
@@ -262,9 +270,11 @@ extension GKAlamofireLivePhotoManager: PHLivePhotoViewDelegate {
     
     public func livePhotoView(_ livePhotoView: PHLivePhotoView, willBeginPlaybackWith playbackStyle: PHLivePhotoViewPlaybackStyle) {
         autoresize(to: livePhotoView)
+        liveStatusChanged?(self, .begin)
     }
     
     public func livePhotoView(_ livePhotoView: PHLivePhotoView, didEndPlaybackWith playbackStyle: PHLivePhotoViewPlaybackStyle) {
+        liveStatusChanged?(self, .ended)
     }
     
     private func autoresize(to view: UIView) {

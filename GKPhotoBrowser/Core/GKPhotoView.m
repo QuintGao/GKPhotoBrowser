@@ -53,6 +53,7 @@
 @property (nonatomic, strong) GKLoadingView  *videoLoadingView;
 
 @property (nonatomic, strong) GKLoadingView  *liveLoadingView;
+@property (nonatomic, strong) GKLivePhotoMarkView *liveMarkView;
 
 @property (nonatomic, strong) GKPhoto        *photo;
 
@@ -70,6 +71,7 @@
         self.backgroundColor = [UIColor clearColor];
         [self addSubview:self.scrollView];
         [self.scrollView addSubview:self.imageView];
+        [self addSubview:self.liveMarkView];
     }
     return self;
 }
@@ -93,6 +95,8 @@
     }
     [self.imageView removeFromSuperview];
     self.imageView = nil;
+    [self.liveMarkView removeFromSuperview];
+    self.liveMarkView = nil;
 }
 
 - (void)resetImageView {
@@ -361,6 +365,17 @@
         _liveLoadingView.strokeColor = [UIColor whiteColor];
     }
     return _liveLoadingView;
+}
+
+- (UIView *)liveMarkView {
+    if (!_liveMarkView) {
+        _liveMarkView = [[GKLivePhotoMarkView alloc] init];
+        _liveMarkView.backgroundColor = [UIColor.whiteColor colorWithAlphaComponent:0.5];
+        _liveMarkView.hidden = YES;
+        _liveMarkView.layer.cornerRadius = 2;
+        _liveMarkView.layer.masksToBounds = YES;
+    }
+    return _liveMarkView;
 }
 
 @end

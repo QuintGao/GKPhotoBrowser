@@ -7,6 +7,66 @@
 
 #import "GKPhotoView+LivePhoto.h"
 
+@interface GKLivePhotoMarkView()
+
+@property (nonatomic, strong) UIImageView *liveImgView;
+
+@property (nonatomic, strong) UILabel *liveLabel;
+
+@end
+
+@implementation GKLivePhotoMarkView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self initUI];
+    }
+    return self;
+}
+
+- (void)initUI {
+    [self addSubview:self.liveImgView];
+    [self addSubview:self.liveLabel];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    CGRect frame = self.liveImgView.frame;
+    frame.origin.x = 5;
+    frame.origin.y = (self.frame.size.height - frame.size.height) / 2;
+    self.liveImgView.frame = frame;
+    
+    frame = self.liveLabel.frame;
+    frame.origin.x = CGRectGetMaxX(self.liveImgView.frame) + 5;
+    frame.origin.y = (self.frame.size.height - frame.size.height) / 2;
+    self.liveLabel.frame = frame;
+}
+
+#pragma mark - lazy
+- (UIImageView *)liveImgView {
+    if (!_liveImgView) {
+        _liveImgView = [[UIImageView alloc] init];
+        _liveImgView.image = GKPhotoBrowserImage(@"gk_photo_live");
+        _liveImgView.tintColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1];
+        [_liveImgView sizeToFit];
+    }
+    return _liveImgView;
+}
+
+- (UILabel *)liveLabel {
+    if (!_liveLabel) {
+        _liveLabel = [[UILabel alloc] init];
+        _liveLabel.font = [UIFont systemFontOfSize:14];
+        _liveLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1];
+        _liveLabel.text = @"LIVE";
+        [_liveLabel sizeToFit];
+    }
+    return _liveLabel;
+}
+
+@end
+
 @implementation GKPhotoView (LivePhoto)
 
 - (void)showLiveLoading {
@@ -32,6 +92,9 @@
 - (void)liveDidScrollAppear {
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
+    if (self.isShowLivePhotoMark) {
+        self.liveMarkView.hidden = NO;
+    }
     if (!self.livePhoto.photo || self.livePhoto.photo != self.photo) {
         [self showLoading];
         __weak __typeof(self) weakSelf = self;
@@ -39,6 +102,9 @@
             __strong __typeof(weakSelf) self = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.liveLoadingView.progress = progress;
+                if (progress >= 1.0) {
+                    [self hideLoading];
+                }
             });
         } completion:^(BOOL success) {
             __strong __typeof(weakSelf) self = weakSelf;
@@ -65,18 +131,21 @@
 - (void)liveDidScrollDisappear {
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
-//    [self.livePhoto gk_stop];
 }
 
 - (void)liveDidDismissAppear {
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
+    if (!self.isShowLivePhotoMark) return;
+    self.liveMarkView.hidden = NO;
 }
 
 - (void)liveWillDismissDisappear {
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
     [self.livePhoto gk_stop];
+    if (!self.isShowLivePhotoMark) return;
+    self.liveMarkView.hidden = YES;
 }
 
 - (void)liveDidDismissDisappear {
@@ -89,6 +158,7 @@
 - (void)liveUpdateFrame {
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
+    if (self.livePhoto.photo != self.photo) return;
     [self.livePhoto gk_updateFrame:self.imageView.bounds];
 }
 

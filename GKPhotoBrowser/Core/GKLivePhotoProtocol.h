@@ -13,6 +13,11 @@
 @class GKPhoto;
 @class GKPhotoBrowser;
 
+typedef NS_ENUM(NSUInteger, GKLivePlayStatus) {
+    GKLivePlayStatusBegin,
+    GKLivePlayStatusEnded
+};
+
 @protocol GKLivePhotoProtocol <NSObject>
 
 @property (nonatomic, weak, nullable) GKPhotoBrowser *browser;
@@ -20,6 +25,8 @@
 @property (nonatomic, strong, nullable) PHLivePhotoView *livePhotoView;
 
 @property (nonatomic, strong, nullable) GKPhoto *photo;
+
+@property (nonatomic, copy) void(^liveStatusChanged)(id<GKLivePhotoProtocol> mgr, GKLivePlayStatus status);
 
 // 加载livePhoto
 - (void)loadLivePhotoWithPhoto:(GKPhoto *_Nonnull)photo targetSize:(CGSize)targetSize progressBlock:(void(^_Nullable)(float progress))progressBlock completion:(void(^_Nullable)(BOOL success))completion;

@@ -50,6 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) GKLoadingView *videoLoadingView;
 
 @property (nonatomic, strong, readonly) GKLoadingView *liveLoadingView;
+@property (nonatomic, strong, readonly) UIView *liveMarkView;
+@property (nonatomic, assign) BOOL isShowLivePhotoMark;
 
 @property (nonatomic, strong, readonly) GKPhoto *photo;
 

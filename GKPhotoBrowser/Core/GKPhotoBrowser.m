@@ -227,6 +227,16 @@ static Class livePhotoClass = nil;
     protocol.browser = self;
     [protocol gk_clear];
     self.livePhoto = protocol;
+    __weak __typeof(self) weakSelf = self;
+    self.livePhoto.liveStatusChanged = ^(id<GKLivePhotoProtocol> mgr, GKLivePlayStatus status) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        if (!self.isShowLivePhotoMark) return;
+        if (status == GKLivePlayStatusBegin) {
+            self.curPhotoView.liveMarkView.hidden = YES;
+        }else {
+            self.curPhotoView.liveMarkView.hidden = NO;
+        }
+    };
 }
 
 - (void)setupVideoProgressProtocol:(id<GKProgressViewProtocol>)protocol {
@@ -649,6 +659,7 @@ static Class livePhotoClass = nil;
             photoView.videoPlayImage  = self.videoPlayImage;
             photoView.isVideoPausedWhenDragged = self.isVideoPausedWhenDragged;
             photoView.isClearMemoryWhenViewReuse = self.isClearMemoryWhenViewReuse;
+            photoView.isShowLivePhotoMark = self.isShowLivePhotoMark;
             
             CGRect frame = self.photoScrollView.bounds;
             

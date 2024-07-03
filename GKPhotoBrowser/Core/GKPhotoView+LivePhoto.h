@@ -9,6 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface GKLivePhotoMarkView: UIView
+@end
+
 @interface GKPhotoView (LivePhoto)
 
 - (void)showLiveLoading;

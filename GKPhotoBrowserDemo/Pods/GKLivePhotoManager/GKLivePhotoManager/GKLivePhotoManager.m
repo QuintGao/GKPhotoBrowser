@@ -30,11 +30,11 @@ static GKLivePhotoManager *_manager = nil;
     _manager = nil;
 }
 
-- (void)handleDataWithVideoPath:(NSString *)videoPath completion:(void (^)(NSString * _Nullable, NSString * _Nullable, NSError * _Nullable))completion {
-    [self handleDataWithVideoPath:videoPath imagePath:nil completion:completion];
+- (void)handleDataWithVideoPath:(NSString *)videoPath progressBlock:(void (^ _Nullable)(float))progressBlock completion:(void (^ _Nullable)(NSString * _Nullable, NSString * _Nullable, NSError * _Nullable))completion {
+    [self handleDataWithVideoPath:videoPath imagePath:nil progressBlock:progressBlock completion:completion];
 }
 
-- (void)handleDataWithVideoPath:(NSString *)videoPath imagePath:(NSString *)imagePath completion:(void (^)(NSString * _Nullable, NSString * _Nullable, NSError * _Nullable))completion {
+- (void)handleDataWithVideoPath:(NSString *)videoPath imagePath:(NSString *)imagePath progressBlock:(void (^ _Nullable)(float))progressBlock completion:(void (^ _Nullable)(NSString * _Nullable, NSString * _Nullable, NSError * _Nullable))completion {
     AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:videoPath]];
     if (!asset) {
         !completion ?: completion(nil, nil, [self errorWithMsg:@"video asset not available"]);
@@ -45,7 +45,9 @@ static GKLivePhotoManager *_manager = nil;
     __block NSString *outVideoPath = nil;
     __block NSString *outImagePath = nil;
     
-    [self exportVideoWithAsset:asset identifier:identifier completion:^(NSString *videoPath, NSError *error) {
+    [self exportVideoWithAsset:asset identifier:identifier progressBlock:^(float progress) {
+        !progressBlock ?: progressBlock(progress);
+    } completion:^(NSString *videoPath, NSError *error) {
         if (error) {
             !completion ?: completion(nil, nil, error);
             return;
@@ -67,7 +69,7 @@ static GKLivePhotoManager *_manager = nil;
     }];
 }
 
-- (void)createLivePhotoWithVideoPath:(NSString *)videoPath imagePath:(NSString *)imagePath targetSize:(CGSize)targetSize completion:(nonnull void (^)(PHLivePhoto * _Nullable, NSError * _Nullable))completion {
+- (void)createLivePhotoWithVideoPath:(NSString *)videoPath imagePath:(NSString *)imagePath targetSize:(CGSize)targetSize completion:(void (^ _Nullable)(PHLivePhoto * _Nullable, NSError * _Nullable))completion {
     AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:videoPath]];
     if (!asset) {
         !completion ?: completion(nil, [self errorWithMsg:@"video asset not available"]);
@@ -86,13 +88,20 @@ static GKLivePhotoManager *_manager = nil;
     }];
 }
 
-- (void)createLivePhotoWithAsset:(PHAsset *)asset targetSize:(CGSize)targetSize completion:(nonnull void (^)(PHLivePhoto * _Nullable, NSError * _Nullable))completion {
+- (void)createLivePhotoWithAsset:(PHAsset *)asset targetSize:(CGSize)targetSize progressBlock:(void (^ _Nullable)(float))progressBlock completion:(void (^ _Nullable)(PHLivePhoto * _Nullable, NSError * _Nullable))completion {
     if (asset.mediaSubtypes != PHAssetMediaSubtypePhotoLive) {
         !completion ?: completion(nil, [self errorWithMsg:@"asset is not livephoto"]);
         return;
     }
     PHLivePhotoRequestOptions *options = [[PHLivePhotoRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
+    options.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (progress) {
+                !progressBlock ?: progressBlock(progress);
+            }
+        });
+    };
     
     [[PHImageManager defaultManager] requestLivePhotoForAsset:asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(PHLivePhoto * _Nullable livePhoto, NSDictionary * _Nullable info) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -131,7 +140,7 @@ static GKLivePhotoManager *_manager = nil;
 }
 
 #pragma mark - private
-- (void)exportVideoWithAsset:(AVAsset *)asset identifier:(NSString *)identifier completion:(void(^)(NSString *videoPath, NSError *error))completion {
+- (void)exportVideoWithAsset:(AVAsset *)asset identifier:(NSString *)identifier progressBlock:(void(^)(float))progressBlock completion:(void(^)(NSString *videoPath, NSError *error))completion {
     NSString *outVideoPath = kOutVideoPath;
     if ([[NSFileManager defaultManager] fileExistsAtPath:outVideoPath]) {
         [[NSFileManager defaultManager] removeItemAtPath:outVideoPath error:nil];
@@ -159,10 +168,14 @@ static GKLivePhotoManager *_manager = nil;
                 !completion ?: completion(nil, [self errorWithMsg:@"unknown error"]);
                 break;
             case AVAssetExportSessionStatusCompleted:
+                !progressBlock ?: progressBlock(session.progress);
                 !completion ?: completion(outVideoPath, nil);
                 break;
             case AVAssetExportSessionStatusFailed:
                 !completion ?: completion(nil, session.error);
+                break;
+            case AVAssetExportSessionStatusExporting:
+                !progressBlock ?: progressBlock(session.progress);
                 break;
             default:
                 break;

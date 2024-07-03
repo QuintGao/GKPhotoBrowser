@@ -158,14 +158,14 @@
 }
 
 - (void)loadLivePhotoWith:(NSString *)moviePath imagePath:(NSString *)imagePath {
-    [[GKLivePhotoManager manager] handleDataWithVideoPath:moviePath imagePath:imagePath completion:^(NSString * _Nullable outVideoPath, NSString * _Nullable outImagePath, NSError * _Nullable error) {
-        [[GKLivePhotoManager manager] createLivePhotoWithVideoPath:outVideoPath imagePath:outImagePath targetSize:CGSizeMake(300, 300) completion:^(PHLivePhoto * _Nullable livePhoto, NSError * _Nullable error) {
-            if (livePhoto) {
-                self.photoView.livePhoto = livePhoto;
-                [self.photoView startPlaybackWithStyle:PHLivePhotoViewPlaybackStyleFull];
-            }
-        }];
-    }];
+//    [[GKLivePhotoManager manager] handleDataWithVideoPath:moviePath imagePath:imagePath completion:^(NSString * _Nullable outVideoPath, NSString * _Nullable outImagePath, NSError * _Nullable error) {
+//        [[GKLivePhotoManager manager] createLivePhotoWithVideoPath:outVideoPath imagePath:outImagePath targetSize:CGSizeMake(300, 300) completion:^(PHLivePhoto * _Nullable livePhoto, NSError * _Nullable error) {
+//            if (livePhoto) {
+//                self.photoView.livePhoto = livePhoto;
+//                [self.photoView startPlaybackWithStyle:PHLivePhotoViewPlaybackStyleFull];
+//            }
+//        }];
+//    }];
 }
 
 - (void)getImageWithPath:(NSURL *)filePath completion:(void(^)(NSString *imagePath))completion {

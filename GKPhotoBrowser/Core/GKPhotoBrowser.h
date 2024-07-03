@@ -273,6 +273,9 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 /// 如果设置为YES，则视图放入重用池时会调用GKWebImageProtocol协议的clearMemoryForURL:方法
 @property (nonatomic, assign) BOOL isClearMemoryWhenViewReuse;
 
+// 是否显示livePhoto标识
+@property (nonatomic, assign) BOOL isShowLivePhotoMark;
+
 // 初始化方法
 /// 创建图片浏览器
 ///   - photos: 包含GKPhoto对象的数组

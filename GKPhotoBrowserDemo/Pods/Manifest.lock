@@ -16,7 +16,7 @@ PODS:
     - AFNetworking/NSURLSession
   - Alamofire (5.9.1)
   - GKCover (3.0.1)
-  - GKLivePhotoManager (1.0.1)
+  - GKLivePhotoManager (1.0.2)
   - GKMessageTool (1.0.5):
     - MBProgressHUD
   - GKNavigationBar (1.9.0):
@@ -62,9 +62,9 @@ PODS:
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
   - SDAutoLayout (2.2.1)
-  - SDWebImage (5.19.2):
-    - SDWebImage/Core (= 5.19.2)
-  - SDWebImage/Core (5.19.2)
+  - SDWebImage (5.19.4):
+    - SDWebImage/Core (= 5.19.4)
+  - SDWebImage/Core (5.19.4)
   - TZImagePickerController (3.8.6):
     - TZImagePickerController/Basic (= 3.8.6)
     - TZImagePickerController/Location (= 3.8.6)
@@ -130,7 +130,7 @@ SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
-  GKLivePhotoManager: 0f9ef6bedc9a80f03c3eaa4ce986b9c675ae9852
+  GKLivePhotoManager: 203a3fc08563511b961c686e543d5560fa801331
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
   GKPhotoBrowser: 392dd38cbcb781900d8236c31ac96914b4578ce8
@@ -139,7 +139,7 @@ SPEC CHECKSUMS:
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
-  SDWebImage: dfe95b2466a9823cf9f0c6d01217c06550d7b29a
+  SDWebImage: 066c47b573f408f18caa467d71deace7c0f8280d
   TZImagePickerController: a013c186415f6044914bb0d0dd960a884cff46ec
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54

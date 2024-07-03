@@ -20,7 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - videoPath: 视频地址（必须是本地地址）
 ///   - completion: 完成回调
 - (void)handleDataWithVideoPath:(NSString *_Nonnull)videoPath
-                     completion:(void(^)(NSString *_Nullable outVideoPath, NSString *_Nullable outImagePath, NSError *_Nullable error))completion;
+                  progressBlock:(void(^_Nullable)(float progress))progressBlock
+                     completion:(void(^_Nullable)(NSString *_Nullable outVideoPath, NSString *_Nullable outImagePath, NSError *_Nullable error))completion;
 
 /// 处理视频和图片并生成livePhoto需要的文件
 /// - Parameters:
@@ -29,29 +30,38 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - completion: 完成回调
 - (void)handleDataWithVideoPath:(NSString *_Nonnull)videoPath
                       imagePath:(NSString *_Nullable)imagePath
-                     completion:(void(^)(NSString *_Nullable outVideoPath, NSString *_Nullable outImagePath, NSError *_Nullable error))completion;
+                  progressBlock:(void(^_Nullable)(float progress))progressBlock
+                     completion:(void(^_Nullable)(NSString *_Nullable outVideoPath, NSString *_Nullable outImagePath, NSError *_Nullable error))completion;
 
 /// 根据视频和图片地址生成livePHoto
 /// - Parameters:
 ///   - videoPath: 视频地址（必须是本地地址）
 ///   - imagePath: 图片地址（必须是本地地址）
-///   - targetSize: 目标尺寸   
+///   - targetSize: 目标尺寸
 ///   - completion: 完成回调
-- (void)createLivePhotoWithVideoPath:(NSString *)videoPath imagePath:(NSString *)imagePath targetSize:(CGSize)targetSize completion:(void(^)(PHLivePhoto *_Nullable livePhoto, NSError *_Nullable error))completion;
+- (void)createLivePhotoWithVideoPath:(NSString *)videoPath
+                           imagePath:(NSString *)imagePath
+                          targetSize:(CGSize)targetSize
+                          completion:(void(^_Nullable)(PHLivePhoto *_Nullable livePhoto, NSError *_Nullable error))completion;
 
 /// 根据相册资源文件生成livePhoto
 /// - Parameters:
 ///   - asset: 资源
 ///   - targetSize: 目标尺寸
 ///   - completion: 完成回调
-- (void)createLivePhotoWithAsset:(PHAsset *)asset targetSize:(CGSize)targetSize completion:(void(^)(PHLivePhoto *_Nullable livePhoto, NSError *_Nullable error))completion;
+- (void)createLivePhotoWithAsset:(PHAsset *)asset
+                      targetSize:(CGSize)targetSize
+                   progressBlock:(void(^_Nullable)(float progress))progressBlock
+                      completion:(void(^_Nullable)(PHLivePhoto *_Nullable livePhoto, NSError *_Nullable error))completion;
 
 /// 保存livePHoto到相册
 /// - Parameters:
 ///   - videoPath: 视频地址（必须是本地地址）
 ///   - imagePath: 图片地址（必须是本地地址）
 ///   - completion: 完成回调
-- (void)saveLivePhotoWithVideoPath:(NSString *)videoPath imagePath:(NSString *)imagePath completion:(void(^)(BOOL, NSError *_Nullable))completion;
+- (void)saveLivePhotoWithVideoPath:(NSString *)videoPath
+                         imagePath:(NSString *)imagePath
+                        completion:(void(^_Nullable)(BOOL, NSError *_Nullable))completion;
 
 @end
 
