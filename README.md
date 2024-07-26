@@ -162,11 +162,18 @@ photo.image = [YYImage imageNamed:obj];
  
  ![jianshu.gif](https://upload-images.jianshu.io/upload_images/1598505-dbc0b13eb87ecd75.gif?imageMogr2/auto-orient/strip)
  
+ ## 发布
+ 
+ ```
+ pod trunk push --allow-warnings --skip-import-validation
+ ```
+ 
  ## 版本记录
 
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.0.2 - 2024.07.26 1、livePhoto优化，增加是否清理缓存属性
  * 3.0.1 - 2024.07.03 1、修复bug #193 2、livePhoto进度优化及增加标识
  * 3.0.0 - 2024.07.01 1、支持livePhoto播放（本地、网络、相册）2、修复某些情况下浏览器不能释放的问题
  * 2.8.2 - 2024.06.04 1、视频加载优化，增加播放失败处理 2、视频播放支持IJKPlayer
