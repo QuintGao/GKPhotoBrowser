@@ -6,6 +6,7 @@
 //
 
 #import "GKPhotoView+Image.h"
+#import "GKPhotoBrowser.h"
 
 @implementation GKPhotoView (Image)
 
@@ -16,7 +17,7 @@
     if (photo) {
         [self resetImageView];
         
-        if (!photo.isVideo && self.showPlayImage) {
+        if (!photo.isVideo && self.browser.showPlayImage) {
             self.playBtn.hidden = YES;
         }else if (photo.isVideo && !photo.isAutoPlay && !photo.isVideoClicked) {
             [self addSubview:self.playBtn];
@@ -89,9 +90,9 @@
     [self adjustFrame];
     
     if (!photo.failed && !placeholderImage) {
-        if (isOrigin && self.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
+        if (isOrigin && self.browser.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
             [self.loadingView startLoading];
-        }else if (!isOrigin && self.loadStyle != GKPhotoBrowserLoadStyleCustom) {
+        }else if (!isOrigin && self.browser.loadStyle != GKPhotoBrowserLoadStyleCustom) {
             [self.loadingView startLoading];
         }
     }
@@ -115,7 +116,7 @@
             [self setupImageView:newImage];
         }else {
             [self loadFailedWithError:error];
-            if (self.failStyle != GKPhotoBrowserFailStyleCustom) {
+            if (self.browser.failStyle != GKPhotoBrowserFailStyleCustom) {
                 [self addSubview:self.loadingView];
                 [self.loadingView showFailure];
             }
@@ -144,9 +145,9 @@
     
     if (url.absoluteString.length > 0) {
         if (!photo.failed && !placeholderImage) {
-            if (isOrigin && self.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
+            if (isOrigin && self.browser.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
                 [self.loadingView startLoading];
-            }else if (!isOrigin && self.loadStyle != GKPhotoBrowserLoadStyleCustom) {
+            }else if (!isOrigin && self.browser.loadStyle != GKPhotoBrowserLoadStyleCustom) {
                 [self.loadingView startLoading];
             }
         }
@@ -175,7 +176,7 @@
                     
                     if ([photo.url.absoluteString isEqualToString:url.absoluteString]) {
                         [self loadFailedWithError:error];
-                        if (self.failStyle != GKPhotoBrowserFailStyleCustom) {
+                        if (self.browser.failStyle != GKPhotoBrowserFailStyleCustom) {
                             [self addSubview:self.loadingView];
                             [self.loadingView showFailure];
                         }
@@ -243,7 +244,7 @@
         // 默认情况下，显示出的图片的宽度 = 屏幕的宽度
         // 如果isFullWidthForLandScape = NO,需要把图片全部显示在屏幕上
         // 此时由于图片的宽度已经等于屏幕的宽度，所以只需判断图片显示的高度>屏幕高度时，将图片的高度缩小到屏幕的高度即可
-        if (!self.isFullWidthForLandScape || self.photo.isVideo) {
+        if (!self.browser.isFullWidthForLandScape || self.photo.isVideo) {
             // 图片的高度 > 屏幕的高度
             if (imageFrame.size.height > frame.size.height) {
                 CGFloat scale = imageFrame.size.width / imageFrame.size.height;
@@ -266,8 +267,8 @@
         // 找到最大缩放比例
         CGFloat scaleH = frame.size.height / imageFrame.size.height;
         CGFloat scaleW = frame.size.width / imageFrame.size.width;
-        self.realZoomScale = MAX(MAX(scaleH, scaleW), self.maxZoomScale);
-        if (self.doubleZoomScale == self.maxZoomScale) {
+        self.realZoomScale = MAX(MAX(scaleH, scaleW), self.browser.maxZoomScale);
+        if (self.doubleZoomScale == self.browser.maxZoomScale) {
             self.doubleZoomScale = self.realZoomScale;
         }else if (self.doubleZoomScale > self.realZoomScale) {
             self.doubleZoomScale = self.realZoomScale;
@@ -308,7 +309,7 @@
     self.loadingView.frame = self.bounds;
     self.videoLoadingView.frame = self.bounds;
     self.liveLoadingView.frame = self.bounds;
-    if (self.showPlayImage) {
+    if (self.browser.showPlayImage) {
         [self.playBtn sizeToFit];
         self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
     }
@@ -327,14 +328,15 @@
 
 - (void)loadProgress:(float)progress isOriginImage:(BOOL)isOriginImage {
     if ([self.delegate respondsToSelector:@selector(photoView:loadProgress:isOriginImage:)]) {
-        if (self.loadStyle == GKPhotoBrowserLoadStyleCustom || self.originLoadStyle == GKPhotoBrowserLoadStyleCustom) {
+        if (self.browser.loadStyle == GKPhotoBrowserLoadStyleCustom ||
+            self.browser.originLoadStyle == GKPhotoBrowserLoadStyleCustom) {
             [self.delegate photoView:self loadProgress:progress isOriginImage:isOriginImage];
         }
     }
-    if (self.loadStyle == GKPhotoBrowserLoadStyleDeterminate || 
-        self.originLoadStyle == GKPhotoBrowserLoadStyleDeterminate ||
-        self.loadStyle == GKPhotoBrowserLoadStyleDeterminateSector ||
-        self.originLoadStyle == GKPhotoBrowserLoadStyleDeterminateSector) {
+    if (self.browser.loadStyle == GKPhotoBrowserLoadStyleDeterminate ||
+        self.browser.originLoadStyle == GKPhotoBrowserLoadStyleDeterminate ||
+        self.browser.loadStyle == GKPhotoBrowserLoadStyleDeterminateSector ||
+        self.browser.originLoadStyle == GKPhotoBrowserLoadStyleDeterminateSector) {
         self.loadingView.progress = progress;
     }
 }

@@ -12,11 +12,10 @@ import Kingfisher
     public var browser: GKPhotoBrowser?
     
     public func imageViewClass() -> AnyClass {
-        return UIImageView.self
+        return AnimatedImageView.self
     }
     
     public func setImageFor(_ imageView: UIImageView?, url: URL?, placeholderImage: UIImage?, progress progressBlock: GKWebImageProgressBlock?, completion completionBlock: GKWebImageCompletionBlock? = nil) {
-        
         imageView?.kf.setImage(with: url, placeholder: placeholderImage, progressBlock: { resiveSize, totalSize in
             progressBlock?(Int(resiveSize), Int(totalSize))
         }, completionHandler: { result in
@@ -40,7 +39,7 @@ import Kingfisher
     }
     
     public func image(with data: Data?) -> UIImage? {
-        guard let data = data else { return nil }
+        guard let data else { return nil }
         let options = ImageCreatingOptions(scale: 1, duration: 0.0, preloadAll: true, onlyFirstFrame: false)
         return KingfisherWrapper.image(data: data, options: options)
     }

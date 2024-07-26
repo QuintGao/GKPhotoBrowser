@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger, GKLivePlayStatus) {
 
 @property (nonatomic, strong, nullable) GKPhoto *photo;
 
-@property (nonatomic, copy) void(^liveStatusChanged)(id<GKLivePhotoProtocol> mgr, GKLivePlayStatus status);
+@property (nonatomic, copy, nullable) void(^liveStatusChanged)(id<GKLivePhotoProtocol> _Nonnull mgr, GKLivePlayStatus status);
 
 // 加载livePhoto
 - (void)loadLivePhotoWithPhoto:(GKPhoto *_Nonnull)photo targetSize:(CGSize)targetSize progressBlock:(void(^_Nullable)(float progress))progressBlock completion:(void(^_Nullable)(BOOL success))completion;
@@ -37,10 +37,11 @@ typedef NS_ENUM(NSUInteger, GKLivePlayStatus) {
 // 停止livePhoto
 - (void)gk_stop;
 
-// 清除下载的文件
-- (void)gk_clear;
-
 // 更新布局
 - (void)gk_updateFrame:(CGRect)frame;
+
+@optional
+// 清除下载的文件
+- (void)gk_clear;
 
 @end

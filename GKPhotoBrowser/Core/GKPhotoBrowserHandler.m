@@ -139,8 +139,6 @@
 
 #pragma mark - BrowserDismiss
 - (void)browserDismiss {
-    GKPhotoView *photoView = self.browser.curPhotoView;
-    
     if (!self.browser.isFollowSystemRotation) {
         // 状态栏恢复到竖屏
         if (@available(iOS 13.0, *)) {} else {

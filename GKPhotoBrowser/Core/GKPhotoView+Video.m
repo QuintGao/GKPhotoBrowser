@@ -6,6 +6,7 @@
 //
 
 #import "GKPhotoView+Video.h"
+#import "GKPhotoBrowser.h"
 
 @implementation GKPhotoView (Video)
 
@@ -55,7 +56,7 @@
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
-    if (!self.showPlayImage) return;
+    if (!self.browser.showPlayImage) return;
     self.playBtn.hidden = NO;
 }
 
@@ -96,7 +97,7 @@
         [self.player gk_play];
     }
     
-    if (!self.showPlayImage) return;
+    if (!self.browser.showPlayImage) return;
     if (!self.playBtn.superview) {
         [self addSubview:self.playBtn];
     }
@@ -106,6 +107,7 @@
 - (void)videoWillScrollDisappear {
     if (!self.photo.isVideo) return;
     if (!self.player) return;
+    if (!self.browser.isVideoPausedWhenScrollBegan) return;
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) {
         if (self.player.isPlaying) {
             [self.player gk_pause];
@@ -127,7 +129,8 @@
         self.playBtn.hidden = NO;
         return;
     }
-    if (!self.showPlayImage) return;
+    [self.player gk_pause];
+    if (!self.browser.showPlayImage) return;
     self.playBtn.hidden = NO;
 }
 
@@ -139,16 +142,16 @@
     }else {
         [self.player gk_play];
     }
-    if (!self.showPlayImage) return;
+    if (!self.browser.showPlayImage) return;
     self.playBtn.hidden = YES;
 }
 
 - (void)videoWillDismissDisappear {
     if (!self.photo.isVideo) return;
     if (!self.player) return;
-    if (!self.isVideoPausedWhenDragged) return;
+    if (!self.browser.isVideoPausedWhenDragged) return;
     if (self.player.status == GKVideoPlayerStatusEnded) {
-        if (!self.showPlayImage) return;
+        if (!self.browser.showPlayImage) return;
         self.playBtn.hidden = YES;
     }else {
         [self.player gk_pause];
@@ -176,7 +179,7 @@
 
 - (void)loadVideo:(BOOL)isStart success:(BOOL)success {
     self.loadingView.hidden = YES;
-    if (self.videoLoadStyle == GKPhotoBrowserLoadStyleCustom) {
+    if (self.browser.videoLoadStyle == GKPhotoBrowserLoadStyleCustom) {
         if ([self.delegate respondsToSelector:@selector(photoView:loadStart:success:)]) {
             [self.delegate photoView:self loadStart:isStart success:success];
         }

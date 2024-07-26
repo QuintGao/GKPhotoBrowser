@@ -100,6 +100,8 @@ static Class livePhotoClass = nil;
     self.showPlayImage           = YES;
     self.isVideoReplay           = YES;
     self.isVideoPausedWhenDragged = YES;
+    self.isLivePhotoPausedWhenDragged = YES;
+    self.isClearMemoryForLivePhoto = YES;
     self.showStyle = GKPhotoBrowserShowStyleZoom;
     self.hideStyle = GKPhotoBrowserHideStyleZoom;
     self.loadStyle = GKPhotoBrowserLoadStyleIndeterminate;
@@ -225,7 +227,6 @@ static Class livePhotoClass = nil;
 
 - (void)setupLivePhotoProtocol:(id<GKLivePhotoProtocol>)protocol {
     protocol.browser = self;
-    [protocol gk_clear];
     self.livePhoto = protocol;
     __weak __typeof(self) weakSelf = self;
     self.livePhoto.liveStatusChanged = ^(id<GKLivePhotoProtocol> mgr, GKLivePlayStatus status) {
@@ -640,26 +641,10 @@ static Class livePhotoClass = nil;
         
         GKPhotoView *photoView = [self photoViewForIndex:i];
         if (photoView == nil) {
-            photoView                 = [self dequeueReusablePhotoView];
-            photoView.delegate        = self;
-            photoView.player          = self.player;
-            photoView.livePhoto       = self.livePhoto;
-            photoView.loadStyle       = self.loadStyle;
-            photoView.originLoadStyle = self.originLoadStyle;
-            photoView.failStyle       = self.failStyle;
-            photoView.videoLoadStyle  = self.videoLoadStyle;
-            photoView.videoFailStyle  = self.videoFailStyle;
-            photoView.liveLoadStyle   = self.liveLoadStyle;
-            photoView.isFollowSystemRotation = self.isFollowSystemRotation;
-            photoView.isFullWidthForLandScape = self.isFullWidthForLandScape;
-            photoView.isAdaptiveSafeArea = self.isAdaptiveSafeArea;
-            photoView.maxZoomScale    = self.maxZoomScale;
+            photoView = [self dequeueReusablePhotoView];
+            photoView.delegate = self;
+            photoView.browser = self;
             photoView.doubleZoomScale = self.doubleZoomScale;
-            photoView.showPlayImage   = self.showPlayImage;
-            photoView.videoPlayImage  = self.videoPlayImage;
-            photoView.isVideoPausedWhenDragged = self.isVideoPausedWhenDragged;
-            photoView.isClearMemoryWhenViewReuse = self.isClearMemoryWhenViewReuse;
-            photoView.isShowLivePhotoMark = self.isShowLivePhotoMark;
             
             CGRect frame = self.photoScrollView.bounds;
             

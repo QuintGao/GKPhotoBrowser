@@ -154,6 +154,8 @@
     }else {
         [browser setupVideoPlayerProtocol:[[cls alloc] init]];
     }
+    
+    browser.isShowLivePhotoMark = YES;
     if (self.livePhotoStyle == 0) {
         [browser setupLivePhotoProtocol:GKAFLivePhotoManager.new];
     }else {

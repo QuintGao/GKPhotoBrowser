@@ -56,7 +56,6 @@
 		795FA6291FF34F230057BDB0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 795FA6271FF34F220057BDB0 /* README.md */; };
 		7961A3052C2E610900C61A70 /* GKLivePhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7961A3042C2E610900C61A70 /* GKLivePhotoViewController.m */; };
 		7961A3072C2E61F700C61A70 /* livephoto.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7961A3062C2E61F700C61A70 /* livephoto.txt */; };
-		7961A30A2C2E967400C61A70 /* KNProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 7961A3082C2E967400C61A70 /* KNProgressHUD.m */; };
 		79B33755249111E100590023 /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = 79B33754249111E100590023 /* test.gif */; };
 		79CEF1BC2C212EDE00BC0F75 /* GKDemoLocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79CEF1BB2C212EDE00BC0F75 /* GKDemoLocalViewController.m */; };
 		79E99CE72BFC3A8500FBC92E /* GKSwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */; };
@@ -168,8 +167,6 @@
 		7961A3032C2E610900C61A70 /* GKLivePhotoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKLivePhotoViewController.h; sourceTree = "<group>"; };
 		7961A3042C2E610900C61A70 /* GKLivePhotoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKLivePhotoViewController.m; sourceTree = "<group>"; };
 		7961A3062C2E61F700C61A70 /* livephoto.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = livephoto.txt; sourceTree = "<group>"; };
-		7961A3082C2E967400C61A70 /* KNProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KNProgressHUD.m; sourceTree = "<group>"; };
-		7961A3092C2E967400C61A70 /* KNProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KNProgressHUD.h; sourceTree = "<group>"; };
 		79B33754249111E100590023 /* test.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test.gif; sourceTree = "<group>"; };
 		79CEF1BA2C212EDE00BC0F75 /* GKDemoLocalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKDemoLocalViewController.h; sourceTree = "<group>"; };
 		79CEF1BB2C212EDE00BC0F75 /* GKDemoLocalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKDemoLocalViewController.m; sourceTree = "<group>"; };
@@ -338,8 +335,6 @@
 				795FA6051FF338200057BDB0 /* GKTest01ViewCell.m */,
 				795FA6081FF338200057BDB0 /* GKTest02ViewCell.h */,
 				795FA5F31FF338200057BDB0 /* GKTest02ViewCell.m */,
-				7961A3092C2E967400C61A70 /* KNProgressHUD.h */,
-				7961A3082C2E967400C61A70 /* KNProgressHUD.m */,
 				795FA5F41FF338200057BDB0 /* GKCategory */,
 			);
 			path = Main;
@@ -632,7 +627,6 @@
 				7925A5532A28915700972F47 /* GKLargeImageManager.m in Sources */,
 				79CEF1BC2C212EDE00BC0F75 /* GKDemoLocalViewController.m in Sources */,
 				602CC2DC21226AD500DE81BF /* GKTopView.m in Sources */,
-				7961A30A2C2E967400C61A70 /* KNProgressHUD.m in Sources */,
 				7961A3052C2E610900C61A70 /* GKLivePhotoViewController.m in Sources */,
 				79FCF8B82C00589E00639BC8 /* GKDemoPhotoViewController.m in Sources */,
 				795FA6141FF338200057BDB0 /* GKToutiaoViewController.m in Sources */,

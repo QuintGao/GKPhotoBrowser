@@ -6,6 +6,7 @@
 //
 
 #import "GKPhotoView+LivePhoto.h"
+#import "GKPhotoBrowser.h"
 
 @interface GKLivePhotoMarkView()
 
@@ -76,6 +77,11 @@
     self.liveLoadingView.frame = self.bounds;
     [self addSubview:self.liveLoadingView];
     [self.liveLoadingView startLoading];
+    if (self.browser.isShowLivePhotoMark) {
+        [self addSubview:self.liveMarkView];
+    }else {
+        [self.liveMarkView removeFromSuperview];
+    }
 }
 
 - (void)hideLiveLoading {
@@ -92,7 +98,7 @@
 - (void)liveDidScrollAppear {
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
-    if (self.isShowLivePhotoMark) {
+    if (self.browser.isShowLivePhotoMark) {
         self.liveMarkView.hidden = NO;
     }
     if (!self.livePhoto.photo || self.livePhoto.photo != self.photo) {
@@ -126,25 +132,30 @@
 - (void)liveWillScrollDisappear {
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
+    if (!self.browser.isLivePhotoPausedWhenScrollBegan) return;
+    [self.livePhoto gk_stop];
 }
 
 - (void)liveDidScrollDisappear {
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
+    [self.livePhoto gk_stop];
 }
 
 - (void)liveDidDismissAppear {
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
-    if (!self.isShowLivePhotoMark) return;
+    if (!self.browser.isShowLivePhotoMark) return;
     self.liveMarkView.hidden = NO;
 }
 
 - (void)liveWillDismissDisappear {
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
-    [self.livePhoto gk_stop];
-    if (!self.isShowLivePhotoMark) return;
+    if (self.browser.isLivePhotoPausedWhenDragged) {
+        [self.livePhoto gk_stop];
+    }
+    if (!self.browser.isShowLivePhotoMark) return;
     self.liveMarkView.hidden = YES;
 }
 
@@ -152,7 +163,9 @@
     if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
     [self.livePhoto gk_stop];
-    [self.livePhoto gk_clear];
+    if (self.browser.isClearMemoryForLivePhoto && [self.livePhoto respondsToSelector:@selector(gk_clear)]) {
+        [self.livePhoto gk_clear];
+    }
 }
 
 - (void)liveUpdateFrame {

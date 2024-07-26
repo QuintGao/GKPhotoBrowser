@@ -22,7 +22,7 @@ import CommonCrypto
     
     public var photo: GKPhoto?
     
-    public var liveStatusChanged: (((any GKLivePhotoProtocol)?, GKLivePlayStatus) -> Void)!
+    public var liveStatusChanged: ((any GKLivePhotoProtocol, GKLivePlayStatus) -> Void)?
     
     var progressBlock: ((Float) -> Void)?
     var completioBlock: ((Bool) -> Void)?
@@ -42,7 +42,9 @@ import CommonCrypto
     let progressRatio: Float = 4 / 5.0
     
     deinit {
-        gk_clear()
+        if let browser, browser.isClearMemoryForLivePhoto {
+            gk_clear()
+        }
     }
     
     public func loadLivePhoto(with photo: GKPhoto, targetSize: CGSize, progressBlock: ((Float) -> Void)?, completion: ((Bool) -> Void)? = nil) {
@@ -98,13 +100,13 @@ import CommonCrypto
                 
                 AF.download(videoUrl, to: videoFileDest)
                     .downloadProgress { [weak self] progress in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         videoProgress = Float(progress.completedUnitCount/progress.totalUnitCount)
                         let progress = (videoProgress + imageProgress) / 2
                         self.progressBlock?(progress * self.progressRatio)
                     }
                     .response { [weak self] response in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         if response.error != nil {
                             self.completioBlock?(false)
                             return
@@ -125,13 +127,13 @@ import CommonCrypto
                 
                 AF.download(photo.url!, to: imageFileDst)
                     .downloadProgress { [weak self] progress in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         imageProgress = Float(progress.completedUnitCount/progress.totalUnitCount)
                         let progress = (videoProgress + imageProgress) / 2
                         self.progressBlock?(progress * self.progressRatio)
                     }
                     .response { [weak self] response in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         if response.error != nil {
                             self.completioBlock?(false)
                             return
@@ -148,11 +150,12 @@ import CommonCrypto
             }else {
                 AF.download(videoUrl, to: videoFileDest)
                     .downloadProgress { [weak self] progress in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         let videoProgress = Float(progress.completedUnitCount/progress.totalUnitCount)
                         self.progressBlock?(videoProgress * self.progressRatio)
                     }
-                    .response { response in
+                    .response { [weak self] response in
+                        guard let self else { return }
                         if response.error != nil {
                             self.completioBlock?(false)
                             return
@@ -177,11 +180,11 @@ import CommonCrypto
     
     public func gk_clear() {
         let fileManager = FileManager.default
-        self.filePathList.forEach {
+        filePathList.forEach {
             try? fileManager.removeItem(atPath: $0)
         }
         
-        guard let photo = self.photo else { return }
+        guard let photo else { return }
         if let videoUrl = photo.videoUrl {
             let videoPath = filePath(with: videoUrl, ext: "mov")
             try? fileManager.removeItem(atPath: videoPath)
@@ -204,10 +207,10 @@ import CommonCrypto
         }
         
         GKLivePhotoManager.default().createLivePhoto(with: asset, targetSize: targetSize) { [weak self] progress in
-            guard let self = self else { return }
+            guard let self else { return }
             self.progressBlock?(progress);
         } completion: { [weak self] livePhoto, error in
-            guard let self = self else { return }
+            guard let self else { return }
             if let livePhoto {
                 self.livePhotoView?.livePhoto = livePhoto
                 self.completioBlock?(true)
@@ -238,20 +241,28 @@ import CommonCrypto
         GKLivePhotoManager.default().handleData(withVideoPath: videoPath, imagePath: imgPath) { [weak self] progress in
             self?.progressBlock?(progress);
         } completion: { [weak self] outVideoPath, outImagePath, error in
-            guard let self = self else { return }
+            guard let self else { return }
             if error != nil {
                 self.completioBlock?(false)
                 return
             }
-            GKLivePhotoManager.default().createLivePhoto(withVideoPath: outVideoPath!, imagePath: outImagePath!, targetSize: targetSize) { [weak self] livePhoto, error in
-                guard let self = self else { return }
-                if let livePhoto {
-                    self.livePhotoView?.livePhoto = livePhoto
-                    self.progressBlock?(1)
-                    self.completioBlock?(true)
-                }else {
-                    self.completioBlock?(false)
-                }
+            self.createLivePhoto(outVideoPath, outImagePath, targetSize)
+        }
+    }
+    
+    private func createLivePhoto(_ videoPath: String?, _ imagePath: String?, _ targetSize: CGSize) {
+        guard let videoPath, let imagePath else {
+            self.completioBlock?(false)
+            return
+        }
+        GKLivePhotoManager.default().createLivePhoto(withVideoPath: videoPath, imagePath: imagePath, targetSize: targetSize) { [weak self] livePhoto, error in
+            guard let self else { return }
+            if let livePhoto {
+                self.livePhotoView?.livePhoto = livePhoto
+                self.progressBlock?(1)
+                self.completioBlock?(true)
+            }else {
+                self.completioBlock?(false)
             }
         }
     }

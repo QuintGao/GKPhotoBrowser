@@ -152,29 +152,15 @@
         browser.doubleZoomScale = 2.0f;
         browser.isAdaptiveSafeArea = YES;
         browser.hidesCountLabel = YES;
-//        browser.hidesPageControl = YES;
         browser.hidesSavedBtn = YES;
         browser.isFullWidthForLandScape = NO;
         browser.isSingleTapDisabled = YES;
-//        browser.photoViewPadding = 0;
-//        browser.animDuration = 10;
-        // 自定义视频播放
-//        [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];
         browser.showPlayImage = NO;
         browser.isVideoReplay = YES;
         browser.videoPlayImage = [UIImage imageNamed:@"ic_play3"];
-//        browser.isDoubleTapDisabled = YES;
-//        browser.isStatusBarShow = YES;
-//        browser.bgColor = UIColor.whiteColor;
-//        browser.statusBarStyle = UIStatusBarStyleDefault;
         
-//        // 当你的APP支持屏幕旋转时此属性必须设置为YES
-//        if (kIsiPad) { // ipad 默认支持屏幕旋转，这里设置为YES
-//            browser.isFollowSystemRotation = YES;
-//        }
-//        [browser setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
-        
-//        browser.isFollowSystemRotation = YES;
+        browser.isShowLivePhotoMark = YES;
+        browser.isClearMemoryForLivePhoto = NO;
         
         browser.delegate = self;
         [browser showFromVC:self];

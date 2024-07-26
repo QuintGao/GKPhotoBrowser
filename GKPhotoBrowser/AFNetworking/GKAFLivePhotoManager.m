@@ -10,6 +10,7 @@
 #import <GKLivePhotoManager/GKLivePhotoManager.h>
 #import <CommonCrypto/CommonDigest.h>
 #import "GKPhotoView.h"
+#import "GKPhotoBrowser.h"
 
 static float progressRatio = 4 / 5.0;
 
@@ -32,7 +33,9 @@ static float progressRatio = 4 / 5.0;
 @synthesize liveStatusChanged;
 
 - (void)dealloc {
-    [self gk_clear];
+    if (self.browser.isClearMemoryForLivePhoto) {
+        [self gk_clear];
+    }
 }
 
 - (void)loadLivePhotoWithPhoto:(GKPhoto *)photo targetSize:(CGSize)targetSize progressBlock:(void (^)(float))progressBlock completion:(void (^ _Nullable)(BOOL))completion {
@@ -208,7 +211,11 @@ static float progressRatio = 4 / 5.0;
     __weak __typeof(self) weakSelf = self;
     if (CGSizeEqualToSize(targetSize, CGSizeZero)) {
         AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:videoPath]];
-        targetSize = asset.naturalSize;
+        
+        AVAssetTrack *track = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
+        if (track) {
+            targetSize = track.naturalSize;
+        }
     }
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {

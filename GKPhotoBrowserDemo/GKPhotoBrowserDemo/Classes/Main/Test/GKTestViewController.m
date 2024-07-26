@@ -17,7 +17,6 @@
 #import <AFNetworking/AFNetworking.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <GKLivePhotoManager/GKLivePhotoManager.h>
-#import "KNProgressHUD.h"
 
 @interface GKTestViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -42,8 +41,6 @@
 @property (nonatomic, strong) PHLivePhotoView *photoView;
 
 @property (nonatomic, strong) GKLoadingView *loadingView;
-
-@property (nonatomic, strong) KNProgressHUD *hud;
 
 @property (nonatomic, assign) float progress;
 
@@ -95,11 +92,6 @@
     [self.view addSubview:self.loadingView];
     
     [self.loadingView startLoading];
-    
-//    self.hud = [[KNProgressHUD alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-//    [self.view addSubview:self.hud];
-//    
-//    self.progress = 0;
     
     [self addProgress];
 }
