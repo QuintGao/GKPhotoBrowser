@@ -173,6 +173,7 @@ photo.image = [YYImage imageNamed:obj];
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.0.3 - 2024.08.12 1、修复系统静音情况下，播放视频无声音的问题 2、增加视频和livePhoto静音播放属性
  * 3.0.2 - 2024.07.26 1、livePhoto优化，增加是否清理缓存属性
  * 3.0.1 - 2024.07.03 1、修复bug #193 2、livePhoto进度优化及增加标识
  * 3.0.0 - 2024.07.01 1、支持livePhoto播放（本地、网络、相册）2、修复某些情况下浏览器不能释放的问题
