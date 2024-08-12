@@ -263,6 +263,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign) BOOL showPlayImage;
 /// 视频暂停或停止时显示的播放图
 @property (nonatomic, strong) UIImage *videoPlayImage;
+/// 视频是否静音播放
+@property (nonatomic, assign) BOOL videoMutedPlay;
 /// 视频播放结束后是否自动重播，默认YES
 @property (nonatomic, assign) BOOL isVideoReplay;
 /// 拖拽消失时是否暂停播放，默认YES
@@ -279,6 +281,8 @@ typedef void(^layoutBlock)(GKPhotoBrowser *photoBrowser, CGRect superFrame);
 @property (nonatomic, assign) BOOL isLivePhotoPausedWhenDragged;
 /// 左右滑动开始时是否暂停播放livePhoto，默认NO
 @property (nonatomic, assign) BOOL isLivePhotoPausedWhenScrollBegan;
+/// livePhoto是否静音播放
+@property (nonatomic, assign) BOOL livePhotoMutedPlay;
 // 是否显示livePhoto标识，默认NO
 @property (nonatomic, assign) BOOL isShowLivePhotoMark;
 // 是否清理livePhoto缓存，默认YES

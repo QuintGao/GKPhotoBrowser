@@ -187,6 +187,10 @@ static float progressRatio = 4 / 5.0;
     self.livePhotoView.frame = frame;
 }
 
+- (void)gk_setMute:(BOOL)mute {
+    self.livePhotoView.muted = mute;
+}
+
 - (void)loadLivePhotoWithAsset:(PHAsset *)asset targetSize:(CGSize)targetSize {
     if (CGSizeEqualToSize(targetSize, CGSizeZero)) {
         targetSize = CGSizeMake(asset.pixelWidth, asset.pixelHeight);
@@ -279,6 +283,9 @@ static float progressRatio = 4 / 5.0;
         _livePhotoView = [[PHLivePhotoView alloc] init];
         _livePhotoView.delegate = self;
         _livePhotoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        if (self.browser.livePhotoMutedPlay) {
+            _livePhotoView.muted = YES;
+        }
     }
     return _livePhotoView;
 }

@@ -6,7 +6,7 @@
 //
 
 #import "GKIJKPlayerManager.h"
-#import "GKPhotoBrowserConfigure.h"
+#import "GKPhotoBrowser.h"
 #if __has_include(<IJKMediaFramework/IJKMediaFramework.h>)
 #import <IJKMediaFramework/IJKMediaFramework.h>
 #endif
@@ -20,6 +20,7 @@
 @property (nonatomic, assign) BOOL isReadyToPlay;
 
 @property (nonatomic, assign) NSTimeInterval seekTime;
+@property (nonatomic, assign) CGFloat lastVolume;
 
 @end
 
@@ -51,6 +52,9 @@
     self.player.shouldAutoplay = NO;
     [self.player prepareToPlay];
     self.videoPlayView = self.player.view;
+    if (self.browser.videoMutedPlay) {
+        [self gk_setMute:YES];
+    }
     [self addPlayerNotifications];
 }
 
@@ -189,6 +193,7 @@
     [self.player.view removeFromSuperview];
     self.player = nil;
     [self.timer invalidate];
+    self.timer = nil;
     _isPlaying = NO;
     self.currentTime = 0;
     [self.videoPlayView removeFromSuperview];
@@ -209,6 +214,17 @@
 - (void)gk_updateFrame:(CGRect)frame {
     self.videoPlayView.frame = frame;
     self.player.view.frame = self.videoPlayView.bounds;
+}
+
+- (void)gk_setMute:(BOOL)mute {
+    if (mute) {
+        self.lastVolume = self.player.playbackVolume;
+        self.player.playbackVolume = 0;
+    } else {
+        /// Fix first called the lastVolume is 0.
+        if (self.lastVolume == 0) self.lastVolume = self.player.playbackVolume;
+        self.player.playbackVolume = self.lastVolume;
+    }
 }
 
 #pragma mark - Getter

@@ -8,7 +8,7 @@
 
 #import "GKAVPlayerManager.h"
 #import <AVFoundation/AVFoundation.h>
-#import "GKPhotoBrowserConfigure.h"
+#import "GKPhotoBrowser.h"
 
 @interface GKAVPlayerView : UIView
 
@@ -59,6 +59,9 @@
     
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:self.assetURL];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
+    if (self.browser.videoMutedPlay) {
+        [self gk_setMute:YES];
+    }
     
     AVPlayerLayer *playerLayer = (AVPlayerLayer *)self.videoPlayView.layer;
     playerLayer.player = self.player;
@@ -132,6 +135,10 @@
 
 - (void)gk_updateFrame:(CGRect)frame {
     self.videoPlayView.frame = frame;
+}
+
+- (void)gk_setMute:(BOOL)mute {
+    self.player.muted = mute;
 }
 
 #pragma mark - Notification

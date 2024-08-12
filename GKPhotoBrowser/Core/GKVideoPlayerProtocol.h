@@ -68,6 +68,9 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
 // 更新布局
 - (void)gk_updateFrame:(CGRect)frame;
 
+// 静音
+- (void)gk_setMute:(BOOL)mute;
+
 @end
 
 NS_ASSUME_NONNULL_END

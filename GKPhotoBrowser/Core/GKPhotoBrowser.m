@@ -150,7 +150,10 @@ static Class livePhotoClass = nil;
         if (!self.curPhotoView.photo.isVideo) return;
         if (![self.curPhoto.videoUrl isEqual:mgr.assetURL]) return;
         switch (status) {
-            case GKVideoPlayerStatusPrepared:
+            case GKVideoPlayerStatusPrepared: {
+                [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionAllowBluetooth error:nil];
+                [[AVAudioSession sharedInstance] setActive:YES error:nil];
+            }
             case GKVideoPlayerStatusBuffering: {
                 [self.curPhotoView showLoading];
             } break;

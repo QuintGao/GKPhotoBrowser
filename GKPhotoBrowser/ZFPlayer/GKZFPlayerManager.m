@@ -9,7 +9,7 @@
 #import "GKZFPlayerManager.h"
 #import <ZFPlayer/ZFPlayer.h>
 #import <ZFPlayer/ZFAVPlayerManager.h>
-#import "GKPhotoBrowserConfigure.h"
+#import "GKPhotoBrowser.h"
 
 @interface GKZFPlayerManager()
 
@@ -39,6 +39,7 @@
     ZFPlayerController *player = [[ZFPlayerController alloc] initWithPlayerManager:manager containerView:self.videoPlayView];
     player.disableGestureTypes = ZFPlayerDisableGestureTypesAll;
     player.allowOrentitaionRotation = NO;
+    player.customAudioSession = YES;
     self.player = player;
     
     // 设置封面图片
@@ -47,9 +48,13 @@
     __weak __typeof(self) weakSelf = self;
     // 准备播放
     player.playerPrepareToPlay = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
-        asset.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        asset.view.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        asset.view.playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        UIViewAutoresizing autoresizing = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+        asset.view.autoresizingMask = autoresizing;
+        asset.view.coverImageView.autoresizingMask = autoresizing;
+        asset.view.playerView.autoresizingMask = autoresizing;
+        if (self.browser.videoMutedPlay) {
+            [self gk_setMute:YES];
+        }
     };
     
     // 加载状态改变回调
@@ -120,8 +125,8 @@
 #pragma mark - GKVideoPlayerProtocol
 - (void)gk_prepareToPlay {
     if (!_assetURL) return;
-    [self initPlayer];
     self.status = GKVideoPlayerStatusPrepared;
+    [self initPlayer];
 }
 
 - (void)gk_play {
@@ -161,6 +166,10 @@
 
 - (void)gk_updateFrame:(CGRect)frame {
     self.videoPlayView.frame = frame;
+}
+
+- (void)gk_setMute:(BOOL)mute {
+    self.player.currentPlayerManager.muted = mute;
 }
 
 #pragma mark - Getter

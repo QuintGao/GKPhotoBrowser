@@ -17,6 +17,9 @@ import CommonCrypto
         let livePhotoView = PHLivePhotoView()
         livePhotoView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         livePhotoView.delegate = self
+        if self.browser?.livePhotoMutedPlay == true {
+            livePhotoView.isMuted = true
+        }
         return livePhotoView
     }()
     
@@ -197,6 +200,10 @@ import CommonCrypto
     
     public func gk_updateFrame(_ frame: CGRect) {
         livePhotoView?.frame = frame
+    }
+    
+    public func gk_setMute(_ mute: Bool) {
+        livePhotoView?.isMuted = mute
     }
     
     // MARK: private

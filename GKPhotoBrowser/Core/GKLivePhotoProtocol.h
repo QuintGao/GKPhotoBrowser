@@ -40,6 +40,9 @@ typedef NS_ENUM(NSUInteger, GKLivePlayStatus) {
 // 更新布局
 - (void)gk_updateFrame:(CGRect)frame;
 
+// 设置静音
+- (void)gk_setMute:(BOOL)mute;
+
 @optional
 // 清除下载的文件
 - (void)gk_clear;
