@@ -126,17 +126,19 @@
         [photos addObject:photo];
     }];
     
-    GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:0];
-    
-    browser.showStyle           = GKPhotoBrowserShowStyleNone;
-    browser.hideStyle           = cell.model.type == 1 ? GKPhotoBrowserHideStyleZoomSlide : GKPhotoBrowserHideStyleZoomScale;
-    browser.isSingleTapDisabled = YES;  // 不响应默认单击事件
-    browser.isStatusBarShow     = YES;  // 显示状态栏
-    browser.isHideSourceView    = NO;
-    browser.delegate            = self;
+    GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
+    configure.showStyle = GKPhotoBrowserShowStyleNone;
+    configure.hideStyle = cell.model.type == 1 ? GKPhotoBrowserHideStyleZoomSlide : GKPhotoBrowserHideStyleZoomScale;
+    configure.isSingleTapDisabled = YES;
+    configure.isHideSourceView = NO;
     if (kIsiPad) {
-        browser.isFollowSystemRotation = YES;
+        configure.isFollowSystemRotation = YES;
     }
+    
+    GKPhotoBrowser *browser = [[GKPhotoBrowser alloc] initWithPhotos:photos currentIndex:0];
+    browser.configure = configure;
+    browser.isStatusBarShow     = YES;  // 显示状态栏
+    browser.delegate            = self;
     
     [browser setupCoverViews:@[self.closeBtn, self.moreBtn, self.bottomView] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
 

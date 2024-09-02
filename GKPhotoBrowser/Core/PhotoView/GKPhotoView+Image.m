@@ -6,7 +6,7 @@
 //
 
 #import "GKPhotoView+Image.h"
-#import "GKPhotoBrowser.h"
+#import "UIDevice+GKPhotoBrowser.h"
 
 @implementation GKPhotoView (Image)
 
@@ -17,7 +17,7 @@
     if (photo) {
         [self resetImageView];
         
-        if (!photo.isVideo && self.browser.showPlayImage) {
+        if (!photo.isVideo && self.configure.isShowPlayImage) {
             self.playBtn.hidden = YES;
         }else if (photo.isVideo && !photo.isAutoPlay && !photo.isVideoClicked) {
             [self addSubview:self.playBtn];
@@ -29,13 +29,13 @@
         
         // 优先加载缓存图片
         UIImage *placeholderImage = nil;
-        UIImage *image = [self.imageProtocol imageFromMemoryForURL:photo.url];
+        UIImage *image = [self.imager imageFromMemoryForURL:photo.url];
         if (image) {
             photo.finished = YES;
             placeholderImage = image;
         }
         
-        UIImage *originImage = [self.imageProtocol imageFromMemoryForURL:photo.originUrl];
+        UIImage *originImage = [self.imager imageFromMemoryForURL:photo.originUrl];
         if (originImage) {
             photo.originFinished = YES;
             placeholderImage = originImage;
@@ -79,7 +79,7 @@
 }
 
 - (void)cancelImageLoad {
-    [self.imageProtocol cancelImageRequestWithImageView:self.imageView];
+    [self.imager cancelImageRequestWithImageView:self.imageView];
 }
 
 - (void)loadAssetImageWithPhoto:(GKPhoto *)photo isOrigin:(BOOL)isOrigin placeholderImage:(UIImage *)placeholderImage {
@@ -90,9 +90,9 @@
     [self adjustFrame];
     
     if (!photo.failed && !placeholderImage) {
-        if (isOrigin && self.browser.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
+        if (isOrigin && self.configure.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
             [self.loadingView startLoading];
-        }else if (!isOrigin && self.browser.loadStyle != GKPhotoBrowserLoadStyleCustom) {
+        }else if (!isOrigin && self.configure.loadStyle != GKPhotoBrowserLoadStyleCustom) {
             [self.loadingView startLoading];
         }
     }
@@ -103,8 +103,8 @@
         if (!self) return;
         UIImage *newImage = nil;
         if (data) {
-            if ([self.imageProtocol respondsToSelector:@selector(imageWithData:)]) {
-                newImage = [self.imageProtocol imageWithData:data];
+            if ([self.imager respondsToSelector:@selector(imageWithData:)]) {
+                newImage = [self.imager imageWithData:data];
             }
             if (!newImage) {
                 newImage = [UIImage imageWithData:data];
@@ -116,7 +116,7 @@
             [self setupImageView:newImage];
         }else {
             [self loadFailedWithError:error];
-            if (self.browser.failStyle != GKPhotoBrowserFailStyleCustom) {
+            if (self.configure.failStyle != GKPhotoBrowserFailStyleCustom) {
                 [self addSubview:self.loadingView];
                 [self.loadingView showFailure];
             }
@@ -145,11 +145,40 @@
     
     if (url.absoluteString.length > 0) {
         if (!photo.failed && !placeholderImage) {
-            if (isOrigin && self.browser.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
+            if (isOrigin && self.configure.originLoadStyle != GKPhotoBrowserLoadStyleCustom) {
                 [self.loadingView startLoading];
-            }else if (!isOrigin && self.browser.loadStyle != GKPhotoBrowserLoadStyleCustom) {
+            }else if (!isOrigin && self.configure.loadStyle != GKPhotoBrowserLoadStyleCustom) {
                 [self.loadingView startLoading];
             }
+        }
+        
+        if (!self.imager) {
+            UIImage *image = [UIImage gkbrowser_imageNamed:url.absoluteString];
+            if (image) {
+                self.imageView.image = image;
+                self.imageSize = image.size;
+                photo.finished = YES;
+                if (isOrigin) {
+                    photo.originFinished = YES;
+                }
+                
+                // 图片加载完成，回调进度
+                [self loadProgress:1.0 isOriginImage:isOrigin];
+                
+                self.scrollView.scrollEnabled = YES;
+                [self.loadingView stopLoading];
+                [self adjustFrame];
+            }else {
+                photo.failed = YES;
+                [self.loadingView stopLoading];
+                NSError *error = [NSError errorWithDomain:@"com.browser.error" code:-1 userInfo:@{NSLocalizedDescriptionKey: @"图片加载失败"}];
+                [self loadFailedWithError:error];
+                if (self.configure.failStyle != GKPhotoBrowserFailStyleCustom) {
+                    [self addSubview:self.loadingView];
+                    [self.loadingView showFailure];
+                }
+            }
+            return;
         }
         
         __weak __typeof(self) weakSelf = self;
@@ -173,13 +202,10 @@
                 if (error) {
                     photo.failed = YES;
                     [self.loadingView stopLoading];
-                    
-                    if ([photo.url.absoluteString isEqualToString:url.absoluteString]) {
-                        [self loadFailedWithError:error];
-                        if (self.browser.failStyle != GKPhotoBrowserFailStyleCustom) {
-                            [self addSubview:self.loadingView];
-                            [self.loadingView showFailure];
-                        }
+                    [self loadFailedWithError:error];
+                    if (self.configure.failStyle != GKPhotoBrowserFailStyleCustom) {
+                        [self addSubview:self.loadingView];
+                        [self.loadingView showFailure];
                     }
                 }else {
                     self.imageSize = image.size;
@@ -205,7 +231,7 @@
                 }
             });
         };
-        [self.imageProtocol setImageForImageView:self.imageView url:url placeholderImage:placeholderImage progress:progressBlock completion:completionBlock];
+        [self.imager setImageForImageView:self.imageView url:url placeholderImage:placeholderImage progress:progressBlock completion:completionBlock];
     }else {
         if (self.imageView.image) {
             photo.finished = YES;
@@ -244,7 +270,7 @@
         // 默认情况下，显示出的图片的宽度 = 屏幕的宽度
         // 如果isFullWidthForLandScape = NO,需要把图片全部显示在屏幕上
         // 此时由于图片的宽度已经等于屏幕的宽度，所以只需判断图片显示的高度>屏幕高度时，将图片的高度缩小到屏幕的高度即可
-        if (!self.browser.isFullWidthForLandScape || self.photo.isVideo) {
+        if (!self.configure.isFullWidthForLandScape || self.photo.isVideo) {
             // 图片的高度 > 屏幕的高度
             if (imageFrame.size.height > frame.size.height) {
                 CGFloat scale = imageFrame.size.width / imageFrame.size.height;
@@ -267,8 +293,8 @@
         // 找到最大缩放比例
         CGFloat scaleH = frame.size.height / imageFrame.size.height;
         CGFloat scaleW = frame.size.width / imageFrame.size.width;
-        self.realZoomScale = MAX(MAX(scaleH, scaleW), self.browser.maxZoomScale);
-        if (self.doubleZoomScale == self.browser.maxZoomScale) {
+        self.realZoomScale = MAX(MAX(scaleH, scaleW), self.configure.maxZoomScale);
+        if (self.doubleZoomScale == self.configure.maxZoomScale) {
             self.doubleZoomScale = self.realZoomScale;
         }else if (self.doubleZoomScale > self.realZoomScale) {
             self.doubleZoomScale = self.realZoomScale;
@@ -304,12 +330,12 @@
         }
     }
     
-    self.liveMarkView.frame = CGRectMake(10, kSafeTopSpace, 64, 20);
+    self.liveMarkView.frame = CGRectMake(10, UIDevice.gk_safeAreaTop, 64, 20);
     
     self.loadingView.frame = self.bounds;
     self.videoLoadingView.frame = self.bounds;
     self.liveLoadingView.frame = self.bounds;
-    if (self.browser.showPlayImage) {
+    if (self.configure.isShowPlayImage) {
         [self.playBtn sizeToFit];
         self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
     }
@@ -328,15 +354,15 @@
 
 - (void)loadProgress:(float)progress isOriginImage:(BOOL)isOriginImage {
     if ([self.delegate respondsToSelector:@selector(photoView:loadProgress:isOriginImage:)]) {
-        if (self.browser.loadStyle == GKPhotoBrowserLoadStyleCustom ||
-            self.browser.originLoadStyle == GKPhotoBrowserLoadStyleCustom) {
+        if (self.configure.loadStyle == GKPhotoBrowserLoadStyleCustom ||
+            self.configure.originLoadStyle == GKPhotoBrowserLoadStyleCustom) {
             [self.delegate photoView:self loadProgress:progress isOriginImage:isOriginImage];
         }
     }
-    if (self.browser.loadStyle == GKPhotoBrowserLoadStyleDeterminate ||
-        self.browser.originLoadStyle == GKPhotoBrowserLoadStyleDeterminate ||
-        self.browser.loadStyle == GKPhotoBrowserLoadStyleDeterminateSector ||
-        self.browser.originLoadStyle == GKPhotoBrowserLoadStyleDeterminateSector) {
+    if (self.configure.loadStyle == GKPhotoBrowserLoadStyleDeterminate ||
+        self.configure.originLoadStyle == GKPhotoBrowserLoadStyleDeterminate ||
+        self.configure.loadStyle == GKPhotoBrowserLoadStyleDeterminateSector ||
+        self.configure.originLoadStyle == GKPhotoBrowserLoadStyleDeterminateSector) {
         self.loadingView.progress = progress;
     }
 }

@@ -7,6 +7,7 @@
 
 #import "GKPhotoBrowserHandler.h"
 #import "GKPhotoBrowser.h"
+#import "GKPhotoBrowserConfigure.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -31,14 +32,19 @@
     self.statusBarAppearance = (hasKey && appearance) || !hasKey;
 }
 
+- (void)setBrowser:(GKPhotoBrowser *)browser {
+    _browser = browser;
+    self.configure = browser.configure;
+}
+
 - (void)showFromVC:(UIViewController *)vc {
-    if (self.browser.showStyle == GKPhotoBrowserShowStylePush) {
+    if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
         self.captureImage = [self getCaptureWithView:vc.view.window];
         self.browser.hidesBottomBarWhenPushed = YES;
         [vc.navigationController pushViewController:self.browser animated:YES];
     }else {
         UIViewController *presentVC = self.browser;
-        if (self.browser.isAddNavigationController) {
+        if (self.configure.isNeedNavigationController) {
             presentVC = [[UINavigationController alloc] initWithRootViewController:self.browser];
         }
         
@@ -51,7 +57,7 @@
 
 #pragma mark - BrowserShow
 - (void)browserShow {
-    switch (self.browser.showStyle) {
+    switch (self.configure.showStyle) {
         case GKPhotoBrowserShowStyleNone:
             [self browserNoneShow];
             break;
@@ -70,7 +76,7 @@
 - (void)browserNoneShow {
     self.browser.view.alpha = 0;
     [self browserChangeAlpha:1];
-    [UIView animateWithDuration:self.browser.animDuration animations:^{
+    [UIView animateWithDuration:self.configure.animDuration animations:^{
         self.browser.view.alpha = 1.0;
     }completion:^(BOOL finished) {
         self.isShow = YES;
@@ -80,7 +86,7 @@
 
 - (void)browserPushShow {
     UIView *view = self.browser.containerView ?: self.browser.view;
-    view.backgroundColor = self.browser.bgColor ? : [UIColor blackColor];
+    view.backgroundColor = self.configure.bgColor ? : [UIColor blackColor];
     self.isShow = YES;
     [self.browser browserFirstAppear];
 }
@@ -111,14 +117,15 @@
     CGRect sourceRect = photo.sourceFrame;
     
     if (CGRectEqualToRect(sourceRect, CGRectZero)) {
-        float systemVersion = [UIDevice currentDevice].systemVersion.floatValue;
-        if (systemVersion >= 8.0 && systemVersion < 9.0) {
-            sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toCoordinateSpace:photoView];
-        }else {
+        if (photo.sourceImageView) {
             sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toView:photoView];
+        }else {
+            CGFloat width = self.browser.view.frame.size.width;
+            CGFloat height = self.browser.view.frame.size.height;
+            sourceRect = CGRectMake((width - 1)/2, (height - 1)/2, 1, 1);
         }
     }
-    if (self.browser.isAdaptiveSafeArea) {
+    if (self.configure.isAdaptiveSafeArea) {
         sourceRect.origin.y -= (kSafeTopSpace + kSafeBottomSpace) * 0.5;
     }
     
@@ -126,7 +133,7 @@
     photoView.imageView.clipsToBounds = YES;
     [photoView updateFrame];
     [self browserChangeAlpha:0];
-    [UIView animateWithDuration:self.browser.animDuration animations:^{
+    [UIView animateWithDuration:self.configure.animDuration animations:^{
         photoView.imageView.frame = endRect;
         [photoView updateFrame];
         [self browserChangeAlpha:1];
@@ -139,21 +146,21 @@
 
 #pragma mark - BrowserDismiss
 - (void)browserDismiss {
-    if (!self.browser.isFollowSystemRotation) {
+    if (!self.configure.isFollowSystemRotation) {
         // 状态栏恢复到竖屏
         if (@available(iOS 13.0, *)) {} else {
             [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
         }
     }
     
-    if (self.browser.showStyle == GKPhotoBrowserShowStylePush) {
+    if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
         [self.browser removeRotationObserver];
         self.browser.photoScrollView.clipsToBounds = YES;
         [self.browser.navigationController popViewControllerAnimated:YES];
     }else {
         // 显示状态栏
         self.browser.isStatusBarShow = YES;
-        if (self.browser.hideStyle == GKPhotoBrowserHideStyleNone) {
+        if (self.configure.hideStyle == GKPhotoBrowserHideStyleNone) {
             [self browserDismissNone];
         }else {
             // 防止返回时跳动
@@ -169,15 +176,16 @@
     UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     
-    if (!self.browser.isFollowSystemRotation && self.browser.supportedInterfaceOrientations == UIInterfaceOrientationMaskPortrait && UIDeviceOrientationIsLandscape(orientation)) {
+    if (!self.configure.isFollowSystemRotation && self.browser.supportedInterfaceOrientations == UIInterfaceOrientationMaskPortrait && UIDeviceOrientationIsLandscape(orientation)) {
         self.isRecover = YES;
-        [UIView animateWithDuration:self.browser.animDuration animations:^{
+        [UIView animateWithDuration:self.configure.animDuration animations:^{
             // 旋转view
             self.browser.contentView.transform = CGAffineTransformIdentity;
             
+            CGFloat width = MIN(screenBounds.size.width, screenBounds.size.height);
             CGFloat height = MAX(screenBounds.size.width, screenBounds.size.height);
             // 设置frame
-            self.browser.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
+            self.browser.contentView.bounds = CGRectMake(0, 0, width, height);
             self.browser.contentView.center = self.browser.view.center;
             
             [self.browser.view setNeedsLayout];
@@ -207,32 +215,27 @@
     
     if (CGRectEqualToRect(sourceRect, CGRectZero)) {
         if (photo.sourceImageView == nil) {
-            [UIView animateWithDuration:self.browser.animDuration animations:^{
+            [UIView animateWithDuration:self.configure.animDuration animations:^{
                 photoView.imageView.alpha = 0;
                 [self browserChangeAlpha:0];
             } completion:^(BOOL finished) {
-                [self dismissAnimated:self.browser.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
+                [self dismissAnimated:self.configure.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
             }];
             return;
         }
         
-        if (self.browser.isHideSourceView) {
+        if (self.configure.isHideSourceView) {
             photo.sourceImageView.alpha = 0;
         }
         
-        float systemVersion = UIDevice.currentDevice.systemVersion.floatValue;
-        if (systemVersion >= 8.0 && systemVersion < 9.0) {
-            sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toCoordinateSpace:photoView];
-        }else {
-            sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toView:photoView];
-        }
+        sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toView:photoView];
     }else {
-        if (self.browser.isHideSourceView && photo.sourceImageView) {
+        if (self.configure.isHideSourceView && photo.sourceImageView) {
             photo.sourceImageView.alpha = 0;
         }
     }
     
-    if (self.browser.isAdaptiveSafeArea) {
+    if (self.configure.isAdaptiveSafeArea) {
         sourceRect.origin.y -= (kSafeTopSpace + kSafeBottomSpace) * 0.5;
     }
     
@@ -247,7 +250,7 @@
     // Fix bug：解决长图点击隐藏时可能出现的闪动bug
     UIViewContentMode mode = photo.sourceImageView ? photo.sourceImageView.contentMode : UIViewContentModeScaleAspectFill;
     photoView.imageView.contentMode = mode;
-    [UIView animateWithDuration:self.browser.animDuration animations:^{
+    [UIView animateWithDuration:self.configure.animDuration animations:^{
         photoView.player.videoPlayView.alpha = 0;
         photoView.imageView.frame = sourceRect;
         [photoView updateFrame];
@@ -269,11 +272,11 @@
         toTranslationY = photoView.superview.frame.size.height;
     }
     
-    [UIView animateWithDuration:self.browser.animDuration animations:^{
+    [UIView animateWithDuration:self.configure.animDuration animations:^{
         photoView.imageView.transform = CGAffineTransformMakeTranslation(0, toTranslationY);
         [self browserChangeAlpha:0];
     }completion:^(BOOL finished) {
-        [self dismissAnimated:self.browser.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
+        [self dismissAnimated:self.configure.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
     }];
 }
 
@@ -281,26 +284,26 @@
     GKPhotoView *photoView = self.browser.curPhotoView;
     if (!photoView) return;
     
-    [UIView animateWithDuration:self.browser.animDuration animations:^{
+    [UIView animateWithDuration:self.configure.animDuration animations:^{
         photoView.imageView.alpha = 0;
         [self browserChangeAlpha:0];
     }completion:^(BOOL finished) {
-        [self dismissAnimated:self.browser.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
+        [self dismissAnimated:self.configure.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
     }];
 }
 
 - (void)dismissAnimated:(BOOL)animated {
     GKPhoto *photo = self.browser.curPhotoView.photo;
     
-    if (animated && self.browser.showStyle != GKPhotoBrowserShowStylePush) {
-        [UIView animateWithDuration:self.browser.animDuration animations:^{
+    if (animated && self.configure.showStyle != GKPhotoBrowserShowStylePush) {
+        [UIView animateWithDuration:self.configure.animDuration animations:^{
             photo.sourceImageView.alpha = 1.0;
         }];
     }else {
         photo.sourceImageView.alpha = 1.0;
     }
     
-    if (!self.browser.isFollowSystemRotation) {
+    if (!self.configure.isFollowSystemRotation) {
         if (@available(iOS 13.0, *)) {} else {
             [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
         }
@@ -312,7 +315,7 @@
     if (!self.statusBarAppearance) {
         [[UIApplication sharedApplication] setStatusBarStyle:self.originStatusBarStyle];
     }
-    if (self.browser.showStyle == GKPhotoBrowserShowStylePush) {
+    if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
         [self.browser.navigationController popViewControllerAnimated:NO];
     }else {
         [self.browser dismissViewControllerAnimated:NO completion:nil];
@@ -324,7 +327,7 @@
 }
 
 - (void)browserChangeAlpha:(CGFloat)alpha {
-    UIColor *bgColor = self.browser.bgColor ?: UIColor.blackColor;
+    UIColor *bgColor = self.configure.bgColor ?: UIColor.blackColor;
     
     UIView *view = self.browser.containerView ?: self.browser.view;
     view.backgroundColor = [bgColor colorWithAlphaComponent:alpha];

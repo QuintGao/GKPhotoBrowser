@@ -33,7 +33,7 @@ static float progressRatio = 4 / 5.0;
 @synthesize liveStatusChanged;
 
 - (void)dealloc {
-    if (self.browser.isClearMemoryForLivePhoto) {
+    if (self.browser.configure.isClearMemoryForLivePhoto) {
         [self gk_clear];
     }
 }
@@ -283,7 +283,7 @@ static float progressRatio = 4 / 5.0;
         _livePhotoView = [[PHLivePhotoView alloc] init];
         _livePhotoView.delegate = self;
         _livePhotoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        if (self.browser.livePhotoMutedPlay) {
+        if (self.browser.configure.isLivePhotoMutedPlay) {
             _livePhotoView.muted = YES;
         }
     }

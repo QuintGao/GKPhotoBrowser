@@ -11,23 +11,6 @@
 #import "GKPhotoRotationHandler.h"
 #import "GKPhotoView+Image.h"
 
-#if __has_include(<GKYYWebImageManager.h>)
-#import "GKYYWebImageManager.h"
-#elif __has_include(<GKSDWebImageManager.h>)
-#import "GKSDWebImageManager.h"
-#endif
-#if __has_include(<GKAVPlayerManager.h>)
-#import "GKAVPlayerManager.h"
-#endif
-#if __has_include(<GKProgressView.h>)
-#import "GKProgressView.h"
-#endif
-
-static Class imageManagerClass = nil;
-static Class videoManagerClass = nil;
-static Class progressClass = nil;
-static Class livePhotoClass = nil;
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
@@ -40,14 +23,16 @@ static Class livePhotoClass = nil;
 @property (nonatomic, weak) UIView           *progressView;
 
 @property (nonatomic, strong) NSArray        *photos;
+
 @property (nonatomic, assign) NSInteger      currentIndex;
+
 @property (nonatomic, strong) GKPhotoView    *curPhotoView;
 
 @property (nonatomic, strong) NSMutableArray *visiblePhotoViews;
 @property (nonatomic, strong) NSMutableSet   *reusablePhotoViews;
 
 @property (nonatomic, strong) NSArray *coverViews;
-@property (nonatomic, copy) layoutBlock layoutBlock;
+@property (nonatomic, copy) void(^layoutBlock)(GKPhotoBrowser *, CGRect);
 
 // 基础处理类
 @property (nonatomic, strong) GKPhotoBrowserHandler *handler;
@@ -59,211 +44,42 @@ static Class livePhotoClass = nil;
 @property (nonatomic, strong) GKPhotoRotationHandler *rotationHandler;
 
 // 图片处理
-@property (nonatomic, strong) id<GKWebImageProtocol> imageProtocol;
+@property (nonatomic, weak) id<GKWebImageProtocol> imager;
 
 // 播放器处理
-@property (nonatomic, strong) id<GKVideoPlayerProtocol> player;
+@property (nonatomic, weak) id<GKVideoPlayerProtocol> player;
 
 // 进度条
-@property (nonatomic, strong) id<GKProgressViewProtocol> progress;
+@property (nonatomic, weak) id<GKProgressViewProtocol> progress;
 
 // livePhoto
-@property (nonatomic, strong) id<GKLivePhotoProtocol> livePhoto;
+@property (nonatomic, weak) id<GKLivePhotoProtocol> livePhoto;
 
 @end
 
 @implementation GKPhotoBrowser
 
-+ (instancetype)photoBrowserWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)currentIndex {
-    return [[self alloc] initWithPhotos:photos currentIndex:currentIndex];
++ (instancetype)photoBrowserWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)index {
+    return [[self alloc] initWithPhotos:photos currentIndex:index];
 }
 
-- (instancetype)initWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)currentIndex {
+- (instancetype)initWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)index {
     if (self = [super init]) {
         self.photos = photos;
-        self.currentIndex = currentIndex;
-        [self initialize];
+        self.currentIndex = index;
     }
     return self;
 }
 
-- (void)initialize {
-    self.isStatusBarShow         = NO;
-    self.isHideSourceView        = YES;
-    self.statusBarStyle          = UIStatusBarStyleLightContent;
-    self.isFullWidthForLandScape = YES;
-    self.maxZoomScale            = kMaxZoomScale;
-    self.doubleZoomScale         = self.maxZoomScale;
-    self.animDuration            = kAnimationDuration;
-    self.photoViewPadding        = kPhotoViewPadding;
-    self.hidesSavedBtn           = YES;
-    self.showPlayImage           = YES;
-    self.isVideoReplay           = YES;
-    self.isVideoPausedWhenDragged = YES;
-    self.isLivePhotoPausedWhenDragged = YES;
-    self.isClearMemoryForLivePhoto = YES;
-    self.showStyle = GKPhotoBrowserShowStyleZoom;
-    self.hideStyle = GKPhotoBrowserHideStyleZoom;
-    self.loadStyle = GKPhotoBrowserLoadStyleIndeterminate;
-    self.originLoadStyle = GKPhotoBrowserLoadStyleIndeterminate;
-    self.videoLoadStyle = GKPhotoBrowserLoadStyleIndeterminate;
-    self.failStyle = GKPhotoBrowserFailStyleOnlyText;
-    self.liveLoadStyle = GKPhotoBrowserLoadStyleDeterminateSector;
-    
-    _visiblePhotoViews  = [NSMutableArray new];
-    _reusablePhotoViews = [NSMutableSet new];
-    
-    imageManagerClass = NSClassFromString(@"GKSDWebImageManager");
-    if (!imageManagerClass) {
-        imageManagerClass = NSClassFromString(@"GKYYWebImageManager");
-    }
-    if (imageManagerClass) {
-        [self setupWebImageProtocol:[imageManagerClass new]];
-    }
-    videoManagerClass = NSClassFromString(@"GKAVPlayerManager");
-    if (videoManagerClass) {
-        [self setupVideoPlayerProtocol:[videoManagerClass new]];
-    }
-    progressClass = NSClassFromString(@"GKProgressView");
-    if (progressClass) {
-        [self setupVideoProgressProtocol:[progressClass new]];
-    }
-    livePhotoClass = NSClassFromString(@"GKAFLivePhotoManager");
-    if (livePhotoClass) {
-        [self setupLivePhotoProtocol:[livePhotoClass new]];
-    }
-}
-
-- (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol {
-    protocol.browser = self;
-    self.imageProtocol = protocol;
-}
-
-- (void)setupVideoPlayerProtocol:(id<GKVideoPlayerProtocol>)protocol {
-    protocol.browser = self;
-    self.player = protocol;
-    
-    __weak __typeof(self) weakSelf = self;
-    self.player.playerStatusChange = ^(id<GKVideoPlayerProtocol> _Nonnull mgr, GKVideoPlayerStatus status) {
-        __strong __typeof(weakSelf) self = weakSelf;
-        if (!self || !self.player) return;
-        if (!self.curPhotoView.photo.isVideo) return;
-        if (![self.curPhoto.videoUrl isEqual:mgr.assetURL]) return;
-        switch (status) {
-            case GKVideoPlayerStatusPrepared: {
-                [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionAllowBluetooth error:nil];
-                [[AVAudioSession sharedInstance] setActive:YES error:nil];
-            }
-            case GKVideoPlayerStatusBuffering: {
-                [self.curPhotoView showLoading];
-            } break;
-            case GKVideoPlayerStatusPlaying: {
-                [self.curPhotoView hideLoading];
-            } break;
-            case GKVideoPlayerStatusEnded: {
-                if (self.isVideoReplay) {
-                    [self.player gk_replay];
-                } else {
-                    [self.curPhotoView showPlayBtn];
-                }
-            } break;
-            case GKVideoPlayerStatusFailed: {
-                [self.curPhotoView showFailure:self.player.error];
-                self.progressView.hidden = YES;
-            } break;
-            default: break;
-        }
-        
-        if ([self.progress respondsToSelector:@selector(updatePlayStatus:)]) {
-            [self.progress updatePlayStatus:status];
-        }
-        
-        __block GKPhotoView *photoView = nil;
-        
-        [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj.photo.videoUrl isEqual:mgr.assetURL]) {
-                photoView = obj;
-                *stop = YES;
-            }
-        }];
-        if (photoView && [self.delegate respondsToSelector:@selector(photoBrowser:videoStateChangeWithPhotoView:status:)]) {
-            [self.delegate photoBrowser:self videoStateChangeWithPhotoView:photoView status:status];
-        }
-    };
-    
-    self.player.playerPlayTimeChange = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, NSTimeInterval currentTime, NSTimeInterval totalTime) {
-        __strong __typeof(weakSelf) self = weakSelf;
-        if (!self || !self.player) return;
-        
-        if ([self.progress respondsToSelector:@selector(updateCurrentTime:totalTime:)]) {
-            [self.progress updateCurrentTime:currentTime totalTime:totalTime];
-        }
-        
-        __block GKPhotoView *photoView = nil;
-        
-        [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj.photo.videoUrl isEqual:mgr.assetURL]) {
-                photoView = obj;
-                *stop = YES;
-            }
-        }];
-        
-        if (photoView && [self.delegate respondsToSelector:@selector(photoBrowser:videoTimeChangeWithPhotoView:currentTime:totalTime:)]) {
-            [self.delegate photoBrowser:self videoTimeChangeWithPhotoView:photoView currentTime:currentTime totalTime:totalTime];
-        }
-    };
-    
-    self.player.playerGetVideoSize = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, CGSize size) {
-        __strong __typeof(weakSelf) self = weakSelf;
-        if (!self || !self.player) return;
-        [self.photos enumerateObjectsUsingBlock:^(GKPhoto *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj.videoUrl isEqual:mgr.assetURL]) {
-                obj.videoSize = size;
-                *stop = YES;
-            }
-        }];
-        if ([self.curPhoto.videoUrl isEqual:mgr.assetURL]) {
-            [self.curPhotoView adjustFrame];
-        }
-    };
-}
-
-- (void)setupLivePhotoProtocol:(id<GKLivePhotoProtocol>)protocol {
-    protocol.browser = self;
-    self.livePhoto = protocol;
-    __weak __typeof(self) weakSelf = self;
-    self.livePhoto.liveStatusChanged = ^(id<GKLivePhotoProtocol> mgr, GKLivePlayStatus status) {
-        __strong __typeof(weakSelf) self = weakSelf;
-        if (!self.isShowLivePhotoMark) return;
-        if (status == GKLivePlayStatusBegin) {
-            self.curPhotoView.liveMarkView.hidden = YES;
-        }else {
-            self.curPhotoView.liveMarkView.hidden = NO;
-        }
-    };
-}
-
-- (void)setupVideoProgressProtocol:(id<GKProgressViewProtocol>)protocol {
-    protocol.browser = self;
-    self.progress = protocol;
-    self.progressView = protocol.progressView;
-    self.progressView.hidden = YES;
-}
-
-- (instancetype)init {
-    NSAssert(NO, @"Use initWithPhotos:currentIndex: instead.");
-    return nil;
-}
-
 - (void)dealloc {
-    [self.rotationHandler delDeviceOrientationObserver];
+    [self.rotationHandler removeDeviceOrientationObserver];
 }
 
 - (void)loadView {
     if (self.handler.captureImage) {
         self.view = [[UIImageView alloc] initWithImage:self.handler.captureImage];
     }else {
-        self.view = [[UIView alloc] initWithFrame:GKPhotoBrowserConfigure.getKeyWindow.bounds];
+        self.view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
     }
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view.userInteractionEnabled = YES;
@@ -272,12 +88,16 @@ static Class livePhotoClass = nil;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // 设置UI
-    [self setupUI];
+    [self initValue];
+    [self initUI];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    if (!self.navigationController.navigationBarHidden) {
+        [self.navigationController setNavigationBarHidden:YES];
+    }
     
     if (self.handler.isAppeared) return;
     self.handler.isAppeared = YES;
@@ -286,7 +106,7 @@ static Class livePhotoClass = nil;
     GKPhotoView *photoView  = [self currentPhotoView];
     self.curPhotoView = photoView;
     
-    if ([_imageProtocol imageFromMemoryForURL:photo.url] || photo.image) {
+    if ([self.imager imageFromMemoryForURL:photo.url] || photo.image) {
         [photoView setupPhoto:photo];
     }else {
         photoView.imageView.image = photo.placeholderImage ? photo.placeholderImage : photo.sourceImageView.image;
@@ -310,43 +130,42 @@ static Class livePhotoClass = nil;
         [self.delegate photoBrowser:self didDisappearAtIndex:self.currentIndex];
     }
     
-    if (self.isClearMemoryWhenDisappear) {
-        if ([self.imageProtocol respondsToSelector:@selector(clearMemory)]) {
-            [self.imageProtocol clearMemory];
+    if (self.configure.isClearMemoryWhenDisappear) {
+        if ([self.imager respondsToSelector:@selector(clearMemory)]) {
+            [self.imager clearMemory];
         }
     }
-    // 手动释放，防止某些情况下释放不了
-    self.imageProtocol = nil;
-    [self.player gk_stop];
-    self.player = nil;
-    [self.livePhoto gk_stop];
-    self.livePhoto = nil;
-    self.progress = nil;
+    
+    [self.configure destory];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     
-    if ([self.imageProtocol respondsToSelector:@selector(clearMemory)]) {
-        [self.imageProtocol clearMemory];
+    if ([self.imager respondsToSelector:@selector(clearMemory)]) {
+        [self.imager clearMemory];
     }
 }
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    if ([GKPhotoBrowserConfigure isMac]) {
+    if ([UIDevice isMac]) {
         self.contentView.frame = self.view.bounds;
         [self layoutSubviews];
     }
 }
 
-- (void)setupUI {
-    if (!self.navigationController.navigationBarHidden) {
-        [self.navigationController setNavigationBarHidden:YES];
-    }
-    
-    if (self.showStyle == GKPhotoBrowserShowStylePush) {
+- (void)initValue {
+    self.isStatusBarShow = NO;
+    self.statusBarStyle = UIStatusBarStyleLightContent;
+    self.visiblePhotoViews = [NSMutableArray array];
+    self.reusablePhotoViews = [NSMutableSet set];
+    [self loadConfigure];
+}
+
+- (void)initUI {
+    if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
         _containerView = [[UIView alloc] initWithFrame:self.view.bounds];
         [self.view addSubview:_containerView];
     }
@@ -375,8 +194,11 @@ static Class livePhotoClass = nil;
 - (void)addGestureAndObserver {
     [self.gestureHandler addGestureRecognizer];
     
-    if (self.isFollowSystemRotation) return;
-    if (!self.isScreenRotateDisabled) {
+    if (self.configure.isFollowSystemRotation) return;
+    
+    if (self.configure.isScreenRotateDisabled) {
+        [self.rotationHandler removeDeviceOrientationObserver];
+    }else {
         [self.rotationHandler addDeviceOrientationObserver];
     }
 }
@@ -408,24 +230,6 @@ static Class livePhotoClass = nil;
     }
 }
 
-- (void)setIsScreenRotateDisabled:(BOOL)isScreenRotateDisabled {
-    _isScreenRotateDisabled = isScreenRotateDisabled;
-    
-    if (isScreenRotateDisabled) {
-        [self.rotationHandler delDeviceOrientationObserver];
-    }else {
-        [self.rotationHandler addDeviceOrientationObserver];
-    }
-}
-
-- (void)setDoubleZoomScale:(CGFloat)doubleZoomScale {
-    if (doubleZoomScale > self.maxZoomScale) {
-        _doubleZoomScale = self.maxZoomScale;
-    }else {
-        _doubleZoomScale = doubleZoomScale;
-    }
-}
-
 #pragma mark - Getter
 - (BOOL)isLandscape {
     return self.rotationHandler.isLandscape;
@@ -446,11 +250,11 @@ static Class livePhotoClass = nil;
 
 #pragma mark - 屏幕旋转
 - (BOOL)shouldAutorotate {
-    return self.isFollowSystemRotation ? YES : NO;
+    return self.configure.isFollowSystemRotation ? YES : NO;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return self.isFollowSystemRotation ? UIInterfaceOrientationMaskAll : UIInterfaceOrientationMaskPortrait;
+    return self.configure.isFollowSystemRotation ? UIInterfaceOrientationMaskAll : UIInterfaceOrientationMaskPortrait;
 }
 
 #pragma mark - 状态栏
@@ -467,7 +271,7 @@ static Class livePhotoClass = nil;
 }
 
 #pragma mark - Public Methods
-- (void)setupCoverViews:(NSArray *)coverViews layoutBlock:(layoutBlock)layoutBlock {
+- (void)setupCoverViews:(NSArray *)coverViews layoutBlock:(void (^ _Nullable)(GKPhotoBrowser * _Nonnull, CGRect))layoutBlock {
     self.coverViews  = coverViews;
     self.layoutBlock = layoutBlock;
 }
@@ -515,8 +319,9 @@ static Class livePhotoClass = nil;
     self.photos = photos;
     
     [self.visiblePhotoViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [self.reusablePhotoViews removeAllObjects];
+    [self.reusablePhotoViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self.visiblePhotoViews removeAllObjects];
+    [self.reusablePhotoViews removeAllObjects];
     
     [self updateReusableViews];
     [self setupPhotoViews];
@@ -539,6 +344,134 @@ static Class livePhotoClass = nil;
 
 - (void)loadCurrentPhotoImage {
     [self.curPhotoView loadOriginImage];
+}
+
+#pragma mark - configure
+- (void)loadConfigure {
+    GKPhotoBrowserConfigure *configure = self.configure;
+    [self setupWebImageProtocol:configure.imager];
+    [self setupVideoPlayerProtocol:configure.player];
+    [self setupVideoProgressProtocol:configure.progress];
+    [self setupLivePhotoProtocol:configure.livePhoto];
+}
+
+- (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol {
+    if (!protocol) return;
+    self.imager = protocol;
+}
+
+- (void)setupVideoPlayerProtocol:(id<GKVideoPlayerProtocol>)protocol {
+    if (!protocol) return;
+    protocol.browser = self;
+    self.player = protocol;
+    
+    __weak __typeof(self) weakSelf = self;
+    protocol.playerStatusChange = ^(id<GKVideoPlayerProtocol> _Nonnull mgr, GKVideoPlayerStatus status) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        if (!self || !self.player) return;
+        if (!self.curPhotoView.photo.isVideo) return;
+        if (![self.curPhoto.videoUrl isEqual:mgr.assetURL]) return;
+        switch (status) {
+            case GKVideoPlayerStatusPrepared: {
+                [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionAllowBluetooth error:nil];
+                [[AVAudioSession sharedInstance] setActive:YES error:nil];
+            }
+            case GKVideoPlayerStatusBuffering: {
+                [self.curPhotoView showLoading];
+            } break;
+            case GKVideoPlayerStatusPlaying: {
+                [self.curPhotoView hideLoading];
+            } break;
+            case GKVideoPlayerStatusEnded: {
+                if (self.configure.isVideoReplay) {
+                    [self.player gk_replay];
+                } else {
+                    [self.curPhotoView showPlayBtn];
+                }
+            } break;
+            case GKVideoPlayerStatusFailed: {
+                [self.curPhotoView showFailure:self.player.error];
+                self.progressView.hidden = YES;
+            } break;
+            default: break;
+        }
+        
+        if ([self.progress respondsToSelector:@selector(updatePlayStatus:)]) {
+            [self.progress updatePlayStatus:status];
+        }
+        
+        __block GKPhotoView *photoView = nil;
+        
+        [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.photo.videoUrl isEqual:mgr.assetURL]) {
+                photoView = obj;
+                *stop = YES;
+            }
+        }];
+        if (photoView && [self.delegate respondsToSelector:@selector(photoBrowser:videoStateChangeWithPhotoView:status:)]) {
+            [self.delegate photoBrowser:self videoStateChangeWithPhotoView:photoView status:status];
+        }
+    };
+    
+    protocol.playerPlayTimeChange = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, NSTimeInterval currentTime, NSTimeInterval totalTime) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        if (!self || !self.player) return;
+        
+        if ([self.progress respondsToSelector:@selector(updateCurrentTime:totalTime:)]) {
+            [self.progress updateCurrentTime:currentTime totalTime:totalTime];
+        }
+        
+        __block GKPhotoView *photoView = nil;
+        
+        [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.photo.videoUrl isEqual:mgr.assetURL]) {
+                photoView = obj;
+                *stop = YES;
+            }
+        }];
+        
+        if (photoView && [self.delegate respondsToSelector:@selector(photoBrowser:videoTimeChangeWithPhotoView:currentTime:totalTime:)]) {
+            [self.delegate photoBrowser:self videoTimeChangeWithPhotoView:photoView currentTime:currentTime totalTime:totalTime];
+        }
+    };
+    
+    protocol.playerGetVideoSize = ^(id<GKVideoPlayerProtocol>  _Nonnull mgr, CGSize size) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        if (!self || !self.player) return;
+        [self.photos enumerateObjectsUsingBlock:^(GKPhoto *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.videoUrl isEqual:mgr.assetURL]) {
+                obj.videoSize = size;
+                *stop = YES;
+            }
+        }];
+        if ([self.curPhoto.videoUrl isEqual:mgr.assetURL]) {
+            [self.curPhotoView adjustFrame];
+        }
+    };
+}
+
+- (void)setupLivePhotoProtocol:(id<GKLivePhotoProtocol>)protocol {
+    if (!protocol) return;
+    protocol.browser = self;
+    self.livePhoto = protocol;
+    __weak __typeof(self) weakSelf = self;
+    protocol.liveStatusChanged = ^(id<GKLivePhotoProtocol> mgr, GKLivePlayStatus status) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        if (!self.configure.isShowLivePhotoMark) return;
+        if (status == GKLivePlayStatusBegin) {
+            self.curPhotoView.liveMarkView.hidden = YES;
+        }else {
+            self.curPhotoView.liveMarkView.hidden = NO;
+        }
+    };
+}
+
+- (void)setupVideoProgressProtocol:(id<GKProgressViewProtocol>)protocol {
+    if (!protocol) return;
+    protocol.browser = self;
+    self.progress = protocol;
+    self.progressView = protocol.progressView;
+    self.progressView.hidden = YES;
 }
 
 #pragma mark - Private Methods
@@ -565,27 +498,27 @@ static Class livePhotoClass = nil;
 - (void)updateCoverViews {
     GKPhoto *photo = [self currentPhoto];
     if (photo.isVideo) {
-        self.progressView.hidden = self.hidesVideoSlider;
+        self.progressView.hidden = self.configure.isHideProgressView;
         self.countLabel.hidden = YES;
         self.pageControl.hidden = YES;
         self.saveBtn.hidden = YES;
     }else {
         self.progressView.hidden = YES;
         
-        if (self.hidesCountLabel) {
+        if (self.configure.hidesCountLabel) {
             self.countLabel.hidden = YES;
         }else {
             self.countLabel.hidden = self.photos.count <= 1;
         }
         
-        if (self.hidesPageControl) {
+        if (self.configure.hidesPageControl) {
             self.pageControl.hidden = YES;
         }else {
             if (self.pageControl.hidesForSinglePage) {
                 self.pageControl.hidden = self.photos.count <= 1;
             }
         }
-        self.saveBtn.hidden = self.hidesSavedBtn;
+        self.saveBtn.hidden = self.configure.hidesSavedBtn;
     }
 }
 
@@ -612,8 +545,8 @@ static Class livePhotoClass = nil;
     if (photoView) {
         [_reusablePhotoViews removeObject:photoView];
     }else {
-        photoView = [[GKPhotoView alloc] initWithFrame:self.photoScrollView.bounds imageProtocol:_imageProtocol];
-        photoView.clipsToBounds = YES;
+        photoView = [[GKPhotoView alloc] initWithFrame:self.photoScrollView.bounds configure:self.configure];
+        photoView.scrollView.clipsToBounds = NO;
     }
     photoView.tag = -1;
     return photoView;
@@ -646,17 +579,17 @@ static Class livePhotoClass = nil;
         if (photoView == nil) {
             photoView = [self dequeueReusablePhotoView];
             photoView.delegate = self;
-            photoView.browser = self;
-            photoView.doubleZoomScale = self.doubleZoomScale;
+            photoView.doubleZoomScale = self.configure.doubleZoomScale;
             
             CGRect frame = self.photoScrollView.bounds;
+            CGFloat padding = self.configure.photoViewPadding;
             
             CGFloat photoScrollW = frame.size.width;
             CGFloat photoScrollH = frame.size.height;
             // 调整当前显示的photoView的frame
-            CGFloat w = photoScrollW - self.photoViewPadding * 2;
+            CGFloat w = photoScrollW - padding * 2;
             CGFloat h = photoScrollH;
-            CGFloat x = self.photoViewPadding + i * (self.photoViewPadding * 2 + w);
+            CGFloat x = padding + i * (padding * 2 + w);
             CGFloat y = 0;
             
             photoView.frame = CGRectMake(x, y, w, h);
@@ -716,13 +649,14 @@ static Class livePhotoClass = nil;
     [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
         if (photoView != self.curPhotoView) {
             [photoView didScrollDisappear];
+            photoView.scrollView.clipsToBounds = YES;
         }
         if (photoView == self.curPhotoView && photoView.scrollView.zoomScale > 1) {
             photoView.scrollView.clipsToBounds = NO;
         }
     }];
     
-    if (self.isResumePhotoZoom) {
+    if (self.configure.isResumePhotoZoom) {
         [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
             GKPhoto *photo = self.photos[idx];
             photo.isZooming = NO;
@@ -760,22 +694,22 @@ static Class livePhotoClass = nil;
         [self.delegate photoBrowser:self loadFailedAtIndex:index error:error];
     }
     if (photoView.photo.isVideo) {
-        NSString *failText = self.failureText ?: @"视频播放失败";
+        NSString *failText = self.configure.failureText ?: @"视频播放失败";
         if ([self.delegate respondsToSelector:@selector(photoBrowser:failedTextAtIndex:)]) {
             failText = [self.delegate photoBrowser:self failedTextAtIndex:index];
         }
-        UIImage *failImage = self.failureImage ?: GKPhotoBrowserImage(@"loading_error");
+        UIImage *failImage = self.configure.failureImage ?: GKPhotoBrowserImage(@"loading_error");
         if ([self.delegate respondsToSelector:@selector(photoBrowser:failedImageAtIndex:)]) {
             failImage = [self.delegate photoBrowser:self failedImageAtIndex:index];
         }
         photoView.videoLoadingView.failText = failText;
         photoView.videoLoadingView.failImage = failImage;
     }else {
-        NSString *failText = self.failureText ?: @"图片加载失败";
+        NSString *failText = self.configure.failureText ?: @"图片加载失败";
         if ([self.delegate respondsToSelector:@selector(photoBrowser:failedTextAtIndex:)]) {
             failText = [self.delegate photoBrowser:self failedTextAtIndex:index];
         }
-        UIImage *failImage = self.failureImage ?: GKPhotoBrowserImage(@"loading_error");
+        UIImage *failImage = self.configure.failureImage ?: GKPhotoBrowserImage(@"loading_error");
         if ([self.delegate respondsToSelector:@selector(photoBrowser:failedImageAtIndex:)]) {
             failImage = [self.delegate photoBrowser:self failedImageAtIndex:index];
         }
@@ -786,19 +720,15 @@ static Class livePhotoClass = nil;
 
 - (void)photoView:(GKPhotoView *)photoView loadProgress:(float)progress isOriginImage:(BOOL)isOriginImage {
     GKPhotoView *curPhotoView = self.curPhotoView;
-    if (curPhotoView.tag == photoView.tag) {
-        if ([self.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
-            [self.delegate photoBrowser:self loadImageAtIndex:self.currentIndex progress:progress isOriginImage:isOriginImage];
-        }
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
+        [self.delegate photoBrowser:self loadImageAtIndex:self.currentIndex progress:progress isOriginImage:isOriginImage];
     }
 }
 
 - (void)photoView:(GKPhotoView *)photoView loadStart:(BOOL)isStart success:(BOOL)success {
     GKPhotoView *curPhotoView = self.curPhotoView;
-    if (curPhotoView.tag == photoView.tag) {
-        if ([self.delegate respondsToSelector:@selector(photoBrowser:videoLoadStart:success:)]) {
-            [self.delegate photoBrowser:self videoLoadStart:isStart success:success];
-        }
+    if ([self.delegate respondsToSelector:@selector(photoBrowser:videoLoadStart:success:)]) {
+        [self.delegate photoBrowser:self videoLoadStart:isStart success:success];
     }
 }
 
@@ -849,11 +779,6 @@ static Class livePhotoClass = nil;
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.curPhotoView willScrollDisappear];
-    [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (photoView != self.curPhotoView) {
-            photoView.scrollView.clipsToBounds = YES;
-        }
-    }];
     if ([self.delegate respondsToSelector:@selector(photoBrowser:scrollViewWillBeginDragging:)]) {
         [self.delegate photoBrowser:self scrollViewWillBeginDragging:scrollView];
     }
@@ -904,11 +829,18 @@ static Class livePhotoClass = nil;
 }
 
 #pragma mark - 懒加载
+- (GKPhotoBrowserConfigure *)configure {
+    if (!_configure) {
+        _configure = GKPhotoBrowserConfigure.defaultConfig;
+    }
+    return _configure;
+}
+
 - (UIScrollView *)photoScrollView {
     if (!_photoScrollView) {
         CGRect frame = self.view.bounds;
-        frame.origin.x   -= self.photoViewPadding;
-        frame.size.width += (2 * self.photoViewPadding);
+        frame.origin.x   -= self.configure.photoViewPadding;
+        frame.size.width += (2 * self.configure.photoViewPadding);
         _photoScrollView = [[UIScrollView alloc] initWithFrame:frame];
         _photoScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _photoScrollView.pagingEnabled  = YES;
@@ -918,8 +850,8 @@ static Class livePhotoClass = nil;
         _photoScrollView.alwaysBounceHorizontal         = YES;
         _photoScrollView.backgroundColor                = [UIColor clearColor];
         _photoScrollView.clipsToBounds                  = NO;
-        if (self.showStyle == GKPhotoBrowserShowStylePush) {
-            if (self.isPopGestureEnabled) {
+        if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
+            if (self.configure.isPopGestureEnabled) {
                 _photoScrollView.gk_gestureHandleEnabled = YES;
             }
         }
@@ -1023,25 +955,27 @@ static Class livePhotoClass = nil;
 
 // 更新布局
 - (void)layoutSubviews {
+    CGFloat padding = self.configure.photoViewPadding;
+    
     CGRect frame = self.contentView.bounds;
-    frame.origin.x   -= self.photoViewPadding;
-    frame.size.width += self.photoViewPadding * 2;
+    frame.origin.x   -= padding;
+    frame.size.width += padding * 2;
     
     CGFloat photoScrollW = frame.size.width;
     CGFloat photoScrollH = frame.size.height;
-    CGFloat pointX = photoScrollW * 0.5 - self.photoViewPadding;
+    CGFloat pointX = photoScrollW * 0.5 - padding;
     
     self.photoScrollView.frame  = frame;
     self.photoScrollView.center = CGPointMake(pointX, photoScrollH * 0.5);
     
     // 调整所有显示的photoView的frame
-    CGFloat w = photoScrollW - self.photoViewPadding * 2;
+    CGFloat w = photoScrollW - padding * 2;
     CGFloat h = photoScrollH;
     __block CGFloat x = 0;
     CGFloat y = 0;
     
     [_visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
-        x = self.photoViewPadding + photoView.tag * (self.photoViewPadding * 2 + w);
+        x = padding + photoView.tag * (padding * 2 + w);
         photoView.frame = CGRectMake(x, y, w, h);
         [photoView resetFrame];
     }];
@@ -1069,7 +1003,7 @@ static Class livePhotoClass = nil;
     if (self.rotationHandler.isLandscape) {
         centerY = height - 20;
     }else {
-        centerY = height - 20 - (self.isAdaptiveSafeArea ? kSafeBottomSpace : 0);
+        centerY = height - 20 - (self.configure.isAdaptiveSafeArea ? kSafeBottomSpace : 0);
     }
     
     CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
@@ -1081,9 +1015,7 @@ static Class livePhotoClass = nil;
         [self.progress updateLayoutWithFrame:self.contentView.bounds];
     }
     
-    if (self.layoutBlock) {
-        self.layoutBlock(self, self.contentView.bounds);
-    }
+    !self.layoutBlock ?: self.layoutBlock(self, self.contentView.bounds);
 }
 
 - (void)browserFirstAppear {
@@ -1098,7 +1030,7 @@ static Class livePhotoClass = nil;
 }
 
 - (void)removeRotationObserver {
-    [self.rotationHandler delDeviceOrientationObserver];
+    [self.rotationHandler removeDeviceOrientationObserver];
 }
 
 @end

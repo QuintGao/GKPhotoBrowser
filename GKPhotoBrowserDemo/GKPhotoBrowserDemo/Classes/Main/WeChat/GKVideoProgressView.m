@@ -141,7 +141,7 @@
 - (void)sliderView:(GKSliderView *)sliderView touchEnded:(float)value {
     self.isSeeking = YES;
     __weak __typeof(self) weakSelf = self;
-    [self.browser.player gk_seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
+    [self.browser.configure.player gk_seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
         __strong __typeof(weakSelf) self = weakSelf;
         self.isSeeking = NO;
     }];

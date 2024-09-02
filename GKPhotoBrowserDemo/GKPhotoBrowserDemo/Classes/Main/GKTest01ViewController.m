@@ -101,11 +101,11 @@
     
 
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:indexPath.row];
-    browser.showStyle = GKPhotoBrowserShowStyleNone;
+    browser.configure.showStyle = GKPhotoBrowserShowStyleNone;
 //    browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate;
-    browser.failStyle = GKPhotoBrowserFailStyleOnlyImage;
+    browser.configure.failStyle = GKPhotoBrowserFailStyleOnlyImage;
     if (kIsiPad) {
-        browser.isFollowSystemRotation = YES;
+        browser.configure.isFollowSystemRotation = YES;
     }
     [browser showFromVC:self];
 }

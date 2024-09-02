@@ -81,13 +81,15 @@ extension GKSwiftViewController: UICollectionViewDataSource, UICollectionViewDel
             return photo
         }
         
+        let configure = GKPhotoBrowserConfigure.default()!
+        configure.setupWebImageProtocol(GKKFWebImageManager())
+        configure.setupVideoPlayerProtocol(GKZFPlayerManager())
+        configure.showStyle = .zoom
+        configure.hideStyle = .zoomScale
+        configure.isAdaptiveSafeArea = true;
+        
         let browser = GKPhotoBrowser(photos: photos, currentIndex: indexPath.item)
-        browser.showStyle = .zoom
-        browser.hideStyle = .zoomScale
-        // 设置网络加载类
-        browser.setupWebImageProtocol(GKKFWebImageManager())
-        // 设置视频播放类
-        browser.setupVideoPlayerProtocol(GKZFPlayerManager())
+        browser.configure = configure
         browser.show(fromVC: self)
     }
 }
@@ -108,7 +110,7 @@ class GKSwiftCollectionViewCell: UICollectionViewCell {
     
     lazy var playBtn: UIButton = {
         let btn = UIButton()
-        let img = GKPhotoBrowserConfigure.gk_image(withName: "gk_video_play")
+        let img = UIImage.gkbrowser_imageNamed("gk_video_play")
         btn.setImage(img, for: .normal)
         btn.isHidden = true
         return btn

@@ -9,12 +9,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GKPhotoBrowser;
+@class GKPhotoBrowser, GKPhotoBrowserConfigure;
 
 @interface GKPhotoBrowserHandler : NSObject
 
 // 弱引用的浏览器类
 @property (nonatomic, weak) GKPhotoBrowser *browser;
+
+// 配置
+@property (nonatomic, weak) GKPhotoBrowserConfigure *configure;
 
 // 截图
 @property (nonatomic, strong) UIImage *captureImage;

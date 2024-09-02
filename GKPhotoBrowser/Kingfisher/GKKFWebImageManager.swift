@@ -12,7 +12,7 @@ import Kingfisher
     public var browser: GKPhotoBrowser?
     
     public func imageViewClass() -> AnyClass {
-        return AnimatedImageView.self
+        AnimatedImageView.self
     }
     
     public func setImageFor(_ imageView: UIImageView?, url: URL?, placeholderImage: UIImage?, progress progressBlock: GKWebImageProgressBlock?, completion completionBlock: GKWebImageCompletionBlock? = nil) {
@@ -35,7 +35,7 @@ import Kingfisher
     }
     
     public func imageFromMemory(for url: URL?) -> UIImage? {
-        return ImageCache.default.retrieveImageInMemoryCache(forKey: url?.absoluteString ?? "")
+        ImageCache.default.retrieveImageInMemoryCache(forKey: url?.absoluteString ?? "")
     }
     
     public func image(with data: Data?) -> UIImage? {

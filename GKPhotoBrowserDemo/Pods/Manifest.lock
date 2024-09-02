@@ -36,7 +36,8 @@ PODS:
     - GKPhotoBrowser/Core
   - GKPhotoBrowser/AVPlayer (3.0.3):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.0.3)
+  - GKPhotoBrowser/Core (3.0.3):
+    - GKPhotoBrowser/Resources
   - GKPhotoBrowser/Default (3.0.3):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
@@ -48,6 +49,7 @@ PODS:
   - GKPhotoBrowser/Progress (3.0.3):
     - GKPhotoBrowser/Core
     - GKSliderView
+  - GKPhotoBrowser/Resources (3.0.3)
   - GKPhotoBrowser/SD (3.0.3):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
@@ -133,7 +135,7 @@ SPEC CHECKSUMS:
   GKLivePhotoManager: 203a3fc08563511b961c686e543d5560fa801331
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: 7719f044d94103d4b3e5d1cd11729e9be80dd8b4
+  GKPhotoBrowser: 9d6eedbf49bd7964848367a60ea3ea8ab74cd25f
   GKSliderView: 94fab41465f2ba543200f04bee401020beab4041
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201

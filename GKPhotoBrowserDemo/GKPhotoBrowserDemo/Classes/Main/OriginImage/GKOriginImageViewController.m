@@ -104,14 +104,13 @@
     }];
     
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:indexPath.item];
-    browser.showStyle = GKPhotoBrowserShowStyleZoom;
-    browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
-//    browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminate;
-    browser.loadStyle = GKPhotoBrowserLoadStyleCustom;
-    browser.originLoadStyle = GKPhotoBrowserLoadStyleCustom;
     browser.delegate = self;
+    browser.configure.showStyle = GKPhotoBrowserShowStyleZoom;
+    browser.configure.hideStyle = GKPhotoBrowserHideStyleZoomScale;
+    browser.configure.loadStyle = GKPhotoBrowserLoadStyleCustom;
+    browser.configure.originLoadStyle = GKPhotoBrowserLoadStyleCustom;
     if (kIsiPad) {
-        browser.isFollowSystemRotation = YES;
+        browser.configure.isFollowSystemRotation = YES;
     }
     self.browser = browser;
     
@@ -145,7 +144,7 @@
 - (void)photoBrowser:(GKPhotoBrowser *)browser loadImageAtIndex:(NSInteger)index progress:(float)progress isOriginImage:(BOOL)isOriginImage {
     
     if (!isOriginImage && progress == 1.0f && !browser.curPhotoView.photo.originFinished) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kAnimationDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [browser loadCurrentPhotoImage];
         });
     }

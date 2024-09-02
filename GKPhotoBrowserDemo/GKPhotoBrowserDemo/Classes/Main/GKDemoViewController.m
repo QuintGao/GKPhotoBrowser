@@ -12,11 +12,12 @@
 #import "GKDemoWebViewController.h"
 #import "GKDemoPhotoViewController.h"
 #import "GKDemoLocalViewController.h"
+#import "GKMessageTool.h"
 
 @interface GKDemoViewController ()
 
-// 必须弱引用
-@property (nonatomic, weak) GKPhotoBrowser *browser;
+// 配置
+@property (nonatomic, strong) GKPhotoBrowserConfigure *configure;
 
 // 显示方式
 @property (nonatomic, assign) GKPhotoBrowserShowStyle showStyle;
@@ -75,6 +76,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.configure = GKPhotoBrowserConfigure.defaultConfig;
     
     [self initUI];
     
@@ -228,69 +231,67 @@
 #pragma mark - Action
 - (void)controlAction:(UISegmentedControl *)control {
     if (control == self.showControl) {
-        self.showStyle = (GKPhotoBrowserShowStyle)control.selectedSegmentIndex;
+        self.configure.showStyle = (GKPhotoBrowserShowStyle)control.selectedSegmentIndex;
     }else if (control == self.hideControl) {
-        self.hideStyle = (GKPhotoBrowserHideStyle)control.selectedSegmentIndex;
+        self.configure.hideStyle = (GKPhotoBrowserHideStyle)control.selectedSegmentIndex;
     }else if (control == self.loadControl){
-        self.loadStyle = (GKPhotoBrowserLoadStyle)control.selectedSegmentIndex;
+        self.configure.loadStyle = (GKPhotoBrowserLoadStyle)control.selectedSegmentIndex;
     }else if (control == self.failControl) {
-        self.failStyle = (GKPhotoBrowserFailStyle)control.selectedSegmentIndex;
+        self.configure.failStyle = (GKPhotoBrowserFailStyle)control.selectedSegmentIndex;
     }else if (control == self.imgLoadControl) {
-        self.imgLoadStyle = control.selectedSegmentIndex;
+        if (control.selectedSegmentIndex == 0) {
+            [self.configure setupWebImageProtocol:[GKSDWebImageManager new]];
+        }else if (control.selectedSegmentIndex == 1) {
+            [self.configure setupWebImageProtocol:[GKYYWebImageManager new]];
+        }else if (control.selectedSegmentIndex == 2) {
+            [self.configure setupWebImageProtocol:[GKKFWebImageManager new]];
+        }
     }else if (control == self.videoLoadControl) {
         if (control.selectedSegmentIndex == 2) {
-            self.videoLoadStyle = GKPhotoBrowserLoadStyleCustom;
+            self.configure.videoLoadStyle = GKPhotoBrowserLoadStyleCustom;
         }else {
-            self.videoLoadStyle = (GKPhotoBrowserLoadStyle)control.selectedSegmentIndex;            
+            self.configure.videoLoadStyle = (GKPhotoBrowserLoadStyle)control.selectedSegmentIndex;
         }
     }else if (control == self.videoFailControl) {
-        self.videoFailStyle = (GKPhotoBrowserFailStyle)control.selectedSegmentIndex;
+        self.configure.videoFailStyle = (GKPhotoBrowserFailStyle)control.selectedSegmentIndex;
     }else if (control == self.videoPlayControl) {
-        self.videoPlayStyle = control.selectedSegmentIndex;
+        if (control.selectedSegmentIndex == 0) {
+            [self.configure setupVideoPlayerProtocol:[GKAVPlayerManager new]];
+        }else if (control.selectedSegmentIndex == 1) {
+            [self.configure setupVideoPlayerProtocol:[GKZFPlayerManager new]];
+        }else if (control.selectedSegmentIndex == 2) {
+            Class cls = NSClassFromString(@"GKIJKPlayerManager");
+            if (!cls) {
+                [GKMessageTool showText:@"请先 pod 'GKPhotoBrowser/IJKPlayer'"];
+                self.videoPlayControl.selectedSegmentIndex = 0;
+                return;
+            }
+            [self.configure setupVideoPlayerProtocol:[cls new]];
+        }
     }else if (control == self.livePhotoControl) {
-        self.livePhotoStyle = control.selectedSegmentIndex;
+        if (control.selectedSegmentIndex == 0) {
+            [self.configure setupLivePhotoProtocol:[GKAFLivePhotoManager new]];
+        }else if (control.selectedSegmentIndex == 1) {
+            [self.configure setupLivePhotoProtocol:[GKAlamofireLivePhotoManager new]];
+        }
     }
 }
 
 - (void)webBtnClick:(id)sender {
     GKDemoWebViewController *webVC = [[GKDemoWebViewController alloc] init];
-    webVC.showStyle = self.showStyle;
-    webVC.hideStyle = self.hideStyle;
-    webVC.loadStyle = self.loadStyle;
-    webVC.failStyle = self.failStyle;
-    webVC.imageLoadStyle = self.imgLoadStyle;
-    webVC.videoLoadStyle = self.videoLoadStyle;
-    webVC.videoFailStyle = self.videoFailStyle;
-    webVC.videoPlayStyle = self.videoPlayStyle;
-    webVC.livePhotoStyle = self.livePhotoStyle;
+    webVC.configure = self.configure;
     [self.navigationController pushViewController:webVC animated:YES];
 }
 
 - (void)photoBtnClick:(id)sender {
     GKDemoPhotoViewController *photoVC = [[GKDemoPhotoViewController alloc] init];
-    photoVC.showStyle = self.showStyle;
-    photoVC.hideStyle = self.hideStyle;
-    photoVC.loadStyle = self.loadStyle;
-    photoVC.failStyle = self.failStyle;
-    photoVC.imageLoadStyle = self.imgLoadStyle;
-    photoVC.videoLoadStyle = self.videoLoadStyle;
-    photoVC.videoFailStyle = self.videoFailStyle;
-    photoVC.videoPlayStyle = self.videoPlayStyle;
-    photoVC.livePhotoStyle = self.livePhotoStyle;
+    photoVC.configure = self.configure;
     [self.navigationController pushViewController:photoVC animated:YES];
 }
 
 - (void)localBtnClick:(id)sender {
     GKDemoLocalViewController *photoVC = [[GKDemoLocalViewController alloc] init];
-    photoVC.showStyle = self.showStyle;
-    photoVC.hideStyle = self.hideStyle;
-    photoVC.loadStyle = self.loadStyle;
-    photoVC.failStyle = self.failStyle;
-    photoVC.imageLoadStyle = self.imgLoadStyle;
-    photoVC.videoLoadStyle = self.videoLoadStyle;
-    photoVC.videoFailStyle = self.videoFailStyle;
-    photoVC.videoPlayStyle = self.videoPlayStyle;
-    photoVC.livePhotoStyle = self.livePhotoStyle;
+    photoVC.configure = self.configure;
     [self.navigationController pushViewController:photoVC animated:YES];
 }
 

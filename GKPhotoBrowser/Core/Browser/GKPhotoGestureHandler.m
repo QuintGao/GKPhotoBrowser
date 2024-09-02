@@ -7,6 +7,7 @@
 
 #import "GKPhotoGestureHandler.h"
 #import "GKPhotoBrowser.h"
+#import "GKPhotoBrowserConfigure.h"
 
 int const static kDirectionPanThreshold = 5;
 
@@ -31,17 +32,9 @@ int const static kDirectionPanThreshold = 5;
     _moveY += prevPoint.y - nowPoint.y;
     if (!self.isDrag) {
         if (abs(_moveX) > kDirectionPanThreshold) {
-            if (_direction == GKPanGestureRecognizerDirectionVertical) {
-                self.state = UIGestureRecognizerStateFailed;
-            }else {
-                _isDrag = YES;
-            }
+            self.state = UIGestureRecognizerStateFailed;
         }else if (abs(_moveY) > kDirectionPanThreshold) {
-            if (_direction == GKPanGestureRecognizerDirectionHorizontal) {
-                self.state = UIGestureRecognizerStateFailed;
-            }else {
-                _isDrag = YES;
-            }
+            _isDrag = YES;
         }
     }
 }
@@ -91,7 +84,6 @@ int const static kDirectionPanThreshold = 5;
     
     // 拖拽手势
     GKPanGestureRecognizer *panGesture = [[GKPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-    panGesture.direction = GKPanGestureRecognizerDirectionVertical;
     self.panGesture = panGesture;
 }
 
@@ -101,7 +93,7 @@ int const static kDirectionPanThreshold = 5;
     [self.browser.photoScrollView addGestureRecognizer:self.singleTapGesture];
     
     // 双击手势
-    if (!self.browser.isDoubleTapDisabled) {
+    if (!self.configure.isDoubleTapDisabled) {
         [self.singleTapGesture requireGestureRecognizerToFail:self.doubleTapGesture];
         [self.browser.photoScrollView addGestureRecognizer:self.doubleTapGesture];
     }
@@ -114,7 +106,7 @@ int const static kDirectionPanThreshold = 5;
 }
 
 - (void)addPanGesture:(BOOL)isFirst {
-    if (isFirst || self.browser.isScreenRotateDisabled) { // 第一次进入或禁止处理屏幕旋转，直接添加手势
+    if (isFirst || self.configure.isScreenRotateDisabled) { // 第一次进入或禁止处理屏幕旋转，直接添加手势
         [self addPanGesture];
     }else {
         if (self.browser.currentOrientation == UIDeviceOrientationPortrait) { // 竖屏
@@ -150,7 +142,7 @@ int const static kDirectionPanThreshold = 5;
     }
     
     // 禁止默认单击事件
-    if (self.browser.isSingleTapDisabled) return;
+    if (self.configure.isSingleTapDisabled) return;
     self.isClickDismiss = YES;
     [self browserDismiss];
 }
@@ -160,7 +152,7 @@ int const static kDirectionPanThreshold = 5;
         [self.browser.delegate photoBrowser:self.browser doubleTapWithIndex:self.browser.currentIndex];
     }
     // 禁止双击放大
-    if (self.browser.isDoubleTapZoomDisabled) return;
+    if (self.configure.isDoubleTapZoomDisabled) return;
 
     GKPhotoView *photoView = self.browser.curPhotoView;
     if (!photoView) return;
@@ -168,7 +160,7 @@ int const static kDirectionPanThreshold = 5;
     if (!photo.finished) return;
     
     // 设置双击放大倍数
-    [photoView setScrollMaxZoomScale:self.browser.doubleZoomScale];
+    [photoView setScrollMaxZoomScale:self.configure.doubleZoomScale];
     
     photoView.scrollView.clipsToBounds = NO;
     if (photoView.scrollView.zoomScale > 1.0) {
@@ -183,7 +175,7 @@ int const static kDirectionPanThreshold = 5;
         CGRect zoomRect  = [self frameWithWidth:wh height:wh center:location];
         [photoView zoomToRect:zoomRect animated:YES];
         
-        photo.zoomScale = self.browser.doubleZoomScale;
+        photo.zoomScale = self.configure.doubleZoomScale;
         photo.isZooming = YES;
         photo.zoomRect  = zoomRect;
         
@@ -206,14 +198,13 @@ int const static kDirectionPanThreshold = 5;
     if (!photoView) return;
     if (photoView.scrollView.zoomScale > 1.0f) return;
     
-    switch (self.browser.hideStyle) {
+    switch (self.configure.hideStyle) {
         case GKPhotoBrowserHideStyleZoomScale:
             [self handlePanZoomScale:panGesture];
             break;
         case GKPhotoBrowserHideStyleZoomSlide:
             [self handlePanZoomSlide:panGesture];
             break;
-            
         default:
             break;
     }
@@ -318,7 +309,7 @@ int const static kDirectionPanThreshold = 5;
     photoView.imageView.clipsToBounds = YES;
     photoView.clipsToBounds = NO;
     GKPhoto *photo = photoView.photo;
-    if (self.browser.isHideSourceView) {
+    if (self.configure.isHideSourceView) {
         photo.sourceImageView.alpha = 0;
     }
     
@@ -344,8 +335,8 @@ int const static kDirectionPanThreshold = 5;
     GKPhoto *photo = photoView.photo;
     photo.sourceImageView.alpha = 1.0;
     
-    [UIView animateWithDuration:self.browser.animDuration animations:^{
-        if (self.browser.hideStyle == GKPhotoBrowserHideStyleZoomScale) {
+    [UIView animateWithDuration:self.configure.animDuration animations:^{
+        if (self.configure.hideStyle == GKPhotoBrowserHideStyleZoomScale) {
             photoView.center = self.photoViewCenter;
         }
         photoView.transform = CGAffineTransformIdentity;

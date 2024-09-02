@@ -13,23 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GKDemoPhotoViewController : GKBaseViewController
 
-@property (nonatomic, assign) GKPhotoBrowserShowStyle showStyle;
-
-@property (nonatomic, assign) GKPhotoBrowserHideStyle hideStyle;
-
-@property (nonatomic, assign) GKPhotoBrowserLoadStyle loadStyle;
-
-@property (nonatomic, assign) GKPhotoBrowserFailStyle failStyle;
-
-@property (nonatomic, assign) NSInteger imageLoadStyle;
-
-@property (nonatomic, assign) GKPhotoBrowserLoadStyle videoLoadStyle;
-
-@property (nonatomic, assign) GKPhotoBrowserFailStyle videoFailStyle;
-
-@property (nonatomic, assign) NSInteger videoPlayStyle;
-
-@property (nonatomic, assign) NSInteger livePhotoStyle;
+@property (nonatomic, strong) GKPhotoBrowserConfigure *configure;
 
 @end
 

@@ -6,7 +6,7 @@
 //  Copyright © 2017年 QuintGao. All rights reserved.
 //
 
-#import "GKPhotoBrowserConfigure.h"
+#import <UIKit/UIKit.h>
 
 typedef void (^GKWebImageProgressBlock)(NSInteger receivedSize, NSInteger expectedSize);
 

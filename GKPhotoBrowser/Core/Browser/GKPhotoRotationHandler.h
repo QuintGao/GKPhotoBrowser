@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UIDeviceOrientation currentOrientation;
 
 - (void)addDeviceOrientationObserver;
-- (void)delDeviceOrientationObserver;
+- (void)removeDeviceOrientationObserver;
 - (void)deviceOrientationDidChange;
 
 - (void)handleSystemRotationToSize:(CGSize)size;

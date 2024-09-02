@@ -11,13 +11,11 @@
 @implementation GKPhotoView (Video)
 
 - (void)videoPlay {
-    if (!self.photo.isVideo) return;
     self.photo.isVideoClicked = YES;
     [self didScrollAppear];
 }
 
 - (void)videoPause {
-    if (!self.photo.isVideo) return;
     if (!self.player) return;
     self.photo.isVideoClicked = NO;
     self.playBtn.hidden = NO;
@@ -25,7 +23,6 @@
 }
 
 - (void)showVideoLoading {
-    if (!self.photo.isVideo) return;
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
@@ -35,7 +32,6 @@
 }
 
 - (void)hideVideoLoading {
-    if (!self.photo.isVideo) return;
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
@@ -43,7 +39,6 @@
 }
 
 - (void)showVideoFailure:(NSError *)error {
-    if (!self.photo.isVideo) return;
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
@@ -52,16 +47,14 @@
 }
 
 - (void)showVideoPlayBtn {
-    if (!self.photo.isVideo) return;
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
-    if (!self.browser.showPlayImage) return;
+    if (!self.configure.isShowPlayImage) return;
     self.playBtn.hidden = NO;
 }
 
 - (void)videoDidScrollAppear {
-    if (!self.photo.isVideo) return;
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) {
         if (!self.playBtn.superview) {
             [self addSubview:self.playBtn];
@@ -97,7 +90,7 @@
         [self.player gk_play];
     }
     
-    if (!self.browser.showPlayImage) return;
+    if (!self.configure.isShowPlayImage) return;
     if (!self.playBtn.superview) {
         [self addSubview:self.playBtn];
     }
@@ -105,9 +98,8 @@
 }
 
 - (void)videoWillScrollDisappear {
-    if (!self.photo.isVideo) return;
     if (!self.player) return;
-    if (!self.browser.isVideoPausedWhenScrollBegan) return;
+    if (!self.configure.isVideoPausedWhenScrollBegan) return;
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) {
         if (self.player.isPlaying) {
             [self.player gk_pause];
@@ -118,7 +110,6 @@
 }
 
 - (void)videoDidScrollDisappear {
-    if (!self.photo.isVideo) return;
     if (!self.player) return;
     if (!self.photo.isAutoPlay) {
         if (self.photo.isVideoClicked) {
@@ -130,28 +121,26 @@
         return;
     }
     [self.player gk_pause];
-    if (!self.browser.showPlayImage) return;
+    if (!self.configure.isShowPlayImage) return;
     self.playBtn.hidden = NO;
 }
 
 - (void)videoDidDismissAppear {
-    if (!self.photo.isVideo) return;
     if (!self.player) return;
     if (self.player.status == GKVideoPlayerStatusEnded) {
         [self.player gk_replay];
     }else {
         [self.player gk_play];
     }
-    if (!self.browser.showPlayImage) return;
+    if (!self.configure.isShowPlayImage) return;
     self.playBtn.hidden = YES;
 }
 
 - (void)videoWillDismissDisappear {
-    if (!self.photo.isVideo) return;
     if (!self.player) return;
-    if (!self.browser.isVideoPausedWhenDragged) return;
+    if (!self.configure.isVideoPausedWhenDragged) return;
     if (self.player.status == GKVideoPlayerStatusEnded) {
-        if (!self.browser.showPlayImage) return;
+        if (!self.configure.isShowPlayImage) return;
         self.playBtn.hidden = YES;
     }else {
         [self.player gk_pause];
@@ -159,14 +148,12 @@
 }
 
 - (void)videoDidDismissDisappear {
-    if (!self.photo.isVideo) return;
     if (!self.player) return;
     [self.player gk_stop];
     self.player.assetURL = nil;
 }
 
 - (void)videoUpdateFrame {
-    if (!self.photo.isVideo) return;
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;
@@ -179,7 +166,7 @@
 
 - (void)loadVideo:(BOOL)isStart success:(BOOL)success {
     self.loadingView.hidden = YES;
-    if (self.browser.videoLoadStyle == GKPhotoBrowserLoadStyleCustom) {
+    if (self.configure.videoLoadStyle == GKPhotoBrowserLoadStyleCustom) {
         if ([self.delegate respondsToSelector:@selector(photoView:loadStart:success:)]) {
             [self.delegate photoView:self loadStart:isStart success:success];
         }

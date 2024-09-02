@@ -145,38 +145,25 @@
             [photos addObject:photo];
         }];
         
-        GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-        browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
-        browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
-        browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
-        browser.maxZoomScale = 20.0f;
-        browser.doubleZoomScale = 2.0f;
-        browser.isAdaptiveSafeArea = YES;
-        browser.hidesCountLabel = YES;
+        GKPhotoBrowserConfigure *configure = [GKPhotoBrowserConfigure defaultConfig];
+        configure.showStyle = GKPhotoBrowserShowStyleZoom;
+        configure.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
+        configure.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
+        configure.maxZoomScale = 20.0f;
+        configure.doubleZoomScale = 2.0f;
+        configure.isAdaptiveSafeArea = YES;
+        configure.hidesCountLabel = YES;
 //        browser.hidesPageControl = YES;
-        browser.hidesSavedBtn = YES;
-        browser.isFullWidthForLandScape = NO;
-        browser.isSingleTapDisabled = YES;
-//        browser.photoViewPadding = 0;
-//        browser.animDuration = 10;
-        // 自定义视频播放
-//        [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];
-        browser.showPlayImage = NO;
-        browser.isVideoReplay = YES;
-        browser.videoPlayImage = [UIImage imageNamed:@"ic_play3"];
-//        browser.isDoubleTapDisabled = YES;
-//        browser.isStatusBarShow = YES;
-//        browser.bgColor = UIColor.whiteColor;
-//        browser.statusBarStyle = UIStatusBarStyleDefault;
+//        configure.hidesSavedBtn = YES;
+        configure.isFullWidthForLandScape = NO;
+        configure.isSingleTapDisabled = YES;
+        configure.isShowPlayImage = NO;
+        configure.isVideoReplay = YES;
+        configure.videoPlayImage = [UIImage imageNamed:@"ic_play3"];
+        [configure setupWebImageProtocol:[GKYYWebImageManager new]];
         
-//        // 当你的APP支持屏幕旋转时此属性必须设置为YES
-//        if (kIsiPad) { // ipad 默认支持屏幕旋转，这里设置为YES
-//            browser.isFollowSystemRotation = YES;
-//        }
-//        [browser setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
-        
-//        browser.isFollowSystemRotation = YES;
-        
+        GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
+        browser.configure = configure;
         browser.delegate = self;
         [browser showFromVC:self];
         self.browser = browser;

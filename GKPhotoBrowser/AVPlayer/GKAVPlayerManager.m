@@ -59,7 +59,7 @@
     
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:self.assetURL];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
-    if (self.browser.videoMutedPlay) {
+    if (self.browser.configure.isVideoMutedPlay) {
         [self gk_setMute:YES];
     }
     

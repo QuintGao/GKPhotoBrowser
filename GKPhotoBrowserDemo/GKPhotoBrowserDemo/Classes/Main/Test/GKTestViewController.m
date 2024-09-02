@@ -17,6 +17,7 @@
 #import <AFNetworking/AFNetworking.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <GKLivePhotoManager/GKLivePhotoManager.h>
+#import "LocalImageLoadManager.h"
 
 @interface GKTestViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -73,27 +74,27 @@
 //    GKBottomView *btmView = [GKBottomView new];
 //    btmView.frame = CGRectMake(0, 100, self.view.frame.size.width, 100);
 //    [self.view addSubview:btmView];
-//    [self setupView];
+    [self setupView];
 //
-//    [self setupData];
+    [self setupData];
     
 //    self.photoView = [[PHLivePhotoView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 300)/2, 100, 300, 300)];
 //    [self.view addSubview:self.photoView];
 //    
 //    [self requestMovie];
     
-    self.view.backgroundColor = UIColor.blackColor;
-    
-    self.loadingView = [GKLoadingView loadingViewWithFrame:self.view.bounds style:GKLoadingStyleDeterminateSector];
-    self.loadingView.radius = 40;
-    self.loadingView.lineWidth = 1;
-    self.loadingView.bgColor = UIColor.whiteColor;
-    self.loadingView.strokeColor = UIColor.whiteColor;
-    [self.view addSubview:self.loadingView];
-    
-    [self.loadingView startLoading];
-    
-    [self addProgress];
+//    self.view.backgroundColor = UIColor.blackColor;
+//    
+//    self.loadingView = [GKLoadingView loadingViewWithFrame:self.view.bounds style:GKLoadingStyleDeterminateSector];
+//    self.loadingView.radius = 40;
+//    self.loadingView.lineWidth = 1;
+//    self.loadingView.bgColor = UIColor.whiteColor;
+//    self.loadingView.strokeColor = UIColor.whiteColor;
+//    [self.view addSubview:self.loadingView];
+//    
+//    [self.loadingView startLoading];
+//    
+//    [self addProgress];
 }
 
 - (void)addProgress {
@@ -336,14 +337,15 @@
 
 - (void)setupData {
     
-    self.dataSource = @[@[@"http://p1.music.126.net/9k3CAPfB9WdcMCFk4CYnKQ==/109951167793871917.jpg?imageView&quality=89",
-         @"http://p1.music.126.net/GK7JvutM88U4ZkohN71TKQ==/109951167794081491.jpg?imageView&quality=89",
-//         @"http://p1.music.126.net/QywPBMy3VK-P-wk_eYjrZw==/109951167793910298.jpg?imageView&quality=89",
-//         @"http://p1.music.126.net/c4vOjlBA5bQsmpuASPi5QQ==/109951167794545716.jpg?imageView&quality=89",
-//         @"http://p1.music.126.net/4ryVvqlvXp0Kh_fcxCWMsA==/109951166903789195.jpg?param=140y140",
-         @"http://p1.music.126.net/gZWQbChzhCbGFXtpin2MXw==/109951167592864239.jpg?param=140y140"]
-                        ];
-    
+//    self.dataSource = @[@[@"http://p1.music.126.net/9k3CAPfB9WdcMCFk4CYnKQ==/109951167793871917.jpg?imageView&quality=89",
+//         @"http://p1.music.126.net/GK7JvutM88U4ZkohN71TKQ==/109951167794081491.jpg?imageView&quality=89",
+////         @"http://p1.music.126.net/QywPBMy3VK-P-wk_eYjrZw==/109951167793910298.jpg?imageView&quality=89",
+////         @"http://p1.music.126.net/c4vOjlBA5bQsmpuASPi5QQ==/109951167794545716.jpg?imageView&quality=89",
+////         @"http://p1.music.126.net/4ryVvqlvXp0Kh_fcxCWMsA==/109951166903789195.jpg?param=140y140",
+//         @"http://p1.music.126.net/gZWQbChzhCbGFXtpin2MXw==/109951167592864239.jpg?param=140y140"]
+//                        ];
+//    self.dataSource = @[@[@"002"]];
+    self.dataSource = @[@[@"test.gif"]];
     [self.tableView reloadData];
 }
 
@@ -365,7 +367,8 @@
             if ([obj hasPrefix:@"http"]) {
                 photo.url         = [NSURL URLWithString:obj];
             }else {
-                photo.image       = [UIImage imageNamed:obj];
+//                photo.image       = [UIImage imageNamed:obj];
+                photo.url = [NSURL URLWithString:obj];
             }
             photo.sourceImageView = containerView.subviews[idx];
             [photoArrs addObject:photo];
@@ -374,10 +377,10 @@
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photoArrs currentIndex:index];
         //        browser.photos       = photoArrs;
         //        browser.currentIndex = index;
-        browser.showStyle    = GKPhotoBrowserShowStyleZoom;
-        browser.hideStyle    = GKPhotoBrowserHideStyleZoomScale;
+        browser.configure.showStyle    = GKPhotoBrowserShowStyleZoom;
+        browser.configure.hideStyle    = GKPhotoBrowserHideStyleZoomScale;
 //        browser.isFollowSystemRotation = YES;
-        browser.addNavigationController = YES;
+        browser.configure.isNeedNavigationController = YES;
         
         UIButton *btn = [[UIButton alloc] init];
         [btn setImage:[UIImage imageNamed:@"cm2_list_detail_icn_cmt"] forState:UIControlStateNormal];
@@ -392,6 +395,9 @@
             btn.frame = frame;
         }];
         
+//        [browser.configure setupWebImageProtocol:[LocalImageLoadManager new]];
+        [browser.configure setupWebImageProtocol:nil];
+        
         browser.delegate = self;
         [browser showFromVC:self];
         self.browser = browser;
@@ -405,11 +411,11 @@
 //            [self.browser resetPhotoBrowserWithPhotos:photoArrs];
 //        });
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            GKPhoto *photo = photoArrs[2];
-            photo.videoUrl = [NSURL URLWithString:@"http://vd3.bdstatic.com/mda-ph53eii3pywz9ax9/cae_h264/1691439126672883676/mda-ph53eii3pywz9ax9.mp4"];
-            [self.browser resetPhotoBrowserWithPhoto:photo index:2];
-        });
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            GKPhoto *photo = photoArrs[2];
+//            photo.videoUrl = [NSURL URLWithString:@"http://vd3.bdstatic.com/mda-ph53eii3pywz9ax9/cae_h264/1691439126672883676/mda-ph53eii3pywz9ax9.mp4"];
+//            [self.browser resetPhotoBrowserWithPhoto:photo index:2];
+//        });
     };
     
     return cell;

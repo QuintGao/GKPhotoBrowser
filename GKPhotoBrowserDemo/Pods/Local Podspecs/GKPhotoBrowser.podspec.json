@@ -38,10 +38,18 @@
     },
     {
       "name": "Core",
-      "source_files": "GKPhotoBrowser/Core",
-      "resources": "GKPhotoBrowser/GKPhotoBrowser.bundle",
+      "source_files": "GKPhotoBrowser/Core/**/*.{h,m}",
+      "dependencies": {
+        "GKPhotoBrowser/Resources": [
+
+        ]
+      }
+    },
+    {
+      "name": "Resources",
+      "resources": "GKPhotoBrowser/Resources/*.{bundle}",
       "resource_bundles": {
-        "GKPhotoBrowser.Privacy": "GKPhotoBrowser/PrivacyInfo.xcprivacy"
+        "GKPhotoBrowser.Privacy": "GKPhotoBrowser/Resources/PrivacyInfo.xcprivacy"
       }
     },
     {

@@ -7,6 +7,7 @@
 //
 
 #import "GKYYWebImageManager.h"
+#import <objc/runtime.h>
 
 #if __has_include(<YYWebImage/YYWebImage>)
 #import <YYWebImage/YYWebImage.h>
@@ -51,6 +52,35 @@
 
 - (void)clearMemory {
     [[YYImageCache sharedCache].memoryCache removeAllObjects];
+}
+
+@end
+
+@interface YYAnimatedImageView (GKPhotoBrowser)
+@end
+
+@implementation YYAnimatedImageView (GKPhotoBrowser)
+
++ (void)load {
+    
+    Method displayLayerMethod = class_getInstanceMethod(self, @selector(displayLayer:));
+   
+    Method displayLayerNewMethod = class_getInstanceMethod(self, @selector(gk_displayLayer:));
+ 
+    method_exchangeImplementations(displayLayerMethod, displayLayerNewMethod);
+}
+
+- (void)gk_displayLayer:(CALayer *)layer {
+    
+    Ivar imgIvar = class_getInstanceVariable([self class], "_curFrame");
+    UIImage *img = object_getIvar(self, imgIvar);
+    if (img) {
+        layer.contents = (__bridge id)img.CGImage;
+    } else {
+        if (@available(iOS 14.0, *)) {
+            [super displayLayer:layer];
+        }
+    }
 }
 
 @end

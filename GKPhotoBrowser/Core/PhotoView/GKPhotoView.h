@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GKPhotoManager.h"
+#import "GKPhoto.h"
 #import "GKWebImageProtocol.h"
 #import "GKVideoPlayerProtocol.h"
 #import "GKLivePhotoProtocol.h"
@@ -57,9 +57,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) GKPhoto *photo;
 
-@property (nonatomic, weak) GKPhotoBrowser *browser;
+@property (nonatomic, strong) GKPhotoBrowserConfigure *configure;
 
-@property (nonatomic, weak, readonly) id<GKWebImageProtocol> imageProtocol;
+@property (nonatomic, weak) id<GKWebImageProtocol> imager;
 
 @property (nonatomic, weak) id<GKVideoPlayerProtocol> player;
 
@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) CGFloat realZoomScale;
 
-- (instancetype)initWithFrame:(CGRect)frame imageProtocol:(id<GKWebImageProtocol>)imageProtocol;
+- (instancetype)initWithFrame:(CGRect)frame configure:(GKPhotoBrowserConfigure *)configure;
 
 // 准备复用
 - (void)prepareForReuse;

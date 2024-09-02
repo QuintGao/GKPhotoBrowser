@@ -7,6 +7,7 @@
 
 #import "GKPhotoRotationHandler.h"
 #import "GKPhotoBrowser.h"
+#import "GKPhotoBrowserConfigure.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -31,7 +32,7 @@
 }
 
 - (void)addDeviceOrientationObserver {
-    if (self.browser.isFollowSystemRotation) return;
+    if (self.configure.isFollowSystemRotation) return;
     // 默认设备方向：竖屏
     self.originalOrientation = UIDeviceOrientationPortrait;
     self.currentOrientation = UIDeviceOrientationPortrait;
@@ -48,8 +49,8 @@
     }
 }
 
-- (void)delDeviceOrientationObserver {
-    if (self.browser.isFollowSystemRotation) return;
+- (void)removeDeviceOrientationObserver {
+    if (self.configure.isFollowSystemRotation) return;
     
     if (self.isOrientationNotificationAdded) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -64,8 +65,8 @@
 }
 
 - (void)deviceOrientationDidChange {
-    if (self.browser.isFollowSystemRotation) return;
-    if (self.browser.isScreenRotateDisabled) return;
+    if (self.configure.isFollowSystemRotation) return;
+    if (self.configure.isScreenRotateDisabled) return;
     
     // 旋转之后当前的设备方向
     UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
@@ -117,7 +118,7 @@
             [self.delegate willRotation:YES];
         }
         
-        NSTimeInterval duration = UIDeviceOrientationIsLandscape(self.originalOrientation) ? 2 * self.browser.animDuration : self.browser.animDuration;
+        NSTimeInterval duration = UIDeviceOrientationIsLandscape(self.originalOrientation) ? 2 * self.configure.animDuration : self.configure.animDuration;
         
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
@@ -131,13 +132,9 @@
             self.browser.contentView.transform = CGAffineTransformMakeRotation(M_PI * rotation);
             
             CGFloat width = MAX(screenBounds.size.width, screenBounds.size.height);
+            CGFloat height = MIN(screenBounds.size.width, screenBounds.size.height);
             // 设置frame
-            self.browser.contentView.bounds = CGRectMake(0, 0, width, MIN(screenBounds.size.width, screenBounds.size.height));
-            self.browser.contentView.center = self.browser.view.center;
-            
-            [self.browser.view setNeedsLayout];
-            [self.browser.view layoutIfNeeded];
-            [self.browser layoutSubviews];
+            [self updateBrowserWithFrame:CGRectMake(0, 0, width, height)];
         } completion:^(BOOL finished) {
             // 记录设备方向
             self.originalOrientation = currentOrientation;
@@ -156,7 +153,7 @@
             [self.delegate willRotation:NO];
         }
         
-        NSTimeInterval duration = self.browser.animDuration;
+        NSTimeInterval duration = self.configure.animDuration;
         
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             // 旋转状态栏
@@ -167,14 +164,10 @@
             // 旋转view
             self.browser.contentView.transform = currentOrientation == UIDeviceOrientationPortrait ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
             
+            CGFloat width = MIN(screenBounds.size.width, screenBounds.size.height);
             CGFloat height = MAX(screenBounds.size.width, screenBounds.size.height);
             // 设置frame
-            self.browser.contentView.bounds = CGRectMake(0, 0, MIN(screenBounds.size.width, screenBounds.size.height), height);
-            self.browser.contentView.center = self.browser.view.center;
-            
-            [self.browser.view setNeedsLayout];
-            [self.browser.view layoutIfNeeded];
-            [self.browser layoutSubviews];
+            [self updateBrowserWithFrame:CGRectMake(0, 0, width, height)];
             
         } completion:^(BOOL finished) {
             // 记录设备方向
@@ -197,21 +190,15 @@
 }
 
 - (void)handleSystemRotationToSize:(CGSize)size {
-    if (!self.browser.isFollowSystemRotation) return;
+    if (!self.configure.isFollowSystemRotation) return;
     
     self.isRotation = YES;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
             CGFloat width = size.width;
             CGFloat height = size.height;
-            self.browser.view.frame = CGRectMake(0, 0, size.width, size.height);
-            
-            self.browser.contentView.bounds = CGRectMake(0, 0, width, height);
-            self.browser.contentView.center = self.browser.view.center;
-            
-            [self.browser.view setNeedsLayout];
-            [self.browser.view layoutIfNeeded];
-            [self.browser layoutSubviews];
+            self.browser.view.frame = CGRectMake(0, 0, width, height);
+            [self updateBrowserWithFrame:CGRectMake(0, 0, width, height)];
         } completion:^(BOOL finished) {
             self.isRotation = NO;
         }];
@@ -222,6 +209,14 @@
     if ([self.browser.delegate respondsToSelector:@selector(photoBrowser:onDeciceChangedWithIndex:isLandscape:)]) {
         [self.browser.delegate photoBrowser:self.browser onDeciceChangedWithIndex:self.browser.currentIndex isLandscape:self.isLandscape];
     }
+}
+
+- (void)updateBrowserWithFrame:(CGRect)frame {
+    self.browser.contentView.bounds = frame;
+    self.browser.contentView.center = self.browser.view.center;
+    [self.browser.view setNeedsLayout];
+    [self.browser.view layoutIfNeeded];
+    [self.browser layoutSubviews];
 }
 
 @end

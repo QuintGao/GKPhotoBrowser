@@ -24,6 +24,7 @@ GKPhotoBrowser是一个可高度自定义的图片、视频浏览器，支持多
 
 ## 特性
 - 支持图片浏览、视频播放、图片视频混排等
+- 支持本地、网络、相册等资源
 - 支持iPhone、iPad
 - 支持单击、双击、长按手势，支持滑动缩放
 - 支持多种显示方式（none，zoom，push）
@@ -109,6 +110,25 @@ GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentI
 ```
 [browser showFromVC:self];
 ```
+
+4、配置
+
+方法一
+```
+browser.configure.showStyle = GKPhotoBrowserShowStyleZoom;
+
+[browser.configure setupWebImageProtocol:GKYYWebImageManager.new];
+```
+
+方法二
+```
+GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
+configure.showStyle = GKPhotoBrowserShowStyleZoom;
+[configure setupWebImageProtocol:GKYYWebImageManager.new];
+
+browser.configure = configure;
+```
+
 更多功能及属性可在demo和代码中查看
 
 ## 常见问题
@@ -121,28 +141,28 @@ GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentI
 2、使用YYWebImage(1.0.5)加载图片，请使用pod 'GKPhotoBrowser/YY'   
 3、自定义图片加载类，如：SDWebImage 5.0以下版本，请使用pod 'GKPhotoBrowser/Core'，然后添加图片加载类并实现GKWebImageProtocol协议
 
-### 3、关于本地gif图片的加载 
-1、 如果使用SDWebImage，请使用SDAnimatedImage加载本地图片  
-``` 
-photo.image = [SDAnimatedImage imageNamed:obj];
+### 3、本库支持多种自定义（图片加载、视频播放、livePhoto下载等等）
+如果想自定义图片加载，请创建类并实现GKWebImageProtocol协议，并在浏览器显示之前进行配置
 ```
+GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
+[configure setupWebImageProtocol:CustomWebManager.new];
 
-2、如果使用YYWebImage，请使用YYImage加载本地图片  
-``` 
-photo.image = [YYImage imageNamed:obj];
+browser.configure = configure;
+```
+如果想自定义视频播放，请创建类并实现GKVideoPlayerProtocol协议，并在浏览器显示之前进行配置
+```
+GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
+[configure setupWebImageProtocol:CustomPlayerManager.new];
+
+browser.configure = configure;
 ```
 
 ### 4、对于支持屏幕旋转的APP及iPad的适配
 需要设置属性isFollowSystemRotation为YES，此时isScreenRotateDisabled属性将失效
 
-### 5、关于视频的播放处理
-内部默认使用的AVPlayer播放视频，如果想要使用其他播放器可使用基础库，然后创建视频播放类并实现GKVideoPlayerProtocol协议，然后设置播放处理类
-```
-[browser setupVideoPlayerProtocol:[CustomPlayerManager class]];
-```
-
-### 6、滑动返回时显示黑屏（不出现背景渐变）
+### 5、滑动返回时显示黑屏（不出现背景渐变）
 查看其他代码中是否有分类修改了UIViewController的modalPresentationStyle，GKPhotoBrowser的默认modalPresentationStyle是UIModalPresentationCustom，如果有修改则需要屏蔽对GKPhotoBrowser的修改
+
  
  ## 效果图
  

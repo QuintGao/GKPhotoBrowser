@@ -95,11 +95,11 @@
     }];
     
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:imgView.tag];
-    browser.showStyle = GKPhotoBrowserShowStyleZoom;
-    browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
-    browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask;
-    browser.isFullWidthForLandScape = NO;
-    browser.isAdaptiveSafeArea = YES;
+    browser.configure.showStyle = GKPhotoBrowserShowStyleZoom;
+    browser.configure.hideStyle = GKPhotoBrowserHideStyleZoomScale;
+    browser.configure.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask;
+    browser.configure.isFullWidthForLandScape = NO;
+    browser.configure.isAdaptiveSafeArea = YES;
     [browser showFromVC:self];
 }
 

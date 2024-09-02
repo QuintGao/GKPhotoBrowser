@@ -52,7 +52,7 @@
         asset.view.autoresizingMask = autoresizing;
         asset.view.coverImageView.autoresizingMask = autoresizing;
         asset.view.playerView.autoresizingMask = autoresizing;
-        if (self.browser.videoMutedPlay) {
+        if (self.browser.configure.isVideoMutedPlay) {
             [self gk_setMute:YES];
         }
     };

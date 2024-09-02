@@ -97,11 +97,11 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "${PODS_ROOT}/../../GKPhotoBrowser/GKPhotoBrowser.bundle"
+  install_resource "${PODS_ROOT}/../../GKPhotoBrowser/Resources/GKPhotoBrowser.bundle"
   install_resource "${PODS_CONFIGURATION_BUILD_DIR}/GKPhotoBrowser/GKPhotoBrowser.Privacy.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "${PODS_ROOT}/../../GKPhotoBrowser/GKPhotoBrowser.bundle"
+  install_resource "${PODS_ROOT}/../../GKPhotoBrowser/Resources/GKPhotoBrowser.bundle"
   install_resource "${PODS_CONFIGURATION_BUILD_DIR}/GKPhotoBrowser/GKPhotoBrowser.Privacy.bundle"
 fi
 

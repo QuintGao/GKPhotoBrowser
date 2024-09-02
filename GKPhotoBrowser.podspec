@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GKPhotoBrowser"
-  s.version      = "3.0.3"
+  s.version      = "3.1.0"
   s.summary      = "iOS可高度自定义的图片浏览器，支持图片浏览、视频播放等多种功能"
   s.homepage     = "https://github.com/QuintGao/GKPhotoBrowser"
   s.license      = "MIT"
@@ -20,9 +20,13 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'Core' do |ss|
-    ss.source_files = 'GKPhotoBrowser/Core'
-    ss.resource = 'GKPhotoBrowser/GKPhotoBrowser.bundle'
-    ss.resource_bundles = {'GKPhotoBrowser.Privacy' => 'GKPhotoBrowser/PrivacyInfo.xcprivacy'}
+    ss.source_files = 'GKPhotoBrowser/Core/**/*.{h,m}'
+    ss.dependency 'GKPhotoBrowser/Resources'
+  end
+  
+  s.subspec 'Resources' do |ss|
+    ss.resource = 'GKPhotoBrowser/Resources/*.{bundle}'
+    ss.resource_bundles = { 'GKPhotoBrowser.Privacy' => 'GKPhotoBrowser/Resources/PrivacyInfo.xcprivacy' }
   end
   
   s.subspec 'SD' do |ss|

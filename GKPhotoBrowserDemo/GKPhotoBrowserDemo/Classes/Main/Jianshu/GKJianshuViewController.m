@@ -117,12 +117,12 @@
     }];
     
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-    browser.showStyle = GKPhotoBrowserShowStylePush;
-    browser.isPopGestureEnabled = YES;
+    browser.configure.showStyle = GKPhotoBrowserShowStylePush;
+    browser.configure.isPopGestureEnabled = YES;
     if (kIsiPad) {
-        browser.isFollowSystemRotation = YES;
+        browser.configure.isFollowSystemRotation = YES;
     }
-    browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
+    browser.configure.hideStyle = GKPhotoBrowserHideStyleZoomScale;
     [browser showFromVC:self];
 }
 

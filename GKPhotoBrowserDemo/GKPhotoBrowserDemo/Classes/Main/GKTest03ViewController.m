@@ -11,6 +11,7 @@
 #import <YYWebImage/YYWebImage.h>
 #import <SDWebImage/SDAnimatedImage.h>
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
+#import <GKPhotoBrowser/GKYYWebImageManager.h>
 
 @interface GKTest03ViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -110,11 +111,11 @@
         
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         
-        browser.showStyle    = GKPhotoBrowserShowStylePush;
-        browser.isFollowSystemRotation = YES;
-        browser.isPopGestureEnabled = YES;
-        browser.hidesPageControl = true;
-        [browser setupWebImageProtocol:[GKYYWebImageManager new]];
+        browser.configure.showStyle    = GKPhotoBrowserShowStylePush;
+        browser.configure.isFollowSystemRotation = YES;
+        browser.configure.isPopGestureEnabled = YES;
+        browser.configure.hidesPageControl = true;
+        [browser.configure setupWebImageProtocol:[GKYYWebImageManager new]];
         [browser showFromVC:weakSelf];
     };
     

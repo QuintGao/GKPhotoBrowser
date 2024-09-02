@@ -124,16 +124,16 @@
         }];
         
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-        browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
-        browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
-        browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate; // 加载方式
+        browser.configure.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
+        browser.configure.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
+        browser.configure.loadStyle = GKPhotoBrowserLoadStyleDeterminate; // 加载方式
         
         browser.delegate = weakSelf;
         if (kIsiPad) {
-            browser.isFollowSystemRotation = YES;
+            browser.configure.isFollowSystemRotation = YES;
         }
         
-        browser.hidesCountLabel = YES;
+        browser.configure.hidesCountLabel = YES;
     
         weakSelf.topView = [[GKTopView alloc] init];
         

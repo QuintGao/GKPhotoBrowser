@@ -14,7 +14,6 @@
 		60415CB22121648F00D1D54B /* GKSDAutoLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60415CB12121648F00D1D54B /* GKSDAutoLayoutViewController.m */; };
 		60415CB72121715000D1D54B /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = 60415CB62121715000D1D54B /* test.txt */; };
 		60415CBA2121750B00D1D54B /* GKBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 60415CB92121750B00D1D54B /* GKBottomView.m */; };
-		606CD60625805EBF00290941 /* YYAnimatedImageView+GKExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 606CD60525805EBF00290941 /* YYAnimatedImageView+GKExtension.m */; };
 		608FC479254142EE003DB82F /* test.html in Resources */ = {isa = PBXBuildFile; fileRef = 608FC478254142EE003DB82F /* test.html */; };
 		60CAD8F7262E66D9003A36D7 /* GKTestVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 60CAD8F6262E66D9003A36D7 /* GKTestVC.m */; };
 		60F9901622715A18008150AE /* GKOriginImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F9901522715A18008150AE /* GKOriginImageViewController.m */; };
@@ -58,6 +57,7 @@
 		7961A3072C2E61F700C61A70 /* livephoto.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7961A3062C2E61F700C61A70 /* livephoto.txt */; };
 		79B33755249111E100590023 /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = 79B33754249111E100590023 /* test.gif */; };
 		79CEF1BC2C212EDE00BC0F75 /* GKDemoLocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79CEF1BB2C212EDE00BC0F75 /* GKDemoLocalViewController.m */; };
+		79D141B52C80761B0081604A /* LocalImageLoadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D141B42C80761B0081604A /* LocalImageLoadManager.m */; };
 		79E99CE72BFC3A8500FBC92E /* GKSwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */; };
 		79FCF8B52C00589500639BC8 /* GKDemoWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCF8B42C00589500639BC8 /* GKDemoWebViewController.m */; };
 		79FCF8B82C00589E00639BC8 /* GKDemoPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCF8B72C00589E00639BC8 /* GKDemoPhotoViewController.m */; };
@@ -92,8 +92,6 @@
 		60415CB62121715000D1D54B /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		60415CB82121750B00D1D54B /* GKBottomView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKBottomView.h; sourceTree = "<group>"; };
 		60415CB92121750B00D1D54B /* GKBottomView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKBottomView.m; sourceTree = "<group>"; };
-		606CD60425805EBF00290941 /* YYAnimatedImageView+GKExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "YYAnimatedImageView+GKExtension.h"; sourceTree = "<group>"; };
-		606CD60525805EBF00290941 /* YYAnimatedImageView+GKExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "YYAnimatedImageView+GKExtension.m"; sourceTree = "<group>"; };
 		608FC478254142EE003DB82F /* test.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
 		60CAD8F5262E66D9003A36D7 /* GKTestVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKTestVC.h; sourceTree = "<group>"; };
 		60CAD8F6262E66D9003A36D7 /* GKTestVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKTestVC.m; sourceTree = "<group>"; };
@@ -170,6 +168,8 @@
 		79B33754249111E100590023 /* test.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test.gif; sourceTree = "<group>"; };
 		79CEF1BA2C212EDE00BC0F75 /* GKDemoLocalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKDemoLocalViewController.h; sourceTree = "<group>"; };
 		79CEF1BB2C212EDE00BC0F75 /* GKDemoLocalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKDemoLocalViewController.m; sourceTree = "<group>"; };
+		79D141B32C80761B0081604A /* LocalImageLoadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalImageLoadManager.h; sourceTree = "<group>"; };
+		79D141B42C80761B0081604A /* LocalImageLoadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalImageLoadManager.m; sourceTree = "<group>"; };
 		79E99CE52BFC3A8400FBC92E /* GKPhotoBrowserDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GKPhotoBrowserDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKSwiftViewController.swift; sourceTree = "<group>"; };
 		79FCF8B32C00589500639BC8 /* GKDemoWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKDemoWebViewController.h; sourceTree = "<group>"; };
@@ -244,6 +244,8 @@
 			children = (
 				7927F0CE20A97F280017FD5B /* GKTestViewController.h */,
 				7927F0CF20A97F280017FD5B /* GKTestViewController.m */,
+				79D141B32C80761B0081604A /* LocalImageLoadManager.h */,
+				79D141B42C80761B0081604A /* LocalImageLoadManager.m */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -370,8 +372,6 @@
 			children = (
 				795FA5F51FF338200057BDB0 /* UIView+GKFrame.h */,
 				795FA5F61FF338200057BDB0 /* UIView+GKFrame.m */,
-				606CD60425805EBF00290941 /* YYAnimatedImageView+GKExtension.h */,
-				606CD60525805EBF00290941 /* YYAnimatedImageView+GKExtension.m */,
 			);
 			path = GKCategory;
 			sourceTree = "<group>";
@@ -548,7 +548,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GKPhotoBrowserDemo/Pods-GKPhotoBrowserDemo-resources.sh",
-				"${PODS_ROOT}/../../GKPhotoBrowser/GKPhotoBrowser.bundle",
+				"${PODS_ROOT}/../../GKPhotoBrowser/Resources/GKPhotoBrowser.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/GKPhotoBrowser/GKPhotoBrowser.Privacy.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -620,6 +620,7 @@
 			files = (
 				795FA60D1FF338200057BDB0 /* AppDelegate.m in Sources */,
 				795FA6171FF338200057BDB0 /* GKTest01ViewController.m in Sources */,
+				79D141B52C80761B0081604A /* LocalImageLoadManager.m in Sources */,
 				7907911D29B6E40A000D70A5 /* GKDemoViewController.m in Sources */,
 				795FA6181FF338200057BDB0 /* GKTest02ViewCell.m in Sources */,
 				79E99CE72BFC3A8500FBC92E /* GKSwiftViewController.swift in Sources */,
@@ -648,7 +649,6 @@
 				795FA6221FF338200057BDB0 /* GKTest03ViewController.m in Sources */,
 				795FA61B1FF338200057BDB0 /* GKTimeLineViewCell.m in Sources */,
 				7925A5502A28914900972F47 /* GKLargeImageViewController.m in Sources */,
-				606CD60625805EBF00290941 /* YYAnimatedImageView+GKExtension.m in Sources */,
 				60154B5F20D11D6B0000877A /* GKGIFViewController.m in Sources */,
 				7925A4EC2A1F37E200972F47 /* GKChatViewCell.m in Sources */,
 				795FA60F1FF338200057BDB0 /* GKPhotosView.m in Sources */,

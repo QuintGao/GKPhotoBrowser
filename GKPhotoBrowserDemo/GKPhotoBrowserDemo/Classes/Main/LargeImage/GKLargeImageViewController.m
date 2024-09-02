@@ -72,18 +72,17 @@
     }];
     
     GKLargeImageManager *manager = [[GKLargeImageManager alloc] initWithType:type];
-    
-    GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:0];
+    GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
     
     // 设置自定义图片加载类
-    [browser setupWebImageProtocol:manager];
-    
+    [configure setupWebImageProtocol:manager];
     // 结束显示时自动清理内存
-    browser.isClearMemoryWhenDisappear = YES;
-    
+    configure.isClearMemoryWhenDisappear = YES;
     // 重用时清理内存
-    browser.isClearMemoryWhenViewReuse = YES;
+    configure.isClearMemoryWhenViewReuse = YES;
     
+    GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:0];
+    browser.configure = configure;
     [browser showFromVC:self];
 }
 

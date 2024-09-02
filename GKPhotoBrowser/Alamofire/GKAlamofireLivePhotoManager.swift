@@ -17,7 +17,7 @@ import CommonCrypto
         let livePhotoView = PHLivePhotoView()
         livePhotoView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         livePhotoView.delegate = self
-        if self.browser?.livePhotoMutedPlay == true {
+        if let configure = browser?.configure, configure.isLivePhotoMutedPlay {
             livePhotoView.isMuted = true
         }
         return livePhotoView
@@ -45,7 +45,7 @@ import CommonCrypto
     let progressRatio: Float = 4 / 5.0
     
     deinit {
-        if let browser, browser.isClearMemoryForLivePhoto {
+        if let browser, browser.configure.isClearMemoryForLivePhoto {
             gk_clear()
         }
     }

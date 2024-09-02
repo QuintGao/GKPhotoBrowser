@@ -112,33 +112,33 @@
             [photoArrs addObject:photo];
         }];
         
-        GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photoArrs currentIndex:index];
-        browser.showStyle       = GKPhotoBrowserShowStyleZoom;
-        browser.hideStyle       = GKPhotoBrowserHideStyleZoomScale;
-        
-        // 指定imageProtocol
-        [browser setupWebImageProtocol:[GKYYWebImageManager new]];
-        
+        GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
+        configure.showStyle = GKPhotoBrowserShowStyleZoom;
+        configure.hideStyle = GKPhotoBrowserHideStyleZoomScale;
+        [configure setupWebImageProtocol:[GKYYWebImageManager new]];
         if (indexPath.row == 2) {
             if (index == 0) {
-                browser.failStyle = GKPhotoBrowserFailStyleOnlyText;
+                configure.failStyle = GKPhotoBrowserFailStyleOnlyText;
             }else if (index == 1) {
-                browser.failStyle = GKPhotoBrowserFailStyleOnlyImage;
+                configure.failStyle = GKPhotoBrowserFailStyleOnlyImage;
             }else if (index == 2) {
-                browser.failStyle = GKPhotoBrowserFailStyleImageAndText;
+                configure.failStyle = GKPhotoBrowserFailStyleImageAndText;
             }else if (index == 3) {
-                browser.failStyle = GKPhotoBrowserFailStyleCustom;
+                configure.failStyle = GKPhotoBrowserFailStyleCustom;
             }
         }
-        browser.loadStyle = GKPhotoBrowserLoadStyleDeterminate;
+        configure.loadStyle = GKPhotoBrowserLoadStyleDeterminate;
 //        browser.failStyle       = GKPhotoBrowserFailStyleOnlyImage;
-        browser.failureText     = @"图片加载失败了，555";
-        browser.failureImage    = [UIImage imageNamed:@"error"];
-        browser.delegate        = weakSelf;
+        configure.failureText     = @"图片加载失败了，555";
+        configure.failureImage    = [UIImage imageNamed:@"error"];
+        
         if (kIsiPad) {
-            browser.isFollowSystemRotation = YES;
+            configure.isFollowSystemRotation = YES;
         }
         
+        GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photoArrs currentIndex:index];
+        browser.configure = configure;
+        browser.delegate = weakSelf;
         [browser showFromVC:weakSelf];
     };
     

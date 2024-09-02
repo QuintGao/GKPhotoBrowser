@@ -124,45 +124,11 @@
     
     NSInteger index = imgView.tag;
     
-    Class cls = NSClassFromString(@"GKIJKPlayerManager");
-    if (self.videoPlayStyle == 2 && !cls) {
-        [GKMessageTool showText:@"请先 pod 'GKPhotoBrowser/IJKPlayer'"];
-        return;
-    }
+    self.configure.isShowLivePhotoMark = YES;
+    self.configure.isPopGestureEnabled = YES; // push显示，在第一页时手势返回
     
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-    browser.showStyle = self.showStyle;
-    browser.hideStyle = self.hideStyle;
-    browser.loadStyle = self.loadStyle;
-    browser.failStyle = self.failStyle;
-    
-    if (self.imageLoadStyle == 0) {
-        [browser setupWebImageProtocol:[[GKSDWebImageManager alloc] init]];
-    }else if (self.imageLoadStyle == 1) {
-        [browser setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
-    }else {
-        [browser setupWebImageProtocol:[[GKKFWebImageManager alloc] init]];
-    }
-    
-    browser.videoLoadStyle = self.videoLoadStyle;
-    browser.videoFailStyle = self.videoFailStyle;
-    
-    if (self.videoPlayStyle == 0) {
-        [browser setupVideoPlayerProtocol:[[GKAVPlayerManager alloc] init]];
-    }else if (self.videoPlayStyle == 1) {
-        [browser setupVideoPlayerProtocol:[[GKZFPlayerManager alloc] init]];
-    }else {
-        [browser setupVideoPlayerProtocol:[[cls alloc] init]];
-    }
-    
-    browser.isShowLivePhotoMark = YES;
-    if (self.livePhotoStyle == 0) {
-        [browser setupLivePhotoProtocol:GKAFLivePhotoManager.new];
-    }else {
-        [browser setupLivePhotoProtocol:GKAlamofireLivePhotoManager.new];
-    }
-    browser.isPopGestureEnabled = YES; // push显示，在第一页时手势返回
-    
+    browser.configure = self.configure;
     [browser showFromVC:self];
     browser.delegate = self;
 }
@@ -186,7 +152,7 @@
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser loadFailedAtIndex:(NSInteger)index error:(nonnull NSError *)error {
     if (browser.curPhoto.isVideo) return;
-    if (browser.failStyle != GKPhotoBrowserFailStyleCustom) return;
+    if (browser.configure.failStyle != GKPhotoBrowserFailStyleCustom) return;
     
     if (self.customFailView) return;
     self.customFailView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];

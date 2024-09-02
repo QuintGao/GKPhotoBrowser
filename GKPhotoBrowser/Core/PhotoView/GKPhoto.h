@@ -1,6 +1,6 @@
 //
-//  GKPhotoManager.h
-//  GKPhotoBrowserDemo
+//  GKPhoto.h
+//  GKPhotoBrowser
 //
 //  Created by gaokun on 2020/6/16.
 //  Copyright © 2020 QuintGao. All rights reserved.
@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <Photos/Photos.h>
-#import "GKPhotoBrowserConfigure.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -83,26 +82,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 根据相册资源获取视频
 /// - Parameter completion: 完成回调
 - (void)getVideo:(nullable void(^)(NSURL *_Nullable url, NSError *_Nullable error))completion;
-
-@end
-
-@interface GKPhotoManager : NSObject
-
-/// 加载相册图片资源
-/// @param imageAsset PHAsset对象
-/// @param completion 完成回调
-+ (PHImageRequestID)loadImageDataWithImageAsset:(PHAsset *)imageAsset completion:(nonnull void(^)(NSData *_Nullable data, NSError *_Nullable error))completion;
-
-/// 根据宽度加载相册资源图片
-/// @param asset PHAsset对象
-/// @param photoWidth 宽度
-/// @param completion 完成回调
-+ (PHImageRequestID)loadImageWithAsset:(PHAsset *)asset photoWidth:(CGFloat)photoWidth completion:(nonnull void(^)(UIImage *_Nullable image, NSError *_Nullable error))completion;
-
-/// 加载相册视频资源
-/// @param asset PHAsset对象
-/// @param completion 完成回调
-+ (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(nonnull void(^)(NSURL *_Nullable url, NSError *_Nullable error))completion;
 
 @end
 

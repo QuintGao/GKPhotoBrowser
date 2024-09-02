@@ -156,18 +156,21 @@
         [photos addObject:photo];
     }];
     
+    GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
+    configure.showStyle = GKPhotoBrowserShowStyleZoom;
+    configure.hideStyle = GKPhotoBrowserHideStyleZoomScale;
+    configure.hidesPageControl = YES;
+    configure.hidesSavedBtn = YES;
+    configure.hidesCountLabel = YES;
+    configure.isSingleTapDisabled = YES;
+    configure.isVideoPausedWhenDragged = NO;
+    [configure setupVideoProgressProtocol:[GKVideoProgressView new]];
+    [configure setupVideoPlayerProtocol:[GKZFPlayerManager new]];
+    configure.isVideoReplay = NO;
+    
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-    browser.showStyle = GKPhotoBrowserShowStyleZoom;
-    browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
-    browser.hidesPageControl = YES;
-    browser.hidesSavedBtn = YES;
-    browser.hidesCountLabel = YES;
+    browser.configure = configure;
     browser.delegate = self;
-    browser.isSingleTapDisabled = YES;
-    browser.isVideoPausedWhenDragged = NO;
-    [browser setupVideoProgressProtocol:[GKVideoProgressView new]];
-    [browser setupVideoPlayerProtocol:[GKZFPlayerManager new]];
-    browser.isVideoReplay = NO;
     [browser showFromVC:self];
     self.browser = browser;
 }

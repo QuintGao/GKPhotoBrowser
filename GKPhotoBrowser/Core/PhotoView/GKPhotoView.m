@@ -10,7 +10,6 @@
 #import "GKPhotoView+Image.h"
 #import "GKPhotoView+Video.h"
 #import "GKPhotoView+LivePhoto.h"
-#import "GKPhotoBrowser.h"
 
 @implementation GKScrollView
 
@@ -58,17 +57,16 @@
 
 @property (nonatomic, strong) GKPhoto        *photo;
 
-@property (nonatomic, weak) id<GKWebImageProtocol>    imageProtocol;
-
 @end
 
 @implementation GKPhotoView
 
-- (instancetype)initWithFrame:(CGRect)frame imageProtocol:(nonnull id<GKWebImageProtocol>)imageProtocol {
+- (instancetype)initWithFrame:(CGRect)frame configure:(GKPhotoBrowserConfigure *)configure {
     if (self = [super initWithFrame:frame]) {
-        NSAssert(imageProtocol != nil, @"请设置图片加载类并实现GKWebImageProtocol类");
-        _imageProtocol = imageProtocol;
-        
+        self.configure = configure;
+        self.imager = configure.imager;
+        self.player = configure.player;
+        self.livePhoto = configure.livePhoto;
         self.backgroundColor = [UIColor clearColor];
         [self addSubview:self.scrollView];
         [self.scrollView addSubview:self.imageView];
@@ -90,8 +88,8 @@
     [self.liveLoadingView stopLoading];
     [self.liveLoadingView removeFromSuperview];
     [self cancelImageLoad];
-    if (self.browser.isClearMemoryWhenViewReuse && [self.imageProtocol respondsToSelector:@selector(clearMemoryForURL:)]) {
-        [self.imageProtocol clearMemoryForURL:self.photo.url];
+    if (self.configure.isClearMemoryWhenViewReuse && [self.imager respondsToSelector:@selector(clearMemoryForURL:)]) {
+        [self.imager clearMemoryForURL:self.photo.url];
     }
     [self.imageView removeFromSuperview];
     self.imageView = nil;
@@ -103,13 +101,6 @@
     [self.imageView removeFromSuperview];
     self.imageView = nil;
     [self.scrollView addSubview:self.imageView];
-}
-
-- (void)setBrowser:(GKPhotoBrowser *)browser {
-    _browser = browser;
-    
-    self.player = browser.player;
-    self.livePhoto = browser.livePhoto;
 }
 
 - (void)setupPhoto:(GKPhoto *)photo {
@@ -127,7 +118,7 @@
 - (void)showLoading {
     if (self.photo.isLivePhoto) {
         [self showLiveLoading];
-    }else {
+    }else if (self.photo.isVideo) {
         [self showVideoLoading];
     }
 }
@@ -143,7 +134,7 @@
 - (void)showFailure:(NSError *)error {
     if (self.photo.isLivePhoto) {
         [self showLiveFailure:error];
-    }else {
+    }else if (self.photo.isVideo) {
         [self showVideoFailure:error];
     }
 }
@@ -155,7 +146,7 @@
 - (void)didScrollAppear {
     if (self.photo.isLivePhoto) {
         [self liveDidScrollAppear];
-    }else {
+    }else if (self.photo.isVideo) {
         [self videoDidScrollAppear];
     }
 }
@@ -163,7 +154,7 @@
 - (void)willScrollDisappear {
     if (self.photo.isLivePhoto) {
         [self liveWillScrollDisappear];
-    }else {
+    }else if (self.photo.isVideo) {
         [self videoWillScrollDisappear];
     }
 }
@@ -171,7 +162,7 @@
 - (void)didScrollDisappear {
     if (self.photo.isLivePhoto) {
         [self liveDidScrollDisappear];
-    }else {
+    }else if (self.photo.isVideo) {
         [self videoDidScrollDisappear];
     }
 }
@@ -179,7 +170,7 @@
 - (void)didDismissAppear {
     if (self.photo.isLivePhoto) {
         [self liveDidDismissAppear];
-    }else {
+    }else if (self.photo.isVideo) {
         [self videoDidDismissAppear];
     }
 }
@@ -187,7 +178,7 @@
 - (void)willDismissDisappear {
     if (self.photo.isLivePhoto) {
         [self liveWillDismissDisappear];
-    }else {
+    }else if (self.photo.isVideo) {
         [self videoWillDismissDisappear];
     }
 }
@@ -195,7 +186,7 @@
 - (void)didDismissDisappear {
     if (self.photo.isLivePhoto) {
         [self liveDidDismissDisappear];
-    }else {
+    }else if (self.photo.isVideo) {
         [self videoDidDismissDisappear];
     }
 }
@@ -203,7 +194,7 @@
 - (void)updateFrame {
     if (self.photo.isLivePhoto) {
         [self liveUpdateFrame];
-    }else {
+    }else if (self.photo.isVideo) {
         [self videoUpdateFrame];
     }
 }
@@ -221,17 +212,16 @@
     CGFloat height = self.bounds.size.height;
     BOOL isLandscape = width > height;
     
-    if (self.browser.isAdaptiveSafeArea) {
+    if (self.configure.isAdaptiveSafeArea) {
+        UIEdgeInsets insets = UIDevice.gk_safeAreaInsets;
         if (isLandscape) {
-            if (self.browser.isFollowSystemRotation) {
-                CGFloat safeAreaLeft = GKPhotoBrowserConfigure.gk_safeAreaInsets.left;
-                CGFloat safeAreaRight = GKPhotoBrowserConfigure.gk_safeAreaInsets.right;
-                width -= (safeAreaLeft + safeAreaRight);
+            if (self.configure.isFollowSystemRotation) {
+                width -= (insets.left + insets.right);
             }else {
-                width -= (kSafeTopSpace + kSafeBottomSpace);
+                width -= (insets.top + insets.bottom);
             }
         }else {
-            height -= (kSafeTopSpace + kSafeBottomSpace);
+            height -= (insets.top + insets.bottom);
         }
     }
     self.scrollView.bounds = CGRectMake(0, 0, width, height);
@@ -321,7 +311,7 @@
 
 - (UIImageView *)imageView {
     if (!_imageView) {
-        _imageView = [_imageProtocol.imageViewClass new];
+        _imageView = self.imager ? [self.imager.imageViewClass new] : [UIImageView new];
         _imageView.frame = self.scrollView.bounds;
     }
     return _imageView;
@@ -330,7 +320,7 @@
 - (UIButton *)playBtn {
     if (!_playBtn) {
         _playBtn = [[UIButton alloc] init];
-        [_playBtn setImage:self.browser.videoPlayImage ?: GKPhotoBrowserImage(@"gk_video_play") forState:UIControlStateNormal];
+        [_playBtn setImage:self.configure.videoPlayImage ?: GKPhotoBrowserImage(@"gk_video_play") forState:UIControlStateNormal];
         [_playBtn addTarget:self action:@selector(playAction) forControlEvents:UIControlEventTouchUpInside];
         _playBtn.hidden = YES;
         [_playBtn sizeToFit];
@@ -341,8 +331,8 @@
 
 - (GKLoadingView *)loadingView {
     if (!_loadingView) {
-        _loadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.browser.loadStyle];
-        _loadingView.failStyle   = self.browser.failStyle;
+        _loadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.configure.loadStyle];
+        _loadingView.failStyle   = self.configure.failStyle;
         _loadingView.lineWidth   = 3;
         _loadingView.radius      = 12;
         _loadingView.bgColor     = [UIColor blackColor];
@@ -353,8 +343,8 @@
 
 - (GKLoadingView *)videoLoadingView {
     if (!_videoLoadingView) {
-        _videoLoadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.browser.videoLoadStyle];
-        _videoLoadingView.failStyle = self.browser.videoFailStyle;
+        _videoLoadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.configure.videoLoadStyle];
+        _videoLoadingView.failStyle = self.configure.videoFailStyle;
         _videoLoadingView.lineWidth = 3;
         _videoLoadingView.radius = 12;
         _videoLoadingView.bgColor = UIColor.blackColor;
@@ -365,7 +355,7 @@
 
 - (GKLoadingView *)liveLoadingView {
     if (!_liveLoadingView) {
-        _liveLoadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.browser.liveLoadStyle];
+        _liveLoadingView = [GKLoadingView loadingViewWithFrame:self.bounds style:(GKLoadingStyle)self.configure.liveLoadStyle];
         _liveLoadingView.radius = 30;
         _liveLoadingView.lineWidth = 1;
         _liveLoadingView.bgColor = [UIColor whiteColor];

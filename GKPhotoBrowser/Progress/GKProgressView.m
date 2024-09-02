@@ -99,9 +99,9 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showSmallSlider) object:nil];
     [self performSelector:@selector(showSmallSlider) withObject:nil afterDelay:3.0f];
     
-    if (!self.browser.player) return;
+    if (!self.browser.configure.player) return;
     __weak __typeof(self) weakSelf = self;
-    [self.browser.player gk_seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
+    [self.browser.configure.player gk_seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
         __strong __typeof(weakSelf) self = weakSelf;
         self.isSeeking = NO;
     }];

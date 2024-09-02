@@ -1,20 +1,11 @@
 //
-//  GKPhotoBrowserConfigure.m
+//  UIDevice+GKPhotoBrowser.m
 //  GKPhotoBrowser
 //
-//  Created by gaokun on 2020/10/19.
-//  Copyright © 2020 QuintGao. All rights reserved.
+//  Created by QuintGao on 2024/8/30.
 //
 
-#import "GKPhotoBrowserConfigure.h"
-
-/// 设备宽度，跟横竖屏无关
-#define GKPHOTO_DEVICE_WIDTH MIN([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
-
-/// 设备高度，跟横竖屏无关
-#define GKPHOTO_DEVICE_HEIGHT MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
-
-NSString *const GKPhotoBrowserBundleName = @"GKPhotoBrowser";
+#import "UIDevice+GKPhotoBrowser.h"
 
 @interface GKPhotoPortraitViewController : UIViewController
 @end
@@ -31,7 +22,7 @@ NSString *const GKPhotoBrowserBundleName = @"GKPhotoBrowser";
 
 @end
 
-@implementation GKPhotoBrowserConfigure
+@implementation UIDevice (GKPhotoBrowser)
 
 + (UIEdgeInsets)gk_safeAreaInsets {
     UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
@@ -67,7 +58,7 @@ NSString *const GKPhotoBrowserBundleName = @"GKPhotoBrowser";
 + (CGRect)gk_statusBarFrame {
     CGRect statusBarFrame = CGRectZero;
     if (@available(iOS 13.0, *)) {
-        statusBarFrame = [GKPhotoBrowserConfigure getKeyWindow].windowScene.statusBarManager.statusBarFrame;
+        statusBarFrame = [self getKeyWindow].windowScene.statusBarManager.statusBarFrame;
     }
     
     if (CGRectEqualToRect(statusBarFrame, CGRectZero)) {
@@ -78,7 +69,7 @@ NSString *const GKPhotoBrowserBundleName = @"GKPhotoBrowser";
     }
     
     if (CGRectEqualToRect(statusBarFrame, CGRectZero)) {
-        CGFloat statusBarH = [GKPhotoBrowserConfigure gk_isNotchedScreen] ? 44 : 20;
+        CGFloat statusBarH = [self gk_isNotchedScreen] ? 44 : 20;
         statusBarFrame = CGRectMake(0, 0, self.getKeyWindow.bounds.size.width, statusBarH);
     }
     
@@ -171,23 +162,15 @@ static NSInteger isNotchedScreen = -1;
     return window;
 }
 
-+ (UIImage *)gk_imageWithName:(NSString *)name {
-    static NSBundle *resourceBundle = nil;
-    if (!resourceBundle) {
-        NSBundle *mainBundle = [NSBundle bundleForClass:self];
-        NSString *resourcePath = [mainBundle pathForResource:GKPhotoBrowserBundleName ofType:@"bundle"];
-        resourceBundle = [NSBundle bundleWithPath:resourcePath] ?: mainBundle;
-    }
-    UIImage *image = [UIImage imageNamed:name inBundle:resourceBundle compatibleWithTraitCollection:nil];
-    return image;
-}
-
 static NSInteger is58InchScreen = -1;
 + (BOOL)is58InchScreen {
     if (is58InchScreen < 0) {
         // Both iPhone XS and iPhone X share the same actual screen sizes, so no need to compare identifiers
         // iPhone XS 和 iPhone X 的物理尺寸是一致的，因此无需比较机器 Identifier
-        is58InchScreen = (GKPHOTO_DEVICE_WIDTH == self.screenSizeFor58Inch.width && GKPHOTO_DEVICE_HEIGHT == self.screenSizeFor58Inch.height) ? 1 : 0;
+        CGFloat deviceWidth = MAX(UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height);
+        CGFloat deviceHeight = MIN(UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height);
+        
+        is58InchScreen = (deviceWidth == self.screenSizeFor58Inch.width && deviceHeight == self.screenSizeFor58Inch.height) ? 1 : 0;
     }
     return is58InchScreen > 0;
 }

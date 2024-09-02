@@ -111,10 +111,10 @@
     }];
     
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-    browser.showStyle = GKPhotoBrowserShowStyleZoom;
-    browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;
+    browser.configure.showStyle = GKPhotoBrowserShowStyleZoom;
+    browser.configure.hideStyle = GKPhotoBrowserHideStyleZoomScale;
     if (kIsiPad) {
-        browser.isFollowSystemRotation = YES;
+        browser.configure.isFollowSystemRotation = YES;
     }
     browser.delegate  = self;
     

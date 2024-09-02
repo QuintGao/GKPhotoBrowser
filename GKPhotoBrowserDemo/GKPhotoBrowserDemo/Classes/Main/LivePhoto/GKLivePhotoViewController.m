@@ -144,24 +144,25 @@
             [photos addObject:photo];
         }];
         
+        GKPhotoBrowserConfigure *configure = [GKPhotoBrowserConfigure defaultConfig];
+        configure.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
+        configure.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
+        configure.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
+        configure.maxZoomScale = 20.0f;
+        configure.doubleZoomScale = 2.0f;
+        configure.isAdaptiveSafeArea = YES;
+        configure.hidesCountLabel = YES;
+        configure.hidesSavedBtn = YES;
+        configure.isFullWidthForLandScape = NO;
+        configure.isSingleTapDisabled = YES;
+        configure.isShowPlayImage = NO;
+        configure.isVideoReplay = YES;
+        configure.videoPlayImage = [UIImage imageNamed:@"ic_play3"];
+        configure.isShowLivePhotoMark = YES;
+        configure.isClearMemoryForLivePhoto = NO;
+        
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-        browser.showStyle = GKPhotoBrowserShowStyleZoom;        // 缩放显示
-        browser.hideStyle = GKPhotoBrowserHideStyleZoomScale;   // 缩放隐藏
-        browser.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
-        browser.maxZoomScale = 20.0f;
-        browser.doubleZoomScale = 2.0f;
-        browser.isAdaptiveSafeArea = YES;
-        browser.hidesCountLabel = YES;
-        browser.hidesSavedBtn = YES;
-        browser.isFullWidthForLandScape = NO;
-        browser.isSingleTapDisabled = YES;
-        browser.showPlayImage = NO;
-        browser.isVideoReplay = YES;
-        browser.videoPlayImage = [UIImage imageNamed:@"ic_play3"];
-        
-        browser.isShowLivePhotoMark = YES;
-        browser.isClearMemoryForLivePhoto = NO;
-        
+        browser.configure = configure;
         browser.delegate = self;
         [browser showFromVC:self];
         self.browser = browser;
@@ -180,95 +181,11 @@
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser singleTapWithIndex:(NSInteger)index {
-//    GKPhoto *photo = browser.curPhoto;
-//    if (photo.isVideo) {
-//        if (browser.player.isPlaying) {
-//            [browser.player gk_pause];
-//            browser.curPhotoView.playBtn.hidden = NO;
-//        }else {
-//            [browser.player gk_play];
-//            browser.curPhotoView.playBtn.hidden = YES;
-//        }
-//    }else {
-//        [browser dismiss];
-//    }
     [browser dismiss];
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser longPressWithIndex:(NSInteger)index {
     
-//    if (self.fromView) return;
-//    if (browser.currentOrientation == UIDeviceOrientationPortraitUpsideDown) return;
-//    
-//    self.currentIndex = index;
-//    
-//    UIView *contentView = browser.contentView;
-//    
-//    UIView *fromView = [UIView new];
-//    fromView.backgroundColor = [UIColor clearColor];
-//    self.fromView = fromView;
-//    
-//    self.isLandscape = browser.isLandscape;
-//    
-//    CGFloat actionSheetH = 0;
-//    
-//    if (self.isLandscape) {
-//        actionSheetH = 150;
-//        fromView.frame = contentView.bounds;
-//        [contentView addSubview:fromView];
-//    }else {
-//        actionSheetH = 150 + kSafeBottomSpace;
-//        fromView.frame = browser.view.bounds;
-//        [browser.view addSubview:fromView];
-//    }
-//    
-//    UIView *actionSheet = [[UIView alloc] initWithFrame:CGRectMake(0, 0, contentView.bounds.size.width, actionSheetH)];
-//    actionSheet.backgroundColor = [UIColor whiteColor];
-//    self.actionSheet = actionSheet;
-//    
-//    UIButton *delBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, actionSheet.width, 50)];
-//    [delBtn setTitle:@"删除" forState:UIControlStateNormal];
-//    [delBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    [delBtn addTarget:self action:@selector(delBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-//    delBtn.backgroundColor = [UIColor whiteColor];
-//    [actionSheet addSubview:delBtn];
-//
-//    UIButton *saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50, actionSheet.width, 50)];
-//    [saveBtn setTitle:@"保存图片" forState:UIControlStateNormal];
-//    [saveBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    [saveBtn addTarget:self action:@selector(saveBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-//    saveBtn.backgroundColor = [UIColor whiteColor];
-//    [actionSheet addSubview:saveBtn];
-//
-//    UIButton *cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 100, actionSheet.width, 50)];
-//    [cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
-//    [cancelBtn addTarget:self action:@selector(cancelBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-//    cancelBtn.backgroundColor = [UIColor whiteColor];
-//    [actionSheet addSubview:cancelBtn];
-//
-//    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 50, actionSheet.width, 0.5)];
-//    lineView.backgroundColor = [UIColor grayColor];
-//    [actionSheet addSubview:lineView];
-//    
-//    UIView *line2View = [[UIView alloc] initWithFrame:CGRectMake(0, 100, actionSheet.width, 0.5)];
-//    line2View.backgroundColor = [UIColor grayColor];
-//    [actionSheet addSubview:line2View];
-//
-//    __weak __typeof(self) weakSelf = self;
-//    [GKCover coverFrom:fromView
-//           contentView:actionSheet
-//                 style:GKCoverStyleTranslucent
-//             showStyle:GKCoverShowStyleBottom
-//         showAnimStyle:GKCoverShowAnimStyleBottom
-//         hideAnimStyle:GKCoverHideAnimStyleBottom
-//              notClick:NO
-//             showBlock:nil
-//             hideBlock:^{
-//                 __strong __typeof(weakSelf) self = weakSelf;
-//                 [self.fromView removeFromSuperview];
-//                 self.fromView = nil;
-//             }];
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser willLayoutSubViews:(NSInteger)index {

@@ -6,7 +6,6 @@
 //
 
 #import "GKPhotoView+LivePhoto.h"
-#import "GKPhotoBrowser.h"
 
 @interface GKLivePhotoMarkView()
 
@@ -71,13 +70,12 @@
 @implementation GKPhotoView (LivePhoto)
 
 - (void)showLiveLoading {
-    if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
     self.loadingView.hidden = YES;
     self.liveLoadingView.frame = self.bounds;
     [self addSubview:self.liveLoadingView];
     [self.liveLoadingView startLoading];
-    if (self.browser.isShowLivePhotoMark) {
+    if (self.configure.isShowLivePhotoMark) {
         [self addSubview:self.liveMarkView];
     }else {
         [self.liveMarkView removeFromSuperview];
@@ -85,20 +83,17 @@
 }
 
 - (void)hideLiveLoading {
-    if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
     [self.liveLoadingView stopLoading];
 }
 
 - (void)showLiveFailure:(NSError *)error {
-    if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
 }
 
 - (void)liveDidScrollAppear {
-    if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
-    if (self.browser.isShowLivePhotoMark) {
+    if (self.configure.isShowLivePhotoMark) {
         self.liveMarkView.hidden = NO;
     }
     if (!self.livePhoto.photo || self.livePhoto.photo != self.photo) {
@@ -130,46 +125,40 @@
 }
 
 - (void)liveWillScrollDisappear {
-    if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
-    if (!self.browser.isLivePhotoPausedWhenScrollBegan) return;
+    if (!self.configure.isLivePhotoPausedWhenScrollBegan) return;
     [self.livePhoto gk_stop];
 }
 
 - (void)liveDidScrollDisappear {
-    if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
     [self.livePhoto gk_stop];
 }
 
 - (void)liveDidDismissAppear {
-    if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
-    if (!self.browser.isShowLivePhotoMark) return;
+    if (!self.configure.isShowLivePhotoMark) return;
     self.liveMarkView.hidden = NO;
 }
 
 - (void)liveWillDismissDisappear {
-    if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
-    if (self.browser.isLivePhotoPausedWhenDragged) {
+    if (self.configure.isLivePhotoPausedWhenDragged) {
         [self.livePhoto gk_stop];
     }
-    if (!self.browser.isShowLivePhotoMark) return;
+    if (!self.configure.isShowLivePhotoMark) return;
     self.liveMarkView.hidden = YES;
 }
 
 - (void)liveDidDismissDisappear {
-    if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
     [self.livePhoto gk_stop];
-    if (self.browser.isClearMemoryForLivePhoto && [self.livePhoto respondsToSelector:@selector(gk_clear)]) {
+    if (self.configure.isClearMemoryForLivePhoto && [self.livePhoto respondsToSelector:@selector(gk_clear)]) {
         [self.livePhoto gk_clear];
     }
 }
 
 - (void)liveUpdateFrame {
-    if (!self.photo.isLivePhoto) return;
     if (!self.livePhoto) return;
     if (self.livePhoto.photo != self.photo) return;
     [self.livePhoto gk_updateFrame:self.imageView.bounds];
