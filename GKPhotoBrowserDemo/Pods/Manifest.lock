@@ -24,39 +24,39 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.9.0)
   - GKNavigationBar/GestureHandle (1.9.0)
   - GKNavigationBar/NavigationBar (1.9.0)
-  - GKPhotoBrowser (3.0.3):
-    - GKPhotoBrowser/Default (= 3.0.3)
-  - GKPhotoBrowser/AF (3.0.3):
+  - GKPhotoBrowser (3.1.0):
+    - GKPhotoBrowser/Default (= 3.1.0)
+  - GKPhotoBrowser/AF (3.1.0):
     - AFNetworking
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Alamofire (3.0.3):
+  - GKPhotoBrowser/Alamofire (3.1.0):
     - Alamofire
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/AVPlayer (3.0.3):
+  - GKPhotoBrowser/AVPlayer (3.1.0):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.0.3):
+  - GKPhotoBrowser/Core (3.1.0):
     - GKPhotoBrowser/Resources
-  - GKPhotoBrowser/Default (3.0.3):
+  - GKPhotoBrowser/Default (3.1.0):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (3.0.3):
+  - GKPhotoBrowser/KF (3.1.0):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (3.0.3):
+  - GKPhotoBrowser/Progress (3.1.0):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Resources (3.0.3)
-  - GKPhotoBrowser/SD (3.0.3):
+  - GKPhotoBrowser/Resources (3.1.0)
+  - GKPhotoBrowser/SD (3.1.0):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (3.0.3):
+  - GKPhotoBrowser/YY (3.1.0):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser/ZFPlayer (3.0.3):
+  - GKPhotoBrowser/ZFPlayer (3.1.0):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.2)
@@ -135,7 +135,7 @@ SPEC CHECKSUMS:
   GKLivePhotoManager: 203a3fc08563511b961c686e543d5560fa801331
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: 9d6eedbf49bd7964848367a60ea3ea8ab74cd25f
+  GKPhotoBrowser: 361d4dd8b39b254b55f99ec374a7fe926c108557
   GKSliderView: 94fab41465f2ba543200f04bee401020beab4041
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201

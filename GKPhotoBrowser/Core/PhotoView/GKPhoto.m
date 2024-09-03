@@ -112,10 +112,10 @@
     options.networkAccessAllowed = YES;
     options.resizeMode = PHImageRequestOptionsResizeModeFast;
     
-    PHImageRequestID *requestID = [[PHImageManager defaultManager] requestImageDataForAsset:asset options:options resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+    PHImageRequestID requestID = [[PHImageManager defaultManager] requestImageDataForAsset:asset options:options resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
         NSError *error = info[PHImageErrorKey];
         BOOL complete = ![info[PHImageCancelledKey] boolValue] && !error && ![info[PHImageResultIsDegradedKey] boolValue];
-        if (completion && imageData) {
+        if (complete && imageData) {
             !completion ?: completion(imageData, nil);
         }else {
             !completion ?: completion(nil, error);

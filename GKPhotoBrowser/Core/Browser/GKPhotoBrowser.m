@@ -719,14 +719,12 @@
 }
 
 - (void)photoView:(GKPhotoView *)photoView loadProgress:(float)progress isOriginImage:(BOOL)isOriginImage {
-    GKPhotoView *curPhotoView = self.curPhotoView;
     if ([self.delegate respondsToSelector:@selector(photoBrowser:loadImageAtIndex:progress:isOriginImage:)]) {
         [self.delegate photoBrowser:self loadImageAtIndex:self.currentIndex progress:progress isOriginImage:isOriginImage];
     }
 }
 
 - (void)photoView:(GKPhotoView *)photoView loadStart:(BOOL)isStart success:(BOOL)success {
-    GKPhotoView *curPhotoView = self.curPhotoView;
     if ([self.delegate respondsToSelector:@selector(photoBrowser:videoLoadStart:success:)]) {
         [self.delegate photoBrowser:self videoLoadStart:isStart success:success];
     }

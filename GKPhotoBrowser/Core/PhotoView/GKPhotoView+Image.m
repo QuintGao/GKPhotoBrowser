@@ -107,7 +107,7 @@
                 newImage = [self.imager imageWithData:data];
             }
             if (!newImage) {
-                newImage = [UIImage imageWithData:data];
+                newImage = [UIImage gkbrowser_imageWithData:data];
             }
         }else {
             newImage = image;
@@ -153,7 +153,10 @@
         }
         
         if (!self.imager) {
-            UIImage *image = [UIImage gkbrowser_imageNamed:url.absoluteString];
+            UIImage *image = [UIImage gkbrowser_imageNamed:url.path];
+            if (!image) {
+                image = self.imageView.image;
+            }
             if (image) {
                 self.imageView.image = image;
                 self.imageSize = image.size;
@@ -237,6 +240,15 @@
             photo.finished = YES;
             self.scrollView.scrollEnabled = YES;
             [self.loadingView stopLoading];
+        }else {
+            photo.failed = YES;
+            [self.loadingView stopLoading];
+            NSError *error = [NSError errorWithDomain:@"com.browser.error" code:-1 userInfo:@{NSLocalizedDescriptionKey: @"图片加载失败"}];
+            [self loadFailedWithError:error];
+            if (self.configure.failStyle != GKPhotoBrowserFailStyleCustom) {
+                [self addSubview:self.loadingView];
+                [self.loadingView showFailure];
+            }
         }
         [self adjustFrame];
     }
@@ -330,14 +342,17 @@
         }
     }
     
-    self.liveMarkView.frame = CGRectMake(10, UIDevice.gk_safeAreaTop, 64, 20);
+    
     
     self.loadingView.frame = self.bounds;
     self.videoLoadingView.frame = self.bounds;
     self.liveLoadingView.frame = self.bounds;
-    if (self.configure.isShowPlayImage) {
+    if (self.photo.isVideo && self.configure.isShowPlayImage) {
         [self.playBtn sizeToFit];
         self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }
+    if (self.photo.isLivePhoto) {
+        self.liveMarkView.frame = CGRectMake(10, UIDevice.gk_safeAreaTop, 64, 20);
     }
     [self updateFrame];
 }

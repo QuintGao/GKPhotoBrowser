@@ -52,7 +52,7 @@
     self.player.shouldAutoplay = NO;
     [self.player prepareToPlay];
     self.videoPlayView = self.player.view;
-    if (self.browser.videoMutedPlay) {
+    if (self.browser.configure.isVideoMutedPlay) {
         [self gk_setMute:YES];
     }
     [self addPlayerNotifications];

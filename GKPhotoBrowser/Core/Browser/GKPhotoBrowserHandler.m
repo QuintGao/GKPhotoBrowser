@@ -243,6 +243,18 @@
     sourceRect.origin.x += photoView.scrollView.contentOffset.x;
     sourceRect.origin.y += photoView.scrollView.contentOffset.y;
     
+    // 判断是否超出屏幕
+    CGRect screenBounds = UIScreen.mainScreen.bounds;
+    if (!CGRectIntersectsRect(screenBounds, sourceRect)) {
+        [UIView animateWithDuration:self.configure.animDuration animations:^{
+            photoView.imageView.alpha = 0;
+            [self browserChangeAlpha:0];
+        } completion:^(BOOL finished) {
+            [self dismissAnimated:self.configure.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
+        }];
+        return;
+    }
+    
     if (photo.sourceImageView.image) {
         photoView.imageView.image = photo.sourceImageView.image;
     }

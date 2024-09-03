@@ -21,6 +21,24 @@ GKPhotoBrowser是一个可高度自定义的图片、视频浏览器，支持多
 
 ## 重要
  如果在使用过程中遇到问题，请先检查使用的版本是否是最新版本（可在说明最上面的pod后面查看），如果不是最新版本，请先更新到最后版本，看看问题是否存在，如果依然存在，可提issue说明或加我QQ1094887059直接问我，最好能提供demo。
+ 
+ ### 3.1.0升级说明
+ ** 3.1.0版本之后对项目部分代码进行了拆分，增加了GKPhotoBrowserConfigure配置类，升级后可按以下方式进行配置
+ 
+方法一
+```
+browser.configure.showStyle = GKPhotoBrowserShowStyleZoom;
+[browser.configure setupWebImageProtocol:GKYYWebImageManager.new];
+```
+
+方法二
+```
+GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
+configure.showStyle = GKPhotoBrowserShowStyleZoom;
+[configure setupWebImageProtocol:GKYYWebImageManager.new];
+
+browser.configure = configure;
+```
 
 ## 特性
 - 支持图片浏览、视频播放、图片视频混排等
@@ -109,24 +127,6 @@ GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentI
 3、显示
 ```
 [browser showFromVC:self];
-```
-
-4、配置
-
-方法一
-```
-browser.configure.showStyle = GKPhotoBrowserShowStyleZoom;
-
-[browser.configure setupWebImageProtocol:GKYYWebImageManager.new];
-```
-
-方法二
-```
-GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
-configure.showStyle = GKPhotoBrowserShowStyleZoom;
-[configure setupWebImageProtocol:GKYYWebImageManager.new];
-
-browser.configure = configure;
 ```
 
 更多功能及属性可在demo和代码中查看

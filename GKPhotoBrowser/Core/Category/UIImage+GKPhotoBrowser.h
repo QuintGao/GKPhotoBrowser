@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIImage *)gkbrowser_imageNamed:(NSString *)name;
 
++ (UIImage *)gkbrowser_imageWithData:(NSData *)data;
+
 @end
 
 NS_ASSUME_NONNULL_END

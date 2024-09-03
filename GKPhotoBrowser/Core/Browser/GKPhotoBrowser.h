@@ -63,15 +63,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 浏览器配置
 @property (nonatomic, strong) GKPhotoBrowserConfigure *configure;
 
-// 初始化方法
 /// 创建图片浏览器
-///   - photos: 包含GKPhoto对象的数组
-///   - currentIndex: 当前的索引
 + (instancetype)photoBrowserWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)index;
 
 /// 创建图片浏览器
-/// @param photos 包含GKPhoto对象的数组
-/// @param currentIndex 当前的索引
 - (instancetype)initWithPhotos:(NSArray<GKPhoto *> *)photos currentIndex:(NSInteger)index;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

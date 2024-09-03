@@ -10,6 +10,7 @@
 @implementation UIImage (GKPhotoBrowser)
 
 + (UIImage *)gkbrowser_imageNamed:(NSString *)name {
+    if (name.length <= 0) return nil;
     static NSBundle *resourceBundle = nil;
     if (!resourceBundle) {
         NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(@"GKPhotoBrowser")];
@@ -26,12 +27,7 @@
     }
     UIImage *image = [UIImage imageNamed:name inBundle:resourceBundle compatibleWithTraitCollection:nil];
     if (!image) {
-        NSURL *url = nil;
-        if ([name hasPrefix:@"file:///"]) {
-            url = [NSURL fileURLWithPath:name];
-        }else {
-            url = [[NSBundle mainBundle] URLForResource:name withExtension:nil];
-        }
+        NSURL *url = [[NSBundle mainBundle] URLForResource:name withExtension:nil];
         if (url) {
             NSData *data = [NSData dataWithContentsOfURL:url];
             image = [self gkbrowser_imageWithData:data];
@@ -54,7 +50,7 @@
     
     if (type == NULL) {
         CFRelease(source);
-        return nil;
+        return [UIImage imageWithData:data];
     }
     
     NSString *typeString = [NSString stringWithFormat:@"%@", type];

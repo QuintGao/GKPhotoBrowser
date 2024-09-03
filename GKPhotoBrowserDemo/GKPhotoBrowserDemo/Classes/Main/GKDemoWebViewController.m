@@ -124,13 +124,49 @@
     
     NSInteger index = imgView.tag;
     
-    self.configure.isShowLivePhotoMark = YES;
-    self.configure.isPopGestureEnabled = YES; // push显示，在第一页时手势返回
+    Class cls = NSClassFromString(@"GKIJKPlayerManager");
+    if (self.videoPlayStyle == 2 && !cls) {
+        [GKMessageTool showText:@"请先 pod 'GKPhotoBrowser/IJKPlayer'"];
+        return;
+    }
+    
+    GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
+    configure.showStyle = self.showStyle;
+    configure.hideStyle = self.hideStyle;
+    configure.loadStyle = self.loadStyle;
+    configure.failStyle = self.failStyle;
+    
+    if (self.imageLoadStyle == 0) {
+        [configure setupWebImageProtocol:[[GKSDWebImageManager alloc] init]];
+    }else if (self.imageLoadStyle == 1) {
+        [configure setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
+    }else {
+        [configure setupWebImageProtocol:[[GKKFWebImageManager alloc] init]];
+    }
+    
+    configure.videoLoadStyle = self.videoLoadStyle;
+    configure.videoFailStyle = self.videoFailStyle;
+    
+    if (self.videoPlayStyle == 0) {
+        [configure setupVideoPlayerProtocol:[[GKAVPlayerManager alloc] init]];
+    }else if (self.videoPlayStyle == 1) {
+        [configure setupVideoPlayerProtocol:[[GKZFPlayerManager alloc] init]];
+    }else {
+        [configure setupVideoPlayerProtocol:[[cls alloc] init]];
+    }
+    
+    configure.isShowLivePhotoMark = YES;
+    if (self.livePhotoStyle == 0) {
+        [configure setupLivePhotoProtocol:GKAFLivePhotoManager.new];
+    }else {
+        [configure setupLivePhotoProtocol:GKAlamofireLivePhotoManager.new];
+    }
+    configure.isPopGestureEnabled = YES; // push显示，在第一页时手势返回
     
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
-    browser.configure = self.configure;
-    [browser showFromVC:self];
+    browser.configure = configure;
     browser.delegate = self;
+    [browser showFromVC:self];
 }
 
 #pragma mark - GKPhotoBrowserDelegate

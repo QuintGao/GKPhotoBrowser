@@ -56,7 +56,7 @@ static CGFloat   photoH;
     for (NSInteger i = 0; i < photos.count; i++) {
         UIImageView *imgView = [NSClassFromString(@"SDAnimatedImageView") new];
         if (!imgView) {
-            imgView = [NSClassFromString(@"FLAnimatedImageView") new];
+            imgView = [UIImageView new];
         }
         
         imgView.tag = i;
@@ -89,7 +89,7 @@ static CGFloat   photoH;
     for (NSInteger i = 0; i < images.count; i++) {
         UIImageView *imgView = [NSClassFromString(@"SDAnimatedImageView") new];
         if (!imgView) {
-            imgView = [NSClassFromString(@"FLAnimatedImageView") new];
+            imgView = [UIImageView new];
         }
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         imgView.clipsToBounds = YES;
@@ -101,11 +101,14 @@ static CGFloat   photoH;
         
         GKTimeLineImage *image = images[i];
         
-        if (image.islocal) {
+        if (image.islocal && image.imageURL) {
             NSData *data = [NSData dataWithContentsOfURL:image.imageURL];
             imgView.image = [UIImage imageWithData:data];
         }else {
-            if (image.coverImage) {
+            if (image.islocal && image.url) {
+                NSURL *url = [NSURL fileURLWithPath:image.url];
+                [imgView sd_setImageWithURL:url];
+            }else if (image.coverImage) {
                 imgView.image = image.coverImage;
             }else if ([image.url hasPrefix:@"http"]) {
                 NSString *urlStr = image.thumbnail_url ? image.thumbnail_url : image.url;
