@@ -193,6 +193,7 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.1.0 - 2024.09.04 1、代码优化，增加配置类 2、本地图片加载优化，图片加载类支持为nil
  * 3.0.3 - 2024.08.12 1、修复系统静音情况下，播放视频无声音的问题 2、增加视频和livePhoto静音播放属性
  * 3.0.2 - 2024.07.26 1、livePhoto优化，增加是否清理缓存属性
  * 3.0.1 - 2024.07.03 1、修复bug #193 2、livePhoto进度优化及增加标识

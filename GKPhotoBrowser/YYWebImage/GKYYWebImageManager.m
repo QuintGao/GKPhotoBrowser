@@ -1,6 +1,6 @@
 //
 //  GKYYWebImageManager.m
-//  GKPhotoBrowserDemo
+//  GKPhotoBrowser
 //
 //  Created by gaokun on 2020/4/27.
 //  Copyright © 2020 QuintGao. All rights reserved.
