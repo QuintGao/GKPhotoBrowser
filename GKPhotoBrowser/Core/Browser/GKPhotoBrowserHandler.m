@@ -211,28 +211,35 @@
     
     GKPhoto *photo = photoView.photo;
     
-    CGRect sourceRect = photo.sourceFrame;
-    
-    if (CGRectEqualToRect(sourceRect, CGRectZero)) {
-        if (photo.sourceImageView == nil) {
-            [UIView animateWithDuration:self.configure.animDuration animations:^{
-                photoView.imageView.alpha = 0;
-                [self browserChangeAlpha:0];
-            } completion:^(BOOL finished) {
-                [self dismissAnimated:self.configure.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
-            }];
-            return;
-        }
-        
-        if (self.configure.isHideSourceView) {
-            photo.sourceImageView.alpha = 0;
-        }
-        
-        sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toView:photoView];
+    // 判断是否可以恢复到原位置
+    BOOL hasOrigin = YES;
+    if (!photo.sourceImageView) {
+        hasOrigin = NO;
     }else {
-        if (self.configure.isHideSourceView && photo.sourceImageView) {
-            photo.sourceImageView.alpha = 0;
+        // 判断是否超出屏幕
+        CGRect screenBounds = UIScreen.mainScreen.bounds;
+        CGRect originRect = photo.sourceFrame;
+        if (CGRectEqualToRect(originRect, CGRectZero)) {
+            originRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toView:nil];
         }
+        
+        if (!CGRectIntersectsRect(screenBounds, originRect)) {
+            hasOrigin = NO;
+        }
+    }
+    if (!hasOrigin) {
+        [self browserDismissNone];
+        return;
+    }
+    
+    // 隐藏原图
+    if (self.configure.isHideSourceView && photo.sourceImageView) {
+        photo.sourceImageView.alpha = 0;
+    }
+    
+    CGRect sourceRect = photo.sourceFrame;
+    if (CGRectEqualToRect(sourceRect, CGRectZero)) {
+        sourceRect = [photo.sourceImageView.superview convertRect:photo.sourceImageView.frame toView:photoView];
     }
     
     if (self.configure.isAdaptiveSafeArea) {
@@ -242,18 +249,6 @@
     // 修复放大时缩放的bug
     sourceRect.origin.x += photoView.scrollView.contentOffset.x;
     sourceRect.origin.y += photoView.scrollView.contentOffset.y;
-    
-    // 判断是否超出屏幕
-    CGRect screenBounds = UIScreen.mainScreen.bounds;
-    if (!CGRectIntersectsRect(screenBounds, sourceRect)) {
-        [UIView animateWithDuration:self.configure.animDuration animations:^{
-            photoView.imageView.alpha = 0;
-            [self browserChangeAlpha:0];
-        } completion:^(BOOL finished) {
-            [self dismissAnimated:self.configure.hideStyle == GKPhotoBrowserHideStyleZoomSlide];
-        }];
-        return;
-    }
     
     if (photo.sourceImageView.image) {
         photoView.imageView.image = photo.sourceImageView.image;
@@ -295,6 +290,11 @@
 - (void)browserDismissNone {
     GKPhotoView *photoView = self.browser.curPhotoView;
     if (!photoView) return;
+    
+    GKPhoto *photo = photoView.photo;
+    if (self.configure.isHideSourceView && photo.sourceImageView) {
+        photo.sourceImageView.alpha = 0;
+    }
     
     [UIView animateWithDuration:self.configure.animDuration animations:^{
         photoView.imageView.alpha = 0;

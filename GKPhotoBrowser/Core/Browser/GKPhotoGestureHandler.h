@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) GKPanGestureRecognizer *panGesture;
 
 @property (nonatomic, assign) BOOL isClickDismiss;
+@property (nonatomic, assign) BOOL isPanBegan;
 
 - (void)addGestureRecognizer;
 - (void)addPanGesture:(BOOL)isFirst;

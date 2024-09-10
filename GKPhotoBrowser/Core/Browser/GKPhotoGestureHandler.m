@@ -223,6 +223,7 @@ int const static kDirectionPanThreshold = 5;
     
     switch (panGesture.state) {
         case UIGestureRecognizerStateBegan: {
+            self.isPanBegan = YES;
             photoView.loadingView.hidden = YES;
             [self handlePanBegin];
         }
@@ -239,9 +240,9 @@ int const static kDirectionPanThreshold = 5;
             break;
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled:{
+            self.isPanBegan = NO;
             
             CGFloat scale = [self panGestureScale:panGesture];
-            
             if (scale < 0.2) {
                 [self browserCancelDismiss];
             }else {
@@ -275,6 +276,7 @@ int const static kDirectionPanThreshold = 5;
     
     switch (panGesture.state) {
         case UIGestureRecognizerStateBegan: {
+            self.isPanBegan = YES;
             photoView.loadingView.hidden = YES;
             [self handlePanBegin];
         }
@@ -287,6 +289,7 @@ int const static kDirectionPanThreshold = 5;
             break;
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled: {
+            self.isPanBegan = NO;
             if (fabs(point.y) > 200 || fabs(velocity.y) > 500) {
                 if ([self.delegate respondsToSelector:@selector(browserDidDisappear)]) {
                     [self.delegate browserDidDisappear];
@@ -306,6 +309,7 @@ int const static kDirectionPanThreshold = 5;
 - (void)handlePanBegin {
     GKPhotoView *photoView = self.browser.curPhotoView;
     if (!photoView) return;
+    
     photoView.imageView.clipsToBounds = YES;
     photoView.clipsToBounds = NO;
     GKPhoto *photo = photoView.photo;

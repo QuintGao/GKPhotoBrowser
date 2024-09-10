@@ -23,6 +23,8 @@ target 'GKPhotoBrowserDemo' do
   pod 'TZImagePickerController'
   pod 'GKSliderView'
   
+  pod 'GKVideoScrollView'
+  
   pod 'GKPhotoBrowser', :path => '../'
   pod 'GKPhotoBrowser/YY', :path => '../'
   pod 'GKPhotoBrowser/KF', :path => '../'

@@ -241,7 +241,7 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 /// @param protocol 需实现GKLivePhotoProtocol协议
 - (void)setupLivePhotoProtocol:(id<GKLivePhotoProtocol>)protocol;
 
-/// 销毁加载类
-- (void)destory;
+/// 隐藏
+- (void)didDisappear;
 
 @end

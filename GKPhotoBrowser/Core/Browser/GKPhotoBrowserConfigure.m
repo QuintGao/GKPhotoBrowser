@@ -116,6 +116,13 @@
     self.livePhoto = protocol;
 }
 
+- (void)didDisappear {
+    if (self.isClearMemoryWhenDisappear && [self.imager respondsToSelector:@selector(clearMemory)]) {
+        [self.imager clearMemory];
+    }
+    [self destory];
+}
+
 - (void)destory {
     self.imager = nil;
     [self.player gk_stop];

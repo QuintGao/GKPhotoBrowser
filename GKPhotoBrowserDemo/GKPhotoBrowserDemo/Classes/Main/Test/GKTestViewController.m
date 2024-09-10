@@ -220,6 +220,12 @@
 //        [browser.configure setupWebImageProtocol:[LocalImageLoadManager new]];
     [browser.configure setupWebImageProtocol:nil];
     
+    [browser setupCoverViews:@[UIView.new] layoutBlock:^(GKPhotoBrowser *browser, CGRect frame) {
+        NSLog(@"%f", browser.view.safeAreaInsets.top);
+        NSLog(@"%@", NSStringFromCGRect(UIApplication.sharedApplication.statusBarFrame));
+        NSLog(@"%@", NSStringFromCGRect([(UIWindowScene *)UIApplication.sharedApplication.connectedScenes.anyObject statusBarManager].statusBarFrame));
+    }];
+    
     browser.delegate = self;
     [browser showFromVC:self];
     self.browser = browser;

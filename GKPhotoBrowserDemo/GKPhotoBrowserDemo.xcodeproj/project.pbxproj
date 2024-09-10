@@ -58,6 +58,9 @@
 		79B33755249111E100590023 /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = 79B33754249111E100590023 /* test.gif */; };
 		79CEF1BC2C212EDE00BC0F75 /* GKDemoLocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79CEF1BB2C212EDE00BC0F75 /* GKDemoLocalViewController.m */; };
 		79D141B52C80761B0081604A /* LocalImageLoadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D141B42C80761B0081604A /* LocalImageLoadManager.m */; };
+		79D142112C89885A0081604A /* GKWBPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D142102C89885A0081604A /* GKWBPlayerManager.m */; };
+		79D142142C898E300081604A /* GKWBPlayerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D142132C898E300081604A /* GKWBPlayerCell.m */; };
+		79D142192C8ADAEA0081604A /* GKWBModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D142182C8ADAEA0081604A /* GKWBModel.m */; };
 		79E99CE72BFC3A8500FBC92E /* GKSwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */; };
 		79FCF8B52C00589500639BC8 /* GKDemoWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCF8B42C00589500639BC8 /* GKDemoWebViewController.m */; };
 		79FCF8B82C00589E00639BC8 /* GKDemoPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCF8B72C00589E00639BC8 /* GKDemoPhotoViewController.m */; };
@@ -170,6 +173,12 @@
 		79CEF1BB2C212EDE00BC0F75 /* GKDemoLocalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKDemoLocalViewController.m; sourceTree = "<group>"; };
 		79D141B32C80761B0081604A /* LocalImageLoadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalImageLoadManager.h; sourceTree = "<group>"; };
 		79D141B42C80761B0081604A /* LocalImageLoadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalImageLoadManager.m; sourceTree = "<group>"; };
+		79D1420F2C89885A0081604A /* GKWBPlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKWBPlayerManager.h; sourceTree = "<group>"; };
+		79D142102C89885A0081604A /* GKWBPlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKWBPlayerManager.m; sourceTree = "<group>"; };
+		79D142122C898E300081604A /* GKWBPlayerCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKWBPlayerCell.h; sourceTree = "<group>"; };
+		79D142132C898E300081604A /* GKWBPlayerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKWBPlayerCell.m; sourceTree = "<group>"; };
+		79D142172C8ADAEA0081604A /* GKWBModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKWBModel.h; sourceTree = "<group>"; };
+		79D142182C8ADAEA0081604A /* GKWBModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKWBModel.m; sourceTree = "<group>"; };
 		79E99CE52BFC3A8400FBC92E /* GKPhotoBrowserDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GKPhotoBrowserDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKSwiftViewController.swift; sourceTree = "<group>"; };
 		79FCF8B32C00589500639BC8 /* GKDemoWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKDemoWebViewController.h; sourceTree = "<group>"; };
@@ -404,6 +413,12 @@
 			children = (
 				7961A3032C2E610900C61A70 /* GKLivePhotoViewController.h */,
 				7961A3042C2E610900C61A70 /* GKLivePhotoViewController.m */,
+				79D1420F2C89885A0081604A /* GKWBPlayerManager.h */,
+				79D142102C89885A0081604A /* GKWBPlayerManager.m */,
+				79D142122C898E300081604A /* GKWBPlayerCell.h */,
+				79D142132C898E300081604A /* GKWBPlayerCell.m */,
+				79D142172C8ADAEA0081604A /* GKWBModel.h */,
+				79D142182C8ADAEA0081604A /* GKWBModel.m */,
 				7961A3062C2E61F700C61A70 /* livephoto.txt */,
 			);
 			path = LivePhoto;
@@ -575,6 +590,7 @@
 				"${BUILT_PRODUCTS_DIR}/GKMessageTool/GKMessageTool.framework",
 				"${BUILT_PRODUCTS_DIR}/GKNavigationBar/GKNavigationBar.framework",
 				"${BUILT_PRODUCTS_DIR}/GKSliderView/GKSliderView.framework",
+				"${BUILT_PRODUCTS_DIR}/GKVideoScrollView/GKVideoScrollView.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
@@ -595,6 +611,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKMessageTool.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKNavigationBar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKSliderView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GKVideoScrollView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
@@ -622,6 +639,7 @@
 				795FA6171FF338200057BDB0 /* GKTest01ViewController.m in Sources */,
 				79D141B52C80761B0081604A /* LocalImageLoadManager.m in Sources */,
 				7907911D29B6E40A000D70A5 /* GKDemoViewController.m in Sources */,
+				79D142112C89885A0081604A /* GKWBPlayerManager.m in Sources */,
 				795FA6181FF338200057BDB0 /* GKTest02ViewCell.m in Sources */,
 				79E99CE72BFC3A8500FBC92E /* GKSwiftViewController.swift in Sources */,
 				795FA6191FF338200057BDB0 /* UIView+GKFrame.m in Sources */,
@@ -632,6 +650,8 @@
 				79FCF8B82C00589E00639BC8 /* GKDemoPhotoViewController.m in Sources */,
 				795FA6141FF338200057BDB0 /* GKToutiaoViewController.m in Sources */,
 				795FA6151FF338200057BDB0 /* GKToutiaoModel.m in Sources */,
+				79D142142C898E300081604A /* GKWBPlayerCell.m in Sources */,
+				79D142192C8ADAEA0081604A /* GKWBModel.m in Sources */,
 				795FA6121FF338200057BDB0 /* GKToutiaoDetailViewController.m in Sources */,
 				7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */,
 				60415CBA2121750B00D1D54B /* GKBottomView.m in Sources */,

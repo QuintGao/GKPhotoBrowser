@@ -159,6 +159,7 @@
     if (self.player.assetURL != self.photo.videoUrl) return;
     if (self.player.videoPlayView.superview != self.imageView) {
         [self.imageView addSubview:self.player.videoPlayView];
+        self.imageView.userInteractionEnabled = YES;
     }
     [self.imageView bringSubviewToFront:self.player.videoPlayView];
     [self.player gk_updateFrame:self.imageView.bounds];

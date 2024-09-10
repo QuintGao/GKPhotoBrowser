@@ -15,6 +15,7 @@
 #import "GKPublishViewController.h"
 #import <GKMessageTool/GKMessageTool.h>
 #import "GKZFPlayerManager.h"
+#import "GKWBPlayerManager.h"
 
 @interface GKLivePhotoViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -160,6 +161,8 @@
         configure.videoPlayImage = [UIImage imageNamed:@"ic_play3"];
         configure.isShowLivePhotoMark = YES;
         configure.isClearMemoryForLivePhoto = NO;
+        [configure setupVideoPlayerProtocol:GKWBPlayerManager.new];
+        [configure setupVideoProgressProtocol:nil];
         
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.configure = configure;
@@ -181,7 +184,15 @@
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser singleTapWithIndex:(NSInteger)index {
-    [browser dismiss];
+    if (browser.curPhoto.isVideo) {
+        if (browser.configure.player.isPlaying) {
+            [browser.configure.player gk_pause];
+        }else {
+            [browser.configure.player gk_play];
+        }
+    }else {
+        [browser dismiss];
+    }
 }
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser longPressWithIndex:(NSInteger)index {

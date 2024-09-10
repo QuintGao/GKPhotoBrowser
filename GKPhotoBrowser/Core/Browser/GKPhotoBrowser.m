@@ -67,6 +67,7 @@
     if (self = [super init]) {
         self.photos = photos;
         self.currentIndex = index;
+        [self initValue];
     }
     return self;
 }
@@ -88,7 +89,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self initValue];
     [self initUI];
 }
 
@@ -130,13 +130,7 @@
         [self.delegate photoBrowser:self didDisappearAtIndex:self.currentIndex];
     }
     
-    if (self.configure.isClearMemoryWhenDisappear) {
-        if ([self.imager respondsToSelector:@selector(clearMemory)]) {
-            [self.imager clearMemory];
-        }
-    }
-    
-    [self.configure destory];
+    [self.configure didDisappear];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -161,7 +155,6 @@
     self.statusBarStyle = UIStatusBarStyleLightContent;
     self.visiblePhotoViews = [NSMutableArray array];
     self.reusablePhotoViews = [NSMutableSet set];
-    [self loadConfigure];
 }
 
 - (void)initUI {
@@ -277,6 +270,7 @@
 }
 
 - (void)showFromVC:(UIViewController *)vc {
+    [self loadConfigure];
     [self.handler showFromVC:vc];
 }
 
@@ -353,6 +347,9 @@
     [self setupVideoPlayerProtocol:configure.player];
     [self setupVideoProgressProtocol:configure.progress];
     [self setupLivePhotoProtocol:configure.livePhoto];
+    self.handler.browser = self;
+    self.gestureHandler.browser = self;
+    self.rotationHandler.browser = self;
 }
 
 - (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol {
@@ -457,6 +454,7 @@
     __weak __typeof(self) weakSelf = self;
     protocol.liveStatusChanged = ^(id<GKLivePhotoProtocol> mgr, GKLivePlayStatus status) {
         __strong __typeof(weakSelf) self = weakSelf;
+        if (self.gestureHandler.isPanBegan) return;
         if (!self.configure.isShowLivePhotoMark) return;
         if (status == GKLivePlayStatusBegin) {
             self.curPhotoView.liveMarkView.hidden = YES;
@@ -866,7 +864,6 @@
 - (GKPhotoBrowserHandler *)handler {
     if (!_handler) {
         _handler = [[GKPhotoBrowserHandler alloc] init];
-        _handler.browser = self;
     }
     return _handler;
 }
@@ -875,7 +872,6 @@
     if (!_gestureHandler) {
         _gestureHandler = [[GKPhotoGestureHandler alloc] init];
         _gestureHandler.delegate = self;
-        _gestureHandler.browser = self;
     }
     return _gestureHandler;
 }
@@ -884,7 +880,6 @@
     if (!_rotationHandler) {
         _rotationHandler = [[GKPhotoRotationHandler alloc] init];
         _rotationHandler.delegate = self;
-        _rotationHandler.browser = self;
     }
     return _rotationHandler;
 }

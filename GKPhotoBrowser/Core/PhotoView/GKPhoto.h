@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 占位图
 @property (nonatomic, strong, nullable) UIImage  *placeholderImage;
 
+/// 额外信息
+@property (nonatomic, strong, nullable) id extraInfo;
+
 #pragma mark - 以下属性播放视频时使用
 /// 视频地址
 @property (nonatomic, strong, nullable) NSURL    *videoUrl;
