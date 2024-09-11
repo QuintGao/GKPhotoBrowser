@@ -2,7 +2,7 @@
 //  GKPhotoBrowserConfigure.m
 //  GKPhotoBrowser
 //
-//  Created by gaokun on 2020/10/19.
+//  Created by QuintGao on 2020/10/19.
 //  Copyright © 2020 QuintGao. All rights reserved.
 //
 
@@ -47,6 +47,7 @@
     self.animDuration            = 0.3;
     self.photoViewPadding        = 10;
     self.hidesSavedBtn           = YES;
+    self.isVideoAutoPlay         = YES;
     self.isVideoReplay           = YES;
     self.isVideoPausedWhenDragged = YES;
     self.isLivePhotoPausedWhenDragged = YES;

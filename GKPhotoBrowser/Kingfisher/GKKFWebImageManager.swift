@@ -1,6 +1,6 @@
 //
 //  GKKFWebImageManager.swift
-//  SwiftExample
+//  GKPhotoBrowser
 //
 //  Created by QuintGao on 2024/5/20.
 //

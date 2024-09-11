@@ -21,6 +21,8 @@
 
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
+@property (nonatomic, assign) CGSize videoSize;
+
 @end
 
 @implementation GKWBPlayerManager
@@ -101,11 +103,11 @@
         }
     };
     
-//    // 视频尺寸
-//    player.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size) {
-//        __strong __typeof(weakSelf) self = weakSelf;
-//        !self.playerGetVideoSize ?: self.playerGetVideoSize(self, size);
-//    };
+    // 视频尺寸
+    player.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        self.videoSize = size;
+    };
     
     // 播放进度回调
     player.playerPlayTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval currentTime, NSTimeInterval duration) {
@@ -216,6 +218,11 @@
 
 - (void)gk_setMute:(BOOL)mute {
     self.player.currentPlayerManager.muted = mute;
+}
+
+- (void)willDismiss {
+    !self.playerGetVideoSize ?: self.playerGetVideoSize(self, self.videoSize);
+    [self.videoPlayView removeFromSuperview];
 }
 
 #pragma mark - GKVideoScrollViewDataSource & GKVideoScrollViewDelegate

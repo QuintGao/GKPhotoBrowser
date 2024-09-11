@@ -89,7 +89,7 @@ static GKLivePhotoManager *_manager = nil;
 }
 
 - (void)createLivePhotoWithAsset:(PHAsset *)asset targetSize:(CGSize)targetSize progressBlock:(void (^ _Nullable)(float))progressBlock completion:(void (^ _Nullable)(PHLivePhoto * _Nullable, NSError * _Nullable))completion {
-    if (asset.mediaSubtypes != PHAssetMediaSubtypePhotoLive) {
+    if (!(asset.mediaSubtypes & PHAssetMediaSubtypePhotoLive)) {
         !completion ?: completion(nil, [self errorWithMsg:@"asset is not livephoto"]);
         return;
     }

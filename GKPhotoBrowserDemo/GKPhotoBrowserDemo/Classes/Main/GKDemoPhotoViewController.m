@@ -18,7 +18,7 @@
 
 @property (nonatomic, strong) NSArray *models;
 
-
+@property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) GKPhotosView *photosView;
 @property (nonatomic, strong) NSArray *photos;
 
@@ -52,9 +52,14 @@
 }
 
 - (void)initSubviews {
+    self.scrollView = [[UIScrollView alloc] init];
+    self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    self.scrollView.frame = CGRectMake(0, CGRectGetMaxY(self.gk_navigationBar.frame), self.view.frame.size.width, self.view.frame.size.height - CGRectGetMaxY(self.gk_navigationBar.frame));
+    [self.view addSubview:self.scrollView];
+    
     self.photosView =  [GKPhotosView photosViewWithWidth:self.view.bounds.size.width - 20 andMargin:10];
     self.photosView.delegate = self;
-    [self.view addSubview:self.photosView];
+    [self.scrollView addSubview:self.photosView];
     
     NSMutableArray *images = [NSMutableArray array];
     [self.models enumerateObjectsUsingBlock:^(TZAssetModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -68,6 +73,7 @@
             image.video_asset = obj.asset;
         }else {
             image.image_asset = obj.asset;
+            image.isLivePhoto = obj.asset.mediaSubtypes & PHAssetMediaSubtypePhotoLive;
         }
         [images addObject:image];
     }];
@@ -76,8 +82,9 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         CGFloat height = [GKPhotosView sizeWithCount:images.count width:self.view.bounds.size.width - 20 andMargin:10].height;
-        CGFloat y = CGRectGetMaxY(self.gk_navigationBar.frame) + 20;
+        CGFloat y = 20;
         self.photosView.frame = CGRectMake(10, y, self.view.bounds.size.width - 20, height);
+        self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, y + height + 20);
         
         self.photosView.images = images;
     });
@@ -88,8 +95,9 @@
     
     [self.photosView updateWidth:self.view.bounds.size.width - 20];
     CGFloat height = [GKPhotosView sizeWithCount:self.photos.count width:self.view.bounds.size.width - 20 andMargin:10].height;
-    CGFloat y = CGRectGetMaxY(self.gk_navigationBar.frame) + 20;
+    CGFloat y = 20;
     self.photosView.frame = CGRectMake(10, y, self.view.bounds.size.width - 20, height);
+    self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, y + height + 20);
 }
 
 #pragma mark - GKPhotosViewDelegate

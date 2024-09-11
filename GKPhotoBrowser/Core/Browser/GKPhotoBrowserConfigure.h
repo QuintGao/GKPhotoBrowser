@@ -181,17 +181,19 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 @property (nonatomic, assign) BOOL isClearMemoryWhenViewReuse;
 
 #pragma mark - 视频相关
-/** 视频播放处理 */
+/// 视频播放处理
 @property (nonatomic, strong, readonly) id<GKVideoPlayerProtocol> player;
-/** 视频加载方式，默认GKPhotoBrowserLoadStyleIndeterminate */
+/// 视频加载方式，默认GKPhotoBrowserLoadStyleIndeterminate
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle videoLoadStyle;
-/** 视频播放失败显示方式，默认GKPhotoBrowserFailStyleOnlyText */
+/// 视频播放失败显示方式，默认GKPhotoBrowserFailStyleOnlyText
 @property (nonatomic, assign) GKPhotoBrowserFailStyle videoFailStyle;
 /// 视频暂停或停止时是否显示播放图标，默认YES
 @property (nonatomic, assign) BOOL isShowPlayImage;
 /// 视频暂停或停止时显示的播放图
 @property (nonatomic, strong) UIImage *videoPlayImage;
-/// 视频是否静音播放
+/// 是否自动播放视频，默认YES
+@property (nonatomic, assign) BOOL isVideoAutoPlay;
+/// 视频是否静音播放，默认NO
 @property (nonatomic, assign) BOOL isVideoMutedPlay;
 /// 视频播放结束后是否自动重播，默认YES
 @property (nonatomic, assign) BOOL isVideoReplay;
@@ -205,24 +207,25 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 @property (nonatomic, strong) UIImage *videoFailureImage;
 
 #pragma mark - 视频进度相关
+/// 进度处理
 @property (nonatomic, strong, readonly) id<GKProgressViewProtocol> progress;
 /// 是否隐藏视频进度视图，默认NO，内容为视频时有效
 @property (nonatomic, assign) BOOL isHideProgressView;
 
 #pragma mark - livePhoto相关
-/** livePhoto处理 */
+/// livePhoto处理
 @property (nonatomic, strong, readonly) id<GKLivePhotoProtocol> livePhoto;
-/** livePhoto加载方式，默认GKPhotoBrowserLoadStyleDeterminateSector*/
+/// livePhoto加载方式，默认GKPhotoBrowserLoadStyleDeterminateSector
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle liveLoadStyle;
 /// 拖拽消失时是否暂停播放livePhoto，默认YES
 @property (nonatomic, assign) BOOL isLivePhotoPausedWhenDragged;
 /// 左右滑动开始时是否暂停播放livePhoto，默认NO
 @property (nonatomic, assign) BOOL isLivePhotoPausedWhenScrollBegan;
-/// livePhoto是否静音播放
+/// livePhoto是否静音播放，默认NO
 @property (nonatomic, assign) BOOL isLivePhotoMutedPlay;
-// 是否显示livePhoto标识，默认NO
+/// 是否显示livePhoto标识，默认NO
 @property (nonatomic, assign) BOOL isShowLivePhotoMark;
-// 是否清理livePhoto缓存，默认YES
+/// 是否清理livePhoto缓存，默认YES
 @property (nonatomic, assign) BOOL isClearMemoryForLivePhoto;
 
 /// 自定义图片请求类

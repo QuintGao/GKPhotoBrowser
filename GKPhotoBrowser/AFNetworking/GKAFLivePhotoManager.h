@@ -1,6 +1,6 @@
 //
 //  GKAFLivePhotoManager.h
-//  AFNetworking
+//  GKPhotoBrowser
 //
 //  Created by QuintGao on 2024/6/20.
 //

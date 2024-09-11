@@ -2,7 +2,7 @@
 //  GKPhoto.m
 //  GKPhotoBrowser
 //
-//  Created by gaokun on 2020/6/16.
+//  Created by QuintGao on 2020/6/16.
 //  Copyright © 2020 QuintGao. All rights reserved.
 //
 
@@ -53,7 +53,7 @@
             }];
         }else {
             CGFloat width = UIScreen.mainScreen.bounds.size.width;
-            self.imageRequestID = [self loadImageWithAsset:asset photoWidth:width * 2 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
+            self.imageRequestID = [self loadImageWithAsset:asset photoWidth:width completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
                 __strong __typeof(weakSelf) self = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.imageRequestID = 0;
@@ -101,7 +101,7 @@
 
 - (BOOL)isLivePhoto {
     if (self.imageAsset) {
-        return self.imageAsset.mediaSubtypes == PHAssetMediaSubtypePhotoLive;
+        return self.imageAsset.mediaSubtypes & PHAssetMediaSubtypePhotoLive;
     }
     return _isLivePhoto;
 }
@@ -111,6 +111,8 @@
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     options.resizeMode = PHImageRequestOptionsResizeModeFast;
+    options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
+    options.synchronous = YES;
     
     PHImageRequestID requestID = [[PHImageManager defaultManager] requestImageDataForAsset:asset options:options resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
         NSError *error = info[PHImageErrorKey];
@@ -143,11 +145,13 @@
     CGFloat pixelHeight = pixelWidth / aspectRatio;
     CGSize imageSize = CGSizeMake(pixelWidth, pixelHeight);
     
-    PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
-    option.networkAccessAllowed = YES;
-    option.resizeMode = PHImageRequestOptionsResizeModeFast;
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
+    options.resizeMode = PHImageRequestOptionsResizeModeFast;
+    options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
+    options.synchronous = YES;
     
-    PHImageRequestID requestID = [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:imageSize contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+    PHImageRequestID requestID = [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:imageSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
         NSError *error = [info objectForKey:PHImageErrorKey];
         BOOL cancelled = [[info objectForKey:PHImageCancelledKey] boolValue];
         if (!cancelled && result) {
@@ -178,10 +182,10 @@
 }
 
 - (PHImageRequestID)loadVideoWithAsset:(PHAsset *)asset completion:(nonnull void (^)(NSURL * _Nullable, NSError * _Nullable))completion {
-    PHVideoRequestOptions *option = [[PHVideoRequestOptions alloc] init];
-    option.networkAccessAllowed = YES;
+    PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
     
-    PHImageRequestID requestID = [[PHImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem *playerItem, NSDictionary *info) {
+    PHImageRequestID requestID = [[PHImageManager defaultManager] requestPlayerItemForVideo:asset options:options resultHandler:^(AVPlayerItem *playerItem, NSDictionary *info) {
         AVURLAsset *urlAsset = (AVURLAsset *)playerItem.asset;
         NSError *error = [info objectForKey:PHImageErrorKey];
         if (error && !urlAsset) {

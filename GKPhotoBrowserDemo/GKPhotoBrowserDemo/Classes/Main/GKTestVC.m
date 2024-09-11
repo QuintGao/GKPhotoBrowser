@@ -2,7 +2,7 @@
 //  GKTestVC.m
 //  GKPhotoBrowserDemo
 //
-//  Created by gaokun on 2021/4/20.
+//  Created by QuintGao on 2021/4/20.
 //  Copyright © 2021 QuintGao. All rights reserved.
 //
 

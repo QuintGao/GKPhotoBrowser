@@ -2,7 +2,7 @@
 //  GKPublishViewController.m
 //  GKPhotoBrowserDemo
 //
-//  Created by gaokun on 2020/6/16.
+//  Created by QuintGao on 2020/6/16.
 //  Copyright © 2020 QuintGao. All rights reserved.
 //
 

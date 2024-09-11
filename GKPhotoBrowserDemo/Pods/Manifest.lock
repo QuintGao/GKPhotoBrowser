@@ -16,7 +16,7 @@ PODS:
     - AFNetworking/NSURLSession
   - Alamofire (5.9.1)
   - GKCover (3.0.1)
-  - GKLivePhotoManager (1.0.2)
+  - GKLivePhotoManager (1.0.3)
   - GKMessageTool (1.0.5):
     - MBProgressHUD
   - GKNavigationBar (1.9.0):
@@ -24,39 +24,39 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.9.0)
   - GKNavigationBar/GestureHandle (1.9.0)
   - GKNavigationBar/NavigationBar (1.9.0)
-  - GKPhotoBrowser (3.1.0):
-    - GKPhotoBrowser/Default (= 3.1.0)
-  - GKPhotoBrowser/AF (3.1.0):
+  - GKPhotoBrowser (3.1.1):
+    - GKPhotoBrowser/Default (= 3.1.1)
+  - GKPhotoBrowser/AF (3.1.1):
     - AFNetworking
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Alamofire (3.1.0):
+  - GKPhotoBrowser/Alamofire (3.1.1):
     - Alamofire
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/AVPlayer (3.1.0):
+  - GKPhotoBrowser/AVPlayer (3.1.1):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.1.0):
+  - GKPhotoBrowser/Core (3.1.1):
     - GKPhotoBrowser/Resources
-  - GKPhotoBrowser/Default (3.1.0):
+  - GKPhotoBrowser/Default (3.1.1):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (3.1.0):
+  - GKPhotoBrowser/KF (3.1.1):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (3.1.0):
+  - GKPhotoBrowser/Progress (3.1.1):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Resources (3.1.0)
-  - GKPhotoBrowser/SD (3.1.0):
+  - GKPhotoBrowser/Resources (3.1.1)
+  - GKPhotoBrowser/SD (3.1.1):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (3.1.0):
+  - GKPhotoBrowser/YY (3.1.1):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser/ZFPlayer (3.1.0):
+  - GKPhotoBrowser/ZFPlayer (3.1.1):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.2)
@@ -65,14 +65,14 @@ PODS:
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
   - SDAutoLayout (2.2.1)
-  - SDWebImage (5.19.4):
-    - SDWebImage/Core (= 5.19.4)
-  - SDWebImage/Core (5.19.4)
-  - TZImagePickerController (3.8.6):
-    - TZImagePickerController/Basic (= 3.8.6)
-    - TZImagePickerController/Location (= 3.8.6)
-  - TZImagePickerController/Basic (3.8.6)
-  - TZImagePickerController/Location (3.8.6)
+  - SDWebImage (5.19.7):
+    - SDWebImage/Core (= 5.19.7)
+  - SDWebImage/Core (5.19.7)
+  - TZImagePickerController (3.8.7):
+    - TZImagePickerController/Basic (= 3.8.7)
+    - TZImagePickerController/Location (= 3.8.7)
+  - TZImagePickerController/Basic (3.8.7)
+  - TZImagePickerController/Location (3.8.7)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
@@ -135,18 +135,18 @@ SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
-  GKLivePhotoManager: 203a3fc08563511b961c686e543d5560fa801331
+  GKLivePhotoManager: dc83ab089077997c2441fc827801bfe3f0fa3a3a
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: 361d4dd8b39b254b55f99ec374a7fe926c108557
+  GKPhotoBrowser: a0d4de94707cf309210024e2b3145b25ad56639c
   GKSliderView: 94fab41465f2ba543200f04bee401020beab4041
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
-  SDWebImage: 066c47b573f408f18caa467d71deace7c0f8280d
-  TZImagePickerController: a013c186415f6044914bb0d0dd960a884cff46ec
+  SDWebImage: 8a6b7b160b4d710e2a22b6900e25301075c34cb3
+  TZImagePickerController: 5f35bb7266552e36ca834bafa955b869fe086124
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30

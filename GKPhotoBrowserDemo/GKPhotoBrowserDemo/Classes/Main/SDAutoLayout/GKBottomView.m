@@ -2,7 +2,7 @@
 //  GKSDBottomView.m
 //  GKPhotoBrowserDemo
 //
-//  Created by gaokun on 2018/8/13.
+//  Created by QuintGao on 2018/8/13.
 //  Copyright © 2018年 QuintGao. All rights reserved.
 //
 

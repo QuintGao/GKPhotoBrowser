@@ -93,9 +93,6 @@
 
 - (void)liveDidScrollAppear {
     if (!self.livePhoto) return;
-    if (self.configure.isShowLivePhotoMark) {
-        self.liveMarkView.hidden = NO;
-    }
     if (!self.livePhoto.photo || self.livePhoto.photo != self.photo) {
         [self showLoading];
         __weak __typeof(self) weakSelf = self;

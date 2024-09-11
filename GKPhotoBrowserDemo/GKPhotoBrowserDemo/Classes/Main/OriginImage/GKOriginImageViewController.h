@@ -2,7 +2,7 @@
 //  GKOriginImageViewController.h
 //  GKPhotoBrowserDemo
 //
-//  Created by gaokun on 2019/4/25.
+//  Created by QuintGao on 2019/4/25.
 //  Copyright © 2019 QuintGao. All rights reserved.
 //
 

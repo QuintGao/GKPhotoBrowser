@@ -48,6 +48,7 @@ import CommonCrypto
         if let browser, browser.configure.isClearMemoryForLivePhoto {
             gk_clear()
         }
+        GKLivePhotoManager.deallocManager()
     }
     
     public func loadLivePhoto(with photo: GKPhoto, targetSize: CGSize, progressBlock: ((Float) -> Void)?, completion: ((Bool) -> Void)? = nil) {
@@ -55,7 +56,7 @@ import CommonCrypto
         self.progressBlock = progressBlock
         self.completioBlock = completion
         
-        if let asset = photo.imageAsset, asset.mediaSubtypes == .photoLive {
+        if let asset = photo.imageAsset, asset.mediaSubtypes.contains(.photoLive) {
             loadLivePhoto(asset, targetSize: targetSize)
         }else if let videoUrl = photo.videoUrl {
             let fileManager = FileManager.default
@@ -90,7 +91,7 @@ import CommonCrypto
             let videoFileDest: DownloadRequest.Destination = { _,_ in
                 (videoFileURL, [])
             }
-            let imageFileDst: DownloadRequest.Destination = { _,_ in
+            let imageFileDest: DownloadRequest.Destination = { _,_ in
                 (imageFileURL, [])
             }
             
@@ -116,11 +117,7 @@ import CommonCrypto
                         }
                         isVideoFinished = true
                         if let fileURL = response.fileURL {
-                            if #available(iOS 16.0, *) {
-                                self.filePathList.append(fileURL.path(percentEncoded: true))
-                            } else {
-                                // Fallback on earlier versions
-                            }
+                            self.filePathList.append(fileURL.path)
                         }
                         if isVideoFinished && isImageFinished {
                             self.loadLivePhoto(with: videoPath, imagePath: imagePath, targetSize: targetSize)
@@ -128,7 +125,7 @@ import CommonCrypto
                     }
                     .resume()
                 
-                AF.download(photo.url!, to: imageFileDst)
+                AF.download(photo.url!, to: imageFileDest)
                     .downloadProgress { [weak self] progress in
                         guard let self else { return }
                         imageProgress = Float(progress.completedUnitCount/progress.totalUnitCount)
@@ -220,6 +217,7 @@ import CommonCrypto
             guard let self else { return }
             if let livePhoto {
                 self.livePhotoView?.livePhoto = livePhoto
+                self.progressBlock?(1);
                 self.completioBlock?(true)
             }else {
                 self.completioBlock?(false)

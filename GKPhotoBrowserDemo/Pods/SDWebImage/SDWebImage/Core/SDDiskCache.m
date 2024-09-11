@@ -64,6 +64,11 @@ static NSString * const SDDiskCacheExtendedAttributeName = @"com.hackemist.SDDis
 - (NSData *)dataForKey:(NSString *)key {
     NSParameterAssert(key);
     NSString *filePath = [self cachePathForKey:key];
+    // if filePath is nil or (null)，framework will crash with this：
+    // Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** -[_NSPlaceholderData initWithContentsOfFile:options:maxLength:error:]: nil file argument'
+    if (filePath == nil || [@"(null)" isEqualToString: filePath]) {
+        return nil;
+    }
     NSData *data = [NSData dataWithContentsOfFile:filePath options:self.config.diskCacheReadingOptions error:nil];
     if (data) {
         return data;
@@ -335,6 +340,17 @@ static NSString * const SDDiskCacheExtendedAttributeName = @"com.hackemist.SDDis
 
 #pragma mark - Hash
 
+static inline NSString *SDSanitizeFileNameString(NSString * _Nullable fileName) {
+    if ([fileName length] == 0) {
+        return fileName;
+    }
+    // note: `:` is the only invalid char on Apple file system
+    // but `/` or `\` is valid
+    // \0 is also special case (which cause Foundation API treat the C string as EOF)
+    NSCharacterSet* illegalFileNameCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\0:"];
+    return [[fileName componentsSeparatedByCharactersInSet:illegalFileNameCharacters] componentsJoinedByString:@""];
+}
+
 #define SD_MAX_FILE_EXTENSION_LENGTH (NAME_MAX - CC_MD5_DIGEST_LENGTH * 2 - 1)
 
 #pragma clang diagnostic push
@@ -346,8 +362,18 @@ static inline NSString * _Nonnull SDDiskCacheFileNameForKey(NSString * _Nullable
     }
     unsigned char r[CC_MD5_DIGEST_LENGTH];
     CC_MD5(str, (CC_LONG)strlen(str), r);
+    NSString *ext;
+    // 1. Use URL path extname if valid
     NSURL *keyURL = [NSURL URLWithString:key];
-    NSString *ext = keyURL ? keyURL.pathExtension : key.pathExtension;
+    if (keyURL) {
+        ext = keyURL.pathExtension;
+    }
+    // 2. Use file extname if valid
+    if (!ext) {
+        ext = key.pathExtension;
+    }
+    // 3. Check if extname valid on file system
+    ext = SDSanitizeFileNameString(ext);
     // File system has file name length limit, we need to check if ext is too long, we don't add it to the filename
     if (ext.length > SD_MAX_FILE_EXTENSION_LENGTH) {
         ext = nil;

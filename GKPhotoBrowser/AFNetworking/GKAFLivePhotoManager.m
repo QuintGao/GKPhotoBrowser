@@ -1,6 +1,6 @@
 //
 //  GKAFLivePhotoManager.m
-//  AFNetworking
+//  GKPhotoBrowser
 //
 //  Created by QuintGao on 2024/6/20.
 //
@@ -36,6 +36,7 @@ static float progressRatio = 4 / 5.0;
     if (self.browser.configure.isClearMemoryForLivePhoto) {
         [self gk_clear];
     }
+    [GKLivePhotoManager deallocManager];
 }
 
 - (void)loadLivePhotoWithPhoto:(GKPhoto *)photo targetSize:(CGSize)targetSize progressBlock:(void (^)(float))progressBlock completion:(void (^ _Nullable)(BOOL))completion {
@@ -44,7 +45,7 @@ static float progressRatio = 4 / 5.0;
     self.completionBlock = completion;
     
     __weak __typeof(self) weakSelf = self;
-    if (photo.imageAsset && photo.imageAsset.mediaSubtypes == PHAssetMediaSubtypePhotoLive) {
+    if (photo.imageAsset && photo.imageAsset.mediaSubtypes & PHAssetMediaSubtypePhotoLive) {
         [self loadLivePhotoWithAsset:photo.imageAsset targetSize:targetSize];
     }else if (photo.videoUrl) {
         NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -204,6 +205,7 @@ static float progressRatio = 4 / 5.0;
         __strong __typeof(weakSelf) self = weakSelf;
         if (livePhoto) {
             self.livePhotoView.livePhoto = livePhoto;
+            !self.progressBlock ?: self.progressBlock(1);
             !self.completionBlock ?: self.completionBlock(YES);
         }else {
             !self.completionBlock ?: self.completionBlock(NO);

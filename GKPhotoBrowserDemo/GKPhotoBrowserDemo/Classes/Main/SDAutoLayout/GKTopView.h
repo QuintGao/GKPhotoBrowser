@@ -2,7 +2,7 @@
 //  GKTopView.h
 //  GKPhotoBrowserDemo
 //
-//  Created by gaokun on 2018/8/14.
+//  Created by QuintGao on 2018/8/14.
 //  Copyright © 2018年 QuintGao. All rights reserved.
 //
 
