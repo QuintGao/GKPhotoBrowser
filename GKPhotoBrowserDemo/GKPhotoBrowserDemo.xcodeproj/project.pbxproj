@@ -61,7 +61,7 @@
 		79D142112C89885A0081604A /* GKWBPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D142102C89885A0081604A /* GKWBPlayerManager.m */; };
 		79D142142C898E300081604A /* GKWBPlayerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D142132C898E300081604A /* GKWBPlayerCell.m */; };
 		79D142192C8ADAEA0081604A /* GKWBModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D142182C8ADAEA0081604A /* GKWBModel.m */; };
-		79D142322C916E660081604A /* GKPhotoSwipeRightTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D142312C916E660081604A /* GKPhotoSwipeRightTransition.m */; };
+		79D142352C91840A0081604A /* GKWBRightSlideManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D142342C91840A0081604A /* GKWBRightSlideManager.m */; };
 		79E99CE72BFC3A8500FBC92E /* GKSwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */; };
 		79FCF8B52C00589500639BC8 /* GKDemoWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCF8B42C00589500639BC8 /* GKDemoWebViewController.m */; };
 		79FCF8B82C00589E00639BC8 /* GKDemoPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCF8B72C00589E00639BC8 /* GKDemoPhotoViewController.m */; };
@@ -180,8 +180,8 @@
 		79D142132C898E300081604A /* GKWBPlayerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKWBPlayerCell.m; sourceTree = "<group>"; };
 		79D142172C8ADAEA0081604A /* GKWBModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKWBModel.h; sourceTree = "<group>"; };
 		79D142182C8ADAEA0081604A /* GKWBModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKWBModel.m; sourceTree = "<group>"; };
-		79D142302C916E660081604A /* GKPhotoSwipeRightTransition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKPhotoSwipeRightTransition.h; sourceTree = "<group>"; };
-		79D142312C916E660081604A /* GKPhotoSwipeRightTransition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKPhotoSwipeRightTransition.m; sourceTree = "<group>"; };
+		79D142332C91840A0081604A /* GKWBRightSlideManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKWBRightSlideManager.h; sourceTree = "<group>"; };
+		79D142342C91840A0081604A /* GKWBRightSlideManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKWBRightSlideManager.m; sourceTree = "<group>"; };
 		79E99CE52BFC3A8400FBC92E /* GKPhotoBrowserDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GKPhotoBrowserDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		79E99CE62BFC3A8500FBC92E /* GKSwiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKSwiftViewController.swift; sourceTree = "<group>"; };
 		79FCF8B32C00589500639BC8 /* GKDemoWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKDemoWebViewController.h; sourceTree = "<group>"; };
@@ -414,12 +414,12 @@
 		7961A3022C2E60F500C61A70 /* LivePhoto */ = {
 			isa = PBXGroup;
 			children = (
-				79D142302C916E660081604A /* GKPhotoSwipeRightTransition.h */,
-				79D142312C916E660081604A /* GKPhotoSwipeRightTransition.m */,
 				7961A3032C2E610900C61A70 /* GKLivePhotoViewController.h */,
 				7961A3042C2E610900C61A70 /* GKLivePhotoViewController.m */,
 				79D1420F2C89885A0081604A /* GKWBPlayerManager.h */,
 				79D142102C89885A0081604A /* GKWBPlayerManager.m */,
+				79D142332C91840A0081604A /* GKWBRightSlideManager.h */,
+				79D142342C91840A0081604A /* GKWBRightSlideManager.m */,
 				79D142122C898E300081604A /* GKWBPlayerCell.h */,
 				79D142132C898E300081604A /* GKWBPlayerCell.m */,
 				79D142172C8ADAEA0081604A /* GKWBModel.h */,
@@ -653,6 +653,7 @@
 				602CC2DC21226AD500DE81BF /* GKTopView.m in Sources */,
 				7961A3052C2E610900C61A70 /* GKLivePhotoViewController.m in Sources */,
 				79FCF8B82C00589E00639BC8 /* GKDemoPhotoViewController.m in Sources */,
+				79D142352C91840A0081604A /* GKWBRightSlideManager.m in Sources */,
 				795FA6141FF338200057BDB0 /* GKToutiaoViewController.m in Sources */,
 				795FA6151FF338200057BDB0 /* GKToutiaoModel.m in Sources */,
 				79D142142C898E300081604A /* GKWBPlayerCell.m in Sources */,
@@ -673,7 +674,6 @@
 				795FA6131FF338200057BDB0 /* GKToutiaoViewCell.m in Sources */,
 				795FA6221FF338200057BDB0 /* GKTest03ViewController.m in Sources */,
 				795FA61B1FF338200057BDB0 /* GKTimeLineViewCell.m in Sources */,
-				79D142322C916E660081604A /* GKPhotoSwipeRightTransition.m in Sources */,
 				7925A5502A28914900972F47 /* GKLargeImageViewController.m in Sources */,
 				60154B5F20D11D6B0000877A /* GKGIFViewController.m in Sources */,
 				7925A4EC2A1F37E200972F47 /* GKChatViewCell.m in Sources */,

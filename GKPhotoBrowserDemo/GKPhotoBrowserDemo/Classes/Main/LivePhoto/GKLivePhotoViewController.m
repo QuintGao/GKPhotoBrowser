@@ -16,7 +16,6 @@
 #import <GKMessageTool/GKMessageTool.h>
 #import "GKZFPlayerManager.h"
 #import "GKWBPlayerManager.h"
-#import "GKPhotoSwipeRightTransition.h"
 
 @interface GKLivePhotoViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -39,8 +38,6 @@
 @property (nonatomic, assign) NSInteger     currentIndex;
 
 @property (nonatomic, assign) CGFloat viewWidth;
-
-@property (nonatomic, strong) GKPhotoSwipeRightTransition *transition;
 
 @end
 
@@ -67,8 +64,6 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[GKTimeLineViewCell class] forCellReuseIdentifier:kTimeLineViewCellID];
     [self.view addSubview:self.tableView];
-    
-    self.transition = [[GKPhotoSwipeRightTransition alloc] init];
 }
 
 - (void)setupData {
@@ -168,13 +163,11 @@
         configure.isClearMemoryForLivePhoto = NO;
         [configure setupVideoPlayerProtocol:GKWBPlayerManager.new];
         [configure setupVideoProgressProtocol:nil];
-//        configure.animDuration = 5;
+        configure.isNeedNavigationController = YES;
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.configure = configure;
         browser.delegate = self;
         [browser showFromVC:self];
-        
-        self.transition.browser = browser;
         
         self.browser = browser;
     };

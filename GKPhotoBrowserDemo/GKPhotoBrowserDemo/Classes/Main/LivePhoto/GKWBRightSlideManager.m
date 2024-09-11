@@ -1,50 +1,83 @@
 //
-//  GKPhotoSwipeRightTransition.m
-//  GKPhotoBrowser
+//  GKWBRightSlideManager.m
+//  GKPhotoBrowserDemo
 //
 //  Created by QuintGao on 2024/9/11.
+//  Copyright © 2024 QuintGao. All rights reserved.
 //
 
-#import "GKPhotoSwipeRightTransition.h"
+#import "GKWBRightSlideManager.h"
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
 #import "GKWBPlayerManager.h"
 
-@interface GKPhotoSwipeRightTransition()<UIGestureRecognizerDelegate>
+@interface GKWBRightSlideManager()<UIGestureRecognizerDelegate>
 
-@property (nonatomic, assign) BOOL interacting;
-
+// 添加手势的控制器
 @property (nonatomic, weak) UIViewController *presentVC;
 
+// 中心点
 @property (nonatomic, assign) CGPoint viewCenter;
 
+// 是否开始滑动
+@property (nonatomic, assign) BOOL interacting;
+
+// 左右滑动的UIScrollView
 @property (nonatomic, weak) UIScrollView *scrollView;
 
 @end
 
-@implementation GKPhotoSwipeRightTransition
+@implementation GKWBRightSlideManager
 
 - (void)setBrowser:(GKPhotoBrowser *)browser {
     _browser = browser;
     
+    // 查找需要添加手势的控制器
     UIViewController *presentVC = browser;
     if (browser.configure.showStyle != GKPhotoBrowserShowStylePush && browser.navigationController) {
         presentVC = browser.navigationController;
+        presentVC.view.clipsToBounds = NO;
     }
-    [self connectToViewController:presentVC];
-}
-
-- (void)connectToViewController:(UIViewController *)viewController {
-    viewController.transitioningDelegate = self;
-    self.presentVC = viewController;
+    self.presentVC = presentVC;
+    
+    // 添加手势
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     pan.delegate = self;
-    [viewController.view addGestureRecognizer:pan];
+    [presentVC.view addGestureRecognizer:pan];
 }
 
-- (CGFloat)completionSpeed {
-    return 1 - self.percentComplete;
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveEvent:(UIEvent *)event {
+    
+    // 获取scrollView
+    if (!self.scrollView) {
+        self.scrollView = self.browser.photoScrollView;
+    }
+    
+    // 当前显示的不是第一个，不做处理
+    if (self.scrollView && self.scrollView.contentOffset.x != 0) {
+        return NO;
+    }
+    
+    // 第一个不是视频不做处理
+    GKPhoto *photo = self.browser.photos.firstObject;
+    if (photo && !photo.isVideo) {
+        return NO;
+    }
+    
+    return YES;
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if ([otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")] ||
+        [otherGestureRecognizer isKindOfClass:UIPanGestureRecognizer.class]) {
+        if (otherGestureRecognizer.view == self.scrollView) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+#pragma mark - HandlePan
 - (void)handlePan:(UIPanGestureRecognizer *)pan {
     CGPoint translation = [pan translationInView:pan.view.superview];
     if (!_interacting && (translation.x < 0 || translation.y < 0 || translation.x < translation.y)) {
@@ -94,14 +127,11 @@
             self.presentVC.view.transform = CGAffineTransformIdentity;
         } completion:^(BOOL finished) {
             self.interacting = NO;
-            [self cancelInteractiveTransition];
         }];
     }else {
         self.interacting = NO;
-        [self finishInteractiveTransition];
         
-        GKWBPlayerManager *mgr = (GKWBPlayerManager *)self.browser.configure.player;
-        [mgr willDismiss];
+        [self.manager willDismiss];
         [self.browser dismiss];
     }
     self.scrollView.panGestureRecognizer.enabled = YES;
@@ -113,36 +143,6 @@
     CGFloat progress = translation.x / superview.bounds.size.width;
     progress = fminf(fmaxf(progress, 0.0), 1.0);
     return progress;
-}
-
-#pragma mark - UIViewControllerTransitioningDelegate
-- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator {
-    return self.interacting ? self : nil;
-}
-
-#pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    
-    if (!self.scrollView) {
-        self.scrollView = self.browser.photoScrollView;
-    }
-    
-    GKPhoto *photo = self.browser.photos.firstObject;
-    if (!photo.isVideo) return NO;
-    
-    if (self.scrollView && self.scrollView.contentOffset.x == 0) return YES;
-    
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    if ([otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")] ||
-         [otherGestureRecognizer isKindOfClass:UIPanGestureRecognizer.class]) {
-        if (otherGestureRecognizer.view == self.scrollView) {
-            return YES;
-        }
-    }
-    return NO;
 }
 
 @end

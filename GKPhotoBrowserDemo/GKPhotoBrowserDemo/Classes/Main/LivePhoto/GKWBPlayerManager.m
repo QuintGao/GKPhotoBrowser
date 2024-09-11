@@ -12,6 +12,7 @@
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import "GKWBPlayerCell.h"
 #import <AFNetworking/AFNetworking.h>
+#import "GKWBRightSlideManager.h"
 
 @interface GKWBPlayerManager()<GKVideoScrollViewDataSource, GKVideoScrollViewDelegate>
 
@@ -22,6 +23,8 @@
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
 @property (nonatomic, assign) CGSize videoSize;
+
+@property (nonatomic, strong) GKWBRightSlideManager *mgr;
 
 @end
 
@@ -175,6 +178,9 @@
     self.status = GKVideoPlayerStatusPrepared;
     [self initPlayer];
     [self initVideoView];
+    
+    self.mgr.browser = self.browser;
+    self.mgr.manager = self;
 }
 
 - (void)gk_play {
@@ -280,6 +286,13 @@
         _dataArray = [NSMutableArray array];
     }
     return _dataArray;
+}
+
+- (GKWBRightSlideManager *)mgr {
+    if (!_mgr) {
+        _mgr = [[GKWBRightSlideManager alloc] init];
+    }
+    return _mgr;
 }
 
 #pragma mark - Setter
