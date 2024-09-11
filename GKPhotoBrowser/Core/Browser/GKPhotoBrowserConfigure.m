@@ -47,7 +47,6 @@
     self.animDuration            = 0.3;
     self.photoViewPadding        = 10;
     self.hidesSavedBtn           = YES;
-    self.isVideoAutoPlay         = YES;
     self.isVideoReplay           = YES;
     self.isVideoPausedWhenDragged = YES;
     self.isLivePhotoPausedWhenDragged = YES;

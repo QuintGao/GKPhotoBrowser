@@ -191,8 +191,6 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 @property (nonatomic, assign) BOOL isShowPlayImage;
 /// 视频暂停或停止时显示的播放图
 @property (nonatomic, strong) UIImage *videoPlayImage;
-/// 是否自动播放视频，默认YES
-@property (nonatomic, assign) BOOL isVideoAutoPlay;
 /// 视频是否静音播放，默认NO
 @property (nonatomic, assign) BOOL isVideoMutedPlay;
 /// 视频播放结束后是否自动重播，默认YES
