@@ -16,7 +16,7 @@ PODS:
     - AFNetworking/NSURLSession
   - Alamofire (5.9.1)
   - GKCover (3.0.1)
-  - GKLivePhotoManager (1.0.3)
+  - GKLivePhotoManager (1.0.4)
   - GKMessageTool (1.0.5):
     - MBProgressHUD
   - GKNavigationBar (1.9.0):
@@ -24,39 +24,39 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.9.0)
   - GKNavigationBar/GestureHandle (1.9.0)
   - GKNavigationBar/NavigationBar (1.9.0)
-  - GKPhotoBrowser (3.1.1):
-    - GKPhotoBrowser/Default (= 3.1.1)
-  - GKPhotoBrowser/AF (3.1.1):
+  - GKPhotoBrowser (3.1.2):
+    - GKPhotoBrowser/Default (= 3.1.2)
+  - GKPhotoBrowser/AF (3.1.2):
     - AFNetworking
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Alamofire (3.1.1):
+  - GKPhotoBrowser/Alamofire (3.1.2):
     - Alamofire
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/AVPlayer (3.1.1):
+  - GKPhotoBrowser/AVPlayer (3.1.2):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.1.1):
+  - GKPhotoBrowser/Core (3.1.2):
     - GKPhotoBrowser/Resources
-  - GKPhotoBrowser/Default (3.1.1):
+  - GKPhotoBrowser/Default (3.1.2):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (3.1.1):
+  - GKPhotoBrowser/KF (3.1.2):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (3.1.1):
+  - GKPhotoBrowser/Progress (3.1.2):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Resources (3.1.1)
-  - GKPhotoBrowser/SD (3.1.1):
+  - GKPhotoBrowser/Resources (3.1.2)
+  - GKPhotoBrowser/SD (3.1.2):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (3.1.1):
+  - GKPhotoBrowser/YY (3.1.2):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser/ZFPlayer (3.1.1):
+  - GKPhotoBrowser/ZFPlayer (3.1.2):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.2)
@@ -135,10 +135,10 @@ SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
-  GKLivePhotoManager: dc83ab089077997c2441fc827801bfe3f0fa3a3a
+  GKLivePhotoManager: 61fe3f9f1923929295020b89de8e4849912e3a6a
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: a0d4de94707cf309210024e2b3145b25ad56639c
+  GKPhotoBrowser: a6d1a838e28cfef63ea9ebcb3e6e789ebb532698
   GKSliderView: 94fab41465f2ba543200f04bee401020beab4041
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74

@@ -231,6 +231,10 @@
     [self.videoPlayView removeFromSuperview];
 }
 
+- (NSInteger)currentIndex {
+    return self.videoView.currentIndex;
+}
+
 #pragma mark - GKVideoScrollViewDataSource & GKVideoScrollViewDelegate
 - (NSInteger)numberOfRowsInScrollView:(GKVideoScrollView *)scrollView {
     return self.dataArray.count;
@@ -248,6 +252,10 @@
     
     if (self.player.containerView != cell.coverImgView) {
         self.player.containerView = cell.coverImgView;
+    }
+    
+    if (indexPath.row != 0) {
+        self.browser.photoScrollView.scrollEnabled = NO;
     }
     
     if ([self.player.assetURL.absoluteString isEqualToString:model.play_url]) {

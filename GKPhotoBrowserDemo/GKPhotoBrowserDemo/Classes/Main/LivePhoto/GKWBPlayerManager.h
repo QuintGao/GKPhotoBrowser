@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GKWBPlayerManager : NSObject<GKVideoPlayerProtocol>
 
+@property (nonatomic, assign) NSInteger currentIndex;
+
 - (void)willDismiss;
 
 @end

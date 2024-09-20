@@ -17,10 +17,9 @@
 
 static GKLivePhotoManager *_manager = nil;
 + (instancetype)manager {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if (_manager == nil) {
         _manager = [[GKLivePhotoManager alloc] init];
-    });
+    }
     return _manager;
 }
 

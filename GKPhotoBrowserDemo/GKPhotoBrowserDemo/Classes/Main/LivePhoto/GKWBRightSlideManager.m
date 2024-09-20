@@ -53,18 +53,30 @@
         self.scrollView = self.browser.photoScrollView;
     }
     
-    // 当前显示的不是第一个，不做处理
-    if (self.scrollView && self.scrollView.contentOffset.x != 0) {
-        return NO;
+//    // 当前显示的不是第一个，不做处理
+//    if (self.scrollView && self.scrollView.contentOffset.x != 0) {
+//        return NO;
+//    }
+    
+//    // 第一个不是视频不做处理
+//    GKPhoto *photo = self.browser.photos.firstObject;
+//    if (photo && !photo.isVideo) {
+//        return NO;
+//    }
+    
+    GKPhoto *photo = self.browser.curPhoto;
+    
+    if (photo && photo.isVideo) {
+        if (self.browser.currentIndex == 0) {
+            return YES;
+        }else if (self.manager.currentIndex == 0) {
+            return NO;
+        }else {
+            return YES;
+        }
     }
     
-    // 第一个不是视频不做处理
-    GKPhoto *photo = self.browser.photos.firstObject;
-    if (photo && !photo.isVideo) {
-        return NO;
-    }
-    
-    return YES;
+    return NO;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
@@ -109,6 +121,10 @@
     self.interacting = YES;
     self.viewCenter = self.presentVC.view.center;
     self.scrollView.panGestureRecognizer.enabled = NO;
+    [self.scrollView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.hidden = YES;
+    }];
+    self.browser.curPhotoView.hidden = NO;
 }
 
 - (void)handlePanChange:(UIPanGestureRecognizer *)pan {
@@ -127,6 +143,9 @@
             self.presentVC.view.transform = CGAffineTransformIdentity;
         } completion:^(BOOL finished) {
             self.interacting = NO;
+            [self.scrollView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                obj.hidden = NO;
+            }];
         }];
     }else {
         self.interacting = NO;
