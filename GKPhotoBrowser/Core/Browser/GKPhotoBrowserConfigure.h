@@ -223,6 +223,8 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 @property (nonatomic, assign) BOOL isLivePhotoMutedPlay;
 /// 是否显示livePhoto标识，默认NO
 @property (nonatomic, assign) BOOL isShowLivePhotoMark;
+/// livePhoto是否支持长按播放，默认YES
+@property (nonatomic, assign) BOOL isLivePhotoLongPressPlay;
 /// 是否清理livePhoto缓存，默认YES
 @property (nonatomic, assign) BOOL isClearMemoryForLivePhoto;
 

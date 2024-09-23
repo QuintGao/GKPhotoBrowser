@@ -10,7 +10,7 @@
 #import "GKTest02ViewCell.h"
 
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
-#import <GKPhotoBrowser/GKYYWebImageManager.h>
+//#import <GKPhotoBrowser/GKYYWebImageManager.h>
 #import <SDWebImage/SDWebImage.h>
 #import <YYWebImage/YYWebImage.h>
 #import <GKMessageTool/GKMessageTool.h>

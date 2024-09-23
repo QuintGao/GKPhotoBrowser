@@ -9,7 +9,6 @@
 #import "GKLivePhotoViewController.h"
 #import "GKTimeLineViewCell.h"
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
-#import <GKPhotoBrowser/GKYYWebImageManager.h>
 #import <SDWebImage/SDWebImage.h>
 #import <YYWebImage/YYWebImage.h>
 #import "GKPublishViewController.h"

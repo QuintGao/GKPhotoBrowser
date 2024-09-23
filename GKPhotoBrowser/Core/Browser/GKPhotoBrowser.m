@@ -642,8 +642,6 @@
 }
 
 - (void)updateCurrentPhotoView {
-    [self photoViewDidSelected];
-    
     [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {
         if (photoView != self.curPhotoView) {
             [photoView didScrollDisappear];
@@ -653,6 +651,8 @@
             photoView.scrollView.clipsToBounds = NO;
         }
     }];
+    
+    [self photoViewDidSelected];
     
     if (self.configure.isResumePhotoZoom) {
         [self.visiblePhotoViews enumerateObjectsUsingBlock:^(GKPhotoView *photoView, NSUInteger idx, BOOL * _Nonnull stop) {

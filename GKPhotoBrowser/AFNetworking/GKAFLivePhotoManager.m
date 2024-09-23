@@ -31,6 +31,7 @@ static float progressRatio = 4 / 5.0;
 @synthesize livePhotoView = _livePhotoView;
 @synthesize photo;
 @synthesize liveStatusChanged;
+@synthesize isPlaying = _isPlaying;
 
 - (void)dealloc {
     if (self.browser.configure.isClearMemoryForLivePhoto) {
@@ -153,10 +154,12 @@ static float progressRatio = 4 / 5.0;
 }
 
 - (void)gk_play {
+    if (self.isPlaying) return;
     [self.livePhotoView startPlaybackWithStyle:PHLivePhotoViewPlaybackStyleFull];
 }
 
 - (void)gk_stop {
+    if (!self.isPlaying) return;
     [self.livePhotoView stopPlayback];
 }
 
@@ -260,15 +263,17 @@ static float progressRatio = 4 / 5.0;
 
 #pragma mark - PHLivePhotoViewDelegate
 - (BOOL)livePhotoView:(PHLivePhotoView *)livePhotoView canBeginPlaybackWithStyle:(PHLivePhotoViewPlaybackStyle)playbackStyle {
-    return YES;
+    return self.browser.configure.isLivePhotoLongPressPlay;
 }
 
 - (void)livePhotoView:(PHLivePhotoView *)livePhotoView willBeginPlaybackWithStyle:(PHLivePhotoViewPlaybackStyle)playbackStyle {
     [self autoresizeToView:livePhotoView];
+    self.isPlaying = YES;
     !self.liveStatusChanged ?: self.liveStatusChanged(self, GKLivePlayStatusBegin);
 }
 
 - (void)livePhotoView:(PHLivePhotoView *)livePhotoView didEndPlaybackWithStyle:(PHLivePhotoViewPlaybackStyle)playbackStyle {
+    self.isPlaying = NO;
     !self.liveStatusChanged ?: self.liveStatusChanged(self, GKLivePlayStatusEnded);
 }
 

@@ -11,7 +11,7 @@
 #import <YYWebImage/YYWebImage.h>
 #import <SDWebImage/SDAnimatedImage.h>
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
-#import <GKPhotoBrowser/GKYYWebImageManager.h>
+//#import <GKPhotoBrowser/GKYYWebImageManager.h>
 
 @interface GKTest03ViewController ()<UITableViewDataSource, UITableViewDelegate>
 

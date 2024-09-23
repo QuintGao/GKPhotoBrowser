@@ -25,6 +25,8 @@ import CommonCrypto
     
     public var photo: GKPhoto?
     
+    public var isPlaying: Bool = false
+    
     public var liveStatusChanged: ((any GKLivePhotoProtocol, GKLivePlayStatus) -> Void)?
     
     var progressBlock: ((Float) -> Void)?
@@ -62,7 +64,7 @@ import CommonCrypto
             let fileManager = FileManager.default
             // 如果传入的是本地地址，判断是否存在
             if fileManager.fileExists(atPath: videoUrl.path) {
-                loadLivePhoto(with: videoUrl.path, imagePath: photo.url?.path ?? nil, targetSize: targetSize)
+                loadLivePhoto(with: videoUrl.path, imagePath: photo.url?.path, targetSize: targetSize)
                 return
             }
             
@@ -171,10 +173,12 @@ import CommonCrypto
     }
     
     public func gk_play() {
+        if isPlaying { return }
         livePhotoView?.startPlayback(with: .full)
     }
     
     public func gk_stop() {
+        if !isPlaying { return }
         livePhotoView?.stopPlayback()
     }
     
@@ -244,7 +248,8 @@ import CommonCrypto
         }
         
         GKLivePhotoManager.default().handleData(withVideoPath: videoPath, imagePath: imgPath) { [weak self] progress in
-            self?.progressBlock?(progress);
+            guard let self else { return }
+            self.progressBlock?(progress);
         } completion: { [weak self] outVideoPath, outImagePath, error in
             guard let self else { return }
             if error != nil {
@@ -281,15 +286,17 @@ import CommonCrypto
 
 extension GKAlamofireLivePhotoManager: PHLivePhotoViewDelegate {
     public func livePhotoView(_ livePhotoView: PHLivePhotoView, canBeginPlaybackWith playbackStyle: PHLivePhotoViewPlaybackStyle) -> Bool {
-        true
+        browser?.configure.isLivePhotoLongPressPlay ?? false
     }
     
     public func livePhotoView(_ livePhotoView: PHLivePhotoView, willBeginPlaybackWith playbackStyle: PHLivePhotoViewPlaybackStyle) {
         autoresize(to: livePhotoView)
+        isPlaying = true
         liveStatusChanged?(self, .begin)
     }
     
     public func livePhotoView(_ livePhotoView: PHLivePhotoView, didEndPlaybackWith playbackStyle: PHLivePhotoViewPlaybackStyle) {
+        isPlaying = false
         liveStatusChanged?(self, .ended)
     }
     

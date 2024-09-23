@@ -20,6 +20,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.autoPlay = YES;
+        self.liveTargetSize = CGSizeMake(2 * UIScreen.mainScreen.bounds.size.width, 2 * UIScreen.mainScreen.bounds.size.height);
     }
     return self;
 }
@@ -52,7 +53,7 @@
                 });
             }];
         }else {
-            CGFloat width = UIScreen.mainScreen.bounds.size.width;
+            CGFloat width = UIScreen.mainScreen.bounds.size.width * 2;
             self.imageRequestID = [self loadImageWithAsset:asset photoWidth:width completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
                 __strong __typeof(weakSelf) self = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{

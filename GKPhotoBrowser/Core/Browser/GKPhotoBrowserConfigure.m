@@ -7,6 +7,7 @@
 //
 
 #import "GKPhotoBrowserConfigure.h"
+#import <GKPhotoBrowser/GKPhotoBrowser-Swift.h>
 
 @interface GKPhotoBrowserConfigure()
 
@@ -51,6 +52,7 @@
     self.isVideoPausedWhenDragged = YES;
     self.isLivePhotoPausedWhenDragged = YES;
     self.isClearMemoryForLivePhoto = YES;
+    self.isLivePhotoLongPressPlay = YES;
     
     self.showStyle = GKPhotoBrowserShowStyleZoom;
     self.hideStyle = GKPhotoBrowserHideStyleZoom;
@@ -64,13 +66,23 @@
     
     self.liveLoadStyle = GKPhotoBrowserLoadStyleDeterminateSector;
     
+    [self loadManagerIfExist];
+}
+
+- (void)loadManagerIfExist {
+    // 图片处理
     Class imageManagerClass = NSClassFromString(@"GKSDWebImageManager");
     if (!imageManagerClass) {
         imageManagerClass = NSClassFromString(@"GKYYWebImageManager");
     }
+    if (!imageManagerClass) {
+        imageManagerClass = NSClassFromString(@"GKPhotoBrowser.GKKFWebImageManager");
+    }
     if (imageManagerClass) {
         [self setupWebImageProtocol:[imageManagerClass new]];
     }
+    
+    // 视频处理
     Class videoManagerClass = NSClassFromString(@"GKAVPlayerManager");
     if (!videoManagerClass) {
         videoManagerClass = NSClassFromString(@"GKZFPlayerManager");
@@ -81,11 +93,18 @@
     if (videoManagerClass) {
         [self setupVideoPlayerProtocol:[videoManagerClass new]];
     }
+    
+    // 视频进度处理
     Class progressClass = NSClassFromString(@"GKProgressView");
     if (progressClass) {
         [self setupVideoProgressProtocol:[progressClass new]];
     }
+    
+    // livePhoto处理
     Class livePhotoClass = NSClassFromString(@"GKAFLivePhotoManager");
+    if (!livePhotoClass) {
+        livePhotoClass = NSClassFromString(@"GKPhotoBrowser.GKAlamofireLivePhotoManager");
+    }
     if (livePhotoClass) {
         [self setupLivePhotoProtocol:[livePhotoClass new]];
     }

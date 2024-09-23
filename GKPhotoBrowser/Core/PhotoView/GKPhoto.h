@@ -49,8 +49,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, getter=isAutoPlay) BOOL autoPlay;
 
 #pragma mark - LivePhoto
-/// 是否是livePhoto，需从外部传入
+/// 是否是livePhoto，网络livePhoto需从外部传入
 @property (nonatomic, assign) BOOL              isLivePhoto;
+/// 相册livePhoto目标尺寸，默认屏幕尺寸的2倍
+@property (nonatomic, assign) CGSize            liveTargetSize;
 
 /************************内部使用，无需关心 ********************/
 /// 图片是否加载完成

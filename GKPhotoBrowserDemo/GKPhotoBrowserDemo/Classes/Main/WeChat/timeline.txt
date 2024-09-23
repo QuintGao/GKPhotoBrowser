@@ -67,6 +67,38 @@
         ]
     },
     {
+        "name": "QuintGao",
+        "icon": {
+            "url": "https://gips0.baidu.com/it/u=797423138,1884901673&fm=3012&app=3012&autime=1680242378&size=b200,200&fmt=auto",
+            "width": "300",
+            "height": "300"
+        },
+        "content": "GKPhotoBrowser-livePhoto",
+        "images": [
+            {
+                "url": "https://wx2.sinaimg.cn/orj360/c4d5a512ly1htxghn4rj1j21400u0n5d.jpg",
+                "width": "300",
+                "height": "300",
+                "video_url": "https://video.weibo.com/media/play?livephoto=https%3A%2F%2Fus.sinaimg.cn%2F001wPTKgjx08ieQFJjYI0f0f01004qkE0k01.mov",
+                "isLivePhoto": 1
+            },
+            {
+                "url": "https://wx3.sinaimg.cn/orj360/c4d5a512ly1htxghngly3j20u0140gvl.jpg",
+                "width": "300",
+                "height": "300",
+                "video_url": "https://video.weibo.com/media/play?livephoto=https%3A%2F%2Fus.sinaimg.cn%2F003wfsYDjx08ieQFMD7G0f0f01004zwf0k01.mov",
+                "isLivePhoto": 1
+            },
+            {
+                "url": "https://wx2.sinaimg.cn/orj360/c4d5a512ly1htxghnrehsj20u0140ti2.jpg",
+                "width": "300",
+                "height": "300",
+                "video_url": "https://video.weibo.com/media/play?livephoto=https%3A%2F%2Fus.sinaimg.cn%2F003ykwvZjx08ieQFOJRK0f0f010031Ao0k01.mov",
+                "isLivePhoto": 1
+            },
+        ]
+    },
+    {
         "name": "百元大眼辉子",
         "icon": {
             "url": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_bf32f087bd863a6dd98b22916c0c005a.jpeg?from=116350172&se=false&biz_tag=feed_avatar&l=20230222144400D400F5440C4AE2004346",

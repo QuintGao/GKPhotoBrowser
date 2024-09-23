@@ -26,6 +26,8 @@ typedef NS_ENUM(NSUInteger, GKLivePlayStatus) {
 
 @property (nonatomic, strong, nullable) GKPhoto *photo;
 
+@property (nonatomic, assign) BOOL isPlaying;
+
 @property (nonatomic, copy, nullable) void(^liveStatusChanged)(id<GKLivePhotoProtocol> _Nonnull mgr, GKLivePlayStatus status);
 
 // 加载livePhoto

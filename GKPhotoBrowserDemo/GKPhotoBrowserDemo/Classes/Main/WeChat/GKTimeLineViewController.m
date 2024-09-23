@@ -9,12 +9,13 @@
 #import "GKTimeLineViewController.h"
 #import "GKTimeLineViewCell.h"
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
-#import <GKPhotoBrowser/GKYYWebImageManager.h>
+//#import <GKPhotoBrowser/GKYYWebImageManager.h>
 #import <SDWebImage/SDWebImage.h>
 #import <YYWebImage/YYWebImage.h>
 #import "GKPublishViewController.h"
 #import <GKMessageTool/GKMessageTool.h>
 #import "GKZFPlayerManager.h"
+#import "GKAFLivePhotoManager+Extension.h"
 
 @interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -160,7 +161,11 @@
         configure.isShowPlayImage = NO;
         configure.isVideoReplay = YES;
         configure.videoPlayImage = [UIImage imageNamed:@"ic_play3"];
-        [configure setupWebImageProtocol:[GKYYWebImageManager new]];
+//        [configure setupWebImageProtocol:[GKYYWebImageManager new]];
+        configure.isLivePhotoLongPressPlay = NO;
+        GKAFLivePhotoManager *afManager = [[GKAFLivePhotoManager alloc] init];
+        afManager.addMark = YES;
+        [configure setupLivePhotoProtocol:afManager];
         
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.configure = configure;
