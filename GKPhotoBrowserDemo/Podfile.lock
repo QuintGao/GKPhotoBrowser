@@ -61,7 +61,7 @@ PODS:
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.2)
   - GKVideoScrollView (1.3.4)
-  - Kingfisher (6.3.1)
+  - Kingfisher (8.0.3)
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
   - SDAutoLayout (2.2.1)
@@ -141,7 +141,7 @@ SPEC CHECKSUMS:
   GKPhotoBrowser: a6d1a838e28cfef63ea9ebcb3e6e789ebb532698
   GKSliderView: 94fab41465f2ba543200f04bee401020beab4041
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
-  Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
+  Kingfisher: bbf78af014cc845cf9a799363f627b5212784165
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
@@ -153,6 +153,6 @@ SPEC CHECKSUMS:
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
 
-PODFILE CHECKSUM: f1172b58d921f31224b02b86cd5326f4b8ace6f1
+PODFILE CHECKSUM: 2b848bd14fb7adea8a7f49caa1a03445cbaeab6f
 
 COCOAPODS: 1.15.2

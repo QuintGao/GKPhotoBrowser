@@ -27,10 +27,10 @@
 import Foundation
 
 /// Represents a data provider to provide image data to Kingfisher when setting with
-/// `Source.provider` source. Compared to `Source.network` member, it gives a chance
+/// ``Source/provider(_:)`` source. Compared to ``Source/network(_:)`` member, it gives a chance
 /// to load some image data in your own way, as long as you can provide the data
 /// representation for the image.
-public protocol ImageDataProvider {
+public protocol ImageDataProvider: Sendable {
     
     /// The key used in cache.
     var cacheKey: String { get }
@@ -43,11 +43,10 @@ public protocol ImageDataProvider {
     ///                      a `.success` with the data associated. Otherwise, call it
     ///                      with a `.failure` and pass the error.
     ///
-    /// - Note:
-    /// If the `handler` is called with a `.failure` with error, a `dataProviderError` of
-    /// `ImageSettingErrorReason` will be finally thrown out to you as the `KingfisherError`
-    /// from the framework.
-    func data(handler: @escaping (Result<Data, Error>) -> Void)
+    /// - Note: If the `handler` is called with a `.failure` with error,
+    /// a ``KingfisherError/ImageSettingErrorReason/dataProviderError(provider:error:)`` will be finally thrown out to
+    /// you as the ``KingfisherError`` from the framework.
+    func data(handler: @escaping @Sendable (Result<Data, any Error>) -> Void)
 
     /// The content URL represents this provider, if exists.
     var contentURL: URL? { get }
@@ -63,13 +62,14 @@ public extension ImageDataProvider {
 /// Represents an image data provider for loading from a local file URL on disk.
 /// Uses this type for adding a disk image to Kingfisher. Compared to loading it
 /// directly, you can get benefit of using Kingfisher's extension methods, as well
-/// as applying `ImageProcessor`s and storing the image to `ImageCache` of Kingfisher.
+/// as applying ``ImageProcessor``s and storing the image to ``ImageCache`` of Kingfisher.
 public struct LocalFileImageDataProvider: ImageDataProvider {
 
     // MARK: Public Properties
 
     /// The file URL from which the image be loaded.
     public let fileURL: URL
+    private let loadingQueue: ExecutionQueue
 
     // MARK: Initializers
 
@@ -78,10 +78,17 @@ public struct LocalFileImageDataProvider: ImageDataProvider {
     /// - Parameters:
     ///   - fileURL: The file URL from which the image be loaded.
     ///   - cacheKey: The key is used for caching the image data. By default,
-    ///               the `absoluteString` of `fileURL` is used.
-    public init(fileURL: URL, cacheKey: String? = nil) {
+    ///               the `absoluteString` of ``LocalFileImageDataProvider/fileURL`` is used.
+    ///   - loadingQueue: The queue where the file loading should happen. By default, the dispatch queue of
+    ///                   `.global(qos: .userInitiated)` will be used.
+    public init(
+        fileURL: URL,
+        cacheKey: String? = nil,
+        loadingQueue: ExecutionQueue = .dispatch(DispatchQueue.global(qos: .userInitiated))
+    ) {
         self.fileURL = fileURL
-        self.cacheKey = cacheKey ?? fileURL.absoluteString
+        self.cacheKey = cacheKey ?? fileURL.localFileCacheKey
+        self.loadingQueue = loadingQueue
     }
 
     // MARK: Protocol Conforming
@@ -89,8 +96,25 @@ public struct LocalFileImageDataProvider: ImageDataProvider {
     /// The key used in cache.
     public var cacheKey: String
 
-    public func data(handler: (Result<Data, Error>) -> Void) {
-        handler(Result(catching: { try Data(contentsOf: fileURL) }))
+    public func data(handler: @escaping @Sendable (Result<Data, any Error>) -> Void) {
+        loadingQueue.execute {
+            handler(Result(catching: { try Data(contentsOf: fileURL) }))
+        }
+    }
+    
+    public var data: Data {
+        get async throws {
+            try await withCheckedThrowingContinuation { continuation in
+                loadingQueue.execute {
+                    do {
+                        let data = try Data(contentsOf: fileURL)
+                        continuation.resume(returning: data)
+                    } catch {
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        }
     }
 
     /// The URL of the local file on the disk.
@@ -123,7 +147,7 @@ public struct Base64ImageDataProvider: ImageDataProvider {
     /// The key used in cache.
     public var cacheKey: String
 
-    public func data(handler: (Result<Data, Error>) -> Void) {
+    public func data(handler: (Result<Data, any Error>) -> Void) {
         let data = Data(base64Encoded: base64String)!
         handler(.success(data))
     }
@@ -142,7 +166,7 @@ public struct RawImageDataProvider: ImageDataProvider {
     /// Creates an image data provider by the given raw `data` value and a `cacheKey` be used in Kingfisher cache.
     ///
     /// - Parameters:
-    ///   - data: The raw data reprensents an image.
+    ///   - data: The raw data represents an image.
     ///   - cacheKey: The key is used for caching the image data. You need a different key for any different image.
     public init(data: Data, cacheKey: String) {
         self.data = data
@@ -154,7 +178,7 @@ public struct RawImageDataProvider: ImageDataProvider {
     /// The key used in cache.
     public var cacheKey: String
 
-    public func data(handler: @escaping (Result<Data, Error>) -> Void) {
+    public func data(handler: @escaping (Result<Data, any Error>) -> Void) {
         handler(.success(data))
     }
 }
