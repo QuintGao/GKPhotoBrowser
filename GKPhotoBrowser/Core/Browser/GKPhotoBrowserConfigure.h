@@ -227,6 +227,8 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 @property (nonatomic, assign) BOOL isLivePhotoLongPressPlay;
 /// 是否清理livePhoto缓存，默认YES
 @property (nonatomic, assign) BOOL isClearMemoryForLivePhoto;
+/// 相册livePhoto目标尺寸，默认屏幕尺寸的2倍
+@property (nonatomic, assign) CGSize liveTargetSize;
 
 /// 自定义图片请求类
 /// @param protocol 需实现GKWebImageProtocol协议

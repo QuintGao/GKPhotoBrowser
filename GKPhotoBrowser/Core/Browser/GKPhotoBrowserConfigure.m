@@ -7,7 +7,6 @@
 //
 
 #import "GKPhotoBrowserConfigure.h"
-#import <GKPhotoBrowser/GKPhotoBrowser-Swift.h>
 
 @interface GKPhotoBrowserConfigure()
 
@@ -53,6 +52,9 @@
     self.isLivePhotoPausedWhenDragged = YES;
     self.isClearMemoryForLivePhoto = YES;
     self.isLivePhotoLongPressPlay = YES;
+    
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    self.liveTargetSize = CGSizeMake(2 * size.width, 2 * size.height);
     
     self.showStyle = GKPhotoBrowserShowStyleZoom;
     self.hideStyle = GKPhotoBrowserHideStyleZoom;

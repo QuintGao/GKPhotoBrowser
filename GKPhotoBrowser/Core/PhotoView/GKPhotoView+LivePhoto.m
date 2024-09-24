@@ -96,7 +96,7 @@
     if (!self.livePhoto.photo || self.livePhoto.photo != self.photo) {
         [self showLoading];
         __weak __typeof(self) weakSelf = self;
-        [self.livePhoto loadLivePhotoWithPhoto:self.photo targetSize:self.photo.liveTargetSize progressBlock:^(float progress) {
+        [self.livePhoto loadLivePhotoWithPhoto:self.photo targetSize:self.configure.liveTargetSize progressBlock:^(float progress) {
             __strong __typeof(weakSelf) self = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.liveLoadingView.progress = progress;
