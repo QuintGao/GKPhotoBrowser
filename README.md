@@ -193,6 +193,10 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.1.3 - 2024.09.24 
+    - 1、新增liveTargetSize属性，可自定义livePhoto相册图片加载尺寸
+    - 2、新增isLivePhotoLongPressPlay属性，可控制livePhoto是否可以长按播放
+    - 3、livePhoto播放优化，demo优化
  * 3.1.2 - 2024.09.11 1、修复加载相册图片时的闪动问题 2、修复相册livePhoto加载失败的问题
  * 3.1.1 - 2024.09.10 1、修复滑动隐藏bug 2、修复状态栏显示异常问题 #196 #197
  * 3.1.0 - 2024.09.04 1、代码优化，增加配置类 2、本地图片加载优化，图片加载类支持为nil

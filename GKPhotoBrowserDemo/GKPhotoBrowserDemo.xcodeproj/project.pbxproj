@@ -831,7 +831,7 @@
 				GCC_PREFIX_HEADER = GKPhotoBrowserDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = GKPhotoBrowserDemo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GKPhotoBrowser;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cn.quintgao.browser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -858,7 +858,7 @@
 				GCC_PREFIX_HEADER = GKPhotoBrowserDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = GKPhotoBrowserDemo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GKPhotoBrowser;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cn.quintgao.browser;
 				PRODUCT_NAME = "$(TARGET_NAME)";

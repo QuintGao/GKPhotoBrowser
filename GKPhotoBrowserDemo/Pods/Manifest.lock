@@ -24,42 +24,42 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.9.0)
   - GKNavigationBar/GestureHandle (1.9.0)
   - GKNavigationBar/NavigationBar (1.9.0)
-  - GKPhotoBrowser (3.1.2):
-    - GKPhotoBrowser/Default (= 3.1.2)
-  - GKPhotoBrowser/AF (3.1.2):
+  - GKPhotoBrowser (3.1.3):
+    - GKPhotoBrowser/Default (= 3.1.3)
+  - GKPhotoBrowser/AF (3.1.3):
     - AFNetworking
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Alamofire (3.1.2):
+  - GKPhotoBrowser/Alamofire (3.1.3):
     - Alamofire
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/AVPlayer (3.1.2):
+  - GKPhotoBrowser/AVPlayer (3.1.3):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.1.2):
+  - GKPhotoBrowser/Core (3.1.3):
     - GKPhotoBrowser/Resources
-  - GKPhotoBrowser/Default (3.1.2):
+  - GKPhotoBrowser/Default (3.1.3):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (3.1.2):
+  - GKPhotoBrowser/KF (3.1.3):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (3.1.2):
+  - GKPhotoBrowser/Progress (3.1.3):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Resources (3.1.2)
-  - GKPhotoBrowser/SD (3.1.2):
+  - GKPhotoBrowser/Resources (3.1.3)
+  - GKPhotoBrowser/SD (3.1.3):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (3.1.2):
+  - GKPhotoBrowser/YY (3.1.3):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser/ZFPlayer (3.1.2):
+  - GKPhotoBrowser/ZFPlayer (3.1.3):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
-  - GKSliderView (1.2.2)
+  - GKSliderView (1.2.3)
   - GKVideoScrollView (1.3.4)
   - Kingfisher (6.3.1)
   - Masonry (1.1.0)
@@ -138,8 +138,8 @@ SPEC CHECKSUMS:
   GKLivePhotoManager: 61fe3f9f1923929295020b89de8e4849912e3a6a
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: a6d1a838e28cfef63ea9ebcb3e6e789ebb532698
-  GKSliderView: 94fab41465f2ba543200f04bee401020beab4041
+  GKPhotoBrowser: d86e744252eda71d0b80960bd9e1b93a6c1a9d6b
+  GKSliderView: 7c6f853afeb0ae370bb8dce76ec669d6e9109d1d
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
@@ -153,6 +153,6 @@ SPEC CHECKSUMS:
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
 
-PODFILE CHECKSUM: f1172b58d921f31224b02b86cd5326f4b8ace6f1
+PODFILE CHECKSUM: 6f28f7fa0f3e86eb0a71a71492c1f99889fbe88d
 
 COCOAPODS: 1.15.2
