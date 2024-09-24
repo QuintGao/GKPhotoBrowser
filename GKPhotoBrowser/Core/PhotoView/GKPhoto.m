@@ -20,7 +20,8 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.autoPlay = YES;
-        self.liveTargetSize = CGSizeMake(2 * UIScreen.mainScreen.bounds.size.width, 2 * UIScreen.mainScreen.bounds.size.height);
+        CGSize size = UIScreen.mainScreen.bounds.size;
+        self.liveTargetSize = CGSizeMake(2 * size.width, 2 * size.height);
     }
     return self;
 }
