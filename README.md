@@ -9,7 +9,7 @@
 [![Pod License](http://img.shields.io/cocoapods/l/GKPhotoBrowser.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![languages](https://img.shields.io/badge/language-objective--c-blue.svg)](#) 
 [![support](https://img.shields.io/badge/support-ios%208%2B-orange.svg)](#) 
- 
+
 iOS仿微信、今日头条等图片浏览器
 ==============
 
@@ -193,6 +193,9 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.1.4 - 2024.12.06
+    - 1、新增禁止上滑消失属性，即消失阈值等属性
+    - 2、新增滑动消失进度更新代理
  * 3.1.3 - 2024.09.24 
     - 1、新增liveTargetSize属性，可自定义livePhoto相册图片加载尺寸
     - 2、新增isLivePhotoLongPressPlay属性，可控制livePhoto是否可以长按播放
