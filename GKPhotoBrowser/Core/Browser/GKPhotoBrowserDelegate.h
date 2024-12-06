@@ -44,6 +44,9 @@
 // 开始滑动时
 - (void)photoBrowser:(GKPhotoBrowser *)browser panBeginWithIndex:(NSInteger)index;
 
+// 滑动消失进度更新
+- (void)photoBrowser:(GKPhotoBrowser *)browser panChangeWithIndex:(NSInteger)index progress:(CGFloat)progress;
+
 // 结束滑动时 disappear：是否消失
 - (void)photoBrowser:(GKPhotoBrowser *)browser panEndedWithIndex:(NSInteger)index willDisappear:(BOOL)disappear;
 

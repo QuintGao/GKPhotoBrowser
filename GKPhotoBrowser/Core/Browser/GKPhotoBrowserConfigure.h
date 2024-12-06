@@ -133,6 +133,18 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 /// 是否适配安全区域，默认NO，为YES时图片会自动适配iPhone X的安全区域
 @property (nonatomic, assign) BOOL isAdaptiveSafeArea;
 
+/// 是否禁止上滑消失，默认NO
+@property (nonatomic, assign) BOOL isUpSlideDismissDisabled;
+
+/// 缩放消失时的进度阈值，默认0.2，即缩放进度大于此值时时浏览器会消失
+@property (nonatomic, assign) CGFloat scaleDismissProgressThreshold;
+
+/// 平移消失时的距离阈值，默认200，即平移距离超过此值时浏览器会消失
+@property (nonatomic, assign) CGFloat slideDismissDistanceThreshold;
+
+/// 平移消失时的速度阈值，默认500，即平移速度超过此值时浏览器会消失
+@property (nonatomic, assign) CGFloat slideDismissVelocityThreshold;
+
 /// 图片最大放大倍数，默认2.0
 @property (nonatomic, assign) CGFloat maxZoomScale;
 

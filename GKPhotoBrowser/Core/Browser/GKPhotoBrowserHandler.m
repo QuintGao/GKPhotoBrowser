@@ -339,6 +339,12 @@
 }
 
 - (void)browserChangeAlpha:(CGFloat)alpha {
+    if (alpha != 0 && alpha != 1) {
+        if ([self.browser.delegate respondsToSelector:@selector(photoBrowser:panChangeWithIndex:progress:)]) {
+            [self.browser.delegate photoBrowser:self.browser panChangeWithIndex:self.browser.currentIndex progress:alpha];
+        }
+    }
+    
     UIColor *bgColor = self.configure.bgColor ?: UIColor.blackColor;
     
     UIView *view = self.browser.containerView ?: self.browser.view;

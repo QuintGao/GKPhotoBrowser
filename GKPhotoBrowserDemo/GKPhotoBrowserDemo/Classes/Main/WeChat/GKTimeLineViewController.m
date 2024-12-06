@@ -167,6 +167,10 @@
         afManager.addMark = YES;
         [configure setupLivePhotoProtocol:afManager];
         
+        if (kIsiPad) {
+            configure.isFollowSystemRotation = YES;
+        }
+        
         GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];
         browser.configure = configure;
         browser.delegate = self;

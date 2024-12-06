@@ -223,6 +223,9 @@ int const static kDirectionPanThreshold = 5;
     
     switch (panGesture.state) {
         case UIGestureRecognizerStateBegan: {
+            if (self.configure.isUpSlideDismissDisabled) {
+                return;
+            }
             self.isPanBegan = YES;
             photoView.loadingView.hidden = YES;
             [self handlePanBegin];
@@ -231,25 +234,48 @@ int const static kDirectionPanThreshold = 5;
         case UIGestureRecognizerStateChanged: {
             CGFloat scale = [self panGestureScale:panGesture];
             CGPoint translation = [panGesture translationInView:panGesture.view];
-            CGFloat imageViewScale = 1 - scale * 0.5;
-            if (imageViewScale < 0.4) imageViewScale = 0.4;
-            photoView.center = CGPointMake(self.photoViewCenter.x + translation.x, self.photoViewCenter.y + translation.y);
-            photoView.transform = CGAffineTransformMakeScale(imageViewScale, imageViewScale);
-            [self browserChangeAlpha:(1 - scale * scale)];
+            if (self.configure.isUpSlideDismissDisabled) {
+                if (translation.y > 0) {
+                    if (!self.isPanBegan) {
+                        self.isPanBegan = YES;
+                        photoView.loadingView.hidden = YES;
+                        [self handlePanBegin];
+                    }
+                    CGFloat imageViewScale = 1 - scale * 0.5;
+                    if (imageViewScale < 0.4) imageViewScale = 0.4;
+                    photoView.center = CGPointMake(self.photoViewCenter.x + translation.x, self.photoViewCenter.y + translation.y);
+                    photoView.transform = CGAffineTransformMakeScale(imageViewScale, imageViewScale);
+                    [self browserChangeAlpha:(1 - scale * scale)];
+                }else if (translation.y < 0) {
+                    if (!self.isPanBegan) return;
+                    photoView.center = CGPointMake(self.photoViewCenter.x + translation.x, self.photoViewCenter.y + translation.y);
+                }
+            }else {
+                CGFloat imageViewScale = 1 - scale * 0.5;
+                if (imageViewScale < 0.4) imageViewScale = 0.4;
+                photoView.center = CGPointMake(self.photoViewCenter.x + translation.x, self.photoViewCenter.y + translation.y);
+                photoView.transform = CGAffineTransformMakeScale(imageViewScale, imageViewScale);
+                [self browserChangeAlpha:(1 - scale * scale)];
+            }
         }
             break;
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled:{
+            if (!self.isPanBegan) return;
             self.isPanBegan = NO;
-            
             CGFloat scale = [self panGestureScale:panGesture];
-            if (scale < 0.2) {
+            CGPoint translation = [panGesture translationInView:panGesture.view];
+            if (translation.y < 0 && self.configure.isUpSlideDismissDisabled) {
                 [self browserCancelDismiss];
-            }else {
+                return;
+            }
+            if (scale > self.configure.scaleDismissProgressThreshold) {
                 if ([self.delegate respondsToSelector:@selector(browserDidDisappear)]) {
                     [self.delegate browserDidDisappear];
                 }
                 [self browserZoomDismiss];
+            }else {
+                [self browserCancelDismiss];
             }
         }
             break;
@@ -271,30 +297,58 @@ int const static kDirectionPanThreshold = 5;
     GKPhotoView *photoView = self.browser.curPhotoView;
     if (!photoView) return;
     
-    CGPoint point    = [panGesture translationInView:panGesture.view];
+    CGPoint translation = [panGesture translationInView:panGesture.view];
     CGPoint velocity = [panGesture velocityInView:panGesture.view];
     
     switch (panGesture.state) {
         case UIGestureRecognizerStateBegan: {
+            if (self.configure.isUpSlideDismissDisabled) {
+                return;
+            }
             self.isPanBegan = YES;
             photoView.loadingView.hidden = YES;
             [self handlePanBegin];
         }
             break;
         case UIGestureRecognizerStateChanged:{
-            photoView.transform = CGAffineTransformMakeTranslation(0, point.y);
-            double percent = 1 - fabs(point.y) / panGesture.view.frame.size.height * 0.5;
-            [self browserChangeAlpha:percent];
+            if (self.configure.isUpSlideDismissDisabled) {
+                if (translation.y > 0) {
+                    if (!self.isPanBegan) {
+                        self.isPanBegan = YES;
+                        photoView.loadingView.hidden = YES;
+                        [self handlePanBegin];
+                    }
+                    
+                    photoView.transform = CGAffineTransformMakeTranslation(0, translation.y);
+                    double percent = 1 - fabs(translation.y) / panGesture.view.frame.size.height * 0.5;
+                    [self browserChangeAlpha:percent];
+                }else if (translation.y < 0) {
+                    if (!self.isPanBegan) return;
+                    photoView.transform = CGAffineTransformMakeTranslation(0, translation.y);
+                }
+            }else {
+                photoView.transform = CGAffineTransformMakeTranslation(0, translation.y);
+                double percent = 1 - fabs(translation.y) / panGesture.view.frame.size.height * 0.5;
+                [self browserChangeAlpha:percent];
+            }
         }
             break;
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled: {
+            if (!self.isPanBegan) return;
             self.isPanBegan = NO;
-            if (fabs(point.y) > 200 || fabs(velocity.y) > 500) {
+            
+            if (translation.y < 0 && self.configure.isUpSlideDismissDisabled) {
+                [self browserCancelDismiss];
+                return;
+            }
+            
+            if (fabs(translation.y) > self.configure.slideDismissDistanceThreshold ||
+                fabs(velocity.y) > self.configure.slideDismissVelocityThreshold) {
                 if ([self.delegate respondsToSelector:@selector(browserDidDisappear)]) {
                     [self.delegate browserDidDisappear];
                 }
-                [self browserSlideDismiss:point];
+                [self browserSlideDismiss:translation];
             }else {
                 [self browserCancelDismiss];
             }
