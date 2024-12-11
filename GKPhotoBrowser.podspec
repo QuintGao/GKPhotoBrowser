@@ -14,7 +14,6 @@ Pod::Spec.new do |s|
   
   s.subspec 'Default' do |ss|
     ss.dependency 'GKPhotoBrowser/Cover'
-    ss.dependency 'GKPhotoBrowser/Loading'
     ss.dependency 'GKPhotoBrowser/SD'
     ss.dependency 'GKPhotoBrowser/AVPlayer'
     ss.dependency 'GKPhotoBrowser/Progress'
@@ -28,11 +27,6 @@ Pod::Spec.new do |s|
   
   s.subspec 'Cover' do |ss|
     ss.source_files = 'GKPhotoBrowser/Cover'
-    ss.dependency 'GKPhotoBrowser/Core'
-  end
-  
-  s.subspec 'Loading' do |ss|
-    ss.source_files = 'GKPhotoBrowser/Loading'
     ss.dependency 'GKPhotoBrowser/Core'
   end
   
