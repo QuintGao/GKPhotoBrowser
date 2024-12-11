@@ -45,15 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 状态栏样式，默认Light
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
 
-/// 数量Label，默认显示，若要隐藏需设置hidesCountLabel为YES
-@property (nonatomic, strong) UILabel *countLabel;
-
-/// 页码，默认显示，若要隐藏需设置hidesPageControl为YES
-@property (nonatomic, strong) UIPageControl *pageControl;
-
-/// 保存按钮，默认隐藏
-@property (nonatomic, strong) UIButton *saveBtn;
-
 /// 视频进度视图
 @property (nonatomic, weak, readonly, nullable) UIView *progressView;
 
@@ -77,9 +68,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 隐藏图片浏览器
 - (void)dismiss;
 
-/// 为浏览器添加自定义遮罩视图
-- (void)setupCoverViews:(NSArray *)coverViews layoutBlock:(void(^_Nullable)(GKPhotoBrowser *, CGRect))layoutBlock;
-
 /// 选中指定位置的内容
 - (void)selectedPhotoWithIndex:(NSInteger)index animated:(BOOL)animated;
 
@@ -94,6 +82,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 加载原图方法，外部调用
 - (void)loadCurrentPhotoImage;
+
+#pragma mark - 弃用方法
+/// 为浏览器添加自定义遮罩视图
+- (void)setupCoverViews:(NSArray *)coverViews layoutBlock:(void(^_Nullable)(GKPhotoBrowser *, CGRect))layoutBlock __attribute__((deprecated("Use GKPhotoBrowserConfigure setupCoverProtocol.")));;
 
 @end
 

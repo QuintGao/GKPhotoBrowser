@@ -10,10 +10,15 @@
 #import "UIScrollView+GKPhotoBrowser.h"
 #import "UIDevice+GKPhotoBrowser.h"
 #import "UIImage+GKPhotoBrowser.h"
+#import "GKCoverViewProtocol.h"
 #import "GKWebImageProtocol.h"
 #import "GKVideoPlayerProtocol.h"
 #import "GKLivePhotoProtocol.h"
 #import "GKProgressViewProtocol.h"
+
+#if __has_include(<GKPhotoBrowser/GKDefaultCoverView.h>)
+#import <GKPhotoBrowser/GKDefaultCoverView.h>
+#endif
 
 #if __has_include(<GKPhotoBrowser/GKSDWebImageManager.h>)
 #import <GKPhotoBrowser/GKSDWebImageManager.h>
@@ -160,6 +165,23 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 /// 浏览器背景（默认黑色）
 @property (nonatomic, strong) UIColor *bgColor;
 
+#pragma mark - GKPhotoBrowserShowStylePush
+/// 是否添加导航控制器，默认NO，添加后会默认隐藏导航栏
+/// showStyle = GKPhotoBrowserShowStylePush时无效
+@property (nonatomic, assign) BOOL isNeedNavigationController;
+
+/// 是否启用滑动返回手势处理（当showStyle为GKPhotoBrowserShowStylePush时有效）
+@property (nonatomic, assign) BOOL isPopGestureEnabled;
+
+#pragma mark - cover相关
+/// cover管理类
+@property (nonatomic, strong, readonly) id<GKCoverViewProtocol> cover;
+
+/// 自定义cover管理类
+/// @param protocol 需实现GKCoverViewProtocol协议
+- (void)setupCoverProtocol:(id<GKCoverViewProtocol>)protocol;
+
+/// 以下属性只在默认coverView下有效，自定义coverView后将失效
 /// 是否隐藏countLabel，默认NO
 @property (nonatomic, assign) BOOL hidesCountLabel;
 
@@ -169,17 +191,14 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 /// 是否隐藏saveBtn，默认YES
 @property (nonatomic, assign) BOOL hidesSavedBtn;
 
-#pragma mark - GKPhotoBrowserShowStylePush
-/// 是否添加导航控制器，默认NO，添加后会默认隐藏导航栏
-/// showStyle = GKPhotoBrowserShowStylePush时无效
-@property (nonatomic, assign) BOOL isNeedNavigationController;
-
-/// 是否启用滑动返回手势处理（当showStyle为GKPhotoBrowserShowStylePush时有效）
-@property (nonatomic, assign) BOOL isPopGestureEnabled;
-
 #pragma mark - 图片相关
 /// 图片加载类
 @property (nonatomic, strong, readonly) id<GKWebImageProtocol> imager;
+
+/// 自定义图片请求类
+/// @param protocol 需实现GKWebImageProtocol协议
+- (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol;
+
 /// 加载失败时显示的文字或图片
 @property (nonatomic, copy) NSString    *failureText;
 @property (nonatomic, strong) UIImage   *failureImage;
@@ -195,6 +214,11 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 #pragma mark - 视频相关
 /// 视频播放处理
 @property (nonatomic, strong, readonly) id<GKVideoPlayerProtocol> player;
+
+/// 自定义视频播放处理类，需要视频播放时必须添加
+/// @param protocol 需实现GKVideoPlayerProtocol协议
+- (void)setupVideoPlayerProtocol:(id<GKVideoPlayerProtocol>)protocol;
+
 /// 视频加载方式，默认GKPhotoBrowserLoadStyleIndeterminate
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle videoLoadStyle;
 /// 视频播放失败显示方式，默认GKPhotoBrowserFailStyleOnlyText
@@ -219,12 +243,22 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 #pragma mark - 视频进度相关
 /// 进度处理
 @property (nonatomic, strong, readonly) id<GKProgressViewProtocol> progress;
+
+/// 自定义视频播放进度条
+/// @param protocol 需实现GKProgressViewProtocol协议
+- (void)setupVideoProgressProtocol:(id<GKProgressViewProtocol>)protocol;
+
 /// 是否隐藏视频进度视图，默认NO，内容为视频时有效
 @property (nonatomic, assign) BOOL isHideProgressView;
 
 #pragma mark - livePhoto相关
 /// livePhoto处理
 @property (nonatomic, strong, readonly) id<GKLivePhotoProtocol> livePhoto;
+
+/// 自定义livePhoto加载处理类
+/// @param protocol 需实现GKLivePhotoProtocol协议
+- (void)setupLivePhotoProtocol:(id<GKLivePhotoProtocol>)protocol;
+
 /// livePhoto加载方式，默认GKPhotoBrowserLoadStyleDeterminateSector
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle liveLoadStyle;
 /// 拖拽消失时是否暂停播放livePhoto，默认YES
@@ -241,22 +275,6 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 @property (nonatomic, assign) BOOL isClearMemoryForLivePhoto;
 /// 相册livePhoto目标尺寸，默认屏幕尺寸的2倍
 @property (nonatomic, assign) CGSize liveTargetSize;
-
-/// 自定义图片请求类
-/// @param protocol 需实现GKWebImageProtocol协议
-- (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol;
-
-/// 自定义视频播放处理类，需要视频播放时必须添加
-/// @param protocol 需实现GKVideoPlayerProtocol协议
-- (void)setupVideoPlayerProtocol:(id<GKVideoPlayerProtocol>)protocol;
-
-/// 自定义视频播放进度条
-/// @param protocol 需实现GKProgressViewProtocol协议
-- (void)setupVideoProgressProtocol:(id<GKProgressViewProtocol>)protocol;
-
-/// 自定义livePhoto加载处理类
-/// @param protocol 需实现GKLivePhotoProtocol协议
-- (void)setupLivePhotoProtocol:(id<GKLivePhotoProtocol>)protocol;
 
 /// 隐藏
 - (void)didDisappear;

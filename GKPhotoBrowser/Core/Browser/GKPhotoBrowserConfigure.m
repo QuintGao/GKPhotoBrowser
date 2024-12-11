@@ -10,6 +10,8 @@
 
 @interface GKPhotoBrowserConfigure()
 
+@property (nonatomic, strong) id<GKCoverViewProtocol> cover;
+
 @property (nonatomic, strong) id<GKWebImageProtocol> imager;
 
 @property (nonatomic, strong) id<GKVideoPlayerProtocol> player;
@@ -75,6 +77,12 @@
 }
 
 - (void)loadManagerIfExist {
+    // cover管理
+    Class coverViewClass = NSClassFromString(@"GKDefaultCoverView");
+    if (coverViewClass) {
+        [self setupCoverProtocol:[coverViewClass new]];
+    }
+    
     // 图片处理
     Class imageManagerClass = NSClassFromString(@"GKSDWebImageManager");
     if (!imageManagerClass) {
@@ -123,6 +131,10 @@
     }
 }
 
+- (void)setupCoverProtocol:(id<GKCoverViewProtocol>)protocol {
+    self.cover = protocol;
+}
+
 - (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol {
     self.imager = protocol;
 }
@@ -148,6 +160,7 @@
 }
 
 - (void)destory {
+    self.cover = nil;
     self.imager = nil;
     [self.player gk_stop];
     self.player = nil;

@@ -24,39 +24,45 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.9.0)
   - GKNavigationBar/GestureHandle (1.9.0)
   - GKNavigationBar/NavigationBar (1.9.0)
-  - GKPhotoBrowser (3.1.3):
-    - GKPhotoBrowser/Default (= 3.1.3)
-  - GKPhotoBrowser/AF (3.1.3):
+  - GKPhotoBrowser (3.1.4):
+    - GKPhotoBrowser/Default (= 3.1.4)
+  - GKPhotoBrowser/AF (3.1.4):
     - AFNetworking
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Alamofire (3.1.3):
+  - GKPhotoBrowser/Alamofire (3.1.4):
     - Alamofire
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/AVPlayer (3.1.3):
+  - GKPhotoBrowser/AVPlayer (3.1.4):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.1.3):
+  - GKPhotoBrowser/Core (3.1.4):
     - GKPhotoBrowser/Resources
-  - GKPhotoBrowser/Default (3.1.3):
+  - GKPhotoBrowser/Cover (3.1.4):
+    - GKPhotoBrowser/Core
+  - GKPhotoBrowser/Default (3.1.4):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
+    - GKPhotoBrowser/Cover
+    - GKPhotoBrowser/Loading
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (3.1.3):
+  - GKPhotoBrowser/KF (3.1.4):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (3.1.3):
+  - GKPhotoBrowser/Loading (3.1.4):
+    - GKPhotoBrowser/Core
+  - GKPhotoBrowser/Progress (3.1.4):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Resources (3.1.3)
-  - GKPhotoBrowser/SD (3.1.3):
+  - GKPhotoBrowser/Resources (3.1.4)
+  - GKPhotoBrowser/SD (3.1.4):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (3.1.3):
+  - GKPhotoBrowser/YY (3.1.4):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser/ZFPlayer (3.1.3):
+  - GKPhotoBrowser/ZFPlayer (3.1.4):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.3)
@@ -138,7 +144,7 @@ SPEC CHECKSUMS:
   GKLivePhotoManager: 61fe3f9f1923929295020b89de8e4849912e3a6a
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: d86e744252eda71d0b80960bd9e1b93a6c1a9d6b
+  GKPhotoBrowser: f345f336b03fcaeffec8cb3e8eb6d73ab7bbe5cb
   GKSliderView: 7c6f853afeb0ae370bb8dce76ec669d6e9109d1d
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
@@ -155,4 +161,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 6f28f7fa0f3e86eb0a71a71492c1f99889fbe88d
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.1

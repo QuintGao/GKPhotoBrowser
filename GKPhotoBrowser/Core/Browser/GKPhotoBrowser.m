@@ -43,6 +43,9 @@
 // 旋转处理
 @property (nonatomic, strong) GKPhotoRotationHandler *rotationHandler;
 
+// coverView
+@property (nonatomic, weak) id<GKCoverViewProtocol> cover;
+
 // 图片处理
 @property (nonatomic, weak) id<GKWebImageProtocol> imager;
 
@@ -237,8 +240,9 @@
 }
 
 - (void)updateViewIndex {
-    self.countLabel.text = [NSString stringWithFormat:@"%zd/%zd", (long)(self.currentIndex + 1), (long)self.photos.count];
-    self.pageControl.currentPage = self.currentIndex;
+    if (self.cover && [self.cover respondsToSelector:@selector(gk_updateCoverWithCount:index:)]) {
+        [self.cover gk_updateCoverWithCount:self.photos.count index:self.currentIndex];
+    }
 }
 
 #pragma mark - 屏幕旋转
@@ -343,6 +347,7 @@
 #pragma mark - configure
 - (void)loadConfigure {
     GKPhotoBrowserConfigure *configure = self.configure;
+    [self setupCoverProtocol:configure.cover];
     [self setupWebImageProtocol:configure.imager];
     [self setupVideoPlayerProtocol:configure.player];
     [self setupVideoProgressProtocol:configure.progress];
@@ -352,8 +357,15 @@
     self.rotationHandler.browser = self;
 }
 
+- (void)setupCoverProtocol:(id<GKCoverViewProtocol>)protocol {
+    if (!protocol) return;
+    protocol.browser = self;
+    self.cover = protocol;
+}
+
 - (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol {
     if (!protocol) return;
+    protocol.browser = self;
     self.imager = protocol;
 }
 
@@ -474,16 +486,14 @@
 
 #pragma mark - Private Methods
 - (void)setupCoverViews {
-    [self.contentView addSubview:self.countLabel];
-    [self.contentView addSubview:self.pageControl];
-    [self.contentView addSubview:self.saveBtn];
+    if (self.cover && [self.cover respondsToSelector:@selector(gk_addCoverToView:)]) {
+        [self.cover gk_addCoverToView:self.contentView];
+    }
+    
     if (self.player && self.progress) {
         [self.contentView addSubview:self.progressView];
     }
     
-    self.pageControl.numberOfPages = self.photos.count;
-    CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
-    self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
     [self updateViewIndex];
     
     if (self.coverViews) {
@@ -497,26 +507,11 @@
     GKPhoto *photo = [self currentPhoto];
     if (photo.isVideo) {
         self.progressView.hidden = self.configure.isHideProgressView;
-        self.countLabel.hidden = YES;
-        self.pageControl.hidden = YES;
-        self.saveBtn.hidden = YES;
     }else {
         self.progressView.hidden = YES;
-        
-        if (self.configure.hidesCountLabel) {
-            self.countLabel.hidden = YES;
-        }else {
-            self.countLabel.hidden = self.photos.count <= 1;
-        }
-        
-        if (self.configure.hidesPageControl) {
-            self.pageControl.hidden = YES;
-        }else {
-            if (self.pageControl.hidesForSinglePage) {
-                self.pageControl.hidden = self.photos.count <= 1;
-            }
-        }
-        self.saveBtn.hidden = self.configure.hidesSavedBtn;
+    }
+    if (self.cover && [self.cover respondsToSelector:@selector(gk_updateCoverWithPhoto:)]) {
+        [self.cover gk_updateCoverWithPhoto:photo];
     }
 }
 
@@ -895,53 +890,6 @@
     return [self photoViewForIndex:self.currentIndex];
 }
 
-- (UILabel *)countLabel {
-    if (!_countLabel) {
-        UILabel *countLabel = [UILabel new];
-        countLabel.textColor = UIColor.whiteColor;
-        countLabel.font = [UIFont systemFontOfSize:16.0f];
-        countLabel.textAlignment = NSTextAlignmentCenter;
-        countLabel.bounds = CGRectMake(0, 0, 80, 30);
-        countLabel.hidden = YES;
-        _countLabel = countLabel;
-    }
-    return _countLabel;
-}
-
-- (UIPageControl *)pageControl {
-    if (!_pageControl) {
-        UIPageControl *pageControl = [UIPageControl new];
-        pageControl.numberOfPages = self.photos.count;
-        pageControl.currentPage = self.currentIndex;
-        pageControl.hidesForSinglePage = YES;
-        pageControl.hidden = YES;
-        pageControl.enabled = NO;
-        if (@available(iOS 14.0, *)) {
-            pageControl.backgroundStyle = UIPageControlBackgroundStyleMinimal;
-        }
-        _pageControl = pageControl;
-    }
-    return _pageControl;
-}
-
-- (UIButton *)saveBtn {
-    if (!_saveBtn) {
-        UIButton *saveBtn = [UIButton new];
-        saveBtn.bounds = CGRectMake(0, 0, 50, 30);
-        [saveBtn setTitle:@"保存" forState:UIControlStateNormal];
-        [saveBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-        saveBtn.titleLabel.font = [UIFont systemFontOfSize:15.0f];
-        saveBtn.layer.cornerRadius = 5;
-        saveBtn.layer.masksToBounds = YES;
-        saveBtn.layer.borderColor = UIColor.whiteColor.CGColor;
-        saveBtn.layer.borderWidth = 1;
-        saveBtn.hidden = YES;
-        [saveBtn addTarget:self action:@selector(saveBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        _saveBtn = saveBtn;
-    }
-    return _saveBtn;
-}
-
 @end
 
 @implementation GKPhotoBrowser (Private)
@@ -987,11 +935,11 @@
     CGFloat width = self.contentView.bounds.size.width;
     CGFloat height = self.contentView.bounds.size.height;
     
+    if (self.cover && [self.cover respondsToSelector:@selector(gk_updateCoverWithFrame:)]) {
+        [self.cover gk_updateCoverWithFrame:self.contentView.bounds];
+    }
+    
     CGFloat centerX = width * 0.5f;
-    
-    self.countLabel.center = CGPointMake(centerX, (KIsiPhoneX && !self.rotationHandler.isLandscape) ? (kSafeTopSpace + 10) : 30);
-    self.progressView.bounds = CGRectMake(0, 0, width - 60, 20);
-    
     CGFloat centerY = 0;
     if (self.rotationHandler.isLandscape) {
         centerY = height - 20;
@@ -999,10 +947,7 @@
         centerY = height - 20 - (self.configure.isAdaptiveSafeArea ? kSafeBottomSpace : 0);
     }
     
-    CGSize size = [self.pageControl sizeForNumberOfPages:self.photos.count];
-    self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
-    self.pageControl.center = CGPointMake(centerX, centerY);
-    self.saveBtn.center = CGPointMake(width - 60, centerY);
+    self.progressView.bounds = CGRectMake(0, 0, width - 60, 20);
     self.progressView.center = CGPointMake(centerX, centerY);
     if ([self.progress respondsToSelector:@selector(updateLayoutWithFrame:)]) {
         [self.progress updateLayoutWithFrame:self.contentView.bounds];

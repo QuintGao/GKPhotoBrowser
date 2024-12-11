@@ -247,13 +247,6 @@
     
 }
 
-- (void)photoBrowser:(GKPhotoBrowser *)browser willLayoutSubViews:(NSInteger)index {
-    CGFloat width = browser.contentView.bounds.size.width;
-    CGFloat height = browser.contentView.bounds.size.height;
-    
-    browser.pageControl.center = CGPointMake(width * 0.5, height - kSafeBottomSpace - 10);
-}
-
 #pragma mark - 懒加载
 - (UIView *)coverView {
     if (!_coverView) {
