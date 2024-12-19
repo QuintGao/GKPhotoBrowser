@@ -193,12 +193,22 @@ static CGFloat   photoH;
         if (self.images) {
             GKTimeLineImage *image = self.images.firstObject;
             
+            if (image.width == 0) {
+                image.width = self.frame.size.width;
+            }
+            
             if (image.width > maxWidth) {
                 photoW = maxWidth;
                 photoH = maxWidth / image.scale;
             }else {
                 photoW = image.width;
                 photoH = image.height;
+                
+                
+                if (image.width == 0 || image.height == 0) {
+                    photoW = (self.frame.size.width - (photosMaxCol - 1) * 10) / photosMaxCol;
+                    photoH = photoW;
+                }
             }
         }else {
             photoW = self.frame.size.width;
@@ -274,16 +284,16 @@ static CGFloat   photoH;
     CGFloat photosW = 0;
     CGFloat photosH = 0;
     
-//    if (count == 1) {
-//        photosW = 100;
-//        photosH = 200;
-//    }else {
+    if (count == 1) {
+        photosW = photoW;
+        photosH = photoH;
+    }else {
         NSInteger cols = count == 4 ? 2 : photosMaxCol;
         NSInteger rows = (count + cols - 1) / cols;
         
         photosW = photoW * cols + (cols - 1) * margin;
         photosH = photoH * rows + (rows - 1) * margin;
-//    }
+    }
     
     return CGSizeMake(photosW, photosH);
 }
@@ -306,6 +316,11 @@ static CGFloat   photoH;
         }else {
             photosW = image.width;
             photosH = image.height;
+            
+            if (image.width == 0 || image.height == 0) {
+                photosW = photoW;
+                photosH = photoH;
+            }
         }
     }else {
         NSInteger cols = count == 4 ? 2 : photosMaxCol;

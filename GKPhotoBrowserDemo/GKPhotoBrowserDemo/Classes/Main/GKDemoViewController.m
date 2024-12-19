@@ -15,6 +15,8 @@
 
 @interface GKDemoViewController ()
 
+@property (nonatomic, strong) UIScrollView *scrollView;
+
 // 显示方式
 @property (nonatomic, assign) GKPhotoBrowserShowStyle showStyle;
 @property (nonatomic, strong) UILabel *showLabel;
@@ -85,118 +87,119 @@
     self.view.backgroundColor = UIColor.whiteColor;
     self.gk_navTitle = @"GKPhotoBrowser";
     
-    [self.view addSubview:self.showLabel];
-    [self.view addSubview:self.showControl];
-    [self.view addSubview:self.hideLabel];
-    [self.view addSubview:self.hideControl];
-    [self.view addSubview:self.loadLabel];
-    [self.view addSubview:self.loadControl];
-    [self.view addSubview:self.failLabel];
-    [self.view addSubview:self.failControl];
-    [self.view addSubview:self.imgLoadLabel];
-    [self.view addSubview:self.imgLoadControl];
-    [self.view addSubview:self.videoLoadLabel];
-    [self.view addSubview:self.videoLoadControl];
-    [self.view addSubview:self.videoFailLabel];
-    [self.view addSubview:self.videoFailControl];
-    [self.view addSubview:self.videoPlayLabel];
-    [self.view addSubview:self.videoPlayControl];
-    [self.view addSubview:self.livePhotoLabel];
-    [self.view addSubview:self.livePhotoControl];
+    [self.view addSubview:self.scrollView];
+    [self.scrollView addSubview:self.showLabel];
+    [self.scrollView addSubview:self.showControl];
+    [self.scrollView addSubview:self.hideLabel];
+    [self.scrollView addSubview:self.hideControl];
+    [self.scrollView addSubview:self.loadLabel];
+    [self.scrollView addSubview:self.loadControl];
+    [self.scrollView addSubview:self.failLabel];
+    [self.scrollView addSubview:self.failControl];
+    [self.scrollView addSubview:self.imgLoadLabel];
+    [self.scrollView addSubview:self.imgLoadControl];
+    [self.scrollView addSubview:self.videoLoadLabel];
+    [self.scrollView addSubview:self.videoLoadControl];
+    [self.scrollView addSubview:self.videoFailLabel];
+    [self.scrollView addSubview:self.videoFailControl];
+    [self.scrollView addSubview:self.videoPlayLabel];
+    [self.scrollView addSubview:self.videoPlayControl];
+    [self.scrollView addSubview:self.livePhotoLabel];
+    [self.scrollView addSubview:self.livePhotoControl];
     
     [self.showLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.gk_navigationBar.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.top.equalTo(@10);
+        make.centerX.equalTo(self.scrollView);
     }];
     
     [self.showControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.showLabel.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.hideLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.showControl.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.hideControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.hideLabel.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.loadLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.hideControl.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.loadControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.loadLabel.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.failLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.loadControl.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.failControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.failLabel.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.imgLoadLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.failControl.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.imgLoadControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.imgLoadLabel.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.videoLoadLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.imgLoadControl.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.videoLoadControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.videoLoadLabel.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.videoFailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.videoLoadControl.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.videoFailControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.videoFailLabel.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.videoPlayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.videoFailControl.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.videoPlayControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.videoPlayLabel.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.livePhotoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.videoPlayControl.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
     [self.livePhotoControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.livePhotoLabel.mas_bottom).offset(10);
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
     }];
     
-    [self.view addSubview:self.webBtn];
-    [self.view addSubview:self.photoBtn];
-    [self.view addSubview:self.localBtn];
+    [self.scrollView addSubview:self.webBtn];
+    [self.scrollView addSubview:self.photoBtn];
+    [self.scrollView addSubview:self.localBtn];
     
     CGFloat margin = (self.view.frame.size.width - 80 * 3) / 4;
     
@@ -208,7 +211,7 @@
     }];
     
     [self.photoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.view);
+        make.centerX.equalTo(self.showLabel);
         make.top.equalTo(self.livePhotoControl.mas_bottom).offset(50);
         make.width.mas_equalTo(80);
         make.height.mas_equalTo(30);
@@ -219,6 +222,12 @@
         make.top.equalTo(self.livePhotoControl.mas_bottom).offset(50);
         make.width.mas_equalTo(80);
         make.height.mas_equalTo(30);
+    }];
+    
+    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.gk_navigationBar.mas_bottom);
+        make.left.right.bottom.equalTo(self.view);
+        make.bottom.equalTo(self.photoBtn.mas_bottom).offset(30);
     }];
 }
 
@@ -292,6 +301,14 @@
 }
 
 #pragma mark - Lazy
+- (UIScrollView *)scrollView {
+    if (!_scrollView) {
+        _scrollView = [[UIScrollView alloc] init];
+        _scrollView.showsVerticalScrollIndicator = NO;
+    }
+    return _scrollView;
+}
+
 - (UILabel *)showLabel {
     if (!_showLabel) {
         _showLabel = [[UILabel alloc] init];

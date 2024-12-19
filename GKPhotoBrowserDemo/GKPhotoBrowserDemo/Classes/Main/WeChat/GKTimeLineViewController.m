@@ -152,7 +152,7 @@
         configure.loadStyle = GKPhotoBrowserLoadStyleIndeterminateMask; // 不明确的加载方式带阴影
         configure.maxZoomScale = 20.0f;
         configure.doubleZoomScale = 2.0f;
-//        configure.isAdaptiveSafeArea = YES;
+        configure.isAdaptiveSafeArea = YES;
         configure.hidesCountLabel = YES;
 //        browser.hidesPageControl = YES;
 //        configure.hidesSavedBtn = YES;

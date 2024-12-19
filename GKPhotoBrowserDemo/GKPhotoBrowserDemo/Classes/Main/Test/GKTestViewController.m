@@ -18,7 +18,7 @@
 #import "GKTimeLineModel.h"
 #import <TZImagePickerController/TZImagePickerController.h>
 #import <MobileCoreServices/MobileCoreServices.h>
-
+#import <GKLivePhotoManager/GKLivePhotoManager.h>
 
 @interface GKTestViewController ()<GKPhotosViewDelegate, TZImagePickerControllerDelegate, UIDocumentPickerDelegate, GKPhotoBrowserDelegate>
 
@@ -31,6 +31,8 @@
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 
 @property (nonatomic, weak) GKPhotoBrowser *browser;
+
+@property (nonatomic, strong) PHLivePhotoView *livePhotoView;
 
 @end
 
@@ -47,6 +49,9 @@
     [self setupData];
 }
 
+- (void)dealloc {
+    [GKLivePhotoManager deallocManager];
+}
 
 - (void)setupView {
     self.photosView =  [GKPhotosView photosViewWithWidth:self.view.bounds.size.width - 20 andMargin:10];
@@ -82,6 +87,15 @@
         make.centerX.equalTo(self.view);
         make.width.mas_equalTo(180);
     }];
+    
+    self.livePhotoView = [[PHLivePhotoView alloc] init];
+    [self.view addSubview:self.livePhotoView];
+    
+    [self.livePhotoView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(fileBtn.mas_bottom).offset(30);
+        make.centerX.equalTo(self.view);
+        make.width.height.mas_equalTo(300);
+    }];
 }
 
 - (void)setupData {
@@ -112,6 +126,18 @@
     [self.dataSource addObject:m3];
     
     [self updatePhotosView];
+    
+    NSString *videoPath = [[NSBundle mainBundle] pathForResource:@"IMG_E8375" ofType:@"mov"];
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"IMG_E8375" ofType:@"heic"];
+    
+    [[GKLivePhotoManager manager] createLivePhotoWithVideoPath:videoPath imagePath:imagePath targetSize:CGSizeMake(300, 300) completion:^(PHLivePhoto * _Nullable livePhoto, NSError * _Nullable error) {
+        if (livePhoto) {
+            self.livePhotoView.livePhoto = livePhoto;
+            [self.livePhotoView startPlaybackWithStyle:PHLivePhotoViewPlaybackStyleFull];
+        }else {
+            NSLog(@"create live photo error:%@", error);
+        }
+    }];
 }
 
 - (void)updatePhotosView {
@@ -179,14 +205,23 @@
 
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(nonnull NSArray<NSURL *> *)urls {
     for (NSURL *url in urls) {
-        
-        GKTimeLineImage *m = [[GKTimeLineImage alloc] init];
-        m.islocal = YES;
-//        m.imageURL = url;
-        m.url = url.path;
-        [self.dataSource addObject:m];
-        
-        [self updatePhotosView];
+        if ([self isVideoFileWithUrl:url]) {
+            GKTimeLineImage *m = [[GKTimeLineImage alloc] init];
+            m.islocal = YES;
+            m.video_url = url.path;
+            [self.dataSource addObject:m];
+            
+            [self updatePhotosView];
+        }else if ([self isImageFileWithUrl:url]) {
+            GKTimeLineImage *m = [[GKTimeLineImage alloc] init];
+            m.islocal = YES;
+            m.url = url.path;
+            [self.dataSource addObject:m];
+            
+            [self updatePhotosView];
+        }else {
+            NSLog(@"未知类型文件");
+        }
     }
 }
 
@@ -203,7 +238,18 @@
             photo.videoAsset = obj.video_asset;
         }
         if (obj.url) {
-            photo.url = [NSURL URLWithString:obj.url];
+            if (obj.islocal) {
+                photo.url = [NSURL fileURLWithPath:obj.url];
+            }else {
+                photo.url = [NSURL URLWithString:obj.url];
+            }
+        }
+        if (obj.video_url) {
+            if (obj.islocal) {
+                photo.videoUrl = [NSURL fileURLWithPath:obj.video_url];
+            }else {
+                photo.videoUrl = [NSURL URLWithString:obj.video_url];
+            }
         }
         
         photo.sourceImageView = self.photosView.subviews[idx];
@@ -245,6 +291,26 @@
 #pragma mark - GKPhotoBrowserDelegate
 - (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index {
     
+}
+
+#pragma mark - private
+- (BOOL)isVideoFileWithUrl:(NSURL *)url {
+    // 常见的视频文件扩展名
+    NSArray *videoExtensions = @[@"mp4", @"mov", @"avi", @"mkv", @"flv", @"wmv", @"webm", @"m4v"];
+    
+    // 获取文件扩展名并转为小写
+    NSString *fileExtension = url.pathExtension.lowercaseString;
+    
+    // 判断扩展名是否为视频文件类型
+    return [videoExtensions containsObject:fileExtension];
+}
+
+- (BOOL)isImageFileWithUrl:(NSURL *)url {
+    NSArray *imageExtensions = @[@"jpg", @"jpeg", @"png", @"gif", @"tiff", @"heic"];
+    
+    NSString *fileExtension = url.pathExtension.lowercaseString;
+    
+    return [imageExtensions containsObject:fileExtension];
 }
 
 #pragma mark - 懒加载

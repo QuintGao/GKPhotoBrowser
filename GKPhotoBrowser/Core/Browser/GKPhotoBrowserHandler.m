@@ -153,6 +153,19 @@
         }
     }
     
+    GKPhotoView *photoView = self.browser.curPhotoView;
+    if (photoView) {
+        if (photoView.photo.isLivePhoto) {
+            photoView.liveMarkView.hidden = YES;
+        }
+        if (photoView.photo.isVideo) {
+            photoView.playBtn.hidden = YES;
+            if (self.browser.progressView) {
+                self.browser.progressView.hidden = YES;
+            }
+        }
+    }
+    
     if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
         [self.browser removeRotationObserver];
         self.browser.photoScrollView.clipsToBounds = YES;

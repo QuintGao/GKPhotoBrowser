@@ -14,9 +14,9 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
-  - Alamofire (5.9.1)
+  - Alamofire (5.10.2)
   - GKCover (3.0.1)
-  - GKLivePhotoManager (1.0.4)
+  - GKLivePhotoManager (1.0.5)
   - GKMessageTool (1.0.5):
     - MBProgressHUD
   - GKNavigationBar (1.9.0):
@@ -44,14 +44,11 @@ PODS:
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Cover
-    - GKPhotoBrowser/Loading
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
   - GKPhotoBrowser/KF (3.1.4):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Loading (3.1.4):
-    - GKPhotoBrowser/Core
   - GKPhotoBrowser/Progress (3.1.4):
     - GKPhotoBrowser/Core
     - GKSliderView
@@ -71,14 +68,14 @@ PODS:
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
   - SDAutoLayout (2.2.1)
-  - SDWebImage (5.19.7):
-    - SDWebImage/Core (= 5.19.7)
-  - SDWebImage/Core (5.19.7)
-  - TZImagePickerController (3.8.7):
-    - TZImagePickerController/Basic (= 3.8.7)
-    - TZImagePickerController/Location (= 3.8.7)
-  - TZImagePickerController/Basic (3.8.7)
-  - TZImagePickerController/Location (3.8.7)
+  - SDWebImage (5.20.0):
+    - SDWebImage/Core (= 5.20.0)
+  - SDWebImage/Core (5.20.0)
+  - TZImagePickerController (3.8.8):
+    - TZImagePickerController/Basic (= 3.8.8)
+    - TZImagePickerController/Location (= 3.8.8)
+  - TZImagePickerController/Basic (3.8.8)
+  - TZImagePickerController/Location (3.8.8)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
@@ -139,20 +136,20 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
-  Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
+  Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
-  GKLivePhotoManager: 61fe3f9f1923929295020b89de8e4849912e3a6a
+  GKLivePhotoManager: 7d5bc069382d5a4c1d44a846727b0beb08582256
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: f345f336b03fcaeffec8cb3e8eb6d73ab7bbe5cb
+  GKPhotoBrowser: 3e28ca4d269d4710271e0ac717761092c7bea7a2
   GKSliderView: 7c6f853afeb0ae370bb8dce76ec669d6e9109d1d
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
-  SDWebImage: 8a6b7b160b4d710e2a22b6900e25301075c34cb3
-  TZImagePickerController: 5f35bb7266552e36ca834bafa955b869fe086124
+  SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
+  TZImagePickerController: d084a7b97c82d387e7669dd86dc9a9057500aacf
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30

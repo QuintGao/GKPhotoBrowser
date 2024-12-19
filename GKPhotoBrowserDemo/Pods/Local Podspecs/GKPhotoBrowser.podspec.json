@@ -25,9 +25,6 @@
         "GKPhotoBrowser/Cover": [
 
         ],
-        "GKPhotoBrowser/Loading": [
-
-        ],
         "GKPhotoBrowser/SD": [
 
         ],
@@ -54,15 +51,6 @@
     {
       "name": "Cover",
       "source_files": "GKPhotoBrowser/Cover",
-      "dependencies": {
-        "GKPhotoBrowser/Core": [
-
-        ]
-      }
-    },
-    {
-      "name": "Loading",
-      "source_files": "GKPhotoBrowser/Loading",
       "dependencies": {
         "GKPhotoBrowser/Core": [
 

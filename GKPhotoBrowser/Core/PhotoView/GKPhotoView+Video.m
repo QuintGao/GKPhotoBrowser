@@ -154,6 +154,10 @@
 }
 
 - (void)videoUpdateFrame {
+    if (self.photo.isVideo && self.configure.isShowPlayImage) {
+        [self.playBtn sizeToFit];
+        self.playBtn.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }
     if (!self.photo.isAutoPlay && !self.photo.isVideoClicked) return;
     if (!self.player) return;
     if (self.player.assetURL != self.photo.videoUrl) return;

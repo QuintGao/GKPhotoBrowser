@@ -14,17 +14,17 @@
 @property (nonatomic, weak, nullable) GKPhotoBrowser *browser;
 
 /// 添加子视图
-- (void)gk_addCoverToView:(UIView *_Nullable)view;
+- (void)addCoverToView:(UIView *_Nullable)view;
 
 /// 更新子视图frame
-- (void)gk_updateCoverWithFrame:(CGRect)frame;
+- (void)updateLayoutWithFrame:(CGRect)frame;
 
 @optional
 
 /// 更新子视图内容
-- (void)gk_updateCoverWithCount:(NSInteger)count index:(NSInteger)index;
+- (void)updateCoverWithCount:(NSInteger)count index:(NSInteger)index;
 
 /// 更新子视图的显示与隐藏
-- (void)gk_updateCoverWithPhoto:(GKPhoto *)photo;
+- (void)updateCoverWithPhoto:(GKPhoto *)photo;
 
 @end

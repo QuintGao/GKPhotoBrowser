@@ -13,7 +13,7 @@
 #pragma mark - GKCoverViewProtocol
 @synthesize browser;
 
-- (void)gk_addCoverToView:(UIView *)view {
+- (void)addCoverToView:(UIView *)view {
     [view addSubview:self.countLabel];
     [view addSubview:self.pageControl];
     [view addSubview:self.saveBtn];
@@ -23,7 +23,7 @@
     self.pageControl.bounds = CGRectMake(0, 0, size.width, size.height);
 }
 
-- (void)gk_updateCoverWithFrame:(CGRect)frame {
+- (void)updateLayoutWithFrame:(CGRect)frame {
     CGFloat width = frame.size.width;
     CGFloat height = frame.size.height;
     
@@ -42,12 +42,12 @@
     self.saveBtn.center = CGPointMake(width - 60, centerY);
 }
 
-- (void)gk_updateCoverWithCount:(NSInteger)count index:(NSInteger)index {
+- (void)updateCoverWithCount:(NSInteger)count index:(NSInteger)index {
     self.countLabel.text = [NSString stringWithFormat:@"%zd/%zd", (long)(index + 1), (long)count];
     self.pageControl.currentPage = index;
 }
 
-- (void)gk_updateCoverWithPhoto:(GKPhoto *)photo {
+- (void)updateCoverWithPhoto:(GKPhoto *)photo {
     if (photo.isVideo) {
         self.countLabel.hidden = YES;
         self.pageControl.hidden = YES;

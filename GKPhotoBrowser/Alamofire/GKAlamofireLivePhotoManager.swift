@@ -216,7 +216,7 @@ import CommonCrypto
         
         GKLivePhotoManager.default().createLivePhoto(with: asset, targetSize: targetSize) { [weak self] progress in
             guard let self else { return }
-            self.progressBlock?(progress);
+            self.progressBlock?(progress/5.0 + progressRatio);
         } completion: { [weak self] livePhoto, error in
             guard let self else { return }
             if let livePhoto {
@@ -249,13 +249,14 @@ import CommonCrypto
         
         GKLivePhotoManager.default().handleData(withVideoPath: videoPath, imagePath: imgPath) { [weak self] progress in
             guard let self else { return }
-            self.progressBlock?(progress);
+            self.progressBlock?(progress/5.0 + progressRatio);
         } completion: { [weak self] outVideoPath, outImagePath, error in
             guard let self else { return }
             if error != nil {
                 self.completioBlock?(false)
                 return
             }
+            
             self.createLivePhoto(outVideoPath, outImagePath, targetSize)
         }
     }
@@ -265,6 +266,14 @@ import CommonCrypto
             self.completioBlock?(false)
             return
         }
+        
+        if !isBundlePath(with: videoPath) {
+            filePathList.append(videoPath)
+        }
+        if !isBundlePath(with: imagePath) {
+            filePathList.append(imagePath)
+        }
+        
         GKLivePhotoManager.default().createLivePhoto(withVideoPath: videoPath, imagePath: imagePath, targetSize: targetSize) { [weak self] livePhoto, error in
             guard let self else { return }
             if let livePhoto {
@@ -281,6 +290,13 @@ import CommonCrypto
         var name = url.absoluteString.md5()
         name = name + "." + ext
         return fileDirectory + "/" + name
+    }
+    
+    private func isBundlePath(with url: String) -> Bool {
+        if url.hasPrefix(Bundle.main.bundlePath) {
+            return true
+        }
+        return false
     }
 }
 

@@ -203,7 +203,7 @@ static float progressRatio = 4 / 5.0;
     __weak __typeof(self) weakSelf = self;
     [[GKLivePhotoManager manager] createLivePhotoWithAsset:photo.imageAsset targetSize:targetSize progressBlock:^(float progress) {
         __strong __typeof(weakSelf) self = weakSelf;
-        !self.progressBlock ?: self.progressBlock(progress);
+        !self.progressBlock ?: self.progressBlock(progress/5.0 + progressRatio);
     } completion:^(PHLivePhoto * _Nullable livePhoto, NSError * _Nullable error) {
         __strong __typeof(weakSelf) self = weakSelf;
         if (livePhoto) {
@@ -238,20 +238,30 @@ static float progressRatio = 4 / 5.0;
     
     [[GKLivePhotoManager manager] handleDataWithVideoPath:videoPath imagePath:imagePath progressBlock:^(float progress) {
         __strong __typeof(weakSelf) self = weakSelf;
-        !self.progressBlock ?: self.progressBlock(progress);
+        !self.progressBlock ?: self.progressBlock(progress/5.0 + progressRatio);
     } completion:^(NSString * _Nullable outVideoPath, NSString * _Nullable outImagePath, NSError * _Nullable error) {
-        [self.filePathList addObject:outVideoPath];
-        [self.filePathList addObject:outImagePath];
-        [[GKLivePhotoManager manager] createLivePhotoWithVideoPath:outVideoPath imagePath:outImagePath targetSize:targetSize completion:^(PHLivePhoto * _Nullable livePhoto, NSError * _Nullable error) {
-            __strong __typeof(weakSelf) self = weakSelf;
-            if (livePhoto) {
-                self.livePhotoView.livePhoto = livePhoto;
-                !self.progressBlock ?: self.progressBlock(1);
-                !self.completionBlock ?: self.completionBlock(YES);
-            }else {
-                !self.completionBlock ?: self.completionBlock(NO);
-            }
-        }];
+        __strong __typeof(weakSelf) self = weakSelf;
+        [self createLivePhotoWithVideoPath:outVideoPath imagePath:outImagePath targetSize:targetSize];
+    }];
+}
+
+- (void)createLivePhotoWithVideoPath:(NSString *)videoPath imagePath:(NSString * _Nonnull)imagePath targetSize:(CGSize)targetSize {
+    if (![self isBundlePathWithUrl:videoPath]) {
+        [self.filePathList addObject:videoPath];
+    }
+    if (![self isBundlePathWithUrl:imagePath]) {
+        [self.filePathList addObject:imagePath];
+    }
+    __weak __typeof(self) weakSelf = self;
+    [[GKLivePhotoManager manager] createLivePhotoWithVideoPath:videoPath imagePath:imagePath targetSize:targetSize completion:^(PHLivePhoto * _Nullable livePhoto, NSError * _Nullable error) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        if (livePhoto) {
+            self.livePhotoView.livePhoto = livePhoto;
+            !self.progressBlock ?: self.progressBlock(1);
+            !self.completionBlock ?: self.completionBlock(YES);
+        }else {
+            !self.completionBlock ?: self.completionBlock(NO);
+        }
     }];
 }
 
@@ -259,6 +269,13 @@ static float progressRatio = 4 / 5.0;
     NSString *name = GKDiskCacheFileNameForKey(url.absoluteString);
     name = [NSString stringWithFormat:@"%@.%@", name, ext];
     return [self.fileDirectory stringByAppendingPathComponent:name];
+}
+
+- (BOOL)isBundlePathWithUrl:(NSString *)url {
+    if ([url hasPrefix:[NSBundle.mainBundle bundlePath]]) {
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark - PHLivePhotoViewDelegate

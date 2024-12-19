@@ -159,6 +159,13 @@
     if (!self.livePhoto) return;
     if (self.livePhoto.photo != self.photo) return;
     [self.livePhoto gk_updateFrame:self.imageView.bounds];
+    if (self.liveMarkView.superview) {
+        CGFloat x = 10;
+        CGFloat y = CGRectGetMinY(self.imageView.frame) + 10;
+        CGFloat w = 64;
+        CGFloat h = 20;
+        self.liveMarkView.frame = CGRectMake(x, y, w, h);
+    }
 }
 
 @end

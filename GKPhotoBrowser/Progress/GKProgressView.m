@@ -72,21 +72,27 @@
 - (void)updateCurrentTime:(NSTimeInterval)currentTime totalTime:(NSTimeInterval)totalTime {
     if (self.isSeeking) return;
     self.totalTime = totalTime;
-    CGFloat progress = 0;
-    if (totalTime == 0) {
-        progress = 0;
-    }else {
-        progress = currentTime / totalTime;
-    }
-    if (progress <= 0) progress = 0;
-    if (progress >= 1) progress = 1;
+    CGFloat progress = totalTime == 0 ? 0 : currentTime / totalTime;
+    progress = MAX(0, MIN(progress, 1));
     self.sliderView.value = progress;
     self.currentLabel.text = [self convertTimeSecond:currentTime];
     self.totalLabel.text = [self convertTimeSecond:totalTime];
 }
 
 - (void)updateLayoutWithFrame:(CGRect)frame {
+    CGFloat width = frame.size.width;
+    CGFloat height = frame.size.height;
     
+    CGFloat centerX = width * 0.5f;
+    CGFloat centerY = 0;
+    if (self.browser.isLandscape) {
+        centerY = height - 20;
+    }else {
+        centerY = height - 20 - (self.browser.configure.isAdaptiveSafeArea ? kSafeBottomSpace : 0);
+    }
+    
+    self.progressView.bounds = CGRectMake(0, 0, width - 60, 20);
+    self.progressView.center = CGPointMake(centerX, centerY);
 }
 
 #pragma mark - GKSliderViewDelegate

@@ -166,6 +166,9 @@ int const static kDirectionPanThreshold = 5;
     if (photoView.scrollView.zoomScale > 1.0) {
         [photoView.scrollView setZoomScale:1.0 animated:YES];
         photo.isZooming = NO;
+        if (photo.isLivePhoto) {
+            photoView.liveMarkView.hidden = self.configure.livePhoto.isPlaying;
+        }
         
         // 默认情况下有滑动手势
         [self addPanGesture:YES];
@@ -178,6 +181,9 @@ int const static kDirectionPanThreshold = 5;
         photo.zoomScale = self.configure.doubleZoomScale;
         photo.isZooming = YES;
         photo.zoomRect  = zoomRect;
+        if (photo.isLivePhoto) {
+            photoView.liveMarkView.hidden = YES;
+        }
         
         // 放大情况下移除滑动手势
         [self removePanGesture];

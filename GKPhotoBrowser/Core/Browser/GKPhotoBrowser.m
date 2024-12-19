@@ -240,8 +240,8 @@
 }
 
 - (void)updateViewIndex {
-    if (self.cover && [self.cover respondsToSelector:@selector(gk_updateCoverWithCount:index:)]) {
-        [self.cover gk_updateCoverWithCount:self.photos.count index:self.currentIndex];
+    if (self.cover && [self.cover respondsToSelector:@selector(updateCoverWithCount:index:)]) {
+        [self.cover updateCoverWithCount:self.photos.count index:self.currentIndex];
     }
 }
 
@@ -486,8 +486,8 @@
 
 #pragma mark - Private Methods
 - (void)setupCoverViews {
-    if (self.cover && [self.cover respondsToSelector:@selector(gk_addCoverToView:)]) {
-        [self.cover gk_addCoverToView:self.contentView];
+    if (self.cover && [self.cover respondsToSelector:@selector(addCoverToView:)]) {
+        [self.cover addCoverToView:self.contentView];
     }
     
     if (self.player && self.progress) {
@@ -510,8 +510,8 @@
     }else {
         self.progressView.hidden = YES;
     }
-    if (self.cover && [self.cover respondsToSelector:@selector(gk_updateCoverWithPhoto:)]) {
-        [self.cover gk_updateCoverWithPhoto:photo];
+    if (self.cover && [self.cover respondsToSelector:@selector(updateCoverWithPhoto:)]) {
+        [self.cover updateCoverWithPhoto:photo];
     }
 }
 
@@ -932,24 +932,12 @@
 }
 
 - (void)layoutCoverViews {
-    CGFloat width = self.contentView.bounds.size.width;
-    CGFloat height = self.contentView.bounds.size.height;
     
-    if (self.cover && [self.cover respondsToSelector:@selector(gk_updateCoverWithFrame:)]) {
-        [self.cover gk_updateCoverWithFrame:self.contentView.bounds];
+    if (self.cover && [self.cover respondsToSelector:@selector(updateLayoutWithFrame:)]) {
+        [self.cover updateLayoutWithFrame:self.contentView.bounds];
     }
     
-    CGFloat centerX = width * 0.5f;
-    CGFloat centerY = 0;
-    if (self.rotationHandler.isLandscape) {
-        centerY = height - 20;
-    }else {
-        centerY = height - 20 - (self.configure.isAdaptiveSafeArea ? kSafeBottomSpace : 0);
-    }
-    
-    self.progressView.bounds = CGRectMake(0, 0, width - 60, 20);
-    self.progressView.center = CGPointMake(centerX, centerY);
-    if ([self.progress respondsToSelector:@selector(updateLayoutWithFrame:)]) {
+    if (self.progress && [self.progress respondsToSelector:@selector(updateLayoutWithFrame:)]) {
         [self.progress updateLayoutWithFrame:self.contentView.bounds];
     }
     
