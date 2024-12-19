@@ -64,6 +64,7 @@ pod 'GKPhotoBrowser'  或  pod 'GKPhotoBrowser/Default'
 ```objc
 pod 'GKPhotoBrowser/Core'
 ```
+
 SDWebImage加载图片
 ```objc
 pod 'GKPhotoBrowser/SD'
@@ -76,6 +77,7 @@ Kingfisher加载图片
 ```objc
 pod 'GKPhotoBrowser/KF'
 ```
+
 AVPlayer播放视频
 ```objc
 pod 'GKPhotoBrowser/AVPlayer'
@@ -102,6 +104,12 @@ pod 'GKPhotoBrowser/Alamofire'
 ```objc
 pod 'GKPhotoBrowser/Progress'
 ```
+
+默认Cover视图
+```objc
+pod 'GKPhotoBrowser/Cover'
+```
+
 ## 使用
 1、创建包含GKPhoto的数据源数组
 ```
@@ -141,7 +149,7 @@ GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentI
 2、使用YYWebImage(1.0.5)加载图片，请使用pod 'GKPhotoBrowser/YY'   
 3、自定义图片加载类，如：SDWebImage 5.0以下版本，请使用pod 'GKPhotoBrowser/Core'，然后添加图片加载类并实现GKWebImageProtocol协议
 
-### 3、本库支持多种自定义（图片加载、视频播放、livePhoto下载等等）
+### 3、本库支持多种自定义（图片加载、视频播放、livePhoto下载、遮罩视图等等）
 如果想自定义图片加载，请创建类并实现GKWebImageProtocol协议，并在浏览器显示之前进行配置
 ```
 GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
@@ -152,7 +160,7 @@ browser.configure = configure;
 如果想自定义视频播放，请创建类并实现GKVideoPlayerProtocol协议，并在浏览器显示之前进行配置
 ```
 GKPhotoBrowserConfigure *configure = GKPhotoBrowserConfigure.defaultConfig;
-[configure setupWebImageProtocol:CustomPlayerManager.new];
+[configure setupVideoPlayerProtocol:CustomPlayerManager.new];
 
 browser.configure = configure;
 ```
@@ -162,7 +170,6 @@ browser.configure = configure;
 
 ### 5、滑动返回时显示黑屏（不出现背景渐变）
 查看其他代码中是否有分类修改了UIViewController的modalPresentationStyle，GKPhotoBrowser的默认modalPresentationStyle是UIModalPresentationCustom，如果有修改则需要屏蔽对GKPhotoBrowser的修改
-
  
  ## 效果图
  
@@ -193,6 +200,9 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.1.5 - 2024.12.19
+    - 1、新增自定义cover协议，可以更方便的自定义cover视图
+    - 2、livePhoto加载速度提升，加载逻辑优化
  * 3.1.4 - 2024.12.06
     - 1、新增禁止上滑消失属性，即消失阈值等属性
     - 2、新增滑动消失进度更新代理
