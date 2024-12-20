@@ -16,6 +16,7 @@
 #import <GKMessageTool/GKMessageTool.h>
 #import "GKZFPlayerManager.h"
 #import "GKAFLivePhotoManager+Extension.h"
+#import <ZLPhotoBrowser-Swift.h>
 
 @interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -167,6 +168,8 @@
         afManager.addMark = YES;
         [configure setupLivePhotoProtocol:afManager];
         
+        configure.isShowStatusBarWhenPan = NO;
+        
         if (kIsiPad) {
             configure.isFollowSystemRotation = YES;
         }
@@ -224,11 +227,11 @@
     CGFloat actionSheetH = 0;
     
     if (self.isLandscape) {
-        actionSheetH = 150;
+        actionSheetH = 200;
         fromView.frame = contentView.bounds;
         [contentView addSubview:fromView];
     }else {
-        actionSheetH = 150 + kSafeBottomSpace;
+        actionSheetH = 200 + kSafeBottomSpace;
         fromView.frame = browser.view.bounds;
         [browser.view addSubview:fromView];
     }
@@ -237,21 +240,28 @@
     actionSheet.backgroundColor = [UIColor whiteColor];
     self.actionSheet = actionSheet;
     
-    UIButton *delBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, actionSheet.width, 50)];
+    UIButton *editBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, actionSheet.width, 50)];
+    [editBtn setTitle:@"编辑" forState:UIControlStateNormal];
+    [editBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [editBtn addTarget:self action:@selector(editBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    editBtn.backgroundColor = [UIColor whiteColor];
+    [actionSheet addSubview:editBtn];
+    
+    UIButton *delBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50, actionSheet.width, 50)];
     [delBtn setTitle:@"删除" forState:UIControlStateNormal];
     [delBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [delBtn addTarget:self action:@selector(delBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     delBtn.backgroundColor = [UIColor whiteColor];
     [actionSheet addSubview:delBtn];
 
-    UIButton *saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50, actionSheet.width, 50)];
+    UIButton *saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 100, actionSheet.width, 50)];
     [saveBtn setTitle:@"保存图片" forState:UIControlStateNormal];
     [saveBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [saveBtn addTarget:self action:@selector(saveBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     saveBtn.backgroundColor = [UIColor whiteColor];
     [actionSheet addSubview:saveBtn];
 
-    UIButton *cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 100, actionSheet.width, 50)];
+    UIButton *cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 150, actionSheet.width, 50)];
     [cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
     [cancelBtn addTarget:self action:@selector(cancelBtnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -265,6 +275,10 @@
     UIView *line2View = [[UIView alloc] initWithFrame:CGRectMake(0, 100, actionSheet.width, 0.5)];
     line2View.backgroundColor = [UIColor grayColor];
     [actionSheet addSubview:line2View];
+    
+    UIView *line3View = [[UIView alloc] initWithFrame:CGRectMake(0, 150, actionSheet.width, 0.5)];
+    line3View.backgroundColor = [UIColor grayColor];
+    [actionSheet addSubview:line3View];
 
     __weak __typeof(self) weakSelf = self;
     [GKCover coverFrom:fromView
@@ -309,6 +323,34 @@
 
 - (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index {
     NSLog(@"浏览器完全消失%@", browser);
+}
+
+- (void)editBtnClick:(id)sender {
+    [GKCover hideCover];
+    
+    GKPhoto *photo = self.browser.curPhoto;
+    if (photo.isVideo) {
+        [GKMessageTool showText:@"不支持编辑视频"];
+        return;
+    }
+    
+    UIImage *image = self.browser.curPhotoView.imageView.image;
+    
+    [ZLEditImageViewController showEditImageVCWithParentVC:self.browser animate:NO image:image editModel:nil cancel:^{
+        NSLog(@"取消编辑");
+    } completion:^(UIImage *newImage, ZLEditImageModel *editModel) {
+        
+    }];
+    
+    SDImageFormat format = [NSData sd_imageFormatForImageData:[image sd_imageData]];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (format == SDImageFormatGIF) {
+            [GKMessageTool showText:@"GIF将以静态图进行编辑"];
+        }else if (photo.isLivePhoto) {
+            [GKMessageTool showText:@"livePhoto将以静态图进行编辑"];
+        }
+    });
 }
 
 - (void)delBtnClick:(id)sender {

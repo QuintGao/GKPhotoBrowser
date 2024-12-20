@@ -382,11 +382,11 @@ int const static kDirectionPanThreshold = 5;
     }
     self.photoViewCenter = photoView.center;
     
-    self.isStatusBarShowing = self.browser.isStatusBarShow;
-    
     // 显示状态栏
-    self.browser.isStatusBarShow = YES;
-    
+    if (self.configure.isShowStatusBarWhenPan) {
+        self.isStatusBarShowing = self.configure.isStatusBarShow;
+        [self.browser setStatusBarShow:YES];
+    }
     if ([self.browser.delegate respondsToSelector:@selector(photoBrowser:panBeginWithIndex:)]) {
         [self.browser.delegate photoBrowser:self.browser panBeginWithIndex:self.browser.currentIndex];
     }
@@ -412,10 +412,13 @@ int const static kDirectionPanThreshold = 5;
             [self.delegate browserCancelDisappear];
         }
 
-        if (!self.isStatusBarShowing) {
-            // 隐藏状态栏
-            self.browser.isStatusBarShow = NO;
+        if (self.configure.isShowStatusBarWhenPan) {
+            if (!self.isStatusBarShowing) {
+                // 隐藏状态栏
+                [self.browser setStatusBarShow:NO];
+            }
         }
+        
         if ([self.browser.delegate respondsToSelector:@selector(photoBrowser:panEndedWithIndex:willDisappear:)]) {
             [self.browser.delegate photoBrowser:self.browser panEndedWithIndex:self.browser.currentIndex willDisappear:NO];
         }

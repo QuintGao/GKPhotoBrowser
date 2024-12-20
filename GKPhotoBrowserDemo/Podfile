@@ -20,7 +20,7 @@ target 'GKPhotoBrowserDemo' do
   pod 'MBProgressHUD'
   pod 'GKMessageTool'
   pod 'Masonry'
-  pod 'TZImagePickerController'
+  pod 'ZLPhotoBrowser'
   pod 'GKSliderView'
   
   pod 'GKVideoScrollView'

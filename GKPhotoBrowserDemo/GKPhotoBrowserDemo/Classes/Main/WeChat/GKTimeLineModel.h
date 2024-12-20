@@ -52,6 +52,8 @@
 /** 宽高比 = 宽/高 */
 @property (nonatomic, assign) CGFloat scale;
 
+@property (nonatomic, copy) NSString *name;
+
 @end
 
 @interface GKTimeLineFrame : NSObject

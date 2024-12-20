@@ -42,6 +42,9 @@
 }
 
 - (void)initialize {
+    self.isStatusBarShow = NO;
+    self.isShowStatusBarWhenPan = YES;
+    self.statusBarStyle = UIStatusBarStyleLightContent;
     self.isHideSourceView        = YES;
     self.isFullWidthForLandScape = YES;
     self.maxZoomScale            = 2.0;

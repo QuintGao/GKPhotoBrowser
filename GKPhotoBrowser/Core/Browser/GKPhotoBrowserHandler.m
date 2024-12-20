@@ -172,7 +172,7 @@
         [self.browser.navigationController popViewControllerAnimated:YES];
     }else {
         // 显示状态栏
-        self.browser.isStatusBarShow = YES;
+        [self.browser setStatusBarShow:YES];
         if (self.configure.hideStyle == GKPhotoBrowserHideStyleNone) {
             [self browserDismissNone];
         }else {
@@ -340,6 +340,9 @@
     if (!self.statusBarAppearance) {
         [[UIApplication sharedApplication] setStatusBarStyle:self.originStatusBarStyle];
     }
+    
+    self.isDismiss = YES;
+    
     if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
         [self.browser.navigationController popViewControllerAnimated:NO];
     }else {

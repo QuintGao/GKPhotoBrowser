@@ -7,14 +7,13 @@
 //
 
 #import "GKDemoPhotoViewController.h"
-#import <TZImagePickerController/TZImagePickerController.h>
 #import "GKPhotosView.h"
 #import "GKTimeLineModel.h"
 #import <GKMessageTool/GKMessageTool.h>
+#import <GKPhotoBrowserDemo-Swift.h>
+#import <ZLPhotoBrowser/ZLPhotoBrowser-Swift.h>
 
 @interface GKDemoPhotoViewController ()<GKPhotosViewDelegate, GKPhotoBrowserDelegate>
-
-@property (nonatomic, strong) TZAlbumModel *model;
 
 @property (nonatomic, strong) NSArray *models;
 
@@ -34,26 +33,22 @@
     self.view.backgroundColor = UIColor.whiteColor;
     self.gk_navTitle = @"相册图片";
     
-    TZImagePickerConfig *config = [TZImagePickerConfig sharedInstance];
-    config.allowPickingVideo = YES;
-    config.allowPickingImage = YES;
-    
-    [[TZImageManager manager] getCameraRollAlbumWithFetchAssets:NO completion:^(TZAlbumModel *model) {
-        self.model = model;
+    [ZLPhotoManager getCameraRollAlbumWithAllowSelectImage:YES allowSelectVideo:YES completion:^(ZLAlbumListModel *model) {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [[TZImageManager manager] getAssetsFromFetchResult:self->_model.result completion:^(NSArray<TZAssetModel *> *models) {
-                self->_models = [NSMutableArray arrayWithArray:models];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self initSubviews];
-                });
-            }];
+            NSArray *models = [ZLPhotoBrowserSwift getPhotos:model];
+            self.models = [NSMutableArray arrayWithArray:models];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self initSubviews];
+            });
         });
     }];
 }
 
 - (void)initSubviews {
     self.scrollView = [[UIScrollView alloc] init];
-    self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    if (@available(iOS 11.0, *)) {
+        self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     self.scrollView.frame = CGRectMake(0, CGRectGetMaxY(self.gk_navigationBar.frame), self.view.frame.size.width, self.view.frame.size.height - CGRectGetMaxY(self.gk_navigationBar.frame));
     [self.view addSubview:self.scrollView];
     
@@ -62,32 +57,31 @@
     [self.scrollView addSubview:self.photosView];
     
     NSMutableArray *images = [NSMutableArray array];
-    [self.models enumerateObjectsUsingBlock:^(TZAssetModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.models enumerateObjectsUsingBlock:^(ZLPhotoModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         GKTimeLineImage *image = [GKTimeLineImage new];
         
-        [[TZImageManager manager] getPhotoWithAsset:obj.asset photoWidth:self.view.width/2 completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
-            image.coverImage = photo;
+        [ZLPhotoBrowserSwift getModel:obj completion:^(ZLPhotoResultModel *result) {
+            image.coverImage = result.image;
+            if (result.type == ResultTypeVideo) {
+                image.video_asset = result.asset;
+            }else {
+                image.image_asset = result.asset;
+                if (result.type == ResultTypeLivePhoto) {
+                    image.isLivePhoto = YES;
+                }
+            }
+            [images addObject:image];
+            
+            self.photos = images;
+            
+            CGFloat height = [GKPhotosView sizeWithCount:images.count width:self.view.bounds.size.width - 20 andMargin:10].height;
+            CGFloat y = 20;
+            self.photosView.frame = CGRectMake(10, y, self.view.bounds.size.width - 20, height);
+            self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, y + height + 20);
+            
+            self.photosView.images = images;
         }];
-        
-        if (obj.type == TZAssetModelMediaTypeVideo) {
-            image.video_asset = obj.asset;
-        }else {
-            image.image_asset = obj.asset;
-            image.isLivePhoto = obj.asset.mediaSubtypes & PHAssetMediaSubtypePhotoLive;
-        }
-        [images addObject:image];
     }];
-    
-    self.photos = images;
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        CGFloat height = [GKPhotosView sizeWithCount:images.count width:self.view.bounds.size.width - 20 andMargin:10].height;
-        CGFloat y = 20;
-        self.photosView.frame = CGRectMake(10, y, self.view.bounds.size.width - 20, height);
-        self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, y + height + 20);
-        
-        self.photosView.images = images;
-    });
 }
 
 - (void)viewWillLayoutSubviews {

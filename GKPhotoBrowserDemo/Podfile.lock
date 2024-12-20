@@ -24,42 +24,42 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.9.0)
   - GKNavigationBar/GestureHandle (1.9.0)
   - GKNavigationBar/NavigationBar (1.9.0)
-  - GKPhotoBrowser (3.1.4):
-    - GKPhotoBrowser/Default (= 3.1.4)
-  - GKPhotoBrowser/AF (3.1.4):
+  - GKPhotoBrowser (3.1.5):
+    - GKPhotoBrowser/Default (= 3.1.5)
+  - GKPhotoBrowser/AF (3.1.5):
     - AFNetworking
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Alamofire (3.1.4):
+  - GKPhotoBrowser/Alamofire (3.1.5):
     - Alamofire
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/AVPlayer (3.1.4):
+  - GKPhotoBrowser/AVPlayer (3.1.5):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.1.4):
+  - GKPhotoBrowser/Core (3.1.5):
     - GKPhotoBrowser/Resources
-  - GKPhotoBrowser/Cover (3.1.4):
+  - GKPhotoBrowser/Cover (3.1.5):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Default (3.1.4):
+  - GKPhotoBrowser/Default (3.1.5):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Cover
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (3.1.4):
+  - GKPhotoBrowser/KF (3.1.5):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (3.1.4):
+  - GKPhotoBrowser/Progress (3.1.5):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Resources (3.1.4)
-  - GKPhotoBrowser/SD (3.1.4):
+  - GKPhotoBrowser/Resources (3.1.5)
+  - GKPhotoBrowser/SD (3.1.5):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (3.1.4):
+  - GKPhotoBrowser/YY (3.1.5):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser/ZFPlayer (3.1.4):
+  - GKPhotoBrowser/ZFPlayer (3.1.5):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.3)
@@ -71,11 +71,6 @@ PODS:
   - SDWebImage (5.20.0):
     - SDWebImage/Core (= 5.20.0)
   - SDWebImage/Core (5.20.0)
-  - TZImagePickerController (3.8.8):
-    - TZImagePickerController/Basic (= 3.8.8)
-    - TZImagePickerController/Location (= 3.8.8)
-  - TZImagePickerController/Basic (3.8.8)
-  - TZImagePickerController/Location (3.8.8)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
@@ -87,6 +82,9 @@ PODS:
   - ZFPlayer/AVPlayer (4.1.4):
     - ZFPlayer/Core
   - ZFPlayer/Core (4.1.4)
+  - ZLPhotoBrowser (4.5.7):
+    - ZLPhotoBrowser/Core (= 4.5.7)
+  - ZLPhotoBrowser/Core (4.5.7)
 
 DEPENDENCIES:
   - AFNetworking
@@ -104,9 +102,9 @@ DEPENDENCIES:
   - MBProgressHUD
   - SDAutoLayout
   - SDWebImage
-  - TZImagePickerController
   - YYModel
   - YYWebImage (~> 1.0.5)
+  - ZLPhotoBrowser
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -123,12 +121,12 @@ SPEC REPOS:
     - MBProgressHUD
     - SDAutoLayout
     - SDWebImage
-    - TZImagePickerController
     - YYCache
     - YYImage
     - YYModel
     - YYWebImage
     - ZFPlayer
+    - ZLPhotoBrowser
 
 EXTERNAL SOURCES:
   GKPhotoBrowser:
@@ -141,7 +139,7 @@ SPEC CHECKSUMS:
   GKLivePhotoManager: 7d5bc069382d5a4c1d44a846727b0beb08582256
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: 3e28ca4d269d4710271e0ac717761092c7bea7a2
+  GKPhotoBrowser: 291abdad05fb01d4250f56146aca9491371bcbe6
   GKSliderView: 7c6f853afeb0ae370bb8dce76ec669d6e9109d1d
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
@@ -149,13 +147,13 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
-  TZImagePickerController: d084a7b97c82d387e7669dd86dc9a9057500aacf
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
+  ZLPhotoBrowser: 04c8a5c5299a3b5945c60bd0e676c16d1215b14c
 
-PODFILE CHECKSUM: 6f28f7fa0f3e86eb0a71a71492c1f99889fbe88d
+PODFILE CHECKSUM: 9e539652e773cc0495c9492ecce2039f8ea2b564
 
 COCOAPODS: 1.16.1

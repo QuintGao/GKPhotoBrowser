@@ -34,6 +34,12 @@
 @property (nonatomic, strong) NSArray *coverViews;
 @property (nonatomic, copy) void(^layoutBlock)(GKPhotoBrowser *, CGRect);
 
+/// 是否显示状态栏，默认NO：不显示状态栏
+@property (nonatomic, assign) BOOL isStatusBarShow;
+
+/// 状态栏样式，默认Light
+@property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
+
 // 基础处理类
 @property (nonatomic, strong) GKPhotoBrowserHandler *handler;
 
@@ -127,6 +133,8 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
+    if (!self.handler.isDismiss) return;
+    
     [self.curPhotoView didDismissDisappear];
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:didDisappearAtIndex:)]) {
@@ -154,8 +162,8 @@
 }
 
 - (void)initValue {
-    self.isStatusBarShow = NO;
-    self.statusBarStyle = UIStatusBarStyleLightContent;
+    self.isStatusBarShow = self.configure.isStatusBarShow;
+    self.statusBarStyle = self.configure.statusBarStyle;
     self.visiblePhotoViews = [NSMutableArray array];
     self.reusablePhotoViews = [NSMutableSet set];
 }
@@ -957,6 +965,10 @@
 
 - (void)removeRotationObserver {
     [self.rotationHandler removeDeviceOrientationObserver];
+}
+
+- (void)setStatusBarShow:(BOOL)show {
+    self.isStatusBarShow = show;
 }
 
 @end

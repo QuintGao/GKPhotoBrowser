@@ -1,0 +1,75 @@
+"previewCamera" = "Kamera";
+"previewCameraRecord" = "Rekod";
+"previewAlbum" = "Imej";
+"cancel" = "Batal";
+
+"originalPhoto" = "Imej Penuh";
+"originalTotalSize" = "Jumlah";
+"done" = "Selesai";
+"ok" = "Okey";
+"editFinish" = "Selesai";
+"cameraDone" = "Selesai";
+"inputDone" = "Selesai";
+
+"back" = "Belakang";
+"edit" = "Edit";
+"revert" = "Buat asal";
+"brightness" = "Kecerahan";
+"contrast" = "Contrast";
+"saturation" = "Ketepuan";
+
+"photo" = "Gambar";
+"preview" = "Pratonton";
+
+"noPhotoTips" = "Tiada Foto";
+
+"hudLoading" = "Memuatkan";
+"hudProcessing" = "Sedang diproses";
+
+"exceededMaxSelectCount" = "Kiraan maksimum untuk pemilihan: %ld";
+"longerThanMaxVideoDuration" = "Tidak dapat memilih video dengan jangka masa lebih lama daripada %lds";
+"shorterThanMinVideoDuration" = "Tidak dapat memilih video dengan jangka masa lebih pendek daripada %lds";
+"largerThanMaxVideoDataSize" = "Tidak boleh memilih video yang lebih besar daripada %@MB";
+"smallerThanMinVideoDataSize" = "Tidak boleh memilih video yang lebih kecil daripada %@MB";
+"exceededMaxVideoSelectCount" = "Jumlah maksimum untuk pemilihan video: %ld";
+"lessThanMinVideoSelectCount" = "Kiraan minimum untuk pemilihan video: %ld";
+
+"noCameraAuthority" = "Izinkan %@ mengakses kamera peranti anda di \"Tetapan\" > \"Privasi\" > \"Kamera\"";
+"noPhotoLibratyAuthority" = "Izinkan %@ mengakses album anda di \"Tetapan\" > \"Privasi\" > \"Foto\"";
+"noMicrophoneAuthority" = "Tidak dapat merakam audio. Pergi Ke \"Tetapan\" > \"%@\" dan dayakan akses mikrofon";
+"cameraUnavailable" = "Kamera tidak tersedia";
+"keepRecording" = "Teruskan Perakaman";
+"gotoSettings" = "Pergi ke Tetapan";
+
+"iCloudVideoLoadFaild" = "Tidak dapat menyegerakkan dari iCloud";
+"imageLoadFailed" = "pemuatan gagal";
+
+"save" = "Berjimat";
+"saveImageError" = "Gagal menyimpan gambar";
+"saveVideoError" = "Gagal menyimpan video";
+"timeout" = "Permintaan tamat";
+
+"customCameraTips" = "Ketik untuk menangkap dan tahan untuk merakam";
+"customCameraTakePhotoTips" = "Ketik untuk menangkap";
+"customCameraRecordVideoTips" = "Tahan untuk merakam";
+"customCameraTapToRecordVideoTips" = "Ketik untuk merakam video";
+"minRecordTimeTips" = "Rakam sekurang-kurangnya %lds";
+
+"cameraRoll" = "Terbaru";
+"panoramas" = "Panorama";
+"videos" = "Video";
+"favorites" = "Kegemaran";
+"timelapses" = "Selang Masa";
+"recentlyAdded" = "Ditambah Terkini";
+"bursts" = "Jujukan";
+"slomoVideos" = "Slo-mo";
+"selfPortraits" = "Swafoto";
+"screenshots" = "Gambar Skrin";
+"depthEffect" = "Potret";
+"livePhotos" = "Live Photos";
+"animated" = "Beranimasi";
+"myPhotoStream" = "Strim Foto Saya";
+
+"noTitleAlbumListPlaceholder" = "Semua Foto";
+"unableToAccessAllPhotos" = "Tidak dapat mengakses semua foto dalam album.\nBenarkan akses kepada \"Semua Foto\" dalam \"Foto\".";
+"textStickerRemoveTips" = "Seret ke sini untuk mengalih keluar";

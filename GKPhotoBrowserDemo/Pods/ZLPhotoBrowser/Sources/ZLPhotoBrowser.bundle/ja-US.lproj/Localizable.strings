@@ -1,0 +1,75 @@
+"previewCamera" = "カメラ";
+"previewCameraRecord" = "撮影";
+"previewAlbum" = "アルバム";
+"cancel" = "キャンセル";
+
+"originalPhoto" = "完全な画像";
+"originalTotalSize" = "合計";
+"done" = "確定";
+"ok" = "確定";
+"editFinish" = "完了";
+"cameraDone" = "確定";
+"inputDone" = "確定";
+
+"back" = "戻る";
+"edit" = "編集";
+"revert" = "元に戻す";
+"brightness" = "明度";
+"contrast" = "コントラスト";
+"saturation" = "彩度";
+
+"photo" = "写真";
+"preview" = "プレビュー";
+
+"noPhotoTips" = "写真がありません";
+
+"hudLoading" = "読み込み中";
+"hudProcessing" = "処理中";
+
+"exceededMaxSelectCount" = "最大選択数: %ld";
+"longerThanMaxVideoDuration" = "%ld秒より長い動画は選択できません";
+"shorterThanMinVideoDuration" = "％ld秒より短い動画は選択できません";
+"largerThanMaxVideoDataSize" = "%@MBを超える動画は選択できません";
+"smallerThanMinVideoDataSize" = "%@MB未満の動画は選択できません";
+"exceededMaxVideoSelectCount" = "動画の最大選択数: %ld";
+"lessThanMinVideoSelectCount" = "動画の最小選択数: %ld";
+
+"noCameraAuthority" = "「設定」>「プライパシー」>「カメラ」から、%@があなたのデバイスのカメラにアクセスする許可をしてください";
+"noPhotoLibratyAuthority" = "「設定」>「プライバシー」>「写真」から、%@があなたのアルバムにアクセスする許可をしてください";
+"noMicrophoneAuthority" = "音声を録音できません。「設定」 >「%@」に移動し、マイクへのアクセスを有効にしてください";
+"cameraUnavailable" = "カメラは利用できません";
+"keepRecording" = "撮影を続ける";
+"gotoSettings" = "設定に移動";
+
+"iCloudVideoLoadFaild" = "iCloudから同期できません";
+"imageLoadFailed" = "ロード失敗";
+
+"save" = "セーブ";
+"saveImageError" = "画像の保存に失敗しました";
+"saveVideoError" = "ビデオの保存に失敗しました";
+"timeout" = "タイムアウトしました";
+
+"customCameraTips" = "タップして撮影、長押しで記録";
+"customCameraTakePhotoTips" = "タップして撮影できます";
+"customCameraRecordVideoTips" = "長押しで記録できます";
+"customCameraTapToRecordVideoTips" = "タップして記録";
+"minRecordTimeTips" = "最低 %ld秒以上記録してください";
+
+"cameraRoll" = "最近の項目";
+"panoramas" = "パノラマ";
+"videos" = "ビデオ";
+"favorites" = "お気に入り";
+"timelapses" = "タイムラプス";
+"recentlyAdded" = "最後に追加した項目";
+"bursts" = "バースト";
+"slomoVideos" = "スローモーション";
+"selfPortraits" = "セルフイー";
+"screenshots" = "スクリーンショット";
+"depthEffect" = "ポートレート";
+"livePhotos" = "Live Photos";
+"animated" = "アニメーション";
+"myPhotoStream" = "マイフォトストリーム";
+
+"noTitleAlbumListPlaceholder" = "画像すべて";
+"unableToAccessAllPhotos" = "アルバム内のすべての写真にアクセスできません。\n「写真」内の「すべての写真」 へのアクセスを許可してください。";
+"textStickerRemoveTips" = "ここにドラッグして削除します";

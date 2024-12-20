@@ -39,12 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 当前设备方向
 @property (nonatomic, assign, readonly) UIDeviceOrientation currentOrientation;
 
-/// 是否显示状态栏，默认NO：不显示状态栏
-@property (nonatomic, assign) BOOL isStatusBarShow;
-
-/// 状态栏样式，默认Light
-@property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
-
 /// 视频进度视图
 @property (nonatomic, weak, readonly, nullable) UIView *progressView;
 
@@ -100,6 +94,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 移除旋转监听
 - (void)removeRotationObserver;
+
+// 设置状态栏显示或隐藏
+- (void)setStatusBarShow:(BOOL)show;
 
 @end
 

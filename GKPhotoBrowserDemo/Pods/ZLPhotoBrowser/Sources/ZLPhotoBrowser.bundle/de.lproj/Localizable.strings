@@ -1,0 +1,75 @@
+"previewCamera" = "Kamera";
+"previewCameraRecord" = "Aufzeichnung";
+"previewAlbum" = "Album";
+"cancel" = "Abbrechen";
+
+"originalPhoto" = "Vollbild";
+"originalTotalSize" = "Gesamt";
+"done" = "Erledigt";
+"ok" = "in Ordnung";
+"editFinish" = "Fertig";
+"cameraDone" = "Erledigt";
+"inputDone" = "Erledigt";
+
+"back" = "Zurück";
+"edit" = "Bearbeiten";
+"revert" = "Rückgängig";
+"brightness" = "Helligkeit";
+"contrast" = "Kontrast";
+"saturation" = "Sättigung";
+
+"photo" = "Fotos";
+"preview" = "Vorschau";
+
+"noPhotoTips" = "Keine Fotos";
+
+"hudLoading" = "Wird geladen";
+"hudProcessing" = "Wird verarbeitet";
+
+"exceededMaxSelectCount" = "Maximale Auswahlanzahl: %ld";
+"longerThanMaxVideoDuration" = "Videos, die länger als %lds sind, können nicht ausgewählt werden";
+"shorterThanMinVideoDuration" = "Videos kürzer als %lds können nicht ausgewählt werden";
+"largerThanMaxVideoDataSize" = "Videos größer als %@MB können nicht ausgewählt werden";
+"smallerThanMinVideoDataSize" = "Videos kleiner als %@MB können nicht ausgewählt werden";
+"exceededMaxVideoSelectCount" = "Video max Auswahlanzahl: %ld";
+"lessThanMinVideoSelectCount" = "Video min Auswahlanzahl: %ld";
+
+"noCameraAuthority" = "Bitte erlauben Sie %@, auf die Kamera Ihres Geräts unter \"Einstellungen\" > \"Datenschutz\" > \"Kamera\" zuzugreifen";
+"noPhotoLibratyAuthority" = "Bitte erlauben Sie %@, auf Ihr Album unter \"Einstellungen\" > \"Datenschutz\" > \"Fotos\" zuzugreifen";
+"noMicrophoneAuthority" = "Audio kann nicht aufgenommen werden. Gehen Sie zu \"Einstellungen\" > \"%@\" und aktivieren Sie den Mikrofonzugriff";
+"cameraUnavailable" = "Kamera ist nicht verfügbar";
+"keepRecording" = "Aufnahme behalten";
+"gotoSettings" = "Zu Einstellungen wechseln";
+
+"iCloudVideoLoadFaild" = "Synchronisierung von iCloud nicht möglich";
+"imageLoadFailed" = "Laden fehlgeschlagen";
+
+"save" = "Sparen";
+"saveImageError" = "Das Bild konnte nicht gespeichert werden";
+"saveVideoError" = "Das Video konnte nicht gespeichert werden";
+"timeout" = "Zeitüberschreitung der Anforderung";
+
+"customCameraTips" = "Tippen, um Fotos aufzunehmen und halten, um ein Video aufzunehmen";
+"customCameraTakePhotoTips" = "Tippen, um ein Foto aufzunehmen";
+"customCameraRecordVideoTips" = "Halten Sie gedrückt, um ein Video aufzunehmen";
+"customCameraTapToRecordVideoTips" = "Tippen, um Video aufzunehmen";
+"minRecordTimeTips" = "Nehmen Sie mindestens %lds auf";
+
+"cameraRoll" = "Letzte";
+"panoramas" = "Panoramen";
+"videos" = "Videos";
+"favorites" = "Favoriten";
+"timelapses" = "Zeitraffer";
+"recentlyAdded" = "Kürzlich hinzugefügt";
+"bursts" = "Serien";
+"slomoVideos" = "Slo-Mo";
+"selfPortraits" = "Selfies";
+"screenshots" = "Bildschirmfotos";
+"depthEffect" = "Porträt";
+"livePhotos" = "Live Photos";
+"animated" = "Animiert";
+"myPhotoStream" = "Mein Fotostream";
+
+"noTitleAlbumListPlaceholder" = "Alle Fotos";
+"unableToAccessAllPhotos" = "Zugriff auf alle Fotos im Album nicht möglich.\nZugriff auf \"Alle Fotos\" unter \"Fotos\" zulassen.";
+"textStickerRemoveTips" = "Zum Entfernen hierher ziehen";

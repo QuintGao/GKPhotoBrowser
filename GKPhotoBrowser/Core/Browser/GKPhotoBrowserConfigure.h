@@ -113,6 +113,15 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 /// 是否跟随系统旋转，默认是NO，如果设置为YES，isScreenRotateDisabled属性将失效
 @property (nonatomic, assign) BOOL isFollowSystemRotation;
 
+/// 是否显示状态栏，默认NO：不显示状态栏
+@property (nonatomic, assign) BOOL isStatusBarShow;
+
+/// 滑动隐藏时是否显示状态栏，默认YES
+@property (nonatomic, assign) BOOL isShowStatusBarWhenPan;
+
+/// 状态栏样式，默认Light
+@property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
+
 /// 是否禁止屏幕旋转监测
 @property (nonatomic, assign) BOOL isScreenRotateDisabled;
 

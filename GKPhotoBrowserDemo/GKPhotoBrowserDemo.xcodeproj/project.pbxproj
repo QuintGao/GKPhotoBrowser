@@ -28,6 +28,8 @@
 		7925A5532A28915700972F47 /* GKLargeImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7925A5522A28915700972F47 /* GKLargeImageManager.m */; };
 		7925A5562A28916100972F47 /* GKLargeImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7925A5552A28916100972F47 /* GKLargeImageView.m */; };
 		7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7927F0CF20A97F280017FD5B /* GKTestViewController.m */; };
+		795364332D13F9CB00541B1E /* GKWBCoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 795364322D13F9CB00541B1E /* GKWBCoverView.m */; };
+		795364352D14206200541B1E /* ZLPhotoBrowserSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795364342D14206200541B1E /* ZLPhotoBrowserSwift.swift */; };
 		795FA5981FF333420057BDB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5971FF333420057BDB0 /* Assets.xcassets */; };
 		795FA59B1FF333420057BDB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5991FF333420057BDB0 /* LaunchScreen.storyboard */; };
 		795FA59E1FF333420057BDB0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 795FA59D1FF333420057BDB0 /* main.m */; };
@@ -121,6 +123,9 @@
 		7925A5552A28916100972F47 /* GKLargeImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKLargeImageView.m; sourceTree = "<group>"; };
 		7927F0CE20A97F280017FD5B /* GKTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKTestViewController.h; sourceTree = "<group>"; };
 		7927F0CF20A97F280017FD5B /* GKTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKTestViewController.m; sourceTree = "<group>"; };
+		795364312D13F9CB00541B1E /* GKWBCoverView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKWBCoverView.h; sourceTree = "<group>"; };
+		795364322D13F9CB00541B1E /* GKWBCoverView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKWBCoverView.m; sourceTree = "<group>"; };
+		795364342D14206200541B1E /* ZLPhotoBrowserSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZLPhotoBrowserSwift.swift; sourceTree = "<group>"; };
 		795FA58B1FF333420057BDB0 /* GKPhotoBrowserDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GKPhotoBrowserDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		795FA5971FF333420057BDB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		795FA59A1FF333420057BDB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -336,8 +341,9 @@
 				795FA6061FF338200057BDB0 /* GKTest03ViewController.m */,
 				60CAD8F5262E66D9003A36D7 /* GKTestVC.h */,
 				60CAD8F6262E66D9003A36D7 /* GKTestVC.m */,
+				795364342D14206200541B1E /* ZLPhotoBrowserSwift.swift */,
 				795FA5F81FF338200057BDB0 /* WeChat */,
-				7961A3022C2E60F500C61A70 /* LivePhoto */,
+				7961A3022C2E60F500C61A70 /* WeBo */,
 				795FA5E81FF338200057BDB0 /* Toutiao */,
 				795FA5E11FF3381F0057BDB0 /* Jianshu */,
 				60F99013227159FB008150AE /* OriginImage */,
@@ -416,7 +422,7 @@
 			path = WeChat;
 			sourceTree = "<group>";
 		};
-		7961A3022C2E60F500C61A70 /* LivePhoto */ = {
+		7961A3022C2E60F500C61A70 /* WeBo */ = {
 			isa = PBXGroup;
 			children = (
 				7961A3032C2E610900C61A70 /* GKLivePhotoViewController.h */,
@@ -429,9 +435,11 @@
 				79D142132C898E300081604A /* GKWBPlayerCell.m */,
 				79D142172C8ADAEA0081604A /* GKWBModel.h */,
 				79D142182C8ADAEA0081604A /* GKWBModel.m */,
+				795364312D13F9CB00541B1E /* GKWBCoverView.h */,
+				795364322D13F9CB00541B1E /* GKWBCoverView.m */,
 				7961A3062C2E61F700C61A70 /* livephoto.txt */,
 			);
-			path = LivePhoto;
+			path = WeBo;
 			sourceTree = "<group>";
 		};
 		79E99CE42BFC3A6C00FBC92E /* Swift */ = {
@@ -606,11 +614,11 @@
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
 				"${BUILT_PRODUCTS_DIR}/SDAutoLayout/SDAutoLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/TZImagePickerController/TZImagePickerController.framework",
 				"${BUILT_PRODUCTS_DIR}/YYCache/YYCache.framework",
 				"${BUILT_PRODUCTS_DIR}/YYImage/YYImage.framework",
 				"${BUILT_PRODUCTS_DIR}/YYModel/YYModel.framework",
 				"${BUILT_PRODUCTS_DIR}/YYWebImage/YYWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/ZLPhotoBrowser/ZLPhotoBrowser.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -627,11 +635,11 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDAutoLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TZImagePickerController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYCache.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYModel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZLPhotoBrowser.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -646,6 +654,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				795FA60D1FF338200057BDB0 /* AppDelegate.m in Sources */,
+				795364332D13F9CB00541B1E /* GKWBCoverView.m in Sources */,
 				795FA6171FF338200057BDB0 /* GKTest01ViewController.m in Sources */,
 				79D141B52C80761B0081604A /* LocalImageLoadManager.m in Sources */,
 				7907911D29B6E40A000D70A5 /* GKDemoViewController.m in Sources */,
@@ -665,6 +674,7 @@
 				79D142142C898E300081604A /* GKWBPlayerCell.m in Sources */,
 				79D142192C8ADAEA0081604A /* GKWBModel.m in Sources */,
 				795FA6121FF338200057BDB0 /* GKToutiaoDetailViewController.m in Sources */,
+				795364352D14206200541B1E /* ZLPhotoBrowserSwift.swift in Sources */,
 				7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */,
 				60415CBA2121750B00D1D54B /* GKBottomView.m in Sources */,
 				60318BAF2498ACAD00ABC67B /* GKPublishViewController.m in Sources */,

@@ -8,12 +8,13 @@
 
 #import "GKDemoLocalViewController.h"
 #import <Masonry/Masonry.h>
-#import <TZImagePickerController/TZImagePickerController.h>
 #import "GKPhotosView.h"
 #import "GKTimeLineModel.h"
 #import <GKMessageTool/GKMessageTool.h>
+#import <ZLPhotoBrowser-Swift.h>
+#import <GKPhotoBrowserDemo-Swift.h>
 
-@interface GKDemoLocalViewController ()<TZImagePickerControllerDelegate, GKPhotosViewDelegate, GKPhotoBrowserDelegate>
+@interface GKDemoLocalViewController ()<GKPhotosViewDelegate, GKPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UIButton *selectBtn;
 
@@ -58,41 +59,53 @@
 }
 
 - (void)selectBtnClick:(id)sender {
-    TZImagePickerController *pickerVC = [[TZImagePickerController alloc] initWithMaxImagesCount:10 delegate:self];
-    pickerVC.allowPickingGif = YES;
-    pickerVC.allowPickingMultipleVideo = YES;
-    [self presentViewController:pickerVC animated:YES completion:nil];
-}
-
-#pragma mark - TZImagePickerControllerDelegate
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto infos:(NSArray<NSDictionary *> *)infos {
+    ZLPhotoConfiguration *config = [ZLPhotoConfiguration default];
+    config.allowSelectImage = YES;
+    config.allowSelectLivePhoto = YES;
+    config.allowSelectGif = YES;
+    config.allowSelectVideo = YES;
+    config.allowEditImage = NO;
+    config.allowEditVideo = NO;
     
-    
-    // 删除文件
-    BOOL isDirectory;
-    if ([[NSFileManager defaultManager] fileExistsAtPath:self.directryPath isDirectory:&isDirectory]) {
-        NSLog(@"%d", isDirectory);
-        NSError *error = nil;
-        [[NSFileManager defaultManager] removeItemAtPath:self.directryPath error:&error];
-        if (error) {
-            NSLog(@"删除失败！--%@", error);
-        }else {
-            NSLog(@"删除成功！");
-        }
-        self.directryPath = nil;
-    }
-    [self.models removeAllObjects];
+    ZLPhotoPreviewSheet *picker = [[ZLPhotoPreviewSheet alloc] init];
     
     __weak __typeof(self) weakSelf = self;
-    [GKMessageTool showMessage:@"数据写入中..."];
-    [self saveWithIndex:0 assets:assets photos:photos completion:^{
-        [GKMessageTool hideMessage];
+    [picker setSelectImageBlock:^(NSArray<ZLResultModel *> *models, BOOL success) {
         __strong __typeof(weakSelf) self = weakSelf;
-        CGFloat height = [GKPhotosView sizeWithCount:self.models.count width:self.view.bounds.size.width - 20 andMargin:10].height;
-        CGFloat y = CGRectGetMaxY(self.selectBtn.frame) + 20;
-        self.photosView.frame = CGRectMake(10, y, self.view.bounds.size.width - 20, height);
-        self.photosView.images = self.models;
+        // 删除文件
+        BOOL isDirectory;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:self.directryPath isDirectory:&isDirectory]) {
+            NSLog(@"%d", isDirectory);
+            NSError *error = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:self.directryPath error:&error];
+            if (error) {
+                NSLog(@"删除失败！--%@", error);
+            }else {
+                NSLog(@"删除成功！");
+            }
+            self.directryPath = nil;
+        }
+        [self.models removeAllObjects];
+        
+        NSMutableArray *assets = [NSMutableArray array];
+        NSMutableArray *photos = [NSMutableArray array];
+        [models enumerateObjectsUsingBlock:^(ZLResultModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [assets addObject:obj.asset];
+            [photos addObject:obj.image];
+        }];
+        
+        __weak __typeof(self) weakSelf = self;
+        [GKMessageTool showMessage:@"数据写入中..."];
+        [self saveWithIndex:0 assets:assets photos:photos completion:^{
+            [GKMessageTool hideMessage];
+            __strong __typeof(weakSelf) self = weakSelf;
+            CGFloat height = [GKPhotosView sizeWithCount:self.models.count width:self.view.bounds.size.width - 20 andMargin:10].height;
+            CGFloat y = CGRectGetMaxY(self.selectBtn.frame) + 20;
+            self.photosView.frame = CGRectMake(10, y, self.view.bounds.size.width - 20, height);
+            self.photosView.images = self.models;
+        }];
     }];
+    [picker showPhotoLibraryWithSender:self];
 }
 
 - (void)saveWithIndex:(NSInteger)index assets:(NSArray *)assets photos:(NSArray *)photos completion:(void(^)(void))completion {
@@ -129,12 +142,13 @@
             if (success) {
                 NSLog(@"视频封面图保存成功！");
                 // 开始保存视频
-                [[TZImageManager manager] requestVideoOutputPathWithAsset:asset presetName:nil success:^(NSString *outputPath) {
-                    NSLog(@"视频保存成功");
-                    imageModel.videoURL = [NSURL fileURLWithPath:outputPath];
-                    !completion ?: completion(YES, imageModel);
-                } failure:^(NSString *errorMessage, NSError *error) {
-                    !completion ?: completion(NO, nil);
+                [ZLPhotoBrowserSwift getVideo:asset completion:^(NSURL *url, NSError *error) {
+                    if (error) {
+                        !completion ?: completion(NO, nil);
+                    }else {
+                        imageModel.videoURL = url;
+                        !completion ?: completion(YES, imageModel);
+                    }
                 }];
             }else {
                 !completion ?: completion(NO, nil);

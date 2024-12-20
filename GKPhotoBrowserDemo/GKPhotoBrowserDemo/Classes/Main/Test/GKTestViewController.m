@@ -16,11 +16,11 @@
 #import <AFNetworking/AFNetworking.h>
 #import "GKPhotosView.h"
 #import "GKTimeLineModel.h"
-#import <TZImagePickerController/TZImagePickerController.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <GKLivePhotoManager/GKLivePhotoManager.h>
+#import <ZLPhotoBrowser-Swift.h>
 
-@interface GKTestViewController ()<GKPhotosViewDelegate, TZImagePickerControllerDelegate, UIDocumentPickerDelegate, GKPhotoBrowserDelegate>
+@interface GKTestViewController ()<GKPhotosViewDelegate, UIDocumentPickerDelegate, GKPhotoBrowserDelegate>
 
 @property (nonatomic, strong) GKPhotosView *photosView;
 
@@ -148,11 +148,31 @@
 }
 
 - (void)albumClick {
-    TZImagePickerController *picker = [[TZImagePickerController alloc] initWithMaxImagesCount:1 delegate:self];
-    picker.allowPickingGif = YES;
-    picker.allowPickingImage = YES;
-    picker.allowPickingVideo = YES;
-    [self presentViewController:picker animated:YES completion:nil];
+    ZLPhotoConfiguration *config = [ZLPhotoConfiguration default];
+    config.allowSelectImage = YES;
+    config.allowSelectGif = YES;
+    config.allowSelectVideo = YES;
+    config.allowSelectLivePhoto = YES;
+    config.maxSelectCount = 1;
+    
+    ZLPhotoPreviewSheet *picker = [[ZLPhotoPreviewSheet alloc] init];
+    __weak __typeof(self) weakSelf = self;
+    [picker setSelectImageBlock:^(NSArray<ZLResultModel *> *models, BOOL success) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        GKTimeLineImage *m = [[GKTimeLineImage alloc] init];
+        m.coverImage = models.firstObject.image;
+        PHAsset *asset = models.firstObject.asset;
+        if (asset.mediaType == PHAssetMediaTypeVideo) {
+            m.video_asset = asset;
+        }else if (asset.mediaType == PHAssetMediaTypeImage) {
+            m.image_asset = asset;
+            m.isLivePhoto = asset.mediaSubtypes & PHAssetMediaSubtypePhotoLive;
+        }
+        [self.dataSource addObject:m];
+        
+        [self updatePhotosView];
+    }];
+    [picker showPhotoLibraryWithSender:self];
 }
 
 - (void)fileClick {
@@ -160,42 +180,6 @@
     UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.data"] inMode:UIDocumentPickerModeImport];
     picker.delegate = self;
     [self presentViewController:picker animated:YES completion:nil];
-}
-
-#pragma mark - TZImagePickerControllerDelegate
-- (void)tz_imagePickerControllerDidCancel:(TZImagePickerController *)picker {
-    
-}
-
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingGifImage:(UIImage *)animatedImage sourceAssets:(PHAsset *)asset {
-    GKTimeLineImage *m = [[GKTimeLineImage alloc] init];
-    m.coverImage = animatedImage;
-    m.image_asset = asset;
-    [self.dataSource addObject:m];
-    
-    [self updatePhotosView];
-}
-
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAssets:(PHAsset *)asset {
-    GKTimeLineImage *m = [[GKTimeLineImage alloc] init];
-    m.coverImage = coverImage;
-    m.video_asset = asset;
-    [self.dataSource addObject:m];
-    
-    [self updatePhotosView];
-}
-
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto infos:(NSArray<NSDictionary *> *)infos {
-    
-    UIImage *image = photos.firstObject;
-    PHAsset *asset = assets.firstObject;
-    
-    GKTimeLineImage *m = [[GKTimeLineImage alloc] init];
-    m.coverImage = image;
-    m.image_asset = asset;
-    [self.dataSource addObject:m];
-    
-    [self updatePhotosView];
 }
 
 #pragma mark - UIDocumentPickerDelegate
@@ -265,12 +249,12 @@
     
 //        [browser.configure setupWebImageProtocol:[LocalImageLoadManager new]];
     [browser.configure setupWebImageProtocol:nil];
-    
-    [browser setupCoverViews:@[UIView.new] layoutBlock:^(GKPhotoBrowser *browser, CGRect frame) {
-        NSLog(@"%f", browser.view.safeAreaInsets.top);
-        NSLog(@"%@", NSStringFromCGRect(UIApplication.sharedApplication.statusBarFrame));
-        NSLog(@"%@", NSStringFromCGRect([(UIWindowScene *)UIApplication.sharedApplication.connectedScenes.anyObject statusBarManager].statusBarFrame));
-    }];
+//    
+//    [browser setupCoverViews:@[UIView.new] layoutBlock:^(GKPhotoBrowser *browser, CGRect frame) {
+//        NSLog(@"%f", browser.view.safeAreaInsets.top);
+//        NSLog(@"%@", NSStringFromCGRect(UIApplication.sharedApplication.statusBarFrame));
+//        NSLog(@"%@", NSStringFromCGRect([(UIWindowScene *)UIApplication.sharedApplication.connectedScenes.anyObject statusBarManager].statusBarFrame));
+//    }];
     
     browser.delegate = self;
     [browser showFromVC:self];

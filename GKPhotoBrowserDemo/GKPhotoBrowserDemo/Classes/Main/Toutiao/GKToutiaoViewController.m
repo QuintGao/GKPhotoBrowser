@@ -134,10 +134,10 @@
     if (kIsiPad) {
         configure.isFollowSystemRotation = YES;
     }
+    configure.isStatusBarShow = YES;
     
     GKPhotoBrowser *browser = [[GKPhotoBrowser alloc] initWithPhotos:photos currentIndex:0];
     browser.configure = configure;
-    browser.isStatusBarShow     = YES;  // 显示状态栏
     browser.delegate            = self;
     
     [browser setupCoverViews:@[self.closeBtn, self.moreBtn, self.bottomView] layoutBlock:^(GKPhotoBrowser *photoBrowser, CGRect superFrame) {
@@ -171,8 +171,7 @@
     self.isCoverShow = !self.isCoverShow;
     
     [UIView animateWithDuration:0.25 animations:^{
-        browser.isStatusBarShow      = self.isCoverShow;
-        
+        [browser setStatusBarShow:self.isCoverShow];
         self.closeBtn.hidden         = !self.isCoverShow;
         self.moreBtn.hidden          = !self.isCoverShow;
         self.bottomView.hidden       = !self.isCoverShow;

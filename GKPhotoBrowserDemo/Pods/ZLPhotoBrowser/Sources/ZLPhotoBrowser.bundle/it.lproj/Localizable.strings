@@ -1,0 +1,75 @@
+"previewCamera" = "Fotocamera";
+"previewCameraRecord" = "Disco";
+"previewAlbum" = "Immagini";
+"cancel" = "Annulla";
+
+"originalPhoto" = "Immagine completa";
+"originalTotalSize" = "Totale";
+"done" = "Fine";
+"ok" = "OK";
+"editFinish" = "Fine";
+"cameraDone" = "Fine";
+"inputDone" = "Fine";
+
+"back" = "Indietro";
+"edit" = "Modifica";
+"revert" = "Annulla";
+"brightness" = "Luminosità";
+"contrast" = "Contrasto";
+"saturation" = "Saturazione";
+
+"photo" = "Fotografie";
+"preview" = "Anteprima";
+
+"noPhotoTips" = "Niente fotos";
+
+"hudLoading" = "Caricamento in corso";
+"hudProcessing" = "Elaborazione in corse";
+
+"exceededMaxSelectCount" = "Conteggio massimo per la selezione: %ld";
+"longerThanMaxVideoDuration" = "Impossibile selezionare video con una durata superiore a %lds";
+"shorterThanMinVideoDuration" = "Impossibile selezionare video con una durata inferiore a %lds";
+"largerThanMaxVideoDataSize" = "Impossibile selezionare video di dimensioni superiori a %@MB";
+"smallerThanMinVideoDataSize" = "Impossibile selezionare video di dimensioni inferiori a %@MB";
+"exceededMaxVideoSelectCount" = "Conteggio massimo per la selezione dei video: %ld";
+"lessThanMinVideoSelectCount" = "Conteggio minimo per la selezione del video: %ld";
+
+"noCameraAuthority" = "Consenti a %@ di accedere alla fotocamera del tuo dispositivo in \"Impostazioni\" > \"Privacy\" > \"Fotocamera\"";
+"noPhotoLibratyAuthority" = "Consenti a %@ di accedere al tuo album in \"Impostazioni\" > \"Privacy\" > \"Foto\"";
+"noMicrophoneAuthority" = "Impossibile registrare I'audio. Vai a \"Impostazioni\" > \"%@\" e attiva I'accesso al microfono";
+"cameraUnavailable" = "La fotocamera non è disponibile";
+"keepRecording" = "Continua a registrare";
+"gotoSettings" = "Vai a lmpostazioni";
+
+"iCloudVideoLoadFaild" = "Impossibile sincronizzare da iCloud";
+"imageLoadFailed" = "Caricamento fallito";
+
+"save" = "Salva";
+"saveImageError" = "Impossibile salvare l'immagine";
+"saveVideoError" = "Impossibile salvare il video";
+"timeout" = "Tempo scaduto per la richiesta";
+
+"customCameraTips" = "Toccare per scattare e tiene premuto per registrare";
+"customCameraTakePhotoTips" = "Tocca per scattare una foto";
+"customCameraRecordVideoTips" = "Tieni premuto per registrare il video";
+"customCameraTapToRecordVideoTips" = "Tocca per registrare un video";
+"minRecordTimeTips" = "Registra almeno %lds";
+
+"cameraRoll" = "Recenti";
+"panoramas" = "Panoramiche";
+"videos" = "Video";
+"favorites" = "Preferiti";
+"timelapses" = "Time-lapse";
+"recentlyAdded" = "Aggiunto recentemente";
+"bursts" = "Sequenze";
+"slomoVideos" = "Slow motion";
+"selfPortraits" = "Selfie";
+"screenshots" = "Istantanee";
+"depthEffect" = "Ritratti";
+"livePhotos" = "Live Photo";
+"animated" = "Animazioni";
+"myPhotoStream" = "II mio streaming foto";
+
+"noTitleAlbumListPlaceholder" = "Tutte le foto";
+"unableToAccessAllPhotos" = "Impossibile accedere a tutte le foto nell'album.\nConsenti l'accesso a \"Tutte le foto\" in \"Foto\"";
+"textStickerRemoveTips" = "Trascina qui per rimuovere";

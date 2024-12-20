@@ -1,0 +1,75 @@
+"previewCamera" = "拍照";
+"previewCameraRecord" = "拍摄";
+"previewAlbum" = "相册";
+"cancel" = "取消";
+
+"originalPhoto" = "原图";
+"originalTotalSize" = "共";
+"done" = "确定";
+"ok" = "确定";
+"editFinish" = "完成";
+"cameraDone" = "确定";
+"inputDone" = "确定";
+
+"back" = "返回";
+"edit" = "编辑";
+"revert" = "还原";
+"brightness" = "亮度";
+"contrast" = "对比度";
+"saturation" = "饱和度";
+
+"photo" = "照片";
+"preview" = "预览";
+
+"noPhotoTips" = "无照片";
+
+"hudLoading" = "正在加载";
+"hudProcessing" = "正在处理";
+
+"exceededMaxSelectCount" = "最多只能选择%ld张图片";
+"longerThanMaxVideoDuration" = "不能选择超过%ld秒的视频";
+"shorterThanMinVideoDuration" = "不能选择低于%ld秒的视频";
+"largerThanMaxVideoDataSize" = "不能选择大于%@MB的视频";
+"smallerThanMinVideoDataSize" = "不能选择小于%@MB的视频";
+"exceededMaxVideoSelectCount" = "最多只能选择%ld个视频";
+"lessThanMinVideoSelectCount" = "最少选择%ld个视频";
+
+"noCameraAuthority" = "请在iPhone的\"设置 > 隐私 > 相机\"选项中，允许%@访问你的相机";
+"noPhotoLibratyAuthority" = "请在iPhone的\"设置 > 隐私 >照片\"选项中，允许%@访问你的照片";
+"noMicrophoneAuthority" = "无法录制声音，前往\"设置 > %@\"中打开麦克风权限";
+"cameraUnavailable" = "相机不可用";
+"keepRecording" = "继续拍摄";
+"gotoSettings" = "前往设置";
+
+"iCloudVideoLoadFaild" = "iCloud无法同步";
+"imageLoadFailed" = "图片加载失败";
+
+"save" = "保存";
+"saveImageError" = "图片保存失败";
+"saveVideoError" = "视频保存失败";
+"timeout" = "请求超时";
+
+"customCameraTips" = "轻触拍照，按住摄像";
+"customCameraTakePhotoTips" = "轻触拍照";
+"customCameraRecordVideoTips" = "按住摄像";
+"customCameraTapToRecordVideoTips" = "轻触摄像";
+"minRecordTimeTips" = "至少录制%ld秒";
+
+"cameraRoll" = "最近项目";
+"panoramas" = "全景照片";
+"videos" = "视频";
+"favorites" = "个人收藏";
+"timelapses" = "延时摄影";
+"recentlyAdded" = "最近添加";
+"bursts" = "连拍快照";
+"slomoVideos" = "慢动作";
+"selfPortraits" = "自拍";
+"screenshots" = "屏幕快照";
+"depthEffect" = "人像";
+"livePhotos" = "Live Photos";
+"animated" = "动图";
+"myPhotoStream" = "我的照片流";
+
+"noTitleAlbumListPlaceholder" = "所有照片";
+"unableToAccessAllPhotos" = "无法访问相册中所有照片，\n请允许访问「照片」中的「所有照片」。";
+"textStickerRemoveTips" = "拖到此处删除";

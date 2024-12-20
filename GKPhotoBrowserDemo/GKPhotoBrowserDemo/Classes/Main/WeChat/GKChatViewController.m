@@ -12,9 +12,9 @@
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
 #import <GKPhotoBrowser/GKZFPlayerManager.h>
 #import "GKVideoProgressView.h"
-#import <TZImagePickerController/TZImagePickerController.h>
+#import <ZLPhotoBrowser-Swift.h>
 
-@interface GKChatViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate, TZImagePickerControllerDelegate>
+@interface GKChatViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -55,54 +55,42 @@
 }
 
 - (void)selectPhoto {
-    TZImagePickerController *pickerVC = [[TZImagePickerController alloc] initWithMaxImagesCount:1 delegate:self];
-    [self presentViewController:pickerVC animated:YES completion:nil];
-}
-
-#pragma mark - TZImagePickerControllerDelegate
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto infos:(NSArray<NSDictionary *> *)infos {
-    UIImage *photo = photos.firstObject;
-    PHAsset *asset = assets.firstObject;
+    ZLPhotoConfiguration *config = [ZLPhotoConfiguration default];
+    config.maxSelectCount = 1;
+    config.allowSelectVideo = YES;
+    config.allowSelectLivePhoto = YES;
     
-    GKTimeLineImage *icon = [[GKTimeLineImage alloc] init];
-    icon.url = @"https://gips0.baidu.com/it/u=2761017119,608134785&fm=3012&app=3012&autime=1679294217&size=b200,200";
-    icon.width = 300;
-    icon.height = 300;
-    
-    GKTimeLineImage *image = [[GKTimeLineImage alloc] init];
-    image.width = photo.size.width;
-    image.height = photo.size.height;
-    image.coverImage = photo;
-    image.image_asset = asset;
-    
-    GKTimeLineModel *model = [[GKTimeLineModel alloc] init];
-    model.name = @"QuintGao";
-    model.icon = icon;
-    model.images = @[image];
-    [self.dataSource insertObject:model atIndex:0];
-    
-    [self.tableView reloadData];
-}
-
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAssets:(PHAsset *)asset {
-    GKTimeLineImage *icon = [[GKTimeLineImage alloc] init];
-    icon.url = @"https://gips0.baidu.com/it/u=2761017119,608134785&fm=3012&app=3012&autime=1679294217&size=b200,200";
-    icon.width = 300;
-    icon.height = 300;
-    
-    GKTimeLineImage *image = [[GKTimeLineImage alloc] init];
-    image.width = coverImage.size.width;
-    image.height = coverImage.size.height;
-    image.coverImage = coverImage;
-    image.video_asset = asset;
-    
-    GKTimeLineModel *model = [[GKTimeLineModel alloc] init];
-    model.name = @"QuintGao";
-    model.icon = icon;
-    model.images = @[image];
-    [self.dataSource insertObject:model atIndex:0];
-    
-    [self.tableView reloadData];
+    ZLPhotoPreviewSheet *picker = [[ZLPhotoPreviewSheet alloc] init];
+    __weak __typeof(self) weakSelf = self;
+    [picker setSelectImageBlock:^(NSArray<ZLResultModel *> *models, BOOL success) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        UIImage *photo = models.firstObject.image;
+        PHAsset *asset = models.firstObject.asset;
+        GKTimeLineImage *icon = [[GKTimeLineImage alloc] init];
+        icon.url = @"https://gips0.baidu.com/it/u=2761017119,608134785&fm=3012&app=3012&autime=1679294217&size=b200,200";
+        icon.width = 300;
+        icon.height = 300;
+        
+        GKTimeLineImage *image = [[GKTimeLineImage alloc] init];
+        image.width = photo.size.width;
+        image.height = photo.size.height;
+        image.coverImage = photo;
+        if (asset.mediaType == PHAssetMediaTypeVideo) {
+            image.video_asset = asset;
+        }else if (asset.mediaType == PHAssetMediaTypeImage) {
+            image.image_asset = asset;
+            image.isLivePhoto = asset.mediaSubtypes & PHAssetMediaSubtypePhotoLive;
+        }
+        
+        GKTimeLineModel *model = [[GKTimeLineModel alloc] init];
+        model.name = @"QuintGao";
+        model.icon = icon;
+        model.images = @[image];
+        [self.dataSource insertObject:model atIndex:0];
+        
+        [self.tableView reloadData];
+    }];
+    [picker showPhotoLibraryWithSender:self];
 }
 
 #pragma mark - <UITableViewDataSource, UITableViewDelegate>
@@ -191,7 +179,9 @@
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        if (@available(iOS 11.0, *)) {
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         [_tableView registerClass:GKChatViewCell.class forCellReuseIdentifier:@"GKChatViewCell"];
         _tableView.rowHeight = 160;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;

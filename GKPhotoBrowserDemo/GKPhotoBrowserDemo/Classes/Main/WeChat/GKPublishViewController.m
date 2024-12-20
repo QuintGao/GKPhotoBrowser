@@ -7,11 +7,11 @@
 //
 
 #import "GKPublishViewController.h"
-#import <TZImagePickerController/TZImagePickerController.h>
 #import "GKPhotosView.h"
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
+#import <ZLPhotoBrowser-Swift.h>
 
-@interface GKPublishViewController ()<TZImagePickerControllerDelegate, GKPhotosViewDelegate>
+@interface GKPublishViewController ()<GKPhotosViewDelegate>
 
 @property (nonatomic, strong) UIButton *selectBtn;
 
@@ -40,44 +40,26 @@
 }
 
 - (void)selectPhoto {
-    TZImagePickerController *pickerVC = [[TZImagePickerController alloc] initWithMaxImagesCount:90 delegate:self];
-    pickerVC.allowTakeVideo = YES;
-    pickerVC.allowPickingVideo = YES;
-    pickerVC.allowPickingGif = YES;
-    pickerVC.modalPresentationStyle = UIModalPresentationFullScreen;
-    [self presentViewController:pickerVC animated:YES completion:nil];
-}
-
-#pragma mark - TZImagePickerControllerDelegate
-- (void)tz_imagePickerControllerDidCancel:(TZImagePickerController *)picker {
+    ZLPhotoConfiguration *config = [ZLPhotoConfiguration default];
+    config.maxSelectCount = 9;
+    config.allowSelectImage = YES;
+    config.allowSelectGif = YES;
+    config.allowSelectVideo = YES;
     
-}
-
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-    [self.assets addObjectsFromArray:assets];
-    [self.photos addObjectsFromArray:photos];
-    
-    self.photoView.photoImages = self.photos;
-    CGFloat height = [GKPhotosView sizeWithCount:photos.count width:(kScreenW - 60 - 50 - 20) andMargin:5].height;
-    self.photoView.frame = CGRectMake(0, 150, (kScreenW - 60 - 50 - 20), height);
-}
-
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingGifImage:(UIImage *)animatedImage sourceAssets:(PHAsset *)asset {
-    [self.assets addObject:asset];
-    [self.photos addObject:animatedImage];
-    
-    self.photoView.photoImages = self.photos;
-    CGFloat height = [GKPhotosView sizeWithCount:1 width:(kScreenH - 60 - 50 - 20) andMargin:5].height;
-    self.photoView.frame = CGRectMake(0, 150, (KScreenW - 60 - 50 - 20), height);
-}
-
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAssets:(PHAsset *)asset {
-    [self.assets addObject:asset];
-    [self.photos addObject:coverImage];
-    
-    self.photoView.photoImages = self.photos;
-    CGFloat height = [GKPhotosView sizeWithCount:1 width:(kScreenH - 60 - 50 - 20) andMargin:5].height;
-    self.photoView.frame = CGRectMake(0, 150, (KScreenW - 60 - 50 - 20), height);
+    ZLPhotoPreviewSheet *picker = [[ZLPhotoPreviewSheet alloc] init];
+    __weak __typeof(self) weakSelf = self;
+    [picker setSelectImageBlock:^(NSArray<ZLResultModel *> *models, BOOL success) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        [models enumerateObjectsUsingBlock:^(ZLResultModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.assets addObject:obj.asset];
+            [self.photos addObject:obj.image];
+        }];
+        
+        self.photoView.photoImages = self.photos;
+        CGFloat height = [GKPhotosView sizeWithCount:self.photos.count width:(kScreenW - 60 - 50 - 20) andMargin:5].height;
+        self.photoView.frame = CGRectMake(0, 150, (kScreenW - 60 - 50 - 20), height);
+    }];
+    [picker showPhotoLibraryWithSender:self];
 }
 
 #pragma mark - GKPhotosViewDelegate

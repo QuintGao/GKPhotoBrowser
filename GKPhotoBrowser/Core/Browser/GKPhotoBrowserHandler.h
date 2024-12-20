@@ -42,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isRecover;
 
+@property (nonatomic, assign) BOOL isDismiss;
+
 // 显示
 - (void)showFromVC:(UIViewController *)vc;
 

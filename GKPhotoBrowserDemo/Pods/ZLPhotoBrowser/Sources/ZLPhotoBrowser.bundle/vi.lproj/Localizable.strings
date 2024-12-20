@@ -1,0 +1,75 @@
+"previewCamera" = "Camera";
+"previewCameraRecord" = "Ghi lại";
+"previewAlbum" = "Hình ảnh";
+"cancel" = "Huỷ";
+
+"originalPhoto" = "Toàn bộ hình ảnh";
+"originalTotalSize" = "Tổng cộng";
+"done" = "Xong";
+"ok" = "đồng ý";
+"editFinish" = "Xong";
+"cameraDone" = "Xong";
+"inputDone" = "Xong";
+
+"back" = "Trở lại";
+"edit" = "Chỉnh sửa";
+"revert" = "Hoàn tác";
+"brightness" = "độ sáng";
+"contrast" = "Sự tương phản";
+"saturation" = "Bão hòa";
+
+"photo" = "Ảnh";
+"preview" = "Xem trước";
+
+"noPhotoTips" = "Không có ảnh";
+
+"hudLoading" = "Đang tải";
+"hudProcessing" = "Đang xử lý";
+
+"exceededMaxSelectCount" = "Số lượng lựa chọn tối đa: %ld";
+"longerThanMaxVideoDuration" = "Không thể chọn video có thời lượng dài hơn %ld giây";
+"shorterThanMinVideoDuration" = "Không thể chọn video có thời lượng ngắn hơn %ld giây";
+"largerThanMaxVideoDataSize" = "Không thể chọn video lớn hơn %@MB";
+"smallerThanMinVideoDataSize" = "Không thể chọn video nhỏ hơn %@MB";
+"exceededMaxVideoSelectCount" = "Số lượng lựa chọn tối đa của video: %ld";
+"lessThanMinVideoSelectCount" = "Số phút chọn tối thiểu của video: %ld";
+
+"noCameraAuthority" = "Vui lòng cho phép %@ truy cập máy ảnh trên thiết bị của bạn trong \"Cài đặt\" > \"Quyền riêng tư\" > \"Máy ảnh\"";
+"noPhotoLibratyAuthority" = "Vui lòng cho phép %@ truy cập anbom của bạn trong \"Cài đặt\" > \"Bảo mật\" > \"Ảnh\"";
+"noMicrophoneAuthority" = "Không thểghi hình. Đi tới \"Cài đặt\" > \"%@\" và bật quyên truy cập mic";
+"cameraUnavailable" = "Máy ảnh không khả dụng";
+"keepRecording" = "Tiếp tục ghi hình";
+"gotoSettings" = "Đi đến Cài đặt";
+
+"iCloudVideoLoadFaild" = "Không thể đồng bộ hóa từ iCloud";
+"imageLoadFailed" = "tải không thành công";
+
+"save" = "Tiết kiệm";
+"saveImageError" = "Lưu ảnh không thành công";
+"saveVideoError" = "Lưu video không thành công";
+"timeout" = "Yêu cầu đã hết thời gian chờ";
+
+"customCameraTips" = "Nhấn để chụp và giữ để ghi";
+"customCameraTakePhotoTips" = "Nhấn để chụp";
+"customCameraRecordVideoTips" = "Giữ để quay video";
+"customCameraTapToRecordVideoTips" = "Nhấn để quay video";
+"minRecordTimeTips" = "Ghi ít nhất %ld giây";
+
+"cameraRoll" = "Gần đây";
+"panoramas" = "Ảnh toàn cảnh";
+"videos" = "Video";
+"favorites" = "Mục ưa thích";
+"timelapses" = "Ảnh time-lapse";
+"recentlyAdded" = "Đã thêm gần đây";
+"bursts" = "Chụp liên hình";
+"slomoVideos" = "Quay chậm";
+"selfPortraits" = "Ảnh selfie";
+"screenshots" = "Ảnh màn hình";
+"depthEffect" = "Chân dung";
+"livePhotos" = "Live Photos";
+"animated" = "Hình động";
+"myPhotoStream" = "Kho ảnh của tôi";
+
+"noTitleAlbumListPlaceholder" = "Tất cả ảnh";
+"unableToAccessAllPhotos" = "Không thể truy cập tất cả ảnh trong album.\nCho phép truy cập vào \"Tất cả ảnh\" trong \"Ành\".";
+"textStickerRemoveTips" = "Kéo vào đây để xóa";
