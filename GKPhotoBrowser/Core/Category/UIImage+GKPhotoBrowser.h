@@ -11,8 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIImage (GKPhotoBrowser)
 
+/// 获取bundle图片
 + (UIImage *)gkbrowser_imageNamed:(NSString *)name;
 
+/// 获取gif图片
 + (UIImage *)gkbrowser_imageWithData:(NSData *)data;
 
 @end

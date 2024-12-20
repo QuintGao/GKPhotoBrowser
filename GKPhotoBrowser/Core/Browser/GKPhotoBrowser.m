@@ -404,6 +404,9 @@
         }
         
         if ([self.progress respondsToSelector:@selector(updatePlayStatus:)]) {
+            if ([self.progress respondsToSelector:@selector(setPhoto:)]) {
+                self.progress.photo = self.curPhotoView.photo;
+            }
             [self.progress updatePlayStatus:status];
         }
         
@@ -509,6 +512,9 @@
         self.progressView.hidden = YES;
     }
     if (self.cover && [self.cover respondsToSelector:@selector(updateCoverWithPhoto:)]) {
+        if ([self.cover respondsToSelector:@selector(setPhoto:)]) {
+            self.cover.photo = photo;
+        }
         [self.cover updateCoverWithPhoto:photo];
     }
 }

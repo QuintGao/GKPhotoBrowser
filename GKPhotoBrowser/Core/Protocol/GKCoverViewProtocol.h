@@ -21,6 +21,9 @@
 
 @optional
 
+/// 当前对应的数据模型
+@property (nonatomic, weak, nullable) GKPhoto *photo;
+
 /// 更新索引
 - (void)updateCoverWithCount:(NSInteger)count index:(NSInteger)index;
 

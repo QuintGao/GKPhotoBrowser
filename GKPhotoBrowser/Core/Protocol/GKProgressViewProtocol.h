@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GKPhotoBrowser;
+@class GKPhotoBrowser, GKPhoto;
 
 @protocol GKProgressViewProtocol <NSObject>
 
@@ -20,6 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) UIView *progressView;
 
 @optional
+
+// 当前对应的数据模型
+@property (nonatomic, weak, nullable) GKPhoto *photo;
+
 // 更新状态
 - (void)updatePlayStatus:(GKVideoPlayerStatus)status;
 

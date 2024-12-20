@@ -12,7 +12,7 @@ typedef void (^GKWebImageProgressBlock)(NSInteger receivedSize, NSInteger expect
 
 typedef void (^GKWebImageCompletionBlock)(UIImage * _Nullable image, NSURL * _Nullable url, BOOL finished, NSError * _Nullable error);
 
-@class GKPhotoBrowser;
+@class GKPhotoBrowser, GKPhoto;
 
 @protocol GKWebImageProtocol<NSObject>
 
@@ -42,6 +42,10 @@ typedef void (^GKWebImageCompletionBlock)(UIImage * _Nullable image, NSURL * _Nu
 - (UIImage *_Nullable)imageFromMemoryForURL:(nullable NSURL *)url;
 
 @optional
+
+/// 当前对应的数据模型
+@property (nonatomic, weak, nullable) GKPhoto *photo;
+
 /// 可选实现，主要用于加载相册图片资源PHAsset
 /// 根据data获取image对象
 /// @param data 图片数据

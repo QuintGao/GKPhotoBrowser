@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
     GKVideoPlayerStatusFailed      // 播放失败
 };
 
-@class GKPhotoBrowser;
+@class GKPhotoBrowser, GKPhoto;
 
 @protocol GKVideoPlayerProtocol <NSObject>
 
@@ -70,6 +70,10 @@ typedef NS_ENUM(NSUInteger, GKVideoPlayerStatus) {
 
 // 静音
 - (void)gk_setMute:(BOOL)mute;
+
+@optional
+/// 当前对应的数据模型
+@property (nonatomic, weak, nullable) GKPhoto *photo;
 
 @end
 

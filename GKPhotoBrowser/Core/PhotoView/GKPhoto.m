@@ -28,6 +28,13 @@
     return !self.isLivePhoto && (self.videoUrl || self.videoAsset);
 }
 
+- (BOOL)isLivePhoto {
+    if (self.imageAsset) {
+        return self.imageAsset.mediaSubtypes & PHAssetMediaSubtypePhotoLive;
+    }
+    return _isLivePhoto;
+}
+
 - (void)getImage:(void (^)(NSData * _Nullable, UIImage * _Nullable, NSError * _Nullable))completion {
     if (!self.imageAsset) {
         NSError *error = [NSError errorWithDomain:@"com.browser.error" code:-1 userInfo:@{NSLocalizedDescriptionKey: @"没有图片资源"}];
@@ -97,13 +104,6 @@
             !completion ?: completion(nil, error);
         }
     }
-}
-
-- (BOOL)isLivePhoto {
-    if (self.imageAsset) {
-        return self.imageAsset.mediaSubtypes & PHAssetMediaSubtypePhotoLive;
-    }
-    return _isLivePhoto;
 }
 
 #pragma mark - Private

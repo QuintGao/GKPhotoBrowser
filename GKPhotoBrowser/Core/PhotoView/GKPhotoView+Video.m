@@ -69,6 +69,9 @@
     // 如果没有设置，则设置播放内容
     if (!self.player.assetURL || self.player.assetURL != self.photo.videoUrl) {
         __weak __typeof(self) weakSelf = self;
+        if ([self.player respondsToSelector:@selector(setPhoto:)]) {
+            self.player.photo = self.photo;
+        }
         [self.photo getVideo:^(NSURL * _Nullable url, NSError * _Nullable error) {
             __strong __typeof(weakSelf) self = weakSelf;
             if (!self) return;

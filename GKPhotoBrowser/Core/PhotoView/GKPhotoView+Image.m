@@ -234,6 +234,10 @@
                 }
             });
         };
+        
+        if ([self.imager respondsToSelector:@selector(setPhoto:)]) {
+            self.imager.photo = photo;
+        }
         [self.imager setImageForImageView:self.imageView url:url placeholderImage:placeholderImage progress:progressBlock completion:completionBlock];
     }else {
         if (self.imageView.image) {
@@ -341,8 +345,6 @@
             self.scrollView.contentOffset = self.photo.offset;
         }
     }
-    
-    
     
     self.loadingView.frame = self.bounds;
     self.videoLoadingView.frame = self.bounds;

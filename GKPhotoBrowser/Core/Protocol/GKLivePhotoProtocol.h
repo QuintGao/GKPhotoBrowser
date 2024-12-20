@@ -10,8 +10,7 @@
 #import <Photos/Photos.h>
 #import <PhotosUI/PhotosUI.h>
 
-@class GKPhoto;
-@class GKPhotoBrowser;
+@class GKPhotoBrowser, GKPhoto;
 
 typedef NS_ENUM(NSUInteger, GKLivePlayStatus) {
     GKLivePlayStatusBegin,
@@ -23,8 +22,6 @@ typedef NS_ENUM(NSUInteger, GKLivePlayStatus) {
 @property (nonatomic, weak, nullable) GKPhotoBrowser *browser;
 
 @property (nonatomic, strong, nullable) PHLivePhotoView *livePhotoView;
-
-@property (nonatomic, strong, nullable) GKPhoto *photo;
 
 @property (nonatomic, assign) BOOL isPlaying;
 
@@ -46,6 +43,10 @@ typedef NS_ENUM(NSUInteger, GKLivePlayStatus) {
 - (void)gk_setMute:(BOOL)mute;
 
 @optional
+
+/// 当前对应的数据模型
+@property (nonatomic, weak, nullable) GKPhoto *photo;
+
 // 清除下载的文件
 - (void)gk_clear;
 
