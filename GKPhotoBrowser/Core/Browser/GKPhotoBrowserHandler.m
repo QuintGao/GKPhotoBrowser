@@ -38,10 +38,14 @@
 }
 
 - (void)showFromVC:(UIViewController *)vc {
-    if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
-        self.captureImage = [self getCaptureWithView:vc.view.window];
+    self.configure.fromVC = vc;
+    if (self.configure.isPush) {
         self.browser.hidesBottomBarWhenPushed = YES;
-        [vc.navigationController pushViewController:self.browser animated:YES];
+        if (self.configure.showStyle == GKPhotoBrowserShowStylePushZoom) {
+            [vc.navigationController pushViewController:self.browser animated:NO];
+        }else {
+            [vc.navigationController pushViewController:self.browser animated:YES];
+        }
     }else {
         UIViewController *presentVC = self.browser;
         if (self.configure.isNeedNavigationController) {
@@ -68,6 +72,10 @@
             [self browserZoomShow];
         }
             break;
+        case GKPhotoBrowserShowStylePushZoom:{
+            [self browserPushZoomShow];
+        }
+            break;
         default:
             break;
     }
@@ -85,10 +93,13 @@
 }
 
 - (void)browserPushShow {
-    UIView *view = self.browser.containerView ?: self.browser.view;
-    view.backgroundColor = self.configure.bgColor ? : [UIColor blackColor];
+    [self browserChangeAlpha:1];
     self.isShow = YES;
     [self.browser browserFirstAppear];
+}
+
+- (void)browserPushZoomShow {
+    [self browserZoomShow];
 }
 
 - (void)browserZoomShow {
@@ -138,9 +149,9 @@
         [photoView updateFrame];
         [self browserChangeAlpha:1];
     }completion:^(BOOL finished) {
-        [self.browser browserFirstAppear];
-        self.isShow = YES;
         photoView.imageView.clipsToBounds = NO;
+        self.isShow = YES;
+        [self.browser browserFirstAppear];
     }];
 }
 
@@ -166,7 +177,7 @@
         }
     }
     
-    if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
+    if (self.configure.isPush) {
         [self.browser removeRotationObserver];
         self.browser.photoScrollView.clipsToBounds = YES;
         [self.browser.navigationController popViewControllerAnimated:YES];
@@ -320,7 +331,7 @@
 - (void)dismissAnimated:(BOOL)animated {
     GKPhoto *photo = self.browser.curPhotoView.photo;
     
-    if (animated && self.configure.showStyle != GKPhotoBrowserShowStylePush) {
+    if (animated && !self.configure.isPush) {
         [UIView animateWithDuration:self.configure.animDuration animations:^{
             photo.sourceImageView.alpha = 1.0;
         }];
@@ -343,7 +354,7 @@
     
     self.isDismiss = YES;
     
-    if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
+    if (self.configure.isPush) {
         [self.browser.navigationController popViewControllerAnimated:NO];
     }else {
         [self.browser dismissViewControllerAnimated:NO completion:nil];
@@ -363,21 +374,11 @@
     
     UIColor *bgColor = self.configure.bgColor ?: UIColor.blackColor;
     
-    UIView *view = self.browser.containerView ?: self.browser.view;
+    UIView *view = self.browser.view;
     view.backgroundColor = [bgColor colorWithAlphaComponent:alpha];
     for (UIView *subview in self.browser.coverViews) {
         subview.alpha = alpha;
     }
-}
-
-- (UIImage *)getCaptureWithView:(UIView *)view {
-    if (!view) return nil;
-    if (view.bounds.size.width <= 0 || view.bounds.size.height <= 0) return nil;
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, UIScreen.mainScreen.scale);
-    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
 }
 
 @end

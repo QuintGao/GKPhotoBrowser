@@ -10,6 +10,7 @@
 #import "GKPhotosView.h"
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
 #import <ZLPhotoBrowser-Swift.h>
+#import "GKTimeLineModel.h"
 
 @interface GKPublishViewController ()<GKPhotosViewDelegate>
 
@@ -17,7 +18,6 @@
 
 @property (nonatomic, strong) GKPhotosView *photoView;
 
-@property (nonatomic, strong) NSMutableArray *assets;
 @property (nonatomic, strong) NSMutableArray *photos;
 
 @end
@@ -35,7 +35,6 @@
     [self.view addSubview:self.photoView];
     self.photoView.frame = CGRectMake(0, 150, (kScreenW - 60 - 50 - 20), 0);
     
-    self.assets = [NSMutableArray new];
     self.photos = [NSMutableArray new];
 }
 
@@ -50,12 +49,21 @@
     __weak __typeof(self) weakSelf = self;
     [picker setSelectImageBlock:^(NSArray<ZLResultModel *> *models, BOOL success) {
         __strong __typeof(weakSelf) self = weakSelf;
+        
         [models enumerateObjectsUsingBlock:^(ZLResultModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self.assets addObject:obj.asset];
-            [self.photos addObject:obj.image];
+            GKTimeLineImage *m = [[GKTimeLineImage alloc] init];
+            m.coverImage = obj.image;
+            if (obj.asset.mediaType == PHAssetMediaTypeVideo) {
+                m.video_asset = obj.asset;
+                m.isVideo = YES;
+            }else if (obj.asset.mediaType == PHAssetMediaTypeImage) {
+                m.image_asset = obj.asset;
+                m.isLivePhoto = obj.asset.mediaSubtypes & PHAssetMediaSubtypePhotoLive;
+            }
+            [self.photos addObject:m];
         }];
         
-        self.photoView.photoImages = self.photos;
+        self.photoView.images = self.photos;
         CGFloat height = [GKPhotosView sizeWithCount:self.photos.count width:(kScreenW - 60 - 50 - 20) andMargin:5].height;
         self.photoView.frame = CGRectMake(0, 150, (kScreenW - 60 - 50 - 20), height);
     }];
@@ -65,12 +73,13 @@
 #pragma mark - GKPhotosViewDelegate
 - (void)photoTapped:(UIImageView *)imgView {
     NSMutableArray *photos = [NSMutableArray new];
-    [self.assets enumerateObjectsUsingBlock:^(PHAsset *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.photos enumerateObjectsUsingBlock:^(GKTimeLineImage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         GKPhoto *photo = [GKPhoto new];
-        if (obj.mediaType == PHAssetMediaTypeVideo) {
-            photo.videoAsset = obj;
+        if (obj.isVideo) {
+            photo.videoAsset = obj.video_asset;
         }else {
-            photo.imageAsset = obj;
+            photo.imageAsset = obj.image_asset;
+            photo.isLivePhoto = obj.isLivePhoto;
         }
         photo.sourceImageView = self.photoView.subviews[idx];
         [photos addObject:photo];

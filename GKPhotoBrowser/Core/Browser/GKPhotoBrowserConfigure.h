@@ -61,7 +61,8 @@
 typedef NS_ENUM(NSUInteger, GKPhotoBrowserShowStyle) {
     GKPhotoBrowserShowStyleNone,       // 直接显示，默认方式
     GKPhotoBrowserShowStyleZoom,       // 缩放显示，动画效果
-    GKPhotoBrowserShowStylePush        // push方式展示
+    GKPhotoBrowserShowStylePush,       // push方式展示
+    GKPhotoBrowserShowStylePushZoom    // push与缩放操作结合，实际做的是push操作
 };
 
 // 图片浏览器的隐藏方式
@@ -284,6 +285,13 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 @property (nonatomic, assign) BOOL isClearMemoryForLivePhoto;
 /// 相册livePhoto目标尺寸，默认屏幕尺寸的2倍
 @property (nonatomic, assign) CGSize liveTargetSize;
+
+#pragma mark - 其他
+/// 记录fromVC
+@property (nonatomic, weak, nullable) UIViewController *fromVC;
+
+/// 是否是push操作
+@property (nonatomic, assign, readonly) BOOL isPush;
 
 /// 隐藏
 - (void)didDisappear;

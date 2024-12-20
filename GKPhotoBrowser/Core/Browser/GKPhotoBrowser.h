@@ -18,8 +18,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GKPhotoBrowser : UIViewController
-/// 底部容器
-@property (nonatomic, strong, readonly) UIView *containerView;
 /// 底部内容视图
 @property (nonatomic, strong, readonly) UIView *contentView;
 /// 滑动容器视图

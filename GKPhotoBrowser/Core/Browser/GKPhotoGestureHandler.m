@@ -382,6 +382,13 @@ int const static kDirectionPanThreshold = 5;
     }
     self.photoViewCenter = photoView.center;
     
+    if (self.configure.isPush && self.configure.fromVC) {
+        UIView *view = self.configure.fromVC.view;
+        view.frame = self.browser.view.frame;
+        [self.browser.view.superview addSubview:view];
+        [self.browser.view.superview insertSubview:view belowSubview:self.browser.view];
+    }
+    
     // 显示状态栏
     if (self.configure.isShowStatusBarWhenPan) {
         self.isStatusBarShowing = self.configure.isStatusBarShow;
@@ -417,6 +424,10 @@ int const static kDirectionPanThreshold = 5;
                 // 隐藏状态栏
                 [self.browser setStatusBarShow:NO];
             }
+        }
+        
+        if (self.configure.isPush && self.configure.fromVC) {
+            [self.configure.fromVC.view removeFromSuperview];
         }
         
         if ([self.browser.delegate respondsToSelector:@selector(photoBrowser:panEndedWithIndex:willDisappear:)]) {

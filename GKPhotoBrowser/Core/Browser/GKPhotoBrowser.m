@@ -85,16 +85,6 @@
     [self.rotationHandler removeDeviceOrientationObserver];
 }
 
-- (void)loadView {
-    if (self.handler.captureImage) {
-        self.view = [[UIImageView alloc] initWithImage:self.handler.captureImage];
-    }else {
-        self.view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
-    }
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.view.userInteractionEnabled = YES;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -169,11 +159,6 @@
 }
 
 - (void)initUI {
-    if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
-        _containerView = [[UIView alloc] initWithFrame:self.view.bounds];
-        [self.view addSubview:_containerView];
-    }
-    
     self.contentView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.contentView.center = self.view.center;
     self.contentView.backgroundColor = [UIColor clearColor];
@@ -852,7 +837,7 @@
         _photoScrollView.alwaysBounceHorizontal         = YES;
         _photoScrollView.backgroundColor                = [UIColor clearColor];
         _photoScrollView.clipsToBounds                  = NO;
-        if (self.configure.showStyle == GKPhotoBrowserShowStylePush) {
+        if (self.configure.isPush) {
             if (self.configure.isPopGestureEnabled) {
                 _photoScrollView.gk_gestureHandleEnabled = YES;
             }

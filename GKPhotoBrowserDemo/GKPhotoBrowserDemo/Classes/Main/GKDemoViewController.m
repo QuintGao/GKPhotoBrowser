@@ -247,7 +247,7 @@
         if (control.selectedSegmentIndex == 2) {
             self.videoLoadStyle = GKPhotoBrowserLoadStyleCustom;
         }else {
-            self.videoLoadStyle = (GKPhotoBrowserLoadStyle)control.selectedSegmentIndex;            
+            self.videoLoadStyle = (GKPhotoBrowserLoadStyle)control.selectedSegmentIndex;
         }
     }else if (control == self.videoFailControl) {
         self.videoFailStyle = (GKPhotoBrowserFailStyle)control.selectedSegmentIndex;
@@ -321,7 +321,7 @@
 
 - (UISegmentedControl *)showControl {
     if (!_showControl) {
-        _showControl = [[UISegmentedControl alloc] initWithItems:@[@"无动画", @"zoom动画", @"push动画"]];
+        _showControl = [[UISegmentedControl alloc] initWithItems:@[@"无动画", @"zoom动画", @"push动画", @"pushZoom"]];
         [_showControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
         _showControl.selectedSegmentIndex = 0;
     }
@@ -359,7 +359,7 @@
 
 - (UISegmentedControl *)loadControl {
     if (!_loadControl) {
-        _loadControl = [[UISegmentedControl alloc] initWithItems:@[@"不明确", @"不明确+阴影", @"明确进度条", @"自定义"]];
+        _loadControl = [[UISegmentedControl alloc] initWithItems:@[@"不明确", @"不明确阴影", @"圆形进度", @"扇形进度", @"自定义"]];
         [_loadControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
         _loadControl.selectedSegmentIndex = 0;
     }

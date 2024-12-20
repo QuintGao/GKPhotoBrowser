@@ -155,6 +155,11 @@
     self.livePhoto = protocol;
 }
 
+- (BOOL)isPush {
+    return self.showStyle == GKPhotoBrowserShowStylePush ||
+           self.showStyle == GKPhotoBrowserShowStylePushZoom;
+}
+
 - (void)didDisappear {
     if (self.isClearMemoryWhenDisappear && [self.imager respondsToSelector:@selector(clearMemory)]) {
         [self.imager clearMemory];
