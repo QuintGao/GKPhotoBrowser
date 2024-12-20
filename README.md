@@ -200,6 +200,10 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.1.6 - 2024.12.20
+    - 1、新增滑动隐藏时是否显示状态栏属性
+    - 2、修复isVideoReplay为NO时，视频不能重新播放的问题 #202
+    - 3、协议增加当前对应的数据模型，可方便传输额外数据
  * 3.1.5 - 2024.12.19
     - 1、新增自定义cover协议，可以更方便的自定义cover视图
     - 2、livePhoto加载速度提升，加载逻辑优化
@@ -210,6 +214,11 @@ browser.configure = configure;
     - 1、新增liveTargetSize属性，可自定义livePhoto相册图片加载尺寸
     - 2、新增isLivePhotoLongPressPlay属性，可控制livePhoto是否可以长按播放
     - 3、livePhoto播放优化，demo优化
+ </details>
+
+ <details>
+     <summary><font size=4>历史更新</font></summary>
+     
  * 3.1.2 - 2024.09.11 1、修复加载相册图片时的闪动问题 2、修复相册livePhoto加载失败的问题
  * 3.1.1 - 2024.09.10 1、修复滑动隐藏bug 2、修复状态栏显示异常问题 #196 #197
  * 3.1.0 - 2024.09.04 1、代码优化，增加配置类 2、本地图片加载优化，图片加载类支持为nil
@@ -236,11 +245,6 @@ browser.configure = configure;
     - 2、新增内存清理相关属性，可在适当的时候清理内存
     - 3、增加视频进度视图协议，可自定义视频进度view
     - 4、新增大图加载demo，通过CATiledLayer显示
- </details>
-
- <details>
-     <summary><font size=4>历史更新</font></summary>
-     
 * 2.5.9 - 2023.05.30 视频播放优化，新增微信聊天demo #173
 * 2.5.8 - 2023.05.16 修复手势向上滑动时不缩放问题
 * 2.5.7 - 2023.04.17
