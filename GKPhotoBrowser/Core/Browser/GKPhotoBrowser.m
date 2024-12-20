@@ -388,7 +388,9 @@
                 if (self.configure.isVideoReplay) {
                     [self.player gk_replay];
                 } else {
+                    __weak __typeof(self) weakSelf = self;
                     [self.player gk_seekToTime:0 completionHandler:^(BOOL finished) {
+                        __strong __typeof(weakSelf) self = weakSelf;
                         [self.player gk_pause];
                     }];
                     [self.curPhotoView showPlayBtn];
