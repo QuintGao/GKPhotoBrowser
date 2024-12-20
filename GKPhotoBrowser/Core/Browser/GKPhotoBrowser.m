@@ -403,6 +403,9 @@
                 if (self.configure.isVideoReplay) {
                     [self.player gk_replay];
                 } else {
+                    [self.player gk_seekToTime:0 completionHandler:^(BOOL finished) {
+                        [self.player gk_pause];
+                    }];
                     [self.curPhotoView showPlayBtn];
                 }
             } break;

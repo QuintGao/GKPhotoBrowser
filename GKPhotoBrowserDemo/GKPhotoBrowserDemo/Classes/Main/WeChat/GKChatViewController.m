@@ -153,7 +153,7 @@
     configure.isSingleTapDisabled = YES;
     configure.isVideoPausedWhenDragged = NO;
     [configure setupVideoProgressProtocol:[GKVideoProgressView new]];
-    [configure setupVideoPlayerProtocol:[GKZFPlayerManager new]];
+//    [configure setupVideoPlayerProtocol:[GKZFPlayerManager new]];
     configure.isVideoReplay = NO;
     
     GKPhotoBrowser *browser = [GKPhotoBrowser photoBrowserWithPhotos:photos currentIndex:index];

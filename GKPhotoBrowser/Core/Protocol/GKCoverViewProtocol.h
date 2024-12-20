@@ -21,10 +21,10 @@
 
 @optional
 
-/// 更新子视图内容
+/// 更新索引
 - (void)updateCoverWithCount:(NSInteger)count index:(NSInteger)index;
 
-/// 更新子视图的显示与隐藏
-- (void)updateCoverWithPhoto:(GKPhoto *)photo;
+/// 更新子视图内容
+- (void)updateCoverWithPhoto:(GKPhoto *_Nullable)photo;
 
 @end
