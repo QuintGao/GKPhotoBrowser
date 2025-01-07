@@ -519,12 +519,6 @@
     }
 }
 
-- (void)saveBtnClick:(UIButton *)btn {
-    if ([self.delegate respondsToSelector:@selector(photoBrowser:onSaveBtnClick:image:)]) {
-        [self.delegate photoBrowser:self onSaveBtnClick:self.currentIndex image:self.curPhotoView.imageView.image];
-    }
-}
-
 - (void)photoViewDidSelected {
     self.curPhotoView = [self currentPhotoView];
     [self.curPhotoView didScrollAppear];

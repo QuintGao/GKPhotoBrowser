@@ -24,42 +24,42 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.9.0)
   - GKNavigationBar/GestureHandle (1.9.0)
   - GKNavigationBar/NavigationBar (1.9.0)
-  - GKPhotoBrowser (3.1.5):
-    - GKPhotoBrowser/Default (= 3.1.5)
-  - GKPhotoBrowser/AF (3.1.5):
+  - GKPhotoBrowser (3.1.6):
+    - GKPhotoBrowser/Default (= 3.1.6)
+  - GKPhotoBrowser/AF (3.1.6):
     - AFNetworking
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Alamofire (3.1.5):
+  - GKPhotoBrowser/Alamofire (3.1.6):
     - Alamofire
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/AVPlayer (3.1.5):
+  - GKPhotoBrowser/AVPlayer (3.1.6):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.1.5):
+  - GKPhotoBrowser/Core (3.1.6):
     - GKPhotoBrowser/Resources
-  - GKPhotoBrowser/Cover (3.1.5):
+  - GKPhotoBrowser/Cover (3.1.6):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Default (3.1.5):
+  - GKPhotoBrowser/Default (3.1.6):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Cover
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (3.1.5):
+  - GKPhotoBrowser/KF (3.1.6):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (3.1.5):
+  - GKPhotoBrowser/Progress (3.1.6):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Resources (3.1.5)
-  - GKPhotoBrowser/SD (3.1.5):
+  - GKPhotoBrowser/Resources (3.1.6)
+  - GKPhotoBrowser/SD (3.1.6):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (3.1.5):
+  - GKPhotoBrowser/YY (3.1.6):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser/ZFPlayer (3.1.5):
+  - GKPhotoBrowser/ZFPlayer (3.1.6):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.3)
@@ -139,7 +139,7 @@ SPEC CHECKSUMS:
   GKLivePhotoManager: 7d5bc069382d5a4c1d44a846727b0beb08582256
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: 291abdad05fb01d4250f56146aca9491371bcbe6
+  GKPhotoBrowser: bf47ff5a4c8f8d1af62ad94e4af8e3e931400212
   GKSliderView: 7c6f853afeb0ae370bb8dce76ec669d6e9109d1d
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74

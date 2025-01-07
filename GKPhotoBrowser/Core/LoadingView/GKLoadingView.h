@@ -17,6 +17,8 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
     GKLoadingStyleCustom              // 自定义
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface GKLoadingView : UIView
 
 + (instancetype)loadingViewWithFrame:(CGRect)frame style:(GKLoadingStyle)style;
@@ -66,3 +68,5 @@ typedef NS_ENUM(NSUInteger, GKLoadingStyle) {
 - (void)removeAnimation;
 
 @end
+
+NS_ASSUME_NONNULL_END

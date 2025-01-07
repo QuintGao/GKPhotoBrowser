@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GKProgressViewProtocol.h"
+#import <GKPhotoBrowser/GKProgressViewProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

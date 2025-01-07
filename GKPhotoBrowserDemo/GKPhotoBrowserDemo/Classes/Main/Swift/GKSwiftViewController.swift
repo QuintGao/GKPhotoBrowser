@@ -81,7 +81,7 @@ extension GKSwiftViewController: UICollectionViewDataSource, UICollectionViewDel
             return photo
         }
         
-        let configure = GKPhotoBrowserConfigure.default()!
+        let configure = GKPhotoBrowserConfigure.default()
         configure.setupWebImageProtocol(GKKFWebImageManager())
         configure.setupVideoPlayerProtocol(GKZFPlayerManager())
         configure.showStyle = .zoom

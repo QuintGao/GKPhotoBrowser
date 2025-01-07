@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GKLivePhotoProtocol.h"
+#import <GKPhotoBrowser/GKLivePhotoProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GKCoverViewProtocol.h"
+#import <GKPhotoBrowser/GKCoverViewProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

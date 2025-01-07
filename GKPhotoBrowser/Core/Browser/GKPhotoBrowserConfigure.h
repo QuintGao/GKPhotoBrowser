@@ -90,6 +90,8 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
     GKPhotoBrowserFailStyleCustom              // 自定义（如：显示HUD）
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface GKPhotoBrowserConfigure : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -297,3 +299,5 @@ typedef NS_ENUM(NSUInteger, GKPhotoBrowserFailStyle) {
 - (void)didDisappear;
 
 @end
+
+NS_ASSUME_NONNULL_END

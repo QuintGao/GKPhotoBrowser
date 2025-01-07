@@ -70,6 +70,13 @@
     }
 }
 
+#pragma mark - action
+- (void)saveBtnClick:(UIButton *)btn {
+    if ([self.browser.delegate respondsToSelector:@selector(photoBrowser:onSaveBtnClick:image:)]) {
+        [self.browser.delegate photoBrowser:self.browser onSaveBtnClick:self.browser.currentIndex image:self.browser.curPhotoView.imageView.image];
+    }
+}
+
 #pragma mark - lazy
 - (UILabel *)countLabel {
     if (!_countLabel) {
