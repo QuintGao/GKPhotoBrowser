@@ -147,6 +147,15 @@
     }];
 }
 
+- (void)sliderView:(GKSliderView *)sliderView tapped:(float)value {
+    self.isSeeking = YES;
+    __weak __typeof(self) weakSelf = self;
+    [self.browser.configure.player gk_seekToTime:self.totalTime * value completionHandler:^(BOOL finished) {
+        __strong __typeof(weakSelf) self = weakSelf;
+        self.isSeeking = NO;
+    }];
+}
+
 #pragma mark - Lazy
 - (UIButton *)playBtn {
     if (!_playBtn) {
@@ -175,7 +184,7 @@
         _sliderView.sliderBtn.backgroundColor = UIColor.whiteColor;
         _sliderView.sliderBtn.layer.masksToBounds = YES;
         _sliderView.delegate = self;
-        _sliderView.isSliderAllowTapped = NO;
+        _sliderView.isSliderAllowTapped = YES;
         _sliderView.maximumTrackTintColor = UIColor.grayColor;
         _sliderView.minimumTrackTintColor = UIColor.whiteColor;
     }
