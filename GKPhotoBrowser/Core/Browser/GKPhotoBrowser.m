@@ -152,8 +152,6 @@
 }
 
 - (void)initValue {
-    self.isStatusBarShow = self.configure.isStatusBarShow;
-    self.statusBarStyle = self.configure.statusBarStyle;
     self.visiblePhotoViews = [NSMutableArray array];
     self.reusablePhotoViews = [NSMutableSet set];
 }
@@ -348,6 +346,8 @@
     self.handler.browser = self;
     self.gestureHandler.browser = self;
     self.rotationHandler.browser = self;
+    self.isStatusBarShow = self.configure.isStatusBarShow;
+    self.statusBarStyle = self.configure.statusBarStyle;
 }
 
 - (void)setupCoverProtocol:(id<GKCoverViewProtocol>)protocol {
