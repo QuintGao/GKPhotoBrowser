@@ -200,6 +200,9 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.1.7 - 2025.01.07
+    - 1、修复设置状态栏属性无效的问题
+    - 2、修复保存代理失效的问题
  * 3.1.6 - 2024.12.20
     - 1、新增滑动隐藏时是否显示状态栏属性
     - 2、修复isVideoReplay为NO时，视频不能重新播放的问题 #202
