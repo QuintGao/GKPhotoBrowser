@@ -200,6 +200,8 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.1.8 - 2025.01.08
+    - 图片加载优化，修复自定义缓存时的显示错乱问题
  * 3.1.7 - 2025.01.07
     - 1、修复设置状态栏属性无效的问题
     - 2、修复保存代理失效的问题
