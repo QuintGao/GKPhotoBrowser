@@ -28,6 +28,7 @@
 		7925A5532A28915700972F47 /* GKLargeImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7925A5522A28915700972F47 /* GKLargeImageManager.m */; };
 		7925A5562A28916100972F47 /* GKLargeImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7925A5552A28916100972F47 /* GKLargeImageView.m */; };
 		7927F0D020A97F280017FD5B /* GKTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7927F0CF20A97F280017FD5B /* GKTestViewController.m */; };
+		794BB2E92D2E5C8700F49D4A /* CustomWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 794BB2E82D2E5C8700F49D4A /* CustomWebImageManager.m */; };
 		795364332D13F9CB00541B1E /* GKWBCoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 795364322D13F9CB00541B1E /* GKWBCoverView.m */; };
 		795364352D14206200541B1E /* ZLPhotoBrowserSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795364342D14206200541B1E /* ZLPhotoBrowserSwift.swift */; };
 		795FA5981FF333420057BDB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 795FA5971FF333420057BDB0 /* Assets.xcassets */; };
@@ -123,6 +124,8 @@
 		7925A5552A28916100972F47 /* GKLargeImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKLargeImageView.m; sourceTree = "<group>"; };
 		7927F0CE20A97F280017FD5B /* GKTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKTestViewController.h; sourceTree = "<group>"; };
 		7927F0CF20A97F280017FD5B /* GKTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKTestViewController.m; sourceTree = "<group>"; };
+		794BB2E72D2E5C8700F49D4A /* CustomWebImageManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomWebImageManager.h; sourceTree = "<group>"; };
+		794BB2E82D2E5C8700F49D4A /* CustomWebImageManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomWebImageManager.m; sourceTree = "<group>"; };
 		795364312D13F9CB00541B1E /* GKWBCoverView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GKWBCoverView.h; sourceTree = "<group>"; };
 		795364322D13F9CB00541B1E /* GKWBCoverView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GKWBCoverView.m; sourceTree = "<group>"; };
 		795364342D14206200541B1E /* ZLPhotoBrowserSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZLPhotoBrowserSwift.swift; sourceTree = "<group>"; };
@@ -341,6 +344,8 @@
 				795FA6061FF338200057BDB0 /* GKTest03ViewController.m */,
 				60CAD8F5262E66D9003A36D7 /* GKTestVC.h */,
 				60CAD8F6262E66D9003A36D7 /* GKTestVC.m */,
+				794BB2E72D2E5C8700F49D4A /* CustomWebImageManager.h */,
+				794BB2E82D2E5C8700F49D4A /* CustomWebImageManager.m */,
 				795364342D14206200541B1E /* ZLPhotoBrowserSwift.swift */,
 				795FA5F81FF338200057BDB0 /* WeChat */,
 				7961A3022C2E60F500C61A70 /* WeBo */,
@@ -694,6 +699,7 @@
 				60154B5F20D11D6B0000877A /* GKGIFViewController.m in Sources */,
 				7925A4EC2A1F37E200972F47 /* GKChatViewCell.m in Sources */,
 				795FA60F1FF338200057BDB0 /* GKPhotosView.m in Sources */,
+				794BB2E92D2E5C8700F49D4A /* CustomWebImageManager.m in Sources */,
 				795FA60E1FF338200057BDB0 /* GKMainViewController.m in Sources */,
 				795FA6101FF338200057BDB0 /* GKJianshuViewController.m in Sources */,
 				795FA6231FF338200057BDB0 /* GKTest02ViewController.m in Sources */,
@@ -843,7 +849,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = GKPhotoBrowser;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cn.quintgao.browser;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quint.photo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -870,7 +876,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = GKPhotoBrowser;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cn.quintgao.browser;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quint.photo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";

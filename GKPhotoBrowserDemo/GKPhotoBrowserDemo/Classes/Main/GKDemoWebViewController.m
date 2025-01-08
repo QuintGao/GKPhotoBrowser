@@ -10,6 +10,8 @@
 #import "GKPhotosView.h"
 #import "GKTimeLineModel.h"
 #import <GKMessageTool/GKMessageTool.h>
+#import <CommonCrypto/CommonDigest.h>
+#import "CustomWebImageManager.h"
 
 @interface GKDemoWebViewController ()<GKPhotosViewDelegate, GKPhotoBrowserDelegate>
 
@@ -119,6 +121,7 @@
             photo.url = [NSURL URLWithString:obj.url];
         }
         photo.sourceImageView = self.photosView.subviews[idx];
+        photo.extraInfo = GKPhotoDiskCacheFileNameForKey(obj.url);
         [photos addObject:photo];
     }];
     
@@ -140,8 +143,10 @@
         [configure setupWebImageProtocol:[[GKSDWebImageManager alloc] init]];
     }else if (self.imageLoadStyle == 1) {
         [configure setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
-    }else {
+    }else if (self.imageLoadStyle == 2) {
         [configure setupWebImageProtocol:[[GKKFWebImageManager alloc] init]];
+    }else if (self.imageLoadStyle == 3) {
+        [configure setupWebImageProtocol:[[CustomWebImageManager alloc] init]];
     }
     
     configure.videoLoadStyle = self.videoLoadStyle;
@@ -168,6 +173,23 @@
     browser.delegate = self;
     [browser showFromVC:self];
 }
+
+#pragma mark - md5
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+static inline NSString * _Nonnull GKDiskCacheFileNameForKey(NSString * _Nullable key) {
+    const char *str = key.UTF8String;
+    if (str == NULL) {
+        str = "";
+    }
+    unsigned char r[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(str, (CC_LONG)strlen(str), r);
+    NSString *filename = [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+                          r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10],
+                          r[11], r[12], r[13], r[14], r[15]];
+    return filename;
+}
+#pragma clang diagnostic pop
 
 #pragma mark - GKPhotoBrowserDelegate
 - (void)photoBrowser:(GKPhotoBrowser *)browser didChangedIndex:(NSInteger)index {

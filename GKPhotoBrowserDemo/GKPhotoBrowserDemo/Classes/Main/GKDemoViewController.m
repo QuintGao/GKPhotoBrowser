@@ -397,7 +397,7 @@
 
 - (UISegmentedControl *)imgLoadControl {
     if (!_imgLoadControl) {
-        _imgLoadControl = [[UISegmentedControl alloc] initWithItems:@[@"SDWebImage", @"YYWebImage", @"Kingfisher"]];
+        _imgLoadControl = [[UISegmentedControl alloc] initWithItems:@[@"SDWebImage", @"YYWebImage", @"Kingfisher", @"自定义"]];
         [_imgLoadControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
         _imgLoadControl.selectedSegmentIndex = 0;
     }

@@ -12,6 +12,7 @@
 #import <GKMessageTool/GKMessageTool.h>
 #import <GKPhotoBrowserDemo-Swift.h>
 #import <ZLPhotoBrowser/ZLPhotoBrowser-Swift.h>
+#import "CustomWebImageManager.h"
 
 @interface GKDemoPhotoViewController ()<GKPhotosViewDelegate, GKPhotoBrowserDelegate>
 
@@ -107,6 +108,8 @@
             photo.imageAsset = obj.image_asset;
         }
         photo.sourceImageView = self.photosView.subviews[idx];
+        
+        photo.extraInfo = GKPhotoDiskCacheFileNameForKey(obj.url);
         [photos addObject:photo];
     }];
     
@@ -128,8 +131,10 @@
         [configure setupWebImageProtocol:[[GKSDWebImageManager alloc] init]];
     }else if (self.imageLoadStyle == 1) {
         [configure setupWebImageProtocol:[[GKYYWebImageManager alloc] init]];
-    }else {
+    }else if (self.imageLoadStyle == 2) {
         [configure setupWebImageProtocol:[[GKKFWebImageManager alloc] init]];
+    }else if (self.imageLoadStyle == 3) {
+        [configure setupWebImageProtocol:[[CustomWebImageManager alloc] init]];
     }
     
     configure.videoLoadStyle = self.videoLoadStyle;

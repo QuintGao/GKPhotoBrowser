@@ -27,6 +27,10 @@
         // 每次设置数据时，恢复缩放
         [self.scrollView setZoomScale:1.0 animated:NO];
         
+        if (self.imager && [self.imager respondsToSelector:@selector(setPhoto:)]) {
+            self.imager.photo = photo;
+        }
+        
         // 优先加载缓存图片
         UIImage *placeholderImage = nil;
         UIImage *image = [self.imager imageFromMemoryForURL:photo.url];
@@ -137,10 +141,10 @@
     }
     
     NSURL *url = nil;
-    if (photo.originFinished) {
+    if (photo.originUrl && photo.originFinished) {
         url = photo.originUrl;
     }else {
-        url = isOrigin ? photo.originUrl : photo.url;
+        url = (isOrigin && photo.originUrl) ? photo.originUrl : photo.url;
     }
     
     if (url.absoluteString.length > 0) {
@@ -235,9 +239,6 @@
             });
         };
         
-        if ([self.imager respondsToSelector:@selector(setPhoto:)]) {
-            self.imager.photo = photo;
-        }
         [self.imager setImageForImageView:self.imageView url:url placeholderImage:placeholderImage progress:progressBlock completion:completionBlock];
     }else {
         if (self.imageView.image) {

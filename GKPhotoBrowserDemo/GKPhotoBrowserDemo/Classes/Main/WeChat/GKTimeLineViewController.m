@@ -17,6 +17,7 @@
 #import "GKZFPlayerManager.h"
 #import "GKAFLivePhotoManager+Extension.h"
 #import <ZLPhotoBrowser-Swift.h>
+#import "CustomWebImageManager.h"
 
 @interface GKTimeLineViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
@@ -144,6 +145,8 @@
                 photo.videoUrl = [NSURL URLWithString:obj.video_url];
             }
             
+            photo.extraInfo = [NSString stringWithFormat:@"GK_%@", GKPhotoDiskCacheFileNameForKey(obj.url)];
+            
             [photos addObject:photo];
         }];
         
@@ -162,7 +165,7 @@
         configure.isShowPlayImage = NO;
         configure.isVideoReplay = YES;
         configure.videoPlayImage = [UIImage imageNamed:@"ic_play3"];
-//        [configure setupWebImageProtocol:[GKYYWebImageManager new]];
+//        [configure setupWebImageProtocol:[CustomWebImageManager new]];
         configure.isLivePhotoLongPressPlay = NO;
         GKAFLivePhotoManager *afManager = [[GKAFLivePhotoManager alloc] init];
         afManager.addMark = YES;

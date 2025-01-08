@@ -105,6 +105,9 @@
     GKPhotoView *photoView  = [self currentPhotoView];
     self.curPhotoView = photoView;
     
+    if (self.imager && [self.imager respondsToSelector:@selector(setPhoto:)]) {
+        self.imager.photo = photo;
+    }
     if ([self.imager imageFromMemoryForURL:photo.url] || photo.image) {
         [photoView setupPhoto:photo];
     }else {

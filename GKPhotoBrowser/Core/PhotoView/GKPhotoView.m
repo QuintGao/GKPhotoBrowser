@@ -88,6 +88,9 @@
     [self.liveLoadingView stopLoading];
     [self.liveLoadingView removeFromSuperview];
     [self cancelImageLoad];
+    if (self.imager && [self.imager respondsToSelector:@selector(setPhoto:)]) {
+        self.imager.photo = self.photo;
+    }
     if (self.configure.isClearMemoryWhenViewReuse && [self.imager respondsToSelector:@selector(clearMemoryForURL:)]) {
         [self.imager clearMemoryForURL:self.photo.url];
     }
