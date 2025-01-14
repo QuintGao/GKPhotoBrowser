@@ -84,11 +84,11 @@ pod 'GKPhotoBrowser/AVPlayer'
 ```
 ZFPlayer播放视频
 ```objc
-pod 'GKPhotoBrowser/ZFPlayer'
+pod 'GKPhotoBrowser_Static/ZFPlayer'
 ```
 IJKPlayer播放视频
 ```objc
-pod 'GKPhotoBrowser/IJKPlayer'
+pod 'GKPhotoBrowser_Static/IJKPlayer'
 ```
 
 AFNetworking下载livePhoto
@@ -200,6 +200,8 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.1.9 - 2025.01.14
+    - GKPhotoBrowser动态库与静态库拆分，若要使用ZFPlayer或IJKPlayer请使用GKPhotoBrowser_Static或自定义
  * 3.1.8 - 2025.01.08
     - 图片加载优化，修复自定义缓存时的显示错乱问题
  * 3.1.7 - 2025.01.07
