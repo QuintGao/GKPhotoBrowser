@@ -3,3 +3,4 @@
 //
 
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
+#import <GKPhotoBrowser_Static/GKZFPlayerManager.h>

@@ -36,7 +36,6 @@
 #import "GKProgressView.h"
 #import "GKSDWebImageManager.h"
 #import "GKYYWebImageManager.h"
-#import "GKZFPlayerManager.h"
 
 FOUNDATION_EXPORT double GKPhotoBrowserVersionNumber;
 FOUNDATION_EXPORT const unsigned char GKPhotoBrowserVersionString[];

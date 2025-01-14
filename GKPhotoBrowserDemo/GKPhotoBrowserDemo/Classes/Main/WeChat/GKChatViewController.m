@@ -10,7 +10,7 @@
 #import "GKChatViewCell.h"
 #import <Masonry/Masonry.h>
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
-#import <GKPhotoBrowser/GKZFPlayerManager.h>
+#import "GKZFPlayerManager.h"
 #import "GKVideoProgressView.h"
 #import <ZLPhotoBrowser-Swift.h>
 

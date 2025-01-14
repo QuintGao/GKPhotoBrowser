@@ -24,42 +24,42 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.9.0)
   - GKNavigationBar/GestureHandle (1.9.0)
   - GKNavigationBar/NavigationBar (1.9.0)
-  - GKPhotoBrowser (3.1.6):
-    - GKPhotoBrowser/Default (= 3.1.6)
-  - GKPhotoBrowser/AF (3.1.6):
+  - GKPhotoBrowser (3.1.8):
+    - GKPhotoBrowser/Default (= 3.1.8)
+  - GKPhotoBrowser/AF (3.1.8):
     - AFNetworking
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Alamofire (3.1.6):
+  - GKPhotoBrowser/Alamofire (3.1.8):
     - Alamofire
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/AVPlayer (3.1.6):
+  - GKPhotoBrowser/AVPlayer (3.1.8):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.1.6):
+  - GKPhotoBrowser/Core (3.1.8):
     - GKPhotoBrowser/Resources
-  - GKPhotoBrowser/Cover (3.1.6):
+  - GKPhotoBrowser/Cover (3.1.8):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Default (3.1.6):
+  - GKPhotoBrowser/Default (3.1.8):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Cover
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (3.1.6):
+  - GKPhotoBrowser/KF (3.1.8):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (3.1.6):
+  - GKPhotoBrowser/Progress (3.1.8):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Resources (3.1.6)
-  - GKPhotoBrowser/SD (3.1.6):
+  - GKPhotoBrowser/Resources (3.1.8)
+  - GKPhotoBrowser/SD (3.1.8):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (3.1.6):
+  - GKPhotoBrowser/YY (3.1.8):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser/ZFPlayer (3.1.6):
+  - GKPhotoBrowser_Static/ZFPlayer (3.1.8):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.3)
@@ -95,7 +95,7 @@ DEPENDENCIES:
   - GKPhotoBrowser/Alamofire (from `../`)
   - GKPhotoBrowser/KF (from `../`)
   - GKPhotoBrowser/YY (from `../`)
-  - GKPhotoBrowser/ZFPlayer (from `../`)
+  - GKPhotoBrowser_Static/ZFPlayer (from `../`)
   - GKSliderView
   - GKVideoScrollView
   - Masonry
@@ -131,6 +131,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   GKPhotoBrowser:
     :path: "../"
+  GKPhotoBrowser_Static:
+    :path: "../"
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
@@ -139,7 +141,8 @@ SPEC CHECKSUMS:
   GKLivePhotoManager: 7d5bc069382d5a4c1d44a846727b0beb08582256
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: bf47ff5a4c8f8d1af62ad94e4af8e3e931400212
+  GKPhotoBrowser: 767f71ab6bc5a4b93b4a842297626e5493185c85
+  GKPhotoBrowser_Static: 0ba511a1c2e016b5e3a03b313718697ce24f3655
   GKSliderView: 7c6f853afeb0ae370bb8dce76ec669d6e9109d1d
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
@@ -154,6 +157,6 @@ SPEC CHECKSUMS:
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
   ZLPhotoBrowser: 04c8a5c5299a3b5945c60bd0e676c16d1215b14c
 
-PODFILE CHECKSUM: 9e539652e773cc0495c9492ecce2039f8ea2b564
+PODFILE CHECKSUM: 2ab02792ff51728ff482b420d6e4f9d3401872dc
 
 COCOAPODS: 1.16.1

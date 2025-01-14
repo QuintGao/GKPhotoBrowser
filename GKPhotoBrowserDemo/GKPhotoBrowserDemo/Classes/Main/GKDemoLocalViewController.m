@@ -193,7 +193,7 @@
     
     Class cls = NSClassFromString(@"GKIJKPlayerManager");
     if (self.videoPlayStyle == 2 && !cls) {
-        [GKMessageTool showText:@"请先 pod 'GKPhotoBrowser/IJKPlayer'"];
+        [GKMessageTool showText:@"请先 pod 'GKPhotoBrowser_Static/IJKPlayer'"];
         return;
     }
     

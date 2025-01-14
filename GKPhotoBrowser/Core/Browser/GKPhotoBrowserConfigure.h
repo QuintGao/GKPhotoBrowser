@@ -32,14 +32,6 @@
 #import <GKPhotoBrowser/GKAVPlayerManager.h>
 #endif
 
-#if __has_include(<GKPhotoBrowser/GKZFPlayerManager.h>)
-#import <GKPhotoBrowser/GKZFPlayerManager.h>
-#endif
-
-#if __has_include(<GKPhotoBrowser/GKIJKPlayerManager.h>)
-#import <GKPhotoBrowser/GKIJKPlayerManager.h>
-#endif
-
 #if __has_include(<GKPhotoBrowser/GKProgressView.h>)
 #import <GKPhotoBrowser/GKProgressView.h>
 #endif
@@ -191,7 +183,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 自定义cover管理类
 /// @param protocol 需实现GKCoverViewProtocol协议
-- (void)setupCoverProtocol:(id<GKCoverViewProtocol>)protocol;
+- (void)setupCoverProtocol:(nullable id<GKCoverViewProtocol>)protocol;
 
 /// 以下属性只在默认coverView下有效，自定义coverView后将失效
 /// 是否隐藏countLabel，默认NO
@@ -209,7 +201,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 自定义图片请求类
 /// @param protocol 需实现GKWebImageProtocol协议
-- (void)setupWebImageProtocol:(id<GKWebImageProtocol>)protocol;
+- (void)setupWebImageProtocol:(nullable id<GKWebImageProtocol>)protocol;
 
 /// 加载失败时显示的文字或图片
 @property (nonatomic, copy) NSString    *failureText;
@@ -229,7 +221,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 自定义视频播放处理类，需要视频播放时必须添加
 /// @param protocol 需实现GKVideoPlayerProtocol协议
-- (void)setupVideoPlayerProtocol:(id<GKVideoPlayerProtocol>)protocol;
+- (void)setupVideoPlayerProtocol:(nullable id<GKVideoPlayerProtocol>)protocol;
 
 /// 视频加载方式，默认GKPhotoBrowserLoadStyleIndeterminate
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle videoLoadStyle;
@@ -258,7 +250,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 自定义视频播放进度条
 /// @param protocol 需实现GKProgressViewProtocol协议
-- (void)setupVideoProgressProtocol:(id<GKProgressViewProtocol>)protocol;
+- (void)setupVideoProgressProtocol:(nullable id<GKProgressViewProtocol>)protocol;
 
 /// 是否隐藏视频进度视图，默认NO，内容为视频时有效
 @property (nonatomic, assign) BOOL isHideProgressView;
@@ -269,7 +261,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 自定义livePhoto加载处理类
 /// @param protocol 需实现GKLivePhotoProtocol协议
-- (void)setupLivePhotoProtocol:(id<GKLivePhotoProtocol>)protocol;
+- (void)setupLivePhotoProtocol:(nullable id<GKLivePhotoProtocol>)protocol;
 
 /// livePhoto加载方式，默认GKPhotoBrowserLoadStyleDeterminateSector
 @property (nonatomic, assign) GKPhotoBrowserLoadStyle liveLoadStyle;

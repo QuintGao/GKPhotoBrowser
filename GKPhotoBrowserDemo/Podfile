@@ -28,10 +28,10 @@ target 'GKPhotoBrowserDemo' do
   pod 'GKPhotoBrowser', :path => '../'
   pod 'GKPhotoBrowser/YY', :path => '../'
   pod 'GKPhotoBrowser/KF', :path => '../'
-  pod 'GKPhotoBrowser/ZFPlayer', :path => '../'
   pod 'GKPhotoBrowser/Alamofire', :path => '../'
-
-#  pod 'GKPhotoBrowser/IJKPlayer', :path => '../'
+  
+  pod 'GKPhotoBrowser_Static/ZFPlayer', :path => '../'
+#  pod 'GKPhotoBrowser_Static/IJKPlayer', :path => '../'
 #  pod 'GKPhotoBrowser', :subspecs => ['SD', 'YY', 'AVPlayer'], :path => '../'
 #  pod 'GKPhotoBrowser/SD', :path => '../'
 #  pod 'GKPhotoBrowser/AVPlayer', :path => '../'

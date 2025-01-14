@@ -129,7 +129,7 @@
     
     Class cls = NSClassFromString(@"GKIJKPlayerManager");
     if (self.videoPlayStyle == 2 && !cls) {
-        [GKMessageTool showText:@"请先 pod 'GKPhotoBrowser/IJKPlayer'"];
+        [GKMessageTool showText:@"请先 pod 'GKPhotoBrowser_Static/IJKPlayer'"];
         return;
     }
     
@@ -173,23 +173,6 @@
     browser.delegate = self;
     [browser showFromVC:self];
 }
-
-#pragma mark - md5
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-static inline NSString * _Nonnull GKDiskCacheFileNameForKey(NSString * _Nullable key) {
-    const char *str = key.UTF8String;
-    if (str == NULL) {
-        str = "";
-    }
-    unsigned char r[CC_MD5_DIGEST_LENGTH];
-    CC_MD5(str, (CC_LONG)strlen(str), r);
-    NSString *filename = [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
-                          r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10],
-                          r[11], r[12], r[13], r[14], r[15]];
-    return filename;
-}
-#pragma clang diagnostic pop
 
 #pragma mark - GKPhotoBrowserDelegate
 - (void)photoBrowser:(GKPhotoBrowser *)browser didChangedIndex:(NSInteger)index {

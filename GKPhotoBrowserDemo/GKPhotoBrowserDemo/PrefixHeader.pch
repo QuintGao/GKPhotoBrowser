@@ -14,6 +14,7 @@
 #import <GKCover/GKCover.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <CommonCrypto/CommonDigest.h>
+#import <GKPhotoBrowser_Static/GKZFPlayerManager.h>
 
 #import "UIView+GKFrame.h"
 
