@@ -35,6 +35,7 @@
 #import "GKDefaultCoverView.h"
 #import "GKProgressView.h"
 #import "GKSDWebImageManager.h"
+#import "GKSJPlayerManager.h"
 #import "GKYYWebImageManager.h"
 
 FOUNDATION_EXPORT double GKPhotoBrowserVersionNumber;

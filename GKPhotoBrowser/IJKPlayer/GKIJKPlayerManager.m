@@ -139,6 +139,7 @@
             self.status = GKVideoPlayerStatusPaused;
             break;
         case IJKMPMoviePlaybackStateStopped:
+            if (self.status == GKVideoPlayerStatusEnded) return;
             self.status = GKVideoPlayerStatusEnded;
             break;
         default:
@@ -175,8 +176,10 @@
 - (void)gk_replay {
     __weak __typeof(self) weakSelf = self;
     [self gk_seekToTime:0 completionHandler:^(BOOL finished) {
+        __strong __typeof(weakSelf) self = weakSelf;
         if (finished) {
-            [weakSelf gk_play];
+            [self gk_play];
+            self.currentTime = 0;
         }
     }];
 }
@@ -205,7 +208,7 @@
 - (void)gk_seekToTime:(NSTimeInterval)time completionHandler:(void (^)(BOOL))completionHandler {
     if (self.player.duration > 0) {
         self.player.currentPlaybackTime = time;
-        completionHandler ?: completionHandler(YES);
+        !completionHandler ?: completionHandler(YES);
     }else {
         self.seekTime = time;
     }

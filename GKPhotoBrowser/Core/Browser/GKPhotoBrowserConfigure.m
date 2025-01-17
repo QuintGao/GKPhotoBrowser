@@ -100,6 +100,9 @@
     
     // 视频处理
     Class videoManagerClass = NSClassFromString(@"GKAVPlayerManager");
+    if (!videoManagerClass) {
+        videoManagerClass = NSClassFromString(@"GKSJPlayerManager");
+    }
     if (videoManagerClass) {
         [self setupVideoPlayerProtocol:[videoManagerClass new]];
     }

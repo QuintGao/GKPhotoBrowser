@@ -454,7 +454,7 @@
 
 - (UISegmentedControl *)videoPlayControl {
     if (!_videoPlayControl) {
-        _videoPlayControl = [[UISegmentedControl alloc] initWithItems:@[@"AVPlayer", @"ZFPlayer", @"IJKPlayer"]];
+        _videoPlayControl = [[UISegmentedControl alloc] initWithItems:@[@"AVPlayer", @"ZFPlayer", @"IJKPlayer", @"SJPlayer"]];
         [_videoPlayControl addTarget:self action:@selector(controlAction:) forControlEvents:UIControlEventValueChanged];
         _videoPlayControl.selectedSegmentIndex = 0;
     }

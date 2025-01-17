@@ -156,8 +156,10 @@
         [configure setupVideoPlayerProtocol:[[GKAVPlayerManager alloc] init]];
     }else if (self.videoPlayStyle == 1) {
         [configure setupVideoPlayerProtocol:[[GKZFPlayerManager alloc] init]];
-    }else {
+    }else if (self.videoPlayStyle == 2){
         [configure setupVideoPlayerProtocol:[[cls alloc] init]];
+    }else if (self.videoPlayStyle == 3){
+        [configure setupVideoPlayerProtocol:[[GKSJPlayerManager alloc] init]];
     }
     
     configure.isShowLivePhotoMark = YES;

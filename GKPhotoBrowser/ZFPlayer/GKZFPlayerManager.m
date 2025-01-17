@@ -87,6 +87,7 @@
                 self.status = GKVideoPlayerStatusFailed;
                 break;
             case ZFPlayerPlayStatePlayStopped:
+                if (self.status == GKVideoPlayerStatusEnded) return;
                 self.status = GKVideoPlayerStatusEnded;
                 break;
                 
@@ -138,6 +139,7 @@
 - (void)gk_replay {
     id<ZFPlayerMediaPlayback> manager = self.player.currentPlayerManager;
     [manager replay];
+    self.currentTime = 0;
 }
 
 - (void)gk_pause {

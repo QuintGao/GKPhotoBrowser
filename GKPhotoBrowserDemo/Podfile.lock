@@ -24,42 +24,45 @@ PODS:
     - GKNavigationBar/NavigationBar (= 1.9.0)
   - GKNavigationBar/GestureHandle (1.9.0)
   - GKNavigationBar/NavigationBar (1.9.0)
-  - GKPhotoBrowser (3.1.8):
-    - GKPhotoBrowser/Default (= 3.1.8)
-  - GKPhotoBrowser/AF (3.1.8):
+  - GKPhotoBrowser (3.1.9):
+    - GKPhotoBrowser/Default (= 3.1.9)
+  - GKPhotoBrowser/AF (3.1.9):
     - AFNetworking
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Alamofire (3.1.8):
+  - GKPhotoBrowser/Alamofire (3.1.9):
     - Alamofire
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/AVPlayer (3.1.8):
+  - GKPhotoBrowser/AVPlayer (3.1.9):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.1.8):
+  - GKPhotoBrowser/Core (3.1.9):
     - GKPhotoBrowser/Resources
-  - GKPhotoBrowser/Cover (3.1.8):
+  - GKPhotoBrowser/Cover (3.1.9):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Default (3.1.8):
+  - GKPhotoBrowser/Default (3.1.9):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Cover
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (3.1.8):
+  - GKPhotoBrowser/KF (3.1.9):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (3.1.8):
+  - GKPhotoBrowser/Progress (3.1.9):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Resources (3.1.8)
-  - GKPhotoBrowser/SD (3.1.8):
+  - GKPhotoBrowser/Resources (3.1.9)
+  - GKPhotoBrowser/SD (3.1.9):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/YY (3.1.8):
+  - GKPhotoBrowser/SJPlayer (3.1.9):
+    - GKPhotoBrowser/Core
+    - SJVideoPlayer
+  - GKPhotoBrowser/YY (3.1.9):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser_Static/ZFPlayer (3.1.8):
+  - GKPhotoBrowser_Static/ZFPlayer (3.1.9):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.3)
@@ -71,6 +74,65 @@ PODS:
   - SDWebImage (5.20.0):
     - SDWebImage/Core (= 5.20.0)
   - SDWebImage/Core (5.20.0)
+  - SJBaseVideoPlayer (3.7.6):
+    - Masonry
+    - SJBaseVideoPlayer/AVPlayer (= 3.7.6)
+    - SJBaseVideoPlayer/Common (= 3.7.6)
+    - SJUIKit/AttributesFactory (>= 0.0.0.38)
+    - SJUIKit/ObserverHelper
+    - SJUIKit/Queues
+    - SJUIKit/SQLite3
+  - SJBaseVideoPlayer/AVPlayer (3.7.6):
+    - Masonry
+    - SJBaseVideoPlayer/Common
+    - SJUIKit/AttributesFactory (>= 0.0.0.38)
+    - SJUIKit/ObserverHelper
+    - SJUIKit/Queues
+    - SJUIKit/SQLite3
+  - SJBaseVideoPlayer/Common (3.7.6):
+    - Masonry
+    - SJBaseVideoPlayer/ResourceLoader
+    - SJUIKit/AttributesFactory (>= 0.0.0.38)
+    - SJUIKit/ObserverHelper
+    - SJUIKit/Queues
+    - SJUIKit/SQLite3
+  - SJBaseVideoPlayer/ResourceLoader (3.7.6):
+    - Masonry
+    - SJUIKit/AttributesFactory (>= 0.0.0.38)
+    - SJUIKit/ObserverHelper
+    - SJUIKit/Queues
+    - SJUIKit/SQLite3
+  - SJUIKit/AttributesFactory (0.0.0.59):
+    - SJUIKit/AttributesFactory/Deprecated (= 0.0.0.59)
+    - SJUIKit/AttributesFactory/UIKitText (= 0.0.0.59)
+  - SJUIKit/AttributesFactory/Deprecated (0.0.0.59)
+  - SJUIKit/AttributesFactory/UIKitText (0.0.0.59)
+  - SJUIKit/ObserverHelper (0.0.0.59)
+  - SJUIKit/Queues (0.0.0.59)
+  - SJUIKit/SQLite3 (0.0.0.59):
+    - SJUIKit/SQLite3/Core (= 0.0.0.59)
+    - SJUIKit/SQLite3/Protocol (= 0.0.0.59)
+    - YYModel
+  - SJUIKit/SQLite3/Core (0.0.0.59):
+    - SJUIKit/SQLite3/Protocol
+    - YYModel
+  - SJUIKit/SQLite3/Protocol (0.0.0.59):
+    - YYModel
+  - SJVideoPlayer (3.4.3):
+    - SJBaseVideoPlayer (>= 3.7.5)
+    - SJVideoPlayer/Common (= 3.4.3)
+    - SJVideoPlayer/ControlLayers (= 3.4.3)
+    - SJVideoPlayer/ResourceLoader (= 3.4.3)
+  - SJVideoPlayer/Common (3.4.3):
+    - Masonry
+    - SJBaseVideoPlayer (>= 3.7.5)
+    - SJUIKit/AttributesFactory
+    - SJVideoPlayer/ResourceLoader
+  - SJVideoPlayer/ControlLayers (3.4.3):
+    - SJBaseVideoPlayer (>= 3.7.5)
+    - SJVideoPlayer/Common
+  - SJVideoPlayer/ResourceLoader (3.4.3):
+    - SJBaseVideoPlayer (>= 3.7.5)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
@@ -94,6 +156,7 @@ DEPENDENCIES:
   - GKPhotoBrowser (from `../`)
   - GKPhotoBrowser/Alamofire (from `../`)
   - GKPhotoBrowser/KF (from `../`)
+  - GKPhotoBrowser/SJPlayer (from `../`)
   - GKPhotoBrowser/YY (from `../`)
   - GKPhotoBrowser_Static/ZFPlayer (from `../`)
   - GKSliderView
@@ -121,6 +184,9 @@ SPEC REPOS:
     - MBProgressHUD
     - SDAutoLayout
     - SDWebImage
+    - SJBaseVideoPlayer
+    - SJUIKit
+    - SJVideoPlayer
     - YYCache
     - YYImage
     - YYModel
@@ -141,8 +207,8 @@ SPEC CHECKSUMS:
   GKLivePhotoManager: 7d5bc069382d5a4c1d44a846727b0beb08582256
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
   GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: 767f71ab6bc5a4b93b4a842297626e5493185c85
-  GKPhotoBrowser_Static: 0ba511a1c2e016b5e3a03b313718697ce24f3655
+  GKPhotoBrowser: 3473d10aabb68f5f889483d99a90e4221af4ac52
+  GKPhotoBrowser_Static: 0935b0020008b5a622e85da9d02265f290d8883c
   GKSliderView: 7c6f853afeb0ae370bb8dce76ec669d6e9109d1d
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
@@ -150,6 +216,9 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
+  SJBaseVideoPlayer: f15debaa8c1e27b63bdefc8caeec515e9c71d079
+  SJUIKit: a40111941e408cc17d4c1c23495aa92999e814b0
+  SJVideoPlayer: 4f09814f58522e0975cb2dccfda925f6c8643467
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
@@ -157,6 +226,6 @@ SPEC CHECKSUMS:
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
   ZLPhotoBrowser: 04c8a5c5299a3b5945c60bd0e676c16d1215b14c
 
-PODFILE CHECKSUM: 2ab02792ff51728ff482b420d6e4f9d3401872dc
+PODFILE CHECKSUM: 82a8f85a57e1244099ed53b19d095d0c68abcdf5
 
-COCOAPODS: 1.16.1
+COCOAPODS: 1.16.2

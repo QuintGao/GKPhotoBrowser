@@ -71,6 +71,12 @@ Pod::Spec.new do |s|
     ss.dependency 'GKPhotoBrowser/Core'
   end
   
+  s.subspec 'SJPlayer' do |ss|
+    ss.source_files = 'GKPhotoBrowser/SJPlayer'
+    ss.dependency 'GKPhotoBrowser/Core'
+    ss.dependency 'SJVideoPlayer'
+  end
+  
   s.subspec 'Progress' do |ss|
     ss.source_files = 'GKPhotoBrowser/Progress'
     ss.dependency 'GKPhotoBrowser/Core'
