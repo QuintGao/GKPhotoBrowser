@@ -22,6 +22,7 @@ target 'GKPhotoBrowserDemo' do
   pod 'Masonry'
   pod 'ZLPhotoBrowser'
   pod 'GKSliderView'
+  pod 'MJRefresh'
   
   pod 'GKVideoScrollView'
   

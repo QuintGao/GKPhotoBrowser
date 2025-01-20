@@ -169,6 +169,10 @@
     [self setupCoverViews];
     [self layoutSubviews];
     
+    if ([self.delegate respondsToSelector:@selector(photoBrowserViewDidLoad:)]) {
+        [self.delegate photoBrowserViewDidLoad:self];
+    }
+    
     CGRect frame = self.photoScrollView.bounds;
     CGSize contentSize = CGSizeMake(frame.size.width * self.photos.count, frame.size.height);
     self.photoScrollView.contentSize = contentSize;

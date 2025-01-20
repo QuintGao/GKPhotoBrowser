@@ -79,6 +79,9 @@
 // isStart: 是否开始加载  success：加载是否成功
 - (void)photoBrowser:(GKPhotoBrowser *)browser videoLoadStart:(BOOL)isStart success:(BOOL)success;
 
+// 可以在这里调用brower的相关视图，如photoScrollView，以此来实现右滑加载更多
+- (void)photoBrowserViewDidLoad:(GKPhotoBrowser *)browser;
+
 // browser UIScrollViewDelegate
 - (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewWillBeginDragging:(UIScrollView *)scrollView;
 - (void)photoBrowser:(GKPhotoBrowser *)browser scrollViewDidScroll:(UIScrollView *)scrollView;

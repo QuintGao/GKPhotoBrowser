@@ -19,6 +19,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <GKLivePhotoManager/GKLivePhotoManager.h>
 #import <ZLPhotoBrowser-Swift.h>
+#import <MJRefresh/MJRefresh.h>
 
 @interface GKTestViewController ()<GKPhotosViewDelegate, UIDocumentPickerDelegate, GKPhotoBrowserDelegate>
 
@@ -257,8 +258,21 @@
 //    }];
     
     browser.delegate = self;
+    
     [browser showFromVC:self];
     self.browser = browser;
+//    
+//    browser.photoScrollView.mj_trailer = [MJRefreshStateTrailer trailerWithRefreshingBlock:^{
+//        NSLog(@"trailer---");
+//        [browser.photoScrollView.mj_trailer endRefreshing];
+//    }];
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        browser.photoScrollView.mj_trailer = [MJRefreshNormalTrailer trailerWithRefreshingBlock:^{
+//            NSLog(@"----trailer");
+//            
+//            [browser.photoScrollView.mj_trailer endRefreshing];
+//        }];
+//    });
 }
 
 - (void)pangesture:(UIPanGestureRecognizer *)pan {
@@ -273,6 +287,19 @@
 }
 
 #pragma mark - GKPhotoBrowserDelegate
+- (void)photoBrowserViewDidLoad:(GKPhotoBrowser *)browser {
+    browser.photoScrollView.mj_trailer = [MJRefreshNormalTrailer trailerWithRefreshingBlock:^{
+        NSLog(@"----trailer");
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [browser.photoScrollView.mj_trailer endRefreshing];
+            
+            [browser.navigationController pushViewController:GKTestViewController.new animated:YES];
+        });
+    }];
+    browser.photoScrollView.mj_trailer.backgroundColor = UIColor.whiteColor;
+}
+
 - (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index {
     
 }

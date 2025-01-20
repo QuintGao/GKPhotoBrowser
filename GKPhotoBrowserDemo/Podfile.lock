@@ -70,6 +70,7 @@ PODS:
   - Kingfisher (6.3.1)
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
+  - MJRefresh (3.7.6)
   - SDAutoLayout (2.2.1)
   - SDWebImage (5.20.0):
     - SDWebImage/Core (= 5.20.0)
@@ -163,6 +164,7 @@ DEPENDENCIES:
   - GKVideoScrollView
   - Masonry
   - MBProgressHUD
+  - MJRefresh
   - SDAutoLayout
   - SDWebImage
   - YYModel
@@ -182,6 +184,7 @@ SPEC REPOS:
     - Kingfisher
     - Masonry
     - MBProgressHUD
+    - MJRefresh
     - SDAutoLayout
     - SDWebImage
     - SJBaseVideoPlayer
@@ -214,6 +217,7 @@ SPEC CHECKSUMS:
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  MJRefresh: 2fe7fb43a5167ceda20bb7e63f130c04fd1814a5
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
   SJBaseVideoPlayer: f15debaa8c1e27b63bdefc8caeec515e9c71d079
@@ -226,6 +230,6 @@ SPEC CHECKSUMS:
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
   ZLPhotoBrowser: 04c8a5c5299a3b5945c60bd0e676c16d1215b14c
 
-PODFILE CHECKSUM: 82a8f85a57e1244099ed53b19d095d0c68abcdf5
+PODFILE CHECKSUM: 8feef67f0991a4fc5c831a335d1db9a300d62ccf
 
 COCOAPODS: 1.16.2
