@@ -202,6 +202,9 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.2.0 - 2025.01.20
+    - 视频播放增加对[SJVideoPlayer](https://github.com/changsanjiang/SJVideoPlayer) 的支持
+    - 代理增加viewDidLoad方法，用于实现左滑加载更多（可结合MJRefresh使用）
  * 3.1.9 - 2025.01.14
     - GKPhotoBrowser动态库与静态库拆分，若要使用ZFPlayer或IJKPlayer请使用GKPhotoBrowser_Static或自定义
  * 3.1.8 - 2025.01.08
