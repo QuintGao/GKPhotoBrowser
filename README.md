@@ -13,8 +13,6 @@
 iOS仿微信、今日头条等图片浏览器
 ==============
 
-[<img src="https://api.gitsponsors.com/api/badge/img?id=110955493" height="40">](https://api.gitsponsors.com/api/badge/link?p=oZcrbkWKPmCSZckc+Kn38WehtxGmaYHkvgaHAfoggsnjFs1oO4GH2ergT1hilVS6+82eAhPNBibLGjUo4TGT827pbiP7gZdwrKt75tGiamIjUm+WagCNHcfe4LzRT+GohCYEfJPPtoPr/0SEkA4inQ==)
-
 GKPhotoBrowser是一个可高度自定义的图片、视频浏览器，支持多种显示、隐藏方式，支持自定义遮罩等
 
 - 参考：
