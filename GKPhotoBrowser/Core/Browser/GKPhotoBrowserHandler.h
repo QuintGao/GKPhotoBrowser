@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isRecover;
 
+// 子类使用：GKPhotoGestureHandler
 @property (nonatomic, assign) BOOL isDismiss;
 
 // 显示

@@ -34,9 +34,9 @@ import ZLPhotoBrowser
         }
     }
     
-    @objc class func getVideo(_ asset: PHAsset, completion: @escaping (URL, Error) -> Void) {
+    @objc class func getVideo(_ asset: PHAsset, completion: @escaping (URL?, Error?) -> Void) {
         ZLVideoManager.exportVideo(for: asset) { url, error in
-            completion(url!, error!)
+            completion(url, error)
         }
     }
 }
