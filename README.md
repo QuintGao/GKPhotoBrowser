@@ -200,6 +200,9 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
 
+ * 3.2.1 - 2025.02.17
+    - 修复livePhoto缓存清理失败的问题
+    - livePhoto标识位置显示优化
  * 3.2.0 - 2025.01.20
     - 视频播放增加对[SJVideoPlayer](https://github.com/changsanjiang/SJVideoPlayer) 的支持
     - 代理增加viewDidLoad方法，用于实现左滑加载更多（可结合MJRefresh使用）
