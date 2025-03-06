@@ -113,8 +113,6 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self hideLoading];
                 if (success) {
-                    self.imageView.userInteractionEnabled = YES;
-                    [self.imageView addSubview:self.livePhoto.livePhotoView];
                     [self adjustFrame];
                     [self.livePhoto gk_play];
                 }
@@ -162,6 +160,11 @@
 - (void)liveUpdateFrame {
     if (!self.livePhoto) return;
     if (self.livePhoto.photo != self.photo) return;
+    if (self.livePhoto.livePhotoView.superview != self.imageView) {
+        [self.imageView addSubview:self.livePhoto.livePhotoView];
+        self.imageView.userInteractionEnabled = YES;
+    }
+    [self.imageView bringSubviewToFront:self.livePhoto.livePhotoView];
     [self.livePhoto gk_updateFrame:self.imageView.bounds];
     if (self.liveMarkView.superview) {
         CGFloat x = 10;

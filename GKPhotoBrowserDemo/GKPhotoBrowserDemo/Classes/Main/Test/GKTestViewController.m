@@ -113,7 +113,10 @@
     
     // 1、网络图片
     GKTimeLineImage *m1 = [[GKTimeLineImage alloc] init];
-    m1.url = @"http://p1.music.126.net/9k3CAPfB9WdcMCFk4CYnKQ==/109951167793871917.jpg?imageView&quality=89";
+//    m1.url = @"http://p1.music.126.net/9k3CAPfB9WdcMCFk4CYnKQ==/109951167793871917.jpg?imageView&quality=89";
+    m1.url = @"https://wx1.sinaimg.cn/mw690/87b3c920gy1hqm73p63vlj22c03401ky.jpg";
+    m1.video_url = @"https://video.weibo.com/media/play?livephoto=https%3A%2F%2Fus.sinaimg.cn%2F0038N8JLgx08fAjJmPCM0f0f0100m5Pb0k01.mov";
+    m1.isLivePhoto = YES;
     [self.dataSource addObject:m1];
     
     // 2、项目Assets下的图片
@@ -229,6 +232,8 @@
                 photo.url = [NSURL URLWithString:obj.url];
             }
         }
+        
+        photo.isLivePhoto = obj.isLivePhoto;
         if (obj.video_url) {
             if (obj.islocal) {
                 photo.videoUrl = [NSURL fileURLWithPath:obj.video_url];
