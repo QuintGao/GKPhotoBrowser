@@ -277,7 +277,7 @@
 }
 
 - (void)dismiss {
-    [self.handler browserDismiss];
+    [self.gestureHandler browserDismiss];
 }
 
 - (void)selectedPhotoWithIndex:(NSInteger)index animated:(BOOL)animated{
