@@ -12,6 +12,13 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
+@interface GKPhotoBrowserHandler()
+
+@property (nonatomic, assign) BOOL hasPlayBtn;
+@property (nonatomic, assign) BOOL hasLiveMarkView;
+
+@end
+
 @implementation GKPhotoBrowserHandler
 
 - (instancetype)init {
@@ -144,6 +151,15 @@
     photoView.imageView.clipsToBounds = YES;
     [photoView updateFrame];
     [self browserChangeAlpha:0];
+    if (photo.isVideo && photoView.playBtn.hidden == NO) {
+        photoView.playBtn.hidden = YES;
+        self.hasPlayBtn = YES;
+    }
+    if (photo.isLivePhoto && photoView.liveMarkView.hidden == NO) {
+        photoView.liveMarkView.hidden = YES;
+        self.hasLiveMarkView = YES;
+    }
+    
     [UIView animateWithDuration:self.configure.animDuration animations:^{
         photoView.imageView.frame = endRect;
         [photoView updateFrame];
@@ -151,6 +167,12 @@
     }completion:^(BOOL finished) {
         photoView.imageView.clipsToBounds = NO;
         self.isShow = YES;
+        if (self.hasPlayBtn) {
+            photoView.playBtn.hidden = NO;
+        }
+        if (self.hasLiveMarkView) {
+            photoView.liveMarkView.hidden = NO;
+        }
         [self.browser browserFirstAppear];
     }];
 }
@@ -281,6 +303,8 @@
     // Fix bug：解决长图点击隐藏时可能出现的闪动bug
     UIViewContentMode mode = photo.sourceImageView ? photo.sourceImageView.contentMode : UIViewContentModeScaleAspectFill;
     photoView.imageView.contentMode = mode;
+    photoView.playBtn.hidden = YES;
+    photoView.liveMarkView.hidden = YES;
     [UIView animateWithDuration:self.configure.animDuration animations:^{
         photoView.player.videoPlayView.alpha = 0;
         photoView.imageView.frame = sourceRect;
@@ -303,6 +327,8 @@
         toTranslationY = photoView.superview.frame.size.height;
     }
     
+    photoView.playBtn.hidden = YES;
+    photoView.liveMarkView.hidden = YES;
     [UIView animateWithDuration:self.configure.animDuration animations:^{
         photoView.imageView.transform = CGAffineTransformMakeTranslation(0, toTranslationY);
         [self browserChangeAlpha:0];
@@ -320,6 +346,8 @@
         photo.sourceImageView.alpha = 0;
     }
     
+    photoView.playBtn.hidden = YES;
+    photoView.liveMarkView.hidden = YES;
     [UIView animateWithDuration:self.configure.animDuration animations:^{
         photoView.imageView.alpha = 0;
         [self browserChangeAlpha:0];

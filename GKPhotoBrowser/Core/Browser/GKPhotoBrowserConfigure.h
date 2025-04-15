@@ -243,6 +243,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isVideoPausedWhenDragged;
 /// 左右滑动开始时是否暂停播放视频，默认NO
 @property (nonatomic, assign) BOOL isVideoPausedWhenScrollBegan;
+/// 视频是否禁止缩放，设置为YES时双击缩放将失效
+@property (nonatomic, assign) BOOL isVideoZoomDisabled;
 
 /// 视频播放失败显示的文字或图片
 @property (nonatomic, copy) NSString *videoFailureText;

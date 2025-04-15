@@ -577,7 +577,6 @@
         if (photoView == nil) {
             photoView = [self dequeueReusablePhotoView];
             photoView.delegate = self;
-            photoView.doubleZoomScale = self.configure.doubleZoomScale;
             
             CGRect frame = self.photoScrollView.bounds;
             CGFloat padding = self.configure.photoViewPadding;

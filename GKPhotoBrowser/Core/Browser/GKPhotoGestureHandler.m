@@ -158,6 +158,7 @@ int const static kDirectionPanThreshold = 5;
     if (!photoView) return;
     GKPhoto *photo = photoView.photo;
     if (!photo.finished) return;
+    if (photo.isVideo && self.configure.isVideoZoomDisabled) return;
     
     // 设置双击放大倍数
     [photoView setScrollMaxZoomScale:self.configure.doubleZoomScale];

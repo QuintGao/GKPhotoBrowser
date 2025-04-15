@@ -130,13 +130,16 @@
 
 - (void)videoDidDismissAppear {
     if (!self.player) return;
-    if (self.player.status == GKVideoPlayerStatusEnded) {
-        [self.player gk_replay];
-    }else {
-        [self.player gk_play];
+    if (!self.configure.isVideoPausedWhenDragged) return;
+    if (self.isPlayingWhenPan) {
+        if (self.player.status == GKVideoPlayerStatusEnded) {
+            [self.player gk_replay];
+        }else {
+            [self.player gk_play];
+        }
+        if (!self.configure.isShowPlayImage) return;
+        self.playBtn.hidden = YES;
     }
-    if (!self.configure.isShowPlayImage) return;
-    self.playBtn.hidden = YES;
 }
 
 - (void)videoWillDismissDisappear {
@@ -146,7 +149,12 @@
         if (!self.configure.isShowPlayImage) return;
         self.playBtn.hidden = YES;
     }else {
-        [self.player gk_pause];
+        if (self.player.isPlaying) {
+            self.isPlayingWhenPan = YES;
+            [self.player gk_pause];
+        } else{
+            self.isPlayingWhenPan = NO;
+        }
     }
 }
 
@@ -189,6 +197,17 @@
             }
         }
     }
+}
+
+
+
+static char kIsPlayingWhenPan;
+- (void)setIsPlayingWhenPan:(BOOL)isPlayingWhenPan {
+    objc_setAssociatedObject(self, &kIsPlayingWhenPan, @(isPlayingWhenPan), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)isPlayingWhenPan {
+    return [objc_getAssociatedObject(self, &kIsPlayingWhenPan) boolValue];
 }
 
 @end

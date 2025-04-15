@@ -306,16 +306,23 @@
             self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, imageFrame.size.height * 0.5);
         }
         
-        // 根据图片大小找到最大缩放等级，保证最大缩放时候，不会有黑边
-        // 找到最大缩放比例
-        CGFloat scaleH = frame.size.height / imageFrame.size.height;
-        CGFloat scaleW = frame.size.width / imageFrame.size.width;
-        self.realZoomScale = MAX(MAX(scaleH, scaleW), self.configure.maxZoomScale);
-        if (self.doubleZoomScale == self.configure.maxZoomScale) {
-            self.doubleZoomScale = self.realZoomScale;
-        }else if (self.doubleZoomScale > self.realZoomScale) {
-            self.doubleZoomScale = self.realZoomScale;
+        self.doubleZoomScale = self.configure.doubleZoomScale;
+        if (self.photo.isVideo && self.configure.isVideoZoomDisabled) {
+            self.doubleZoomScale = 1;
+            self.realZoomScale = 1;
+        }else {
+            // 根据图片大小找到最大缩放等级，保证最大缩放时候，不会有黑边
+            // 找到最大缩放比例
+            CGFloat scaleH = frame.size.height / imageFrame.size.height;
+            CGFloat scaleW = frame.size.width / imageFrame.size.width;
+            self.realZoomScale = MAX(MAX(scaleH, scaleW), self.configure.maxZoomScale);
+            if (self.doubleZoomScale == self.configure.maxZoomScale) {
+                self.doubleZoomScale = self.realZoomScale;
+            }else if (self.doubleZoomScale > self.realZoomScale) {
+                self.doubleZoomScale = self.realZoomScale;
+            }
         }
+        
         // 初始化
         self.scrollView.minimumZoomScale = 1.0f;
         self.scrollView.maximumZoomScale = self.realZoomScale;
