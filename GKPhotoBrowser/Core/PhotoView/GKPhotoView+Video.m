@@ -7,6 +7,7 @@
 
 #import "GKPhotoView+Video.h"
 #import "GKPhotoBrowser.h"
+#import <objc/runtime.h>
 
 @implementation GKPhotoView (Video)
 
