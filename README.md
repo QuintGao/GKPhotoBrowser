@@ -199,7 +199,10 @@ browser.configure = configure;
 
  <details open>
      <summary><font size=4>最近更新</font></summary>
-
+ * 3.2.4 - 2025.04.15
+    - 修复手动调用dismiss方法，browser无法释放的问题
+    - 视频播放按钮显示优化
+    - 增加禁止视频缩放属性
  * 3.2.2 - 2025.03.07
     - 修复livePhoto重用后可能出现不播放的问题
  * 3.2.1 - 2025.02.17
