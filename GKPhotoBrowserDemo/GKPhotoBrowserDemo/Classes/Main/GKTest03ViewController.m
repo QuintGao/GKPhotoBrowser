@@ -13,7 +13,7 @@
 #import <GKPhotoBrowser/GKPhotoBrowser.h>
 //#import <GKPhotoBrowser/GKYYWebImageManager.h>
 
-@interface GKTest03ViewController ()<UITableViewDataSource, UITableViewDelegate>
+@interface GKTest03ViewController ()<UITableViewDataSource, UITableViewDelegate, GKPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -117,6 +117,7 @@
         browser.configure.hidesPageControl = true;
         [browser.configure setupWebImageProtocol:[GKYYWebImageManager new]];
         [browser showFromVC:weakSelf];
+        browser.delegate = self;
     };
     
     return cell;
@@ -126,6 +127,10 @@
     NSArray *arr = self.dataSource[indexPath.row];
     
     return [GKTest02ViewCell cellHeightWithWidth:self.view.bounds.size.width count:arr.count];
+}
+
+- (void)photoBrowser:(GKPhotoBrowser *)browser didDisappearAtIndex:(NSInteger)index {
+    NSLog(@"%@", @"browser dismiss success");
 }
 
 @end

@@ -200,6 +200,7 @@
     }
     
     if (self.configure.isPush) {
+        self.isDismiss = YES;
         [self.browser removeRotationObserver];
         self.browser.photoScrollView.clipsToBounds = YES;
         [self.browser.navigationController popViewControllerAnimated:YES];
