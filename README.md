@@ -200,6 +200,8 @@ browser.configure = configure;
  <details open>
      <summary><font size=4>最近更新</font></summary>
      
+ * 3.2.6 - 2025.07.08
+    - 获取KeyWindow方法优化
  * 3.2.5 - 2025.07.03
     - 修复push显示方式，browser无法释放的问题
  * 3.2.4 - 2025.04.15
