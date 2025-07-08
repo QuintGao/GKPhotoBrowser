@@ -134,32 +134,37 @@ static NSInteger isNotchedScreen = -1;
 }
 
 + (UIWindow *)getKeyWindow {
-    UIWindow *window = nil;
+    UIWindow *keyWindow = nil;
+
     if (@available(iOS 13.0, *)) {
-        for (UIWindowScene *windowScene in [UIApplication sharedApplication].connectedScenes) {
-            if (windowScene.activationState == UISceneActivationStateForegroundActive) {
-                for (UIWindow *w in windowScene.windows) {
+        for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+            if (scene.activationState == UISceneActivationStateForegroundActive &&
+                [scene isKindOfClass:[UIWindowScene class]]) {
+                
+                UIWindowScene *windowScene = (UIWindowScene *)scene;
+                for (UIWindow *window in windowScene.windows) {
                     if (window.isKeyWindow) {
-                        window = w;
+                        keyWindow = window;
                         break;
                     }
                 }
             }
         }
     }
-    if (!window) {
-        window = [UIApplication sharedApplication].windows.firstObject;
-        if (!window.isKeyWindow) {
+
+    // fallback for iOS 12 and earlier
+    if (!keyWindow) {
 #pragma clang diagnostic push
-#pragma clang disagnostic ignored "-Wdeprecated-declarations"
-            UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-#pragma clang disagnostic pop
-            if (CGRectEqualToRect(keyWindow.bounds, UIScreen.mainScreen.bounds)) {
-                window = keyWindow;
-            }
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+#pragma clang diagnostic pop
+
+        if (CGRectEqualToRect(window.bounds, UIScreen.mainScreen.bounds)) {
+            keyWindow = window;
         }
     }
-    return window;
+
+    return keyWindow;
 }
 
 static NSInteger is58InchScreen = -1;
