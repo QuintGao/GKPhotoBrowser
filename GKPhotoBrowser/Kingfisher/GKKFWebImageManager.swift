@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-@objc open class GKKFWebImageManager: NSObject, GKWebImageProtocol {
+@objc open class GKKFWebImageManager: NSObject, @preconcurrency GKWebImageProtocol {
     public var browser: GKPhotoBrowser?
     
     public func imageViewClass() -> AnyClass {
