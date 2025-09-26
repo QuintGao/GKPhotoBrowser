@@ -33,6 +33,17 @@ typedef NS_ENUM(NSUInteger, SDImageForceDecodePolicy) {
     SDImageForceDecodePolicyAlways
 };
 
+/// These enum is used to represent the High Dynamic Range type during image encoding/decoding.
+/// There are alao other HDR type in history before ISO Standard (ISO 21496-1), including Google and Apple's old OSs captured photos, but which is non-standard and we do not support.
+typedef NS_ENUM(NSUInteger, SDImageHDRType) {
+    /// SDR, mostly only 8 bits color per components, RGBA8
+    SDImageHDRTypeSDR = 0,
+    /// ISO HDR (supported by modern format only, like HEIF/AVIF/JPEG-XL)
+    SDImageHDRTypeISOHDR = 1,
+    /// ISO Gain Map based HDR (supported by nearly all format, including tranditional JPEG, which stored the gain map into XMP)
+    SDImageHDRTypeISOGainMap = 2,
+};
+
 /// Byte alignment the bytes size with alignment
 /// - Parameters:
 ///   - size: The bytes size
@@ -112,6 +123,12 @@ typedef struct SDImagePixelFormat {
  The implementation use the Core Graphics internal to check whether the CGImage is `CGImageProvider` based, or `CGDataProvider` based. The `CGDataProvider` based is treated as non-lazy.
  */
 + (BOOL)CGImageIsLazy:(_Nonnull CGImageRef)cgImage;
+
+/**
+ Check if the CGImage is using HDR color space.
+ @note This use the same implementation like Apple, to checkl if color space uses transfer functions defined in ITU Rec.2100
+ */
++ (BOOL)CGImageIsHDR:(_Nonnull CGImageRef)cgImage;
 
 /**
  Create a decoded CGImage by the provided CGImage. This follows The Create Rule and you are response to call release after usage.

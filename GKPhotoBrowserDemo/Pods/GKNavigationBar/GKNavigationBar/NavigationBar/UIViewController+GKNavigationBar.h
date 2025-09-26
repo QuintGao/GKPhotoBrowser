@@ -105,6 +105,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param isRoot 是否是根控制器
 - (UIViewController *)gk_findCurrentViewControllerIsRoot:(BOOL)isRoot;
 
+/// 内部方法，慎用
+- (BOOL)gk_isLandscape;
+
 @end
 
 NS_ASSUME_NONNULL_END

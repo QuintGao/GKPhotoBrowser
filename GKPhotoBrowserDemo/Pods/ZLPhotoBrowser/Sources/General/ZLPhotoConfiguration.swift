@@ -238,11 +238,14 @@ public class ZLPhotoConfiguration: NSObject {
     /// This block will be called when cancel selecting an asset.
     public var didDeselectAsset: ((PHAsset) -> Void)?
     
+    /// This block will be called when clicking the camera button in the library.
+    public var canEnterCamera: (() -> Bool)?
+    
     /// The maximum number of frames for GIF images. To avoid crashes due to memory spikes caused by loading GIF images with too many frames, it is recommended that this value is not too large. Defaults to 50.
     public var maxFrameCountForGIF = 50
     
     /// You can use this block to customize the playback of GIF images to achieve better results. For example, use FLAnimatedImage to play GIFs. Defaults to nil.
-    public var gifPlayBlock: ((UIImageView, Data, [AnyHashable: Any]?) -> Void)?
+    public var gifPlayBlock: ((UIImageView, Data, PHAsset, [AnyHashable: Any]?) -> Void)?
     
     /// Pause GIF image playback, used together with gifPlayBlock. Defaults to nil.
     public var pauseGIFBlock: ((UIImageView) -> Void)?

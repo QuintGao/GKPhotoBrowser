@@ -118,6 +118,9 @@ public class ZLCameraConfiguration: NSObject {
         }
     }
     
+    /// Video stabilization mode. Defaults to .off.
+    public var videoStabilizationMode: AVCaptureVideoStabilizationMode = .off
+    
     /// Video export format for recording video and editing video. Defaults to mov.
     public var videoExportType: ZLCameraConfiguration.VideoExportType = .mov
     
@@ -135,6 +138,9 @@ public class ZLCameraConfiguration: NSObject {
             pri_videoCodecType = newValue
         }
     }
+    
+    /// Optional lock for output orientation. If set, any video/photo output will use this orientation.
+    public var lockedOutputOrientation: AVCaptureVideoOrientation? = nil
 }
 
 public extension ZLCameraConfiguration {
@@ -333,6 +339,18 @@ public extension ZLCameraConfiguration {
     @discardableResult
     func overlayView(_ value: UIView) -> ZLCameraConfiguration {
         overlayView = value
+        return self
+    }
+    
+    @discardableResult
+    func videoStabilizationMode(_ value: AVCaptureVideoStabilizationMode) -> ZLCameraConfiguration {
+        videoStabilizationMode = value
+        return self
+    }
+    
+    @discardableResult
+    func lockedOutputOrientation(_ orientation: AVCaptureVideoOrientation?) -> ZLCameraConfiguration {
+        self.lockedOutputOrientation = orientation
         return self
     }
 }

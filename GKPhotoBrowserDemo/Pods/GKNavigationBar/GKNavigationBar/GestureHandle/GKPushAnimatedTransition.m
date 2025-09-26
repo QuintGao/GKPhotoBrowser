@@ -72,23 +72,20 @@
         }
         self.toViewController.view.frame = CGRectMake(0, 0, screenW, screenH);
     } completion:^(BOOL finished) {
-        if (self.isHideTabBar) {
-            if (self.transitionContext.transitionWasCancelled) {
-                [self.containerView addSubview:self.fromViewController.view];
-            }else {
-                [self.fromViewController.view removeFromSuperview];
-            }
-            
-            fromView.transform = CGAffineTransformIdentity;
-            if (fromView) {
-                [fromView removeFromSuperview];
-                fromView = nil;
-            }
-            
-            if (captureView) {
-                [captureView removeFromSuperview];
-                captureView = nil;
-            }
+        if (self.transitionContext.transitionWasCancelled) {
+            [self.containerView addSubview:self.fromViewController.view];
+        }else {
+            [self.fromViewController.view removeFromSuperview];
+        }
+        fromView.transform = CGAffineTransformIdentity;
+        if (fromView) {
+            [fromView removeFromSuperview];
+            fromView = nil;
+        }
+        
+        if (captureView) {
+            [captureView removeFromSuperview];
+            captureView = nil;
         }
         if (self.isScale) {
             [self.shadowView removeFromSuperview];

@@ -1,6 +1,6 @@
 {
   "name": "GKPhotoBrowser_Static",
-  "version": "3.1.9",
+  "version": "3.2.6",
   "summary": "iOS可高度自定义的图片浏览器，支持图片浏览、视频播放等多种功能",
   "homepage": "https://github.com/QuintGao/GKPhotoBrowser",
   "license": "MIT",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/QuintGao/GKPhotoBrowser.git",
-    "tag": "3.1.9"
+    "tag": "3.2.6"
   },
   "swift_versions": "5.0",
   "default_subspecs": "Default",
@@ -22,33 +22,23 @@
     {
       "name": "Default",
       "dependencies": {
-        "GKPhotoBrowser/Default": [
-
-        ]
+        "GKPhotoBrowser/Default": []
       }
     },
     {
       "name": "ZFPlayer",
       "source_files": "GKPhotoBrowser/ZFPlayer",
       "dependencies": {
-        "GKPhotoBrowser/Core": [
-
-        ],
-        "ZFPlayer/AVPlayer": [
-
-        ]
+        "GKPhotoBrowser/Core": [],
+        "ZFPlayer/AVPlayer": []
       }
     },
     {
       "name": "IJKPlayer",
       "source_files": "GKPhotoBrowser/IJKPlayer",
       "dependencies": {
-        "GKPhotoBrowser/Core": [
-
-        ],
-        "IJKMediaFramework": [
-
-        ]
+        "GKPhotoBrowser/Core": [],
+        "IJKMediaFramework": []
       }
     }
   ],

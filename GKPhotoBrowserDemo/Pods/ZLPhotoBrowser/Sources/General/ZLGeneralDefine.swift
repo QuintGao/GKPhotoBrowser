@@ -104,7 +104,11 @@ func deviceSafeAreaInsets() -> UIEdgeInsets {
 }
 
 func deviceIsFringeScreen() -> Bool {
-    return deviceSafeAreaInsets().top > 20
+    if UIApplication.shared.statusBarOrientation.isLandscape {
+        return deviceSafeAreaInsets().left > 0 || deviceSafeAreaInsets().right > 0
+    } else {
+        return deviceSafeAreaInsets().top > 20
+    }
 }
 
 func isSmallScreen() -> Bool {
@@ -279,8 +283,8 @@ func zl_debugPrint(_ message: Any...) {
 //    message.forEach { debugPrint($0) }
 }
 
-func zlLoggerInDebug(_ lastMessage: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line) {
+func zlLoggerInDebug(_ lastMessage: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line, funcName: String = #function) {
     #if DEBUG
-        print("\(file):\(line): \(lastMessage())")
+    debugPrint("file: \(file), line: \(line), func: \(funcName), message: \(lastMessage())")
     #endif
 }

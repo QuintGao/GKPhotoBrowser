@@ -334,7 +334,13 @@ static GKLivePhotoManager *_manager = nil;
 }
 
 - (void)exportVideoWithUrlAsset:(AVURLAsset *)urlAsset identifier:(NSString *)identifier progressBlock:(void(^)(float))progressBlock completion:(void(^)(NSString *videoPath, NSError *error))completion {
-    AVURLAsset *metadataAsset = [AVURLAsset assetWithURL:[self metadataURL]];
+    NSURL *metadataUrl = [self metadataURL];
+    if (!metadataUrl) {
+        !completion ?: completion(nil, [self errorWithMsg:@"获取内部资源出错"]);
+        return;
+    }
+    
+    AVURLAsset *metadataAsset = [AVURLAsset assetWithURL:metadataUrl];
     
     NSError *error = nil;
     AVAssetReader *videoReader = [AVAssetReader assetReaderWithAsset:urlAsset error:&error];
@@ -704,9 +710,14 @@ static GKLivePhotoManager *_manager = nil;
                 bundleURL = [associatedBundle URLForResource:@"GKLivePhotoManager" withExtension:@"bundle"];
             }
         }
-        resourceBundle = [NSBundle bundleWithURL:bundleURL] ?: bundle;
+        if (bundleURL) {
+            resourceBundle = [NSBundle bundleWithURL:bundleURL];
+        }
+        if (!resourceBundle) {
+            resourceBundle = bundle;
+        }
     }
-    return [resourceBundle URLForResource:@"metadata" withExtension:@"mov"];
+    return resourceBundle ? [resourceBundle URLForResource:@"metadata" withExtension:@"mov"] : nil;
 }
 
 - (AVMetadataItem *)metadataItemWithAssetID:(NSString *)assetIdentifier {

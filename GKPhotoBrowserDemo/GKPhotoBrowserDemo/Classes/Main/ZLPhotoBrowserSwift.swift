@@ -11,8 +11,7 @@ import ZLPhotoBrowser
 
 @objc class ZLPhotoBrowserSwift: NSObject {
     @objc class func getPhotos(_ model: ZLAlbumListModel) -> [ZLPhotoModel] {
-        model.refetchPhotos()
-        return model.models
+        return model.preloadPhotos(loadAll: true)
     }
     
     @objc class func getModel(_ model: ZLPhotoModel, completion: @escaping (ZLPhotoResultModel) -> Void) {

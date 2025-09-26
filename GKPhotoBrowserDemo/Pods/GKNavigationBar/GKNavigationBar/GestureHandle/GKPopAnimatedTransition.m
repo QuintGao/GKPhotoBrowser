@@ -65,26 +65,26 @@
         }
     } completion:^(BOOL finished) {
         if (self.isHideTabBar) {
-            if (self.transitionContext.transitionWasCancelled) {
-                [self.toViewController.view removeFromSuperview];
-            }else {//transition 完成: 将之前的 tab 截屏清空
-                self.toViewController.gk_captureImage = nil;
-                [self.containerView addSubview:self.toViewController.view];
-            }
-            
-            toView.transform = CGAffineTransformIdentity;
-            if (toView) {
-                [toView removeFromSuperview];
-                toView = nil;
-            }
-            if (captureView) {
-                [captureView removeFromSuperview];
-                captureView = nil;
-            }
-            
             if (self.toViewController.navigationController.childViewControllers.count == 1) {
                 tabBar.hidden = NO;
             }
+        }
+        
+        if (self.transitionContext.transitionWasCancelled) {
+            [self.toViewController.view removeFromSuperview];
+        }else {//transition 完成: 将之前的 tab 截屏清空
+            self.toViewController.gk_captureImage = nil;
+            [self.containerView addSubview:self.toViewController.view];
+        }
+        
+        toView.transform = CGAffineTransformIdentity;
+        if (toView) {
+            [toView removeFromSuperview];
+            toView = nil;
+        }
+        if (captureView) {
+            [captureView removeFromSuperview];
+            captureView = nil;
         }
         if (self.isScale) {
             [self.shadowView removeFromSuperview];

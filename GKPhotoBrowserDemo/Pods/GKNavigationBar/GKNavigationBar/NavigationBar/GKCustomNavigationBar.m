@@ -24,13 +24,30 @@
     // 适配iOS11，遍历所有子控件，向下移动状态栏高度
     if (@available(iOS 11.0, *)) {
         [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj isKindOfClass:NSClassFromString(@"_UIBarBackground")]) {
+            if ([obj isKindOfClass:NSClassFromString(self.backCls)]) {
                 CGRect frame = obj.frame;
+                frame.origin.y = 0;
                 frame.size.height = self.frame.size.height;
                 obj.frame = frame;
             }else {
+                CGFloat navBarHNFS = GK_NAVBAR_HEIGHT_NFS;
+                CGFloat navBarH = GK_NAVBAR_HEIGHT;
+                
+                if (GK_IS_LANDSCAPE) {
+                    if (self.viewController && [self.viewController gk_isLandscape]) {
+                        navBarH = GK_NAVBAR_HEIGHT;
+                    }else {
+                        navBarH = [UIDevice navBarHeightForPortrait];
+                    }
+                }
+                
                 CGRect frame = obj.frame;
-                frame.origin.y = self.frame.size.height - (self.gk_nonFullScreen ? GK_NAVBAR_HEIGHT_NFS : GK_NAVBAR_HEIGHT);
+                if (UIDevice.isLiquidGlass && self.gk_nonFullScreen) {
+                    frame.size.height = UIDevice.navBarForIphone;
+                    frame.origin.y = self.frame.size.height - frame.size.height;
+                } else {
+                    frame.origin.y = self.frame.size.height - (self.gk_nonFullScreen ? navBarHNFS : navBarH);
+                }
                 obj.frame = frame;
             }
         }];
@@ -41,6 +58,14 @@
     
     // 分割线
     [self gk_navLineHideOrShow];
+}
+
+- (NSString *)backCls {
+    return [NSString stringWithFormat:@"%@%@%@", @"_UI", @"Bar", @"Background"];
+}
+
+- (NSString *)navBackCls {
+    return [NSString stringWithFormat:@"%@%@%@%@", @"_UI", @"Navigation", @"Bar", @"Background"];
 }
 
 - (void)gk_navLineHideOrShow {
@@ -58,19 +83,15 @@
     
     [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (@available(iOS 10.0, *)) {
-            if ([obj isKindOfClass:NSClassFromString(@"_UIBarBackground")]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (obj.alpha != gk_navBarBackgroundAlpha) {
-                        obj.alpha = gk_navBarBackgroundAlpha;
-                    }
-                });
-            }
-        }else if ([obj isKindOfClass:NSClassFromString(@"_UINavigationBarBackground")]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+            if ([obj isKindOfClass:NSClassFromString(self.backCls)]) {
                 if (obj.alpha != gk_navBarBackgroundAlpha) {
                     obj.alpha = gk_navBarBackgroundAlpha;
                 }
-            });
+            }
+        }else if ([obj isKindOfClass:NSClassFromString(self.navBackCls)]) {
+            if (obj.alpha != gk_navBarBackgroundAlpha) {
+                obj.alpha = gk_navBarBackgroundAlpha;
+            }
         }
     }];
     

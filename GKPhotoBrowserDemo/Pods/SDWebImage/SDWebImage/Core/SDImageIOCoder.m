@@ -18,6 +18,12 @@
 
 // Specify File Size for lossy format encoding, like JPEG
 static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestinationRequestedFileSize";
+// Support Xcode 15 SDK, use raw value instead of symbol
+static NSString * kSDCGImageDestinationEncodeRequest = @"kCGImageDestinationEncodeRequest";
+static NSString * kSDCGImageDestinationEncodeToSDR = @"kCGImageDestinationEncodeToSDR";
+static NSString * kSDCGImageDestinationEncodeToISOHDR = @"kCGImageDestinationEncodeToISOHDR";
+static NSString * kSDCGImageDestinationEncodeToISOGainmap = @"kCGImageDestinationEncodeToISOGainmap";
+
 
 @implementation SDImageIOCoder {
     size_t _width, _height;
@@ -28,7 +34,20 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
     BOOL _preserveAspectRatio;
     CGSize _thumbnailSize;
     BOOL _lazyDecode;
+    BOOL _decodeToHDR;
 }
+
+#if SD_IMAGEIO_HDR_ENCODING
++ (void)initialize {
+    if (@available(macOS 15, iOS 18, tvOS 18, watchOS 11, *)) {
+        // Use SDK instead of raw value
+        kSDCGImageDestinationEncodeRequest = (__bridge NSString *)kCGImageDestinationEncodeRequest;
+        kSDCGImageDestinationEncodeToSDR = (__bridge NSString *)kCGImageDestinationEncodeToSDR;
+        kSDCGImageDestinationEncodeToISOHDR = (__bridge NSString *)kCGImageDestinationEncodeToISOHDR;
+        kSDCGImageDestinationEncodeToISOGainmap = (__bridge NSString *)kCGImageDestinationEncodeToISOGainmap;
+    }
+}
+#endif
 
 - (void)dealloc {
     if (_imageSource) {
@@ -179,6 +198,8 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
         lazyDecode = lazyDecodeValue.boolValue;
     }
     
+    BOOL decodeToHDR = [options[SDImageCoderDecodeToHDR] boolValue];
+    
     NSString *typeIdentifierHint = options[SDImageCoderDecodeTypeIdentifierHint];
     if (!typeIdentifierHint) {
         // Check file extension and convert to UTI, from: https://stackoverflow.com/questions/1506251/getting-an-uniform-type-identifier-for-a-given-extension
@@ -211,7 +232,7 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
     CFStringRef uttype = CGImageSourceGetType(source);
     SDImageFormat imageFormat = [NSData sd_imageFormatFromUTType:uttype];
     
-    UIImage *image = [SDImageIOAnimatedCoder createFrameAtIndex:0 source:source scale:scale preserveAspectRatio:preserveAspectRatio thumbnailSize:thumbnailSize lazyDecode:lazyDecode animatedImage:NO];
+    UIImage *image = [SDImageIOAnimatedCoder createFrameAtIndex:0 source:source scale:scale preserveAspectRatio:preserveAspectRatio thumbnailSize:thumbnailSize lazyDecode:lazyDecode animatedImage:NO decodeToHDR:decodeToHDR];
     CFRelease(source);
     
     image.sd_imageFormat = imageFormat;
@@ -256,6 +277,9 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
             lazyDecode = lazyDecodeValue.boolValue;
         }
         _lazyDecode = lazyDecode;
+        
+        _decodeToHDR = [options[SDImageCoderDecodeToHDR] boolValue];
+        
 #if SD_UIKIT
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 #endif
@@ -306,7 +330,7 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
         if (scaleFactor != nil) {
             scale = MAX([scaleFactor doubleValue], 1);
         }
-        image = [SDImageIOAnimatedCoder createFrameAtIndex:0 source:_imageSource scale:scale preserveAspectRatio:_preserveAspectRatio thumbnailSize:_thumbnailSize lazyDecode:_lazyDecode animatedImage:NO];
+        image = [SDImageIOAnimatedCoder createFrameAtIndex:0 source:_imageSource scale:scale preserveAspectRatio:_preserveAspectRatio thumbnailSize:_thumbnailSize lazyDecode:_lazyDecode animatedImage:NO decodeToHDR:_finished ? _decodeToHDR : NO];
         if (image) {
             CFStringRef uttype = CGImageSourceGetType(_imageSource);
             image.sd_imageFormat = [NSData sd_imageFormatFromUTType:uttype];
@@ -330,7 +354,6 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
         // Earily return, supports CGImage only
         return nil;
     }
-    
     if (format == SDImageFormatUndefined) {
         BOOL hasAlpha = [SDImageCoderHelper CGImageContainsAlpha:imageRef];
         if (hasAlpha) {
@@ -339,7 +362,7 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
             format = SDImageFormatJPEG;
         }
     }
-    
+
     NSMutableData *imageData = [NSMutableData data];
     CFStringRef imageUTType = [NSData sd_UTTypeFromImageFormat:format];
     
@@ -376,6 +399,21 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
         maxPixelSize = maxPixelSizeValue.CGSizeValue;
 #endif
     }
+    // HDR Encoding
+    NSUInteger encodeToHDR = 0;
+    if (options[SDImageCoderEncodeToHDR]) {
+        encodeToHDR = [options[SDImageCoderEncodeToHDR] unsignedIntegerValue];
+    }
+    if (@available(macOS 15, iOS 18, tvOS 18, watchOS 11, *)) {
+        if (encodeToHDR == SDImageHDRTypeISOHDR) {
+            properties[kSDCGImageDestinationEncodeRequest] = kSDCGImageDestinationEncodeToISOHDR;
+        } else if (encodeToHDR == SDImageHDRTypeISOGainMap) {
+            properties[kSDCGImageDestinationEncodeRequest] = kSDCGImageDestinationEncodeToISOGainmap;
+        } else {
+            properties[kSDCGImageDestinationEncodeRequest] = kSDCGImageDestinationEncodeToSDR;
+        }
+    }
+    
     CGFloat pixelWidth = (CGFloat)CGImageGetWidth(imageRef);
     CGFloat pixelHeight = (CGFloat)CGImageGetHeight(imageRef);
     CGFloat finalPixelSize = 0;

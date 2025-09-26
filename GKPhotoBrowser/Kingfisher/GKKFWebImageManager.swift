@@ -15,7 +15,7 @@ import Kingfisher
         AnimatedImageView.self
     }
     
-    public func setImageFor(_ imageView: UIImageView?, url: URL?, placeholderImage: UIImage?, progress progressBlock: GKWebImageProgressBlock?, completion completionBlock: GKWebImageCompletionBlock? = nil) {
+    @MainActor public func setImageFor(_ imageView: UIImageView?, url: URL?, placeholderImage: UIImage?, progress progressBlock: GKWebImageProgressBlock?, completion completionBlock: GKWebImageCompletionBlock? = nil) {
         imageView?.kf.setImage(with: url, placeholder: placeholderImage, progressBlock: { resiveSize, totalSize in
             progressBlock?(Int(resiveSize), Int(totalSize))
         }, completionHandler: { result in
@@ -30,7 +30,7 @@ import Kingfisher
         })
     }
     
-    public func cancelImageRequest(with imageView: UIImageView?) {
+    @MainActor public func cancelImageRequest(with imageView: UIImageView?) {
         imageView?.kf.cancelDownloadTask()
     }
     

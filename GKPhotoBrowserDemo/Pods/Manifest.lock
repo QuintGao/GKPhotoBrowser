@@ -16,53 +16,53 @@ PODS:
     - AFNetworking/NSURLSession
   - Alamofire (5.10.2)
   - GKCover (3.0.1)
-  - GKLivePhotoManager (1.0.5)
+  - GKLivePhotoManager (1.0.7)
   - GKMessageTool (1.0.5):
     - MBProgressHUD
-  - GKNavigationBar (1.9.0):
-    - GKNavigationBar/GestureHandle (= 1.9.0)
-    - GKNavigationBar/NavigationBar (= 1.9.0)
-  - GKNavigationBar/GestureHandle (1.9.0)
-  - GKNavigationBar/NavigationBar (1.9.0)
-  - GKPhotoBrowser (3.1.9):
-    - GKPhotoBrowser/Default (= 3.1.9)
-  - GKPhotoBrowser/AF (3.1.9):
+  - GKNavigationBar (1.9.7):
+    - GKNavigationBar/GestureHandle (= 1.9.7)
+    - GKNavigationBar/NavigationBar (= 1.9.7)
+  - GKNavigationBar/GestureHandle (1.9.7)
+  - GKNavigationBar/NavigationBar (1.9.7)
+  - GKPhotoBrowser (3.2.6):
+    - GKPhotoBrowser/Default (= 3.2.6)
+  - GKPhotoBrowser/AF (3.2.6):
     - AFNetworking
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Alamofire (3.1.9):
+  - GKPhotoBrowser/Alamofire (3.2.6):
     - Alamofire
     - GKLivePhotoManager
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/AVPlayer (3.1.9):
+  - GKPhotoBrowser/AVPlayer (3.2.6):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Core (3.1.9):
+  - GKPhotoBrowser/Core (3.2.6):
     - GKPhotoBrowser/Resources
-  - GKPhotoBrowser/Cover (3.1.9):
+  - GKPhotoBrowser/Cover (3.2.6):
     - GKPhotoBrowser/Core
-  - GKPhotoBrowser/Default (3.1.9):
+  - GKPhotoBrowser/Default (3.2.6):
     - GKPhotoBrowser/AF
     - GKPhotoBrowser/AVPlayer
     - GKPhotoBrowser/Cover
     - GKPhotoBrowser/Progress
     - GKPhotoBrowser/SD
-  - GKPhotoBrowser/KF (3.1.9):
+  - GKPhotoBrowser/KF (3.2.6):
     - GKPhotoBrowser/Core
     - Kingfisher
-  - GKPhotoBrowser/Progress (3.1.9):
+  - GKPhotoBrowser/Progress (3.2.6):
     - GKPhotoBrowser/Core
     - GKSliderView
-  - GKPhotoBrowser/Resources (3.1.9)
-  - GKPhotoBrowser/SD (3.1.9):
+  - GKPhotoBrowser/Resources (3.2.6)
+  - GKPhotoBrowser/SD (3.2.6):
     - GKPhotoBrowser/Core
     - SDWebImage (~> 5.0)
-  - GKPhotoBrowser/SJPlayer (3.1.9):
+  - GKPhotoBrowser/SJPlayer (3.2.6):
     - GKPhotoBrowser/Core
     - SJVideoPlayer
-  - GKPhotoBrowser/YY (3.1.9):
+  - GKPhotoBrowser/YY (3.2.6):
     - GKPhotoBrowser/Core
     - YYWebImage
-  - GKPhotoBrowser_Static/ZFPlayer (3.1.9):
+  - GKPhotoBrowser_Static/ZFPlayer (3.2.6):
     - GKPhotoBrowser/Core
     - ZFPlayer/AVPlayer
   - GKSliderView (1.2.3)
@@ -72,9 +72,9 @@ PODS:
   - MBProgressHUD (1.2.0)
   - MJRefresh (3.7.6)
   - SDAutoLayout (2.2.1)
-  - SDWebImage (5.20.0):
-    - SDWebImage/Core (= 5.20.0)
-  - SDWebImage/Core (5.20.0)
+  - SDWebImage (5.21.2):
+    - SDWebImage/Core (= 5.21.2)
+  - SDWebImage/Core (5.21.2)
   - SJBaseVideoPlayer (3.7.6):
     - Masonry
     - SJBaseVideoPlayer/AVPlayer (= 3.7.6)
@@ -145,9 +145,9 @@ PODS:
   - ZFPlayer/AVPlayer (4.1.4):
     - ZFPlayer/Core
   - ZFPlayer/Core (4.1.4)
-  - ZLPhotoBrowser (4.5.7):
-    - ZLPhotoBrowser/Core (= 4.5.7)
-  - ZLPhotoBrowser/Core (4.5.7)
+  - ZLPhotoBrowser (4.7.0.1):
+    - ZLPhotoBrowser/Core (= 4.7.0.1)
+  - ZLPhotoBrowser/Core (4.7.0.1)
 
 DEPENDENCIES:
   - AFNetworking
@@ -207,11 +207,11 @@ SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
   GKCover: 6486cf87c0a5cae4bb5c3a09e17925ad8b466412
-  GKLivePhotoManager: 7d5bc069382d5a4c1d44a846727b0beb08582256
+  GKLivePhotoManager: 7fba1ae3eebbbd9323320e137a88a231bc5af5fa
   GKMessageTool: fcf46cca30f62eaebb8fea288c9452f3682645f2
-  GKNavigationBar: 8f8de3179ee1afe737d43a546cfaec5a5f5e9160
-  GKPhotoBrowser: 3473d10aabb68f5f889483d99a90e4221af4ac52
-  GKPhotoBrowser_Static: 0935b0020008b5a622e85da9d02265f290d8883c
+  GKNavigationBar: b32ca32122b2a9c3e36d10e23039402fb8d17420
+  GKPhotoBrowser: f11520b89c95d2a73f6048733e6c3592c5b26e1a
+  GKPhotoBrowser_Static: ee2a9036b4cf73637e9f3cb2172884fd02fa670a
   GKSliderView: 7c6f853afeb0ae370bb8dce76ec669d6e9109d1d
   GKVideoScrollView: f5e4fe290d7811665d4e3699293f1736b1e12cd6
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
@@ -219,7 +219,7 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MJRefresh: 2fe7fb43a5167ceda20bb7e63f130c04fd1814a5
   SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
-  SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
+  SDWebImage: 9f177d83116802728e122410fb25ad88f5c7608a
   SJBaseVideoPlayer: f15debaa8c1e27b63bdefc8caeec515e9c71d079
   SJUIKit: a40111941e408cc17d4c1c23495aa92999e814b0
   SJVideoPlayer: 4f09814f58522e0975cb2dccfda925f6c8643467
@@ -228,7 +228,7 @@ SPEC CHECKSUMS:
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
   ZFPlayer: 5cf39e8d9f0c2394a014b0db4767b5b5a6bffe13
-  ZLPhotoBrowser: 04c8a5c5299a3b5945c60bd0e676c16d1215b14c
+  ZLPhotoBrowser: 281694aa684b79f2dbd8a4c49ba46e8f9b07e521
 
 PODFILE CHECKSUM: 8feef67f0991a4fc5c831a335d1db9a300d62ccf
 

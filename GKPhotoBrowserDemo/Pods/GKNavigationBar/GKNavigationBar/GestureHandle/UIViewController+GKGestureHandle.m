@@ -11,11 +11,33 @@
 
 NSString *const GKViewControllerPropertyChangedNotification = @"GKViewControllerPropertyChangedNotification";
 
-@interface UIViewController (GKGestureHandle)<GKViewControllerPushDelegate, GKViewControllerPopDelegate>
+@interface UIViewController (GKGestureHandlePrivate)<GKViewControllerPushDelegate, GKViewControllerPopDelegate>
 
 @property (nonatomic, assign) BOOL hasPushDelegate;
 
 @property (nonatomic, assign) BOOL hasPopDelegate;
+
+@end
+
+@implementation UIViewController (GKGestureHandlePrivate)
+
+static char kAssociatedObjectKey_hasPushDelegate;
+- (BOOL)hasPushDelegate {
+    return [objc_getAssociatedObject(self, &kAssociatedObjectKey_hasPushDelegate) boolValue];
+}
+
+- (void)setHasPushDelegate:(BOOL)hasPushDelegate {
+    objc_setAssociatedObject(self, &kAssociatedObjectKey_hasPushDelegate, @(hasPushDelegate), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+static char kAssociatedObjectKey_hasPopDelegate;
+- (BOOL)hasPopDelegate {
+    return [objc_getAssociatedObject(self, &kAssociatedObjectKey_hasPopDelegate) boolValue];
+}
+
+- (void)setHasPopDelegate:(BOOL)hasPopDelegate {
+    return objc_setAssociatedObject(self, &kAssociatedObjectKey_hasPopDelegate, @(hasPopDelegate), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 @end
 
@@ -144,24 +166,6 @@ static char kAssociatedObjectKey_popTransition;
 
 - (void)setGk_popTransition:(id<UIViewControllerAnimatedTransitioning>)gk_popTransition {
     objc_setAssociatedObject(self, &kAssociatedObjectKey_popTransition, gk_popTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-static char kAssociatedObjectKey_hasPushDelegate;
-- (BOOL)hasPushDelegate {
-    return [objc_getAssociatedObject(self, &kAssociatedObjectKey_hasPushDelegate) boolValue];
-}
-
-- (void)setHasPushDelegate:(BOOL)hasPushDelegate {
-    objc_setAssociatedObject(self, &kAssociatedObjectKey_hasPushDelegate, @(hasPushDelegate), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-static char kAssociatedObjectKey_hasPopDelegate;
-- (BOOL)hasPopDelegate {
-    return [objc_getAssociatedObject(self, &kAssociatedObjectKey_hasPopDelegate) boolValue];
-}
-
-- (void)setHasPopDelegate:(BOOL)hasPopDelegate {
-    return objc_setAssociatedObject(self, &kAssociatedObjectKey_hasPopDelegate, @(hasPopDelegate), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - GKGesturePopHandlerProtocol

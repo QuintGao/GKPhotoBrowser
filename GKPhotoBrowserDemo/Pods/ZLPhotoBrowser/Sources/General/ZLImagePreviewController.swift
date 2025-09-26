@@ -59,7 +59,7 @@ public class ZLImagePreviewController: UIViewController {
     
     private let showBottomView: Bool
 
-    var currentIndex: Int
+    public private(set) var currentIndex: Int
     
     private var indexBeforOrientationChanged: Int
     
@@ -73,6 +73,9 @@ public class ZLImagePreviewController: UIViewController {
         view.delegate = self
         view.isPagingEnabled = true
         view.showsHorizontalScrollIndicator = false
+        if #available(iOS 11.0, *) {
+            view.contentInsetAdjustmentBehavior = .never
+        }
         
         ZLPhotoPreviewCell.zl.register(view)
         ZLGifPreviewCell.zl.register(view)
@@ -156,16 +159,24 @@ public class ZLImagePreviewController: UIViewController {
     
     private var orientation: UIInterfaceOrientation = .unknown
     
+    private var imageRequestID: PHImageRequestID?
+    
+    private var urlDownloadTask: URLSessionDownloadTask?
+    
     @objc public var delegate: ZLImagePreviewControllerDelegate?
     
-    @objc public var longPressBlock: ((ZLImagePreviewController?, UIImage?, Int) -> Void)?
+    @objc public var longPressBlock: ((_ vc: ZLImagePreviewController?, _ index: Int) -> Void)?
     
     @objc public var doneBlock: (([Any]) -> Void)?
     
     @objc public var videoHttpHeader: [String: Any]?
     
+    @objc public var netVideoCoverImageBlock: ((_ url: URL) -> UIImage?)?
+    
+    @objc public var supportInteractiveDismiss = true
+    
     /// 下拉返回时，需要外界提供一个动画结束时的rect
-    public var dismissTransitionFrame: ((Int) -> CGRect?)?
+    public var dismissTransitionFrame: ((_ index: Int) -> CGRect?)?
     
     override public var prefersStatusBarHidden: Bool {
         !ZLPhotoUIConfiguration.default().showStatusBarInPreviewInterface
@@ -178,6 +189,8 @@ public class ZLImagePreviewController: UIViewController {
     }
     
     deinit {
+        cancelImageRequest()
+        urlDownloadTask?.cancel()
         zl_debugPrint("ZLImagePreviewController deinit")
     }
     
@@ -227,7 +240,6 @@ public class ZLImagePreviewController: UIViewController {
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        transitioningDelegate = self
         
         guard isFirstAppear else { return }
         isFirstAppear = false
@@ -304,7 +316,9 @@ public class ZLImagePreviewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .zl.previewVCBgColor
-        automaticallyAdjustsScrollViewInsets = false
+        if #unavailable(iOS 11.0) {
+            automaticallyAdjustsScrollViewInsets = false
+        }
         
         view.addSubview(navView)
         
@@ -329,6 +343,9 @@ public class ZLImagePreviewController: UIViewController {
     }
     
     private func addDismissInteractiveTransition() {
+        guard supportInteractiveDismiss else { return }
+        
+        transitioningDelegate = self
         dismissInteractiveTransition = ZLImagePreviewDismissInteractiveTransition(viewController: self)
         dismissInteractiveTransition?.shouldStartTransition = { [weak self] point -> Bool in
             guard let `self` = self else { return false }
@@ -558,10 +575,6 @@ extension ZLImagePreviewController: UICollectionViewDataSource, UICollectionView
             if config.allowSelectGif, model.type == .gif {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ZLGifPreviewCell.zl.identifier, for: indexPath) as! ZLGifPreviewCell
                 
-                cell.singleTapBlock = { [weak self] in
-                    self?.tapPreviewCell()
-                }
-                
                 cell.model = model
                 baseCell = cell
             } else if config.allowSelectLivePhoto, model.type == .livePhoto {
@@ -570,6 +583,12 @@ extension ZLImagePreviewController: UICollectionViewDataSource, UICollectionView
                 cell.model = model
                 
                 baseCell = cell
+                baseCell.singleTapBlock = { [weak self] in
+                    self?.tapPreviewCell()
+                }
+                
+                // livePhoto 不添加长按手势，因为与播放手势冲突
+                return baseCell
             } else if config.allowSelectVideo, model.type == .video {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ZLVideoPreviewCell.zl.identifier, for: indexPath) as! ZLVideoPreviewCell
                 
@@ -579,16 +598,10 @@ extension ZLImagePreviewController: UICollectionViewDataSource, UICollectionView
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ZLPhotoPreviewCell.zl.identifier, for: indexPath) as! ZLPhotoPreviewCell
 
-                cell.singleTapBlock = { [weak self] in
-                    self?.tapPreviewCell()
-                }
-
                 cell.model = model
 
                 baseCell = cell
             }
-            
-            return baseCell
         } else if let image = obj as? UIImage {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ZLLocalImagePreviewCell.zl.identifier, for: indexPath) as! ZLLocalImagePreviewCell
             
@@ -615,7 +628,9 @@ extension ZLImagePreviewController: UICollectionViewDataSource, UICollectionView
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ZLNetVideoPreviewCell.zl.identifier, for: indexPath) as! ZLNetVideoPreviewCell
                 
-                cell.configureCell(videoUrl: url, httpHeader: videoHttpHeader)
+                cell.configureCell(videoUrl: url, httpHeader: videoHttpHeader) { [weak self] in
+                    self?.netVideoCoverImageBlock?(url)
+                }
                 
                 baseCell = cell
             }
@@ -631,9 +646,9 @@ extension ZLImagePreviewController: UICollectionViewDataSource, UICollectionView
             self?.tapPreviewCell()
         }
         
-        (baseCell as? ZLLocalImagePreviewCell)?.longPressBlock = { [weak self, weak baseCell] in
+        baseCell.longPressBlock = { [weak self] in
             if let callback = self?.longPressBlock {
-                callback(self, baseCell?.currentImage, indexPath.row)
+                callback(self, indexPath.row)
             } else {
                 self?.showSaveImageAlert()
             }
@@ -654,16 +669,121 @@ extension ZLImagePreviewController: UICollectionViewDataSource, UICollectionView
     
     private func showSaveImageAlert() {
         func saveImage() {
-            guard let cell = collectionView.cellForItem(at: IndexPath(row: currentIndex, section: 0)) as? ZLLocalImagePreviewCell, let image = cell.currentImage else {
+            guard let cell = collectionView.cellForItem(at: IndexPath(row: currentIndex, section: 0)) else {
                 return
             }
             
-            let hud = ZLProgressHUD.show(toast: .processing)
-            ZLPhotoManager.saveImageToAlbum(image: image) { [weak self] error, _ in
-                hud.hide()
-                if error != nil {
-                    showAlertView(localLanguageTextValue(.saveImageError), self)
+            if cell is ZLLocalImagePreviewCell,
+               let url = datas[currentIndex] as? URL {
+                let hud = ZLProgressHUD.show(toast: .processing)
+                urlDownloadTask?.cancel()
+                urlDownloadTask = URLSession.shared.downloadTask(with: url) { localURL, _, error in
+                    ZLMainAsync {
+                        zl_debugPrint("---- localURL: \(String(describing: localURL))")
+                        guard let localURL,
+                              error == nil,
+                              let data = try? Data(contentsOf: localURL) else {
+                            hud.hide()
+                            showAlertView(localLanguageTextValue(.saveVideoError), self)
+                            return
+                        }
+                        
+                        ZLPhotoManager.saveImageDataToAlbum(data: data) { error, _ in
+                            hud.hide()
+                            if error != nil {
+                                showAlertView(localLanguageTextValue(.saveImageError), self)
+                            }
+                        }
+                    }
                 }
+                
+                urlDownloadTask?.resume()
+                return
+            }
+            
+            if cell is ZLNetVideoPreviewCell,
+               let url = datas[currentIndex] as? URL {
+                let hud = ZLProgressHUD.show(toast: .processing)
+                urlDownloadTask?.cancel()
+                urlDownloadTask = URLSession.shared.downloadTask(with: url) { localURL, _, error in
+                    ZLMainAsync {
+                        zl_debugPrint("---- localURL: \(String(describing: localURL))")
+                        guard let localURL, error == nil else {
+                            hud.hide()
+                            showAlertView(localLanguageTextValue(.saveVideoError), self)
+                            return
+                        }
+                        
+                        let fileExt = url.pathExtension.isEmpty ? "mp4" : url.pathExtension
+                        let destURL = URL(fileURLWithPath: NSTemporaryDirectory())
+                            .appendingPathComponent(UUID().uuidString)
+                            .appendingPathExtension(fileExt)
+                        do {
+                            try FileManager.default.moveItem(at: localURL, to: destURL)
+                            
+                            ZLPhotoManager.saveVideoToAlbum(url: destURL) { error, _ in
+                                hud.hide()
+                                try? FileManager.default.removeItem(at: destURL)
+                                if error != nil {
+                                    showAlertView(localLanguageTextValue(.saveVideoError), self)
+                                }
+                            }
+                        } catch {
+                            showAlertView(localLanguageTextValue(.saveVideoError), self)
+                        }
+                    }
+                }
+                
+                urlDownloadTask?.resume()
+                return
+            }
+            
+            if (cell is ZLPhotoPreviewCell || cell is ZLGifPreviewCell),
+               let asset = datas[currentIndex] as? PHAsset {
+                let hud = ZLProgressHUD.show(toast: .processing, timeout: ZLPhotoUIConfiguration.default().timeout)
+                hud.timeoutBlock = { [weak self] in
+                    self?.cancelImageRequest()
+                }
+                imageRequestID = ZLPhotoManager.fetchOriginalImageData(for: asset, completion: { [weak self] data, info, isDegraded in
+                    guard let `self` = self else { return }
+                    
+                    if info?[PHImageErrorKey] as? Error != nil {
+                        hud.hide()
+                        showAlertView(localLanguageTextValue(.saveImageError), self)
+                    } else if !isDegraded {
+                        ZLPhotoManager.saveImageDataToAlbum(data: data) { error, _ in
+                            hud.hide()
+                            if error != nil {
+                                showAlertView(localLanguageTextValue(.saveImageError), self)
+                            }
+                        }
+                    }
+                })
+                
+                return
+            }
+            
+            if cell is ZLVideoPreviewCell,
+               let asset = datas[currentIndex] as? PHAsset {
+                let hud = ZLProgressHUD.show(toast: .processing)
+                let fileURL = URL(fileURLWithPath: NSTemporaryDirectory())
+                    .appendingPathComponent(UUID().uuidString)
+                    .appendingPathExtension("mp4")
+                ZLPhotoManager.saveAsset(asset, toFile: fileURL) { error in
+                    if error != nil {
+                        showAlertView(localLanguageTextValue(.saveVideoError), self)
+                    } else {
+                        ZLPhotoManager.saveVideoToAlbum(url: fileURL) { error, _ in
+                            hud.hide()
+                            try? FileManager.default.removeItem(at: fileURL)
+                            if error != nil {
+                                showAlertView(localLanguageTextValue(.saveVideoError), self)
+                            }
+                        }
+                    }
+                }
+                
+                return
             }
         }
         
@@ -672,5 +792,11 @@ extension ZLImagePreviewController: UICollectionViewDataSource, UICollectionView
         }
         let cancelAction = ZLCustomAlertAction(title: localLanguageTextValue(.cancel), style: .cancel, handler: nil)
         showAlertController(title: nil, message: nil, style: .actionSheet, actions: [saveAction, cancelAction], sender: self)
+    }
+    
+    private func cancelImageRequest() {
+        guard let imageRequestID else { return }
+        
+        PHImageManager.default().cancelImageRequest(imageRequestID)
     }
 }

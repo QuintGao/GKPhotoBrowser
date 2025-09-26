@@ -9,6 +9,7 @@
 #import "SDWebImageCompat.h"
 
 typedef void(^SDWebImageNoParamsBlock)(void);
+/// Image Loading context option
 typedef NSString * SDWebImageContextOption NS_EXTENSIBLE_STRING_ENUM;
 typedef NSDictionary<SDWebImageContextOption, id> SDWebImageContext;
 typedef NSMutableDictionary<SDWebImageContextOption, id> SDWebImageMutableContext;
@@ -336,6 +337,13 @@ FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextImageT
  @warning This does not effect the cache key. So which means, this will effect the global cache even next time you query without this option. Pay attention when you use this on global options (It's always recommended to use request-level option for different pipeline)
  */
 FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextImageScaleDownLimitBytes;
+
+/**
+ A Boolean value (NSNumber) to provide converting to HDR during decoding. Currently if number is 0, use SDR, else use HDR. But we may extend this option to use `NSUInteger` in the future (means, think this options as int number, but not actual boolean)
+ @note Supported by iOS 17 and above when using ImageIO coder (third-party coder can support lower firmware)
+ Defaults to @(NO), decoder will automatically convert SDR.
+ */
+FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextImageDecodeToHDR;
 
 #pragma mark - Cache Context Options
 
